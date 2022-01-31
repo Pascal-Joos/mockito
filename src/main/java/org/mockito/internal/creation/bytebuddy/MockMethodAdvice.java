@@ -51,6 +51,8 @@ import org.mockito.internal.util.concurrent.DetachedThreadLocal;
 import org.mockito.internal.util.concurrent.WeakConcurrentMap;
 import org.mockito.plugins.MemberAccessor;
 
+import javax.annotation.Nullable;
+
 import static net.bytebuddy.matcher.ElementMatchers.*;
 
 public class MockMethodAdvice extends MockMethodDispatcher {
@@ -712,6 +714,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
 
         @SuppressWarnings("unused")
         @Advice.OnMethodEnter(skipOn = Advice.OnNonDefaultValue.class)
+        @Nullable
         private static Callable<?> enter(
                 @Identifier String identifier,
                 @Advice.Origin Class<?> type,
