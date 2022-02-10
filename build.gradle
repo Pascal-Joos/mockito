@@ -96,7 +96,7 @@ dependencies {
 
     testUtil sourceSets.test.output
 
-    annotationProcessor "edu.ucr.cs.riple:nullaway:0.7.12-SNAPSHOT"
+    annotationProcessor "ucr.uber.nullaway:nullaway:0.9.3-SNAPSHOT"
 
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
     errorprone "com.google.errorprone:error_prone_core:2.3.2"
@@ -112,6 +112,7 @@ tasks.withType(JavaCompile) {
             check("NullAway", CheckSeverity.ERROR)
             option("NullAway:AnnotatedPackages", "org.mockito")
             option("NullAway:AutoFix", "true")
+            option("NullAway:AutoFixOutPutDirectory", "/tmp/NullAwayFix")
         }
         options.compilerArgs << "-Xmaxerrs" << "100000"
     }
