@@ -4,9 +4,9 @@
  */
 package org.mockito.internal.util.reflection;
 
+import org.mockito.Initializer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.internal.util.Checks;
@@ -18,8 +18,11 @@ import org.mockito.plugins.MemberAccessor;
  * Contains the instance reference on which the field can be read and write.
  */
 public class InstanceField {
+
     private final Field field;
+
     private final Object instance;
+
     private FieldReader fieldReader;
 
     /**
@@ -106,6 +109,7 @@ public class InstanceField {
         return field;
     }
 
+    @Initializer
     private FieldReader reader() {
         if (fieldReader == null) {
             fieldReader = new FieldReader(instance, field);
@@ -129,9 +133,10 @@ public class InstanceField {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         InstanceField that = (InstanceField) o;
         return field.equals(that.field) && instance.equals(that.instance);
     }

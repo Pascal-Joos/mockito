@@ -4,6 +4,8 @@
  */
 package org.mockito.internal.creation.bytebuddy;
 
+import javax.annotation.Nullable;
+
 public interface ConstructionCallback {
 
     Object apply(Class<?> type, Object object, Object[] arguments, String[] parameterTypeNames);

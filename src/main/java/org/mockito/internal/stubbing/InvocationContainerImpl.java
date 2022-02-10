@@ -4,14 +4,14 @@
  */
 package org.mockito.internal.stubbing;
 
+import javax.annotation.Nullable;
+import org.mockito.Initializer;
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.mockito.internal.invocation.StubInfoImpl;
 import org.mockito.internal.verification.DefaultRegisteredInvocations;
 import org.mockito.internal.verification.RegisteredInvocations;
@@ -29,10 +29,14 @@ import org.mockito.stubbing.ValidableAnswer;
 public class InvocationContainerImpl implements InvocationContainer, Serializable {
 
     private static final long serialVersionUID = -5334301962749537177L;
-    private final LinkedList<StubbedInvocationMatcher> stubbed =
-            new LinkedList<StubbedInvocationMatcher>();
+
+    private final LinkedList<StubbedInvocationMatcher> stubbed = new LinkedList<StubbedInvocationMatcher>();
+
     private final DoAnswerStyleStubbing doAnswerStyleStubbing;
+
     private final RegisteredInvocations registeredInvocations;
+
+    @Nullable
     private final Strictness mockStrictness;
 
     private MatchableInvocation invocationForStubbing;
@@ -43,6 +47,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
         this.doAnswerStyleStubbing = new DoAnswerStyleStubbing();
     }
 
+    @Initializer
     public void setInvocationForPotentialStubbing(MatchableInvocation invocation) {
         registeredInvocations.add(invocation.getInvocation());
         this.invocationForStubbing = invocation;
@@ -64,23 +69,18 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
     /**
      * Adds new stubbed answer and returns the invocation matcher the answer was added to.
      */
-    public StubbedInvocationMatcher addAnswer(
-            Answer answer, boolean isConsecutive, Strictness stubbingStrictness) {
+    public StubbedInvocationMatcher addAnswer(Answer answer, boolean isConsecutive, @Nullable Strictness stubbingStrictness) {
         Invocation invocation = invocationForStubbing.getInvocation();
         mockingProgress().stubbingCompleted();
         if (answer instanceof ValidableAnswer) {
             ((ValidableAnswer) answer).validateFor(invocation);
         }
-
         synchronized (stubbed) {
             if (isConsecutive) {
                 stubbed.getFirst().addAnswer(answer);
             } else {
-                Strictness effectiveStrictness =
-                        stubbingStrictness != null ? stubbingStrictness : this.mockStrictness;
-                stubbed.addFirst(
-                        new StubbedInvocationMatcher(
-                                answer, invocationForStubbing, effectiveStrictness));
+                Strictness effectiveStrictness = stubbingStrictness != null ? stubbingStrictness : this.mockStrictness;
+                stubbed.addFirst(new StubbedInvocationMatcher(answer, invocationForStubbing, effectiveStrictness));
             }
             return stubbed.getFirst();
         }
@@ -102,14 +102,13 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
                 }
             }
         }
-
         return null;
     }
 
     /**
      * Sets the answers declared with 'doAnswer' style.
      */
-    public void setAnswersForStubbing(List<Answer<?>> answers, Strictness strictness) {
+    public void setAnswersForStubbing(List<Answer<?>> answers, @Nullable Strictness strictness) {
         doAnswerStyleStubbing.setAnswers(answers, strictness);
     }
 
@@ -125,10 +124,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
         invocationForStubbing = invocation;
         assert hasAnswersForStubbing();
         for (int i = 0; i < doAnswerStyleStubbing.getAnswers().size(); i++) {
-            addAnswer(
-                    doAnswerStyleStubbing.getAnswers().get(i),
-                    i != 0,
-                    doAnswerStyleStubbing.getStubbingStrictness());
+            addAnswer(doAnswerStyleStubbing.getAnswers().get(i), i != 0, doAnswerStyleStubbing.getStubbingStrictness());
         }
         doAnswerStyleStubbing.clear();
     }
@@ -171,8 +167,6 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
     }
 
     private RegisteredInvocations createRegisteredInvocations(MockCreationSettings mockSettings) {
-        return mockSettings.isStubOnly()
-                ? new SingleRegisteredInvocation()
-                : new DefaultRegisteredInvocations();
+        return mockSettings.isStubOnly() ? new SingleRegisteredInvocation() : new DefaultRegisteredInvocations();
     }
 }
