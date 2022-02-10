@@ -14,6 +14,8 @@ import org.mockito.invocation.Invocation;
 import org.mockito.invocation.Location;
 import org.mockito.invocation.MatchableInvocation;
 
+import javax.annotation.Nullable;
+
 public class InvocationsFinder {
 
     private InvocationsFinder() {}
@@ -116,6 +118,7 @@ public class InvocationsFinder {
         return null;
     }
 
+    @Nullable
     public static Location getLastLocation(List<Invocation> invocations) {
         if (invocations.isEmpty()) {
             return null;
