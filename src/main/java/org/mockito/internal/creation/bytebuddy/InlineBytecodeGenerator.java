@@ -3,6 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 package org.mockito.internal.creation.bytebuddy;
+import javax.annotation.Nullable;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
@@ -75,6 +76,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
 
     private final Method getModule, canRead, redefineModule;
 
+    @Nullable
     private volatile Throwable lastException;
 
     public InlineBytecodeGenerator(
