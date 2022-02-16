@@ -3,6 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 package org.mockito.internal.util.reflection;
+import javax.annotation.Nullable;
 
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.agent.ByteBuddyAgent;
@@ -25,6 +26,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
 
     private static final Map<Class<?>, Class<?>> WRAPPERS = new HashMap<>();
 
+    @Nullable
     private static final Instrumentation INSTRUMENTATION;
     private static final Dispatcher DISPATCHER;
 
