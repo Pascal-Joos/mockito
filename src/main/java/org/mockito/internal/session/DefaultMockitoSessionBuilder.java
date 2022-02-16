@@ -3,6 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 package org.mockito.internal.session;
+import javax.annotation.Nullable;
 
 import static java.util.Collections.emptyList;
 
@@ -21,6 +22,7 @@ public class DefaultMockitoSessionBuilder implements MockitoSessionBuilder {
 
     private List<Object> testClassInstances = new ArrayList<Object>();
     private String name;
+    @Nullable
     private Strictness strictness;
     private MockitoSessionLogger logger;
 
