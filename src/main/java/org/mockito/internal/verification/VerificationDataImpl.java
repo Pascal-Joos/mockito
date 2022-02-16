@@ -3,6 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 package org.mockito.internal.verification;
+import javax.annotation.Nullable;
 
 import static org.mockito.internal.exceptions.Reporter.cannotVerifyToString;
 import static org.mockito.internal.util.ObjectMethodsGuru.isToStringMethod;
@@ -20,7 +21,7 @@ public class VerificationDataImpl implements VerificationData {
     private final InvocationMatcher wanted;
     private final InvocationContainerImpl invocations;
 
-    public VerificationDataImpl(InvocationContainerImpl invocations, InvocationMatcher wanted) {
+    public VerificationDataImpl(InvocationContainerImpl invocations, @Nullable InvocationMatcher wanted) {
         this.invocations = invocations;
         this.wanted = wanted;
         this.assertWantedIsVerifiable();
