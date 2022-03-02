@@ -3,6 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 package org.mockito.internal.matchers.apachecommons;
+import javax.annotation.Nullable;
 
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.plugins.MemberAccessor;
@@ -224,7 +225,7 @@ class EqualsBuilder {
             Object rhs,
             boolean testTransients,
             Class<?> reflectUpToClass,
-            String[] excludeFields) {
+            @Nullable String[] excludeFields) {
         if (lhs == rhs) {
             return true;
         }
