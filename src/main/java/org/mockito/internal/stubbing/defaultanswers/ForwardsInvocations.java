@@ -4,13 +4,12 @@
  */
 package org.mockito.internal.stubbing.defaultanswers;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.exceptions.Reporter.delegatedMethodDoesNotExistOnDelegate;
 import static org.mockito.internal.exceptions.Reporter.delegatedMethodHasWrongReturnType;
-
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.InvocationOnMock;
@@ -23,6 +22,7 @@ import org.mockito.stubbing.Answer;
  * @since 1.9.5
  */
 public class ForwardsInvocations implements Answer<Object>, Serializable {
+
     private static final long serialVersionUID = -8343690268123254910L;
 
     private Object delegatedObject = null;
@@ -33,22 +33,16 @@ public class ForwardsInvocations implements Answer<Object>, Serializable {
 
     public Object answer(InvocationOnMock invocation) throws Throwable {
         Method mockMethod = invocation.getMethod();
-
         try {
             Method delegateMethod = getDelegateMethod(mockMethod);
-
-            if (!compatibleReturnTypes(
-                    mockMethod.getReturnType(), delegateMethod.getReturnType())) {
-                throw delegatedMethodHasWrongReturnType(
-                        mockMethod, delegateMethod, invocation.getMock(), delegatedObject);
+            if (!compatibleReturnTypes(mockMethod.getReturnType(), delegateMethod.getReturnType())) {
+                throw delegatedMethodHasWrongReturnType(mockMethod, delegateMethod, invocation.getMock(), delegatedObject);
             }
-
             MemberAccessor accessor = Plugins.getMemberAccessor();
             Object[] rawArguments = ((Invocation) invocation).getRawArguments();
             return accessor.invoke(delegateMethod, delegatedObject, rawArguments);
         } catch (NoSuchMethodException e) {
-            throw delegatedMethodDoesNotExistOnDelegate(
-                    mockMethod, invocation.getMock(), delegatedObject);
+            throw delegatedMethodDoesNotExistOnDelegate(mockMethod, invocation.getMock(), delegatedObject);
         } catch (InvocationTargetException e) {
             // propagate the original exception from the delegate
             throw e.getCause();
@@ -61,9 +55,7 @@ public class ForwardsInvocations implements Answer<Object>, Serializable {
             return mockMethod;
         } else {
             // Return method of delegate object with the same signature as mockMethod.
-            return delegatedObject
-                    .getClass()
-                    .getMethod(mockMethod.getName(), mockMethod.getParameterTypes());
+            return delegatedObject.getClass().getMethod(mockMethod.getName(), mockMethod.getParameterTypes());
         }
     }
 

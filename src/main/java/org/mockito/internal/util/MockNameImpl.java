@@ -4,18 +4,20 @@
  */
 package org.mockito.internal.util;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
-
 import org.mockito.mock.MockName;
 
 public class MockNameImpl implements MockName, Serializable {
 
     private static final long serialVersionUID = 8014974700844306925L;
+
     private final String mockName;
+
     private boolean defaultName;
 
     @SuppressWarnings("unchecked")
-    public MockNameImpl(String mockName, Class<?> type, boolean mockedStatic) {
+    public MockNameImpl(@Nullable String mockName, Class<?> type, boolean mockedStatic) {
         if (mockName == null) {
             this.mockName = mockedStatic ? toClassName(type) : toInstanceName(type);
             this.defaultName = true;
