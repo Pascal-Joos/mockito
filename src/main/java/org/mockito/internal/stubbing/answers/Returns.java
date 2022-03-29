@@ -4,11 +4,10 @@
  */
 package org.mockito.internal.stubbing.answers;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.exceptions.Reporter.cannotStubVoidMethodWithAReturnValue;
 import static org.mockito.internal.exceptions.Reporter.wrongTypeOfReturnValue;
-
 import java.io.Serializable;
-
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.ValidableAnswer;
@@ -16,9 +15,10 @@ import org.mockito.stubbing.ValidableAnswer;
 public class Returns implements Answer<Object>, ValidableAnswer, Serializable {
 
     private static final long serialVersionUID = -6245608253574215396L;
+
     private final Object value;
 
-    public Returns(Object value) {
+    public Returns(@Nullable Object value) {
         this.value = value;
     }
 
@@ -32,17 +32,11 @@ public class Returns implements Answer<Object>, ValidableAnswer, Serializable {
         if (invocationInfo.isVoid()) {
             throw cannotStubVoidMethodWithAReturnValue(invocationInfo.getMethodName());
         }
-
         if (returnsNull() && invocationInfo.returnsPrimitive()) {
-            throw wrongTypeOfReturnValue(
-                    invocationInfo.printMethodReturnType(), "null", invocationInfo.getMethodName());
+            throw wrongTypeOfReturnValue(invocationInfo.printMethodReturnType(), "null", invocationInfo.getMethodName());
         }
-
         if (!returnsNull() && !invocationInfo.isValidReturnType(returnType())) {
-            throw wrongTypeOfReturnValue(
-                    invocationInfo.printMethodReturnType(),
-                    printReturnType(),
-                    invocationInfo.getMethodName());
+            throw wrongTypeOfReturnValue(invocationInfo.printMethodReturnType(), printReturnType(), invocationInfo.getMethodName());
         }
     }
 

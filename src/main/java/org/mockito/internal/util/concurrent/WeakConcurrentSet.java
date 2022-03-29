@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.util.concurrent;
 
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ public class WeakConcurrentSet<V> implements Runnable, Iterable<V> {
     final WeakConcurrentMap<V, Boolean> target;
 
     public WeakConcurrentSet(Cleaner cleaner) {
-        switch (cleaner) {
+        switch(cleaner) {
             case INLINE:
                 target = new WeakConcurrentMap.WithInlinedExpunction<V, Boolean>();
                 break;
@@ -37,7 +38,8 @@ public class WeakConcurrentSet<V> implements Runnable, Iterable<V> {
      * @return {@code true} if the value was added to the set and was not contained before.
      */
     public boolean add(V value) {
-        return target.put(value, Boolean.TRUE) == null; // is null or Boolean.TRUE
+        // is null or Boolean.TRUE
+        return target.put(value, Boolean.TRUE) == null;
     }
 
     /**
@@ -84,9 +86,8 @@ public class WeakConcurrentSet<V> implements Runnable, Iterable<V> {
      * ({@link Cleaner#MANUAL}).
      */
     public enum Cleaner {
-        THREAD,
-        INLINE,
-        MANUAL
+
+        THREAD, INLINE, MANUAL
     }
 
     /**
@@ -99,6 +100,7 @@ public class WeakConcurrentSet<V> implements Runnable, Iterable<V> {
     /**
      * @return The cleaner thread or {@code null} if no such thread was set.
      */
+    @Nullable
     public Thread getCleanerThread() {
         return target.getCleanerThread();
     }

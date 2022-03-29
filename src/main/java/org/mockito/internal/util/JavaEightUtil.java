@@ -4,9 +4,9 @@
  */
 package org.mockito.internal.util;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-
 import org.mockito.creation.instance.InstantiationException;
 
 /**
@@ -16,11 +16,22 @@ import org.mockito.creation.instance.InstantiationException;
 public final class JavaEightUtil {
 
     // No need for volatile, these optionals are already safe singletons.
+    @Nullable
     private static Object emptyOptional;
+
+    @Nullable
     private static Object emptyOptionalDouble;
+
+    @Nullable
     private static Object emptyOptionalInt;
+
+    @Nullable
     private static Object emptyOptionalLong;
+
+    @Nullable
     private static Object emptyDuration;
+
+    @Nullable
     private static Object emptyPeriod;
 
     private JavaEightUtil() {
@@ -37,7 +48,6 @@ public final class JavaEightUtil {
         if (emptyOptional != null) {
             return emptyOptional;
         }
-
         return emptyOptional = invokeNullaryFactoryMethod("java.util.Optional", "empty");
     }
 
@@ -51,9 +61,7 @@ public final class JavaEightUtil {
         if (emptyOptionalDouble != null) {
             return emptyOptionalDouble;
         }
-
-        return emptyOptionalDouble =
-                invokeNullaryFactoryMethod("java.util.OptionalDouble", "empty");
+        return emptyOptionalDouble = invokeNullaryFactoryMethod("java.util.OptionalDouble", "empty");
     }
 
     /**
@@ -66,7 +74,6 @@ public final class JavaEightUtil {
         if (emptyOptionalInt != null) {
             return emptyOptionalInt;
         }
-
         return emptyOptionalInt = invokeNullaryFactoryMethod("java.util.OptionalInt", "empty");
     }
 
@@ -80,7 +87,6 @@ public final class JavaEightUtil {
         if (emptyOptionalLong != null) {
             return emptyOptionalLong;
         }
-
         return emptyOptionalLong = invokeNullaryFactoryMethod("java.util.OptionalLong", "empty");
     }
 
@@ -134,7 +140,6 @@ public final class JavaEightUtil {
         if (emptyDuration != null) {
             return emptyDuration;
         }
-
         return emptyDuration = getStaticFieldValue("java.time.Duration", "ZERO");
     }
 
@@ -148,7 +153,6 @@ public final class JavaEightUtil {
         if (emptyPeriod != null) {
             return emptyPeriod;
         }
-
         return emptyPeriod = getStaticFieldValue("java.time.Period", "ZERO");
     }
 
@@ -166,8 +170,7 @@ public final class JavaEightUtil {
             // any exception is really unexpected since the type name has
             // already been verified
         } catch (final Exception e) {
-            throw new InstantiationException(
-                    String.format("Could not create %s#%s(): %s", fqcn, methodName, e), e);
+            throw new InstantiationException(String.format("Could not create %s#%s(): %s", fqcn, methodName, e), e);
         }
     }
 
@@ -186,8 +189,7 @@ public final class JavaEightUtil {
             // any exception is really unexpected since the type name has
             // already been verified
         } catch (Exception e) {
-            throw new InstantiationException(
-                    String.format("Could not get %s#%s(): %s", fqcn, fieldName, e), e);
+            throw new InstantiationException(String.format("Could not get %s#%s(): %s", fqcn, fieldName, e), e);
         }
     }
 
@@ -215,14 +217,12 @@ public final class JavaEightUtil {
      * @param parameterClasses The list of parameters.
      * @return The Method object that matches the specified name and parameterTypes.
      */
-    private static Method getMethod(
-            final String fqcn, final String methodName, final Class<?>... parameterClasses) {
+    private static Method getMethod(final String fqcn, final String methodName, final Class<?>... parameterClasses) {
         try {
             final Class<?> type = getClass(fqcn);
             return type.getMethod(methodName, parameterClasses);
         } catch (Exception e) {
-            throw new InstantiationException(
-                    String.format("Could not find %s#%s(): %s", fqcn, methodName, e), e);
+            throw new InstantiationException(String.format("Could not find %s#%s(): %s", fqcn, methodName, e), e);
         }
     }
 }
