@@ -4,6 +4,7 @@
  */
 package org.mockito;
 
+import javax.annotation.Nullable;
 import org.mockito.internal.stubbing.answers.CallsRealMethods;
 import org.mockito.internal.stubbing.defaultanswers.GloballyConfiguredAnswer;
 import org.mockito.internal.stubbing.defaultanswers.ReturnsDeepStubs;
@@ -25,6 +26,7 @@ import org.mockito.stubbing.Answer;
  * <b>This is not the full list</b> of Answers available in Mockito. Some interesting answers can be found in org.mockito.stubbing.answers package.
  */
 public enum Answers implements Answer<Object> {
+
     /**
      * The default configured answer of every mock.
      *
@@ -33,7 +35,6 @@ public enum Answers implements Answer<Object> {
      * @see org.mockito.Mockito#RETURNS_DEFAULTS
      */
     RETURNS_DEFAULTS(new GloballyConfiguredAnswer()),
-
     /**
      * An answer that returns smart-nulls.
      *
@@ -42,7 +43,6 @@ public enum Answers implements Answer<Object> {
      * @see org.mockito.Mockito#RETURNS_SMART_NULLS
      */
     RETURNS_SMART_NULLS(new ReturnsSmartNulls()),
-
     /**
      * An answer that returns <strong>mocks</strong> (not stubs).
      *
@@ -51,7 +51,6 @@ public enum Answers implements Answer<Object> {
      * @see org.mockito.Mockito#RETURNS_MOCKS
      */
     RETURNS_MOCKS(new ReturnsMocks()),
-
     /**
      * An answer that returns <strong>deep stubs</strong> (not mocks).
      *
@@ -60,7 +59,6 @@ public enum Answers implements Answer<Object> {
      * @see org.mockito.Mockito#RETURNS_DEEP_STUBS
      */
     RETURNS_DEEP_STUBS(new ReturnsDeepStubs()),
-
     /**
      * An answer that calls the real methods (used for partial mocks).
      *
@@ -69,7 +67,6 @@ public enum Answers implements Answer<Object> {
      * @see org.mockito.Mockito#CALLS_REAL_METHODS
      */
     CALLS_REAL_METHODS(new CallsRealMethods()),
-
     /**
      * An answer that tries to return itself. This is useful for mocking {@code Builders}.
      *
@@ -94,6 +91,7 @@ public enum Answers implements Answer<Object> {
         return this;
     }
 
+    @Nullable
     public Object answer(InvocationOnMock invocation) throws Throwable {
         return implementation.answer(invocation);
     }

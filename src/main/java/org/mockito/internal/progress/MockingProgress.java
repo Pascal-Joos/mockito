@@ -4,8 +4,8 @@
  */
 package org.mockito.internal.progress;
 
+import javax.annotation.Nullable;
 import java.util.Set;
-
 import org.mockito.listeners.MockitoListener;
 import org.mockito.listeners.VerificationListener;
 import org.mockito.mock.MockCreationSettings;
@@ -17,12 +17,14 @@ public interface MockingProgress {
 
     void reportOngoingStubbing(OngoingStubbing<?> ongoingStubbing);
 
+    @Nullable
     OngoingStubbing<?> pullOngoingStubbing();
 
     Set<VerificationListener> verificationListeners();
 
     void verificationStarted(VerificationMode verificationMode);
 
+    @Nullable
     VerificationMode pullVerificationMode();
 
     void stubbingStarted();
