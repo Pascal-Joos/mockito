@@ -4,8 +4,8 @@
  */
 package org.mockito.internal.verification.api;
 
+import javax.annotation.Nullable;
 import java.util.List;
-
 import org.mockito.internal.invocation.InvocationMatcher;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MatchableInvocation;
@@ -47,5 +47,6 @@ public interface VerificationData {
      * Deprecated since 2.2.12
      */
     @Deprecated
+    @Nullable
     InvocationMatcher getWanted();
 }
