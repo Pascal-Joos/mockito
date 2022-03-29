@@ -4,6 +4,7 @@
  */
 package org.mockito.exceptions.base;
 
+import javax.annotation.Nullable;
 import org.mockito.internal.exceptions.stacktrace.ConditionalStackTraceFilter;
 
 /**
@@ -25,7 +26,7 @@ public class MockitoException extends RuntimeException {
     private StackTraceElement[] unfilteredStackTrace;
 
     // TODO lazy filtered stacktrace initialization
-    public MockitoException(String message, Throwable t) {
+    public MockitoException(@Nullable String message, @Nullable Throwable t) {
         super(message, t);
         filterStackTrace();
     }
@@ -37,7 +38,6 @@ public class MockitoException extends RuntimeException {
 
     private void filterStackTrace() {
         unfilteredStackTrace = getStackTrace();
-
         ConditionalStackTraceFilter filter = new ConditionalStackTraceFilter();
         filter.filter(this);
     }

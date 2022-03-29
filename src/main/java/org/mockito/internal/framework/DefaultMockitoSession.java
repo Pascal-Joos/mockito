@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.framework;
 
+import javax.annotation.Nullable;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.MockitoSession;
@@ -14,22 +15,18 @@ import org.mockito.internal.junit.TestFinishedEvent;
 import org.mockito.internal.junit.UniversalTestListener;
 import org.mockito.plugins.MockitoLogger;
 import org.mockito.quality.Strictness;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultMockitoSession implements MockitoSession {
 
     private final String name;
+
     private final UniversalTestListener listener;
 
     private final List<AutoCloseable> closeables = new ArrayList<>();
 
-    public DefaultMockitoSession(
-            List<Object> testClassInstances,
-            String name,
-            Strictness strictness,
-            MockitoLogger logger) {
+    public DefaultMockitoSession(List<Object> testClassInstances, String name, Strictness strictness, MockitoLogger logger) {
         this.name = name;
         listener = new UniversalTestListener(strictness, logger);
         try {
@@ -48,7 +45,6 @@ public class DefaultMockitoSession implements MockitoSession {
             } catch (Throwable t) {
                 e.addSuppressed(t);
             }
-
             // clean up in case 'openMocks' fails
             listener.setListenerDirty();
             throw e;
@@ -66,27 +62,25 @@ public class DefaultMockitoSession implements MockitoSession {
     }
 
     @Override
-    public void finishMocking(final Throwable failure) {
+    public void finishMocking(@Nullable final Throwable failure) {
         try {
             // Cleaning up the state, we no longer need the listener hooked up
             // The listener implements MockCreationListener and at this point
             // we no longer need to listen on mock creation events. We are wrapping up the session
             Mockito.framework().removeListener(listener);
-
             // Emit test finished event so that validation such as strict stubbing can take place
-            listener.testFinished(
-                    new TestFinishedEvent() {
-                        @Override
-                        public Throwable getFailure() {
-                            return failure;
-                        }
+            listener.testFinished(new TestFinishedEvent() {
 
-                        @Override
-                        public String getTestName() {
-                            return name;
-                        }
-                    });
+                @Override
+                public Throwable getFailure() {
+                    return failure;
+                }
 
+                @Override
+                public String getTestName() {
+                    return name;
+                }
+            });
             // Validate only when there is no test failure to avoid reporting multiple problems
             if (failure == null) {
                 // Finally, validate user's misuse of Mockito framework.
