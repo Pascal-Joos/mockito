@@ -4,9 +4,9 @@
  */
 package org.mockito.internal.util.reflection;
 
+import javax.annotation.Nullable;
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.plugins.MemberAccessor;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -31,7 +31,6 @@ public class LenientCopyTool {
 
     private <T> void copyValues(T from, T mock, Class<?> classFrom) {
         Field[] fields = classFrom.getDeclaredFields();
-
         for (Field field : fields) {
             // ignore static fields
             if (Modifier.isStatic(field.getModifiers())) {

@@ -4,9 +4,9 @@
  */
 package org.mockito.internal.stubbing;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.exceptions.Reporter.notAnException;
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
-
 import org.mockito.internal.stubbing.answers.CallsRealMethods;
 import org.mockito.internal.stubbing.answers.Returns;
 import org.mockito.internal.stubbing.answers.ThrowsException;
@@ -30,7 +30,7 @@ public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
     }
 
     @Override
-    public OngoingStubbing<T> thenReturn(T value) {
+    public OngoingStubbing<T> thenReturn(@Nullable T value) {
         return thenAnswer(new Returns(value));
     }
 
@@ -49,11 +49,12 @@ public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
         return stubbing;
     }
 
-    private OngoingStubbing<T> thenThrow(Throwable throwable) {
+    private OngoingStubbing<T> thenThrow(@Nullable Throwable throwable) {
         return thenAnswer(new ThrowsException(throwable));
     }
 
     @Override
+    @Nullable
     public OngoingStubbing<T> thenThrow(Throwable... throwables) {
         if (throwables == null) {
             return thenThrow((Throwable) null);
@@ -70,7 +71,7 @@ public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
     }
 
     @Override
-    public OngoingStubbing<T> thenThrow(Class<? extends Throwable> throwableType) {
+    public OngoingStubbing<T> thenThrow(@Nullable Class<? extends Throwable> throwableType) {
         if (throwableType == null) {
             mockingProgress().reset();
             throw notAnException();
@@ -79,8 +80,7 @@ public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
     }
 
     @Override
-    public OngoingStubbing<T> thenThrow(
-            Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... nextToBeThrown) {
+    public OngoingStubbing<T> thenThrow(Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... nextToBeThrown) {
         if (nextToBeThrown == null) {
             return thenThrow((Class<Throwable>) null);
         }
