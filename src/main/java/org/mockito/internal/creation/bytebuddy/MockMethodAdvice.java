@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.creation.bytebuddy;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
-
 import net.bytebuddy.ClassFileVersion;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.asm.AsmVisitorWrapper;
@@ -50,30 +50,27 @@ import org.mockito.internal.invocation.mockref.MockWeakReference;
 import org.mockito.internal.util.concurrent.DetachedThreadLocal;
 import org.mockito.internal.util.concurrent.WeakConcurrentMap;
 import org.mockito.plugins.MemberAccessor;
-
 import static net.bytebuddy.matcher.ElementMatchers.*;
 
 public class MockMethodAdvice extends MockMethodDispatcher {
 
     private final WeakConcurrentMap<Object, MockMethodInterceptor> interceptors;
+
     private final DetachedThreadLocal<Map<Class<?>, MockMethodInterceptor>> mockedStatics;
 
     private final String identifier;
 
     private final SelfCallInfo selfCallInfo = new SelfCallInfo();
+
     private final MethodGraph.Compiler compiler = MethodGraph.Compiler.Default.forJavaHierarchy();
-    private final WeakConcurrentMap<Class<?>, SoftReference<MethodGraph>> graphs =
-            new WeakConcurrentMap.WithInlinedExpunction<Class<?>, SoftReference<MethodGraph>>();
+
+    private final WeakConcurrentMap<Class<?>, SoftReference<MethodGraph>> graphs = new WeakConcurrentMap.WithInlinedExpunction<Class<?>, SoftReference<MethodGraph>>();
 
     private final Predicate<Class<?>> isMockConstruction;
+
     private final ConstructionCallback onConstruction;
 
-    public MockMethodAdvice(
-            WeakConcurrentMap<Object, MockMethodInterceptor> interceptors,
-            DetachedThreadLocal<Map<Class<?>, MockMethodInterceptor>> mockedStatics,
-            String identifier,
-            Predicate<Class<?>> isMockConstruction,
-            ConstructionCallback onConstruction) {
+    public MockMethodAdvice(WeakConcurrentMap<Object, MockMethodInterceptor> interceptors, DetachedThreadLocal<Map<Class<?>, MockMethodInterceptor>> mockedStatics, String identifier, Predicate<Class<?>> isMockConstruction, ConstructionCallback onConstruction) {
         this.interceptors = interceptors;
         this.mockedStatics = mockedStatics;
         this.onConstruction = onConstruction;
@@ -83,28 +80,19 @@ public class MockMethodAdvice extends MockMethodDispatcher {
 
     @SuppressWarnings("unused")
     @Advice.OnMethodEnter(skipOn = Advice.OnNonDefaultValue.class)
-    private static Callable<?> enter(
-            @Identifier String identifier,
-            @Advice.This Object mock,
-            @Advice.Origin Method origin,
-            @Advice.AllArguments Object[] arguments)
-            throws Throwable {
+    @Nullable
+    private static Callable<?> enter(@Identifier String identifier, @Advice.This Object mock, @Advice.Origin Method origin, @Advice.AllArguments Object[] arguments) throws Throwable {
         MockMethodDispatcher dispatcher = MockMethodDispatcher.get(identifier, mock);
-        if (dispatcher == null
-                || !dispatcher.isMocked(mock)
-                || dispatcher.isOverridden(mock, origin)) {
+        if (dispatcher == null || !dispatcher.isMocked(mock) || dispatcher.isOverridden(mock, origin)) {
             return null;
         } else {
             return dispatcher.handle(mock, origin, arguments);
         }
     }
 
-    @SuppressWarnings({"unused", "UnusedAssignment"})
+    @SuppressWarnings({ "unused", "UnusedAssignment" })
     @Advice.OnMethodExit
-    private static void exit(
-            @Advice.Return(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object returned,
-            @Advice.Enter Callable<?> mocked)
-            throws Throwable {
+    private static void exit(@Advice.Return(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object returned, @Advice.Enter Callable<?> mocked) throws Throwable {
         if (mocked != null) {
             returned = mocked.call();
         }
@@ -132,6 +120,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
     }
 
     @Override
+    @Nullable
     public Callable<?> handle(Object instance, Method origin, Object[] arguments) throws Throwable {
         MockMethodInterceptor interceptor = interceptors.get(instance);
         if (interceptor == null) {
@@ -143,36 +132,22 @@ public class MockMethodAdvice extends MockMethodDispatcher {
         } else {
             realMethod = new RealMethodCall(selfCallInfo, origin, instance, arguments);
         }
-        return new ReturnValueWrapper(
-                interceptor.doIntercept(
-                        instance,
-                        origin,
-                        arguments,
-                        realMethod,
-                        new LocationImpl(new Throwable(), true)));
+        return new ReturnValueWrapper(interceptor.doIntercept(instance, origin, arguments, realMethod, new LocationImpl(new Throwable(), true)));
     }
 
     @Override
-    public Callable<?> handleStatic(Class<?> type, Method origin, Object[] arguments)
-            throws Throwable {
+    @Nullable
+    public Callable<?> handleStatic(Class<?> type, Method origin, Object[] arguments) throws Throwable {
         Map<Class<?>, MockMethodInterceptor> interceptors = mockedStatics.get();
         if (interceptors == null || !interceptors.containsKey(type)) {
             return null;
         }
-        return new ReturnValueWrapper(
-                interceptors
-                        .get(type)
-                        .doIntercept(
-                                type,
-                                origin,
-                                arguments,
-                                new StaticMethodCall(selfCallInfo, type, origin, arguments),
-                                new LocationImpl(new Throwable(), true)));
+        return new ReturnValueWrapper(interceptors.get(type).doIntercept(type, origin, arguments, new StaticMethodCall(selfCallInfo, type, origin, arguments), new LocationImpl(new Throwable(), true)));
     }
 
     @Override
-    public Object handleConstruction(
-            Class<?> type, Object object, Object[] arguments, String[] parameterTypeNames) {
+    @Nullable
+    public Object handleConstruction(Class<?> type, Object object, Object[] arguments, String[] parameterTypeNames) {
         return onConstruction.apply(type, object, arguments, parameterTypeNames);
     }
 
@@ -205,14 +180,8 @@ public class MockMethodAdvice extends MockMethodDispatcher {
             methodGraph = compiler.compile(new TypeDescription.ForLoadedType(instance.getClass()));
             graphs.put(instance.getClass(), new SoftReference<MethodGraph>(methodGraph));
         }
-        MethodGraph.Node node =
-                methodGraph.locate(
-                        new MethodDescription.ForLoadedMethod(origin).asSignatureToken());
-        return !node.getSort().isResolved()
-                || !node.getRepresentative()
-                        .asDefined()
-                        .getDeclaringType()
-                        .represents(origin.getDeclaringClass());
+        MethodGraph.Node node = methodGraph.locate(new MethodDescription.ForLoadedMethod(origin).asSignatureToken());
+        return !node.getSort().isResolved() || !node.getRepresentative().asDefined().getDeclaringType().represents(origin.getDeclaringClass());
     }
 
     @Override
@@ -230,8 +199,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
 
         private final Object[] arguments;
 
-        private RealMethodCall(
-                SelfCallInfo selfCallInfo, Method origin, Object instance, Object[] arguments) {
+        private RealMethodCall(SelfCallInfo selfCallInfo, Method origin, Object instance, Object[] arguments) {
             this.selfCallInfo = selfCallInfo;
             this.origin = origin;
             this.instanceRef = new MockWeakReference<Object>(instance);
@@ -260,8 +228,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
 
         private final Object[] arguments;
 
-        private SerializableRealMethodCall(
-                String identifier, Method origin, Object instance, Object[] arguments) {
+        private SerializableRealMethodCall(String identifier, Method origin, Object instance, Object[] arguments) {
             this.origin = new SerializableMethod(origin);
             this.identifier = identifier;
             this.instanceRef = new MockWeakReference<Object>(instance);
@@ -276,14 +243,11 @@ public class MockMethodAdvice extends MockMethodDispatcher {
         @Override
         public Object invoke() throws Throwable {
             Method method = origin.getJavaMethod();
-            MockMethodDispatcher mockMethodDispatcher =
-                    MockMethodDispatcher.get(identifier, instanceRef.get());
+            MockMethodDispatcher mockMethodDispatcher = MockMethodDispatcher.get(identifier, instanceRef.get());
             if (!(mockMethodDispatcher instanceof MockMethodAdvice)) {
                 throw new MockitoException("Unexpected dispatcher for advice-based super call");
             }
-            Object previous =
-                    ((MockMethodAdvice) mockMethodDispatcher)
-                            .selfCallInfo.replace(instanceRef.get());
+            Object previous = ((MockMethodAdvice) mockMethodDispatcher).selfCallInfo.replace(instanceRef.get());
             try {
                 return tryInvoke(method, instanceRef.get(), arguments);
             } finally {
@@ -302,8 +266,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
 
         private final Object[] arguments;
 
-        private StaticMethodCall(
-                SelfCallInfo selfCallInfo, Class<?> type, Method origin, Object[] arguments) {
+        private StaticMethodCall(SelfCallInfo selfCallInfo, Class<?> type, Method origin, Object[] arguments) {
             this.selfCallInfo = selfCallInfo;
             this.type = type;
             this.origin = origin;
@@ -322,19 +285,13 @@ public class MockMethodAdvice extends MockMethodDispatcher {
         }
     }
 
-    private static Object tryInvoke(Method origin, Object instance, Object[] arguments)
-            throws Throwable {
+    private static Object tryInvoke(Method origin, @Nullable Object instance, Object[] arguments) throws Throwable {
         MemberAccessor accessor = Plugins.getMemberAccessor();
         try {
             return accessor.invoke(origin, instance, arguments);
         } catch (InvocationTargetException exception) {
             Throwable cause = exception.getCause();
-            new ConditionalStackTraceFilter()
-                    .filter(
-                            hideRecursiveCall(
-                                    cause,
-                                    new Throwable().getStackTrace().length,
-                                    origin.getDeclaringClass()));
+            new ConditionalStackTraceFilter().filter(hideRecursiveCall(cause, new Throwable().getStackTrace().length, origin.getDeclaringClass()));
             throw cause;
         }
     }
@@ -371,8 +328,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
         }
     }
 
-    static class ConstructorShortcut
-            implements AsmVisitorWrapper.ForDeclaredMethods.MethodVisitorWrapper {
+    static class ConstructorShortcut implements AsmVisitorWrapper.ForDeclaredMethods.MethodVisitorWrapper {
 
         private final String identifier;
 
@@ -381,27 +337,14 @@ public class MockMethodAdvice extends MockMethodDispatcher {
         }
 
         @Override
-        public MethodVisitor wrap(
-                TypeDescription instrumentedType,
-                MethodDescription instrumentedMethod,
-                MethodVisitor methodVisitor,
-                Implementation.Context implementationContext,
-                TypePool typePool,
-                int writerFlags,
-                int readerFlags) {
+        public MethodVisitor wrap(TypeDescription instrumentedType, MethodDescription instrumentedMethod, MethodVisitor methodVisitor, Implementation.Context implementationContext, TypePool typePool, int writerFlags, int readerFlags) {
             if (instrumentedMethod.isConstructor() && !instrumentedType.represents(Object.class)) {
-                MethodList<MethodDescription.InDefinedShape> constructors =
-                        instrumentedType
-                                .getSuperClass()
-                                .asErasure()
-                                .getDeclaredMethods()
-                                .filter(isConstructor().and(not(isPrivate())));
+                MethodList<MethodDescription.InDefinedShape> constructors = instrumentedType.getSuperClass().asErasure().getDeclaredMethods().filter(isConstructor().and(not(isPrivate())));
                 int arguments = Integer.MAX_VALUE;
                 boolean visible = false;
                 MethodDescription.InDefinedShape current = null;
                 for (MethodDescription.InDefinedShape constructor : constructors) {
-                    if (constructor.getParameters().size() < arguments
-                            && (!visible || constructor.isPackagePrivate())) {
+                    if (constructor.getParameters().size() < arguments && (!visible || constructor.isPackagePrivate())) {
                         current = constructor;
                         visible = constructor.isPackagePrivate();
                     }
@@ -409,6 +352,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
                 if (current != null) {
                     final MethodDescription.InDefinedShape selected = current;
                     return new MethodVisitor(OpenedClassReader.ASM_API, methodVisitor) {
+
                         @Override
                         public void visitCode() {
                             super.visitCode();
@@ -433,40 +377,18 @@ public class MockMethodAdvice extends MockMethodDispatcher {
                              */
                             Label label = new Label();
                             super.visitLdcInsn(identifier);
-                            if (implementationContext
-                                    .getClassFileVersion()
-                                    .isAtLeast(ClassFileVersion.JAVA_V5)) {
+                            if (implementationContext.getClassFileVersion().isAtLeast(ClassFileVersion.JAVA_V5)) {
                                 super.visitLdcInsn(Type.getType(instrumentedType.getDescriptor()));
                             } else {
                                 super.visitLdcInsn(instrumentedType.getName());
-                                super.visitMethodInsn(
-                                        Opcodes.INVOKESTATIC,
-                                        Type.getInternalName(Class.class),
-                                        "forName",
-                                        Type.getMethodDescriptor(
-                                                Type.getType(Class.class),
-                                                Type.getType(String.class)),
-                                        false);
+                                super.visitMethodInsn(Opcodes.INVOKESTATIC, Type.getInternalName(Class.class), "forName", Type.getMethodDescriptor(Type.getType(Class.class), Type.getType(String.class)), false);
                             }
-                            super.visitMethodInsn(
-                                    Opcodes.INVOKESTATIC,
-                                    Type.getInternalName(MockMethodDispatcher.class),
-                                    "isConstructorMock",
-                                    Type.getMethodDescriptor(
-                                            Type.BOOLEAN_TYPE,
-                                            Type.getType(String.class),
-                                            Type.getType(Class.class)),
-                                    false);
+                            super.visitMethodInsn(Opcodes.INVOKESTATIC, Type.getInternalName(MockMethodDispatcher.class), "isConstructorMock", Type.getMethodDescriptor(Type.BOOLEAN_TYPE, Type.getType(String.class), Type.getType(Class.class)), false);
                             super.visitInsn(Opcodes.ICONST_0);
                             super.visitJumpInsn(Opcodes.IF_ICMPEQ, label);
                             super.visitVarInsn(Opcodes.ALOAD, 0);
-                            for (TypeDescription type :
-                                    selected.getParameters().asTypeList().asErasures()) {
-                                if (type.represents(boolean.class)
-                                        || type.represents(byte.class)
-                                        || type.represents(short.class)
-                                        || type.represents(char.class)
-                                        || type.represents(int.class)) {
+                            for (TypeDescription type : selected.getParameters().asTypeList().asErasures()) {
+                                if (type.represents(boolean.class) || type.represents(byte.class) || type.represents(short.class) || type.represents(char.class) || type.represents(int.class)) {
                                     super.visitInsn(Opcodes.ICONST_0);
                                 } else if (type.represents(long.class)) {
                                     super.visitInsn(Opcodes.LCONST_0);
@@ -478,153 +400,71 @@ public class MockMethodAdvice extends MockMethodDispatcher {
                                     super.visitInsn(Opcodes.ACONST_NULL);
                                 }
                             }
-                            super.visitMethodInsn(
-                                    Opcodes.INVOKESPECIAL,
-                                    selected.getDeclaringType().getInternalName(),
-                                    selected.getInternalName(),
-                                    selected.getDescriptor(),
-                                    false);
+                            super.visitMethodInsn(Opcodes.INVOKESPECIAL, selected.getDeclaringType().getInternalName(), selected.getInternalName(), selected.getDescriptor(), false);
                             super.visitLdcInsn(identifier);
-                            if (implementationContext
-                                    .getClassFileVersion()
-                                    .isAtLeast(ClassFileVersion.JAVA_V5)) {
+                            if (implementationContext.getClassFileVersion().isAtLeast(ClassFileVersion.JAVA_V5)) {
                                 super.visitLdcInsn(Type.getType(instrumentedType.getDescriptor()));
                             } else {
                                 super.visitLdcInsn(instrumentedType.getName());
-                                super.visitMethodInsn(
-                                        Opcodes.INVOKESTATIC,
-                                        Type.getInternalName(Class.class),
-                                        "forName",
-                                        Type.getMethodDescriptor(
-                                                Type.getType(Class.class),
-                                                Type.getType(String.class)),
-                                        false);
+                                super.visitMethodInsn(Opcodes.INVOKESTATIC, Type.getInternalName(Class.class), "forName", Type.getMethodDescriptor(Type.getType(Class.class), Type.getType(String.class)), false);
                             }
                             super.visitVarInsn(Opcodes.ALOAD, 0);
                             super.visitLdcInsn(instrumentedMethod.getParameters().size());
-                            super.visitTypeInsn(
-                                    Opcodes.ANEWARRAY, Type.getInternalName(Object.class));
+                            super.visitTypeInsn(Opcodes.ANEWARRAY, Type.getInternalName(Object.class));
                             int index = 0;
-                            for (ParameterDescription parameter :
-                                    instrumentedMethod.getParameters()) {
+                            for (ParameterDescription parameter : instrumentedMethod.getParameters()) {
                                 super.visitInsn(Opcodes.DUP);
                                 super.visitLdcInsn(index++);
-                                Type type =
-                                        Type.getType(
-                                                parameter.getType().asErasure().getDescriptor());
-                                super.visitVarInsn(
-                                        type.getOpcode(Opcodes.ILOAD), parameter.getOffset());
+                                Type type = Type.getType(parameter.getType().asErasure().getDescriptor());
+                                super.visitVarInsn(type.getOpcode(Opcodes.ILOAD), parameter.getOffset());
                                 if (parameter.getType().isPrimitive()) {
-                                    Type wrapper =
-                                            Type.getType(
-                                                    parameter
-                                                            .getType()
-                                                            .asErasure()
-                                                            .asBoxed()
-                                                            .getDescriptor());
-                                    super.visitMethodInsn(
-                                            Opcodes.INVOKESTATIC,
-                                            wrapper.getInternalName(),
-                                            "valueOf",
-                                            Type.getMethodDescriptor(wrapper, type),
-                                            false);
+                                    Type wrapper = Type.getType(parameter.getType().asErasure().asBoxed().getDescriptor());
+                                    super.visitMethodInsn(Opcodes.INVOKESTATIC, wrapper.getInternalName(), "valueOf", Type.getMethodDescriptor(wrapper, type), false);
                                 }
                                 super.visitInsn(Opcodes.AASTORE);
                             }
                             index = 0;
                             super.visitLdcInsn(instrumentedMethod.getParameters().size());
-                            super.visitTypeInsn(
-                                    Opcodes.ANEWARRAY, Type.getInternalName(String.class));
-                            for (TypeDescription typeDescription :
-                                    instrumentedMethod.getParameters().asTypeList().asErasures()) {
+                            super.visitTypeInsn(Opcodes.ANEWARRAY, Type.getInternalName(String.class));
+                            for (TypeDescription typeDescription : instrumentedMethod.getParameters().asTypeList().asErasures()) {
                                 super.visitInsn(Opcodes.DUP);
                                 super.visitLdcInsn(index++);
                                 super.visitLdcInsn(typeDescription.getName());
                                 super.visitInsn(Opcodes.AASTORE);
                             }
-                            super.visitMethodInsn(
-                                    Opcodes.INVOKESTATIC,
-                                    Type.getInternalName(MockMethodDispatcher.class),
-                                    "handleConstruction",
-                                    Type.getMethodDescriptor(
-                                            Type.getType(Object.class),
-                                            Type.getType(String.class),
-                                            Type.getType(Class.class),
-                                            Type.getType(Object.class),
-                                            Type.getType(Object[].class),
-                                            Type.getType(String[].class)),
-                                    false);
-                            FieldList<FieldDescription.InDefinedShape> fields =
-                                    instrumentedType.getDeclaredFields().filter(not(isStatic()));
-                            super.visitTypeInsn(
-                                    Opcodes.CHECKCAST, instrumentedType.getInternalName());
+                            super.visitMethodInsn(Opcodes.INVOKESTATIC, Type.getInternalName(MockMethodDispatcher.class), "handleConstruction", Type.getMethodDescriptor(Type.getType(Object.class), Type.getType(String.class), Type.getType(Class.class), Type.getType(Object.class), Type.getType(Object[].class), Type.getType(String[].class)), false);
+                            FieldList<FieldDescription.InDefinedShape> fields = instrumentedType.getDeclaredFields().filter(not(isStatic()));
+                            super.visitTypeInsn(Opcodes.CHECKCAST, instrumentedType.getInternalName());
                             super.visitInsn(Opcodes.DUP);
                             Label noSpy = new Label();
                             super.visitJumpInsn(Opcodes.IFNULL, noSpy);
                             for (FieldDescription field : fields) {
                                 super.visitInsn(Opcodes.DUP);
-                                super.visitFieldInsn(
-                                        Opcodes.GETFIELD,
-                                        instrumentedType.getInternalName(),
-                                        field.getInternalName(),
-                                        field.getDescriptor());
+                                super.visitFieldInsn(Opcodes.GETFIELD, instrumentedType.getInternalName(), field.getInternalName(), field.getDescriptor());
                                 super.visitVarInsn(Opcodes.ALOAD, 0);
-                                super.visitInsn(
-                                        field.getType().getStackSize() == StackSize.DOUBLE
-                                                ? Opcodes.DUP_X2
-                                                : Opcodes.DUP_X1);
+                                super.visitInsn(field.getType().getStackSize() == StackSize.DOUBLE ? Opcodes.DUP_X2 : Opcodes.DUP_X1);
                                 super.visitInsn(Opcodes.POP);
-                                super.visitFieldInsn(
-                                        Opcodes.PUTFIELD,
-                                        instrumentedType.getInternalName(),
-                                        field.getInternalName(),
-                                        field.getDescriptor());
+                                super.visitFieldInsn(Opcodes.PUTFIELD, instrumentedType.getInternalName(), field.getInternalName(), field.getDescriptor());
                             }
                             super.visitLabel(noSpy);
-                            if (implementationContext
-                                    .getClassFileVersion()
-                                    .isAtLeast(ClassFileVersion.JAVA_V6)) {
-                                Object[] locals =
-                                        toFrames(
-                                                instrumentedType.getInternalName(),
-                                                instrumentedMethod
-                                                        .getParameters()
-                                                        .asTypeList()
-                                                        .asErasures());
-                                super.visitFrame(
-                                        Opcodes.F_FULL,
-                                        locals.length,
-                                        locals,
-                                        1,
-                                        new Object[] {instrumentedType.getInternalName()});
+                            if (implementationContext.getClassFileVersion().isAtLeast(ClassFileVersion.JAVA_V6)) {
+                                Object[] locals = toFrames(instrumentedType.getInternalName(), instrumentedMethod.getParameters().asTypeList().asErasures());
+                                super.visitFrame(Opcodes.F_FULL, locals.length, locals, 1, new Object[] { instrumentedType.getInternalName() });
                             }
                             super.visitInsn(Opcodes.POP);
                             super.visitInsn(Opcodes.RETURN);
                             super.visitLabel(label);
-                            if (implementationContext
-                                    .getClassFileVersion()
-                                    .isAtLeast(ClassFileVersion.JAVA_V6)) {
-                                Object[] locals =
-                                        toFrames(
-                                                Opcodes.UNINITIALIZED_THIS,
-                                                instrumentedMethod
-                                                        .getParameters()
-                                                        .asTypeList()
-                                                        .asErasures());
-                                super.visitFrame(
-                                        Opcodes.F_FULL, locals.length, locals, 0, new Object[0]);
+                            if (implementationContext.getClassFileVersion().isAtLeast(ClassFileVersion.JAVA_V6)) {
+                                Object[] locals = toFrames(Opcodes.UNINITIALIZED_THIS, instrumentedMethod.getParameters().asTypeList().asErasures());
+                                super.visitFrame(Opcodes.F_FULL, locals.length, locals, 0, new Object[0]);
                             }
                         }
 
                         @Override
                         public void visitMaxs(int maxStack, int maxLocals) {
                             int prequel = Math.max(5, selected.getStackSize());
-                            for (ParameterDescription parameter :
-                                    instrumentedMethod.getParameters()) {
-                                prequel =
-                                        Math.max(
-                                                prequel,
-                                                6 + parameter.getType().getStackSize().getSize());
+                            for (ParameterDescription parameter : instrumentedMethod.getParameters()) {
+                                prequel = Math.max(prequel, 6 + parameter.getType().getStackSize().getSize());
                                 prequel = Math.max(prequel, 8);
                             }
                             super.visitMaxs(Math.max(maxStack, prequel), maxLocals);
@@ -641,11 +481,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
             int index = 0;
             for (TypeDescription type : types) {
                 Object frame;
-                if (type.represents(boolean.class)
-                        || type.represents(byte.class)
-                        || type.represents(short.class)
-                        || type.represents(char.class)
-                        || type.represents(int.class)) {
+                if (type.represents(boolean.class) || type.represents(byte.class) || type.represents(short.class) || type.represents(char.class) || type.represents(int.class)) {
                     frame = Opcodes.INTEGER;
                 } else if (type.represents(long.class)) {
                     frame = Opcodes.LONG;
@@ -663,7 +499,8 @@ public class MockMethodAdvice extends MockMethodDispatcher {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
-    @interface Identifier {}
+    @interface Identifier {
+    }
 
     static class ForHashCode {
 
@@ -674,12 +511,9 @@ public class MockMethodAdvice extends MockMethodDispatcher {
             return dispatcher != null && dispatcher.isMock(self);
         }
 
-        @SuppressWarnings({"unused", "UnusedAssignment"})
+        @SuppressWarnings({ "unused", "UnusedAssignment" })
         @Advice.OnMethodExit
-        private static void enter(
-                @Advice.This Object self,
-                @Advice.Return(readOnly = false) int hashCode,
-                @Advice.Enter boolean skipped) {
+        private static void enter(@Advice.This Object self, @Advice.Return(readOnly = false) int hashCode, @Advice.Enter boolean skipped) {
             if (skipped) {
                 hashCode = System.identityHashCode(self);
             }
@@ -695,13 +529,9 @@ public class MockMethodAdvice extends MockMethodDispatcher {
             return dispatcher != null && dispatcher.isMock(self);
         }
 
-        @SuppressWarnings({"unused", "UnusedAssignment"})
+        @SuppressWarnings({ "unused", "UnusedAssignment" })
         @Advice.OnMethodExit
-        private static void enter(
-                @Advice.This Object self,
-                @Advice.Argument(0) Object other,
-                @Advice.Return(readOnly = false) boolean equals,
-                @Advice.Enter boolean skipped) {
+        private static void enter(@Advice.This Object self, @Advice.Argument(0) Object other, @Advice.Return(readOnly = false) boolean equals, @Advice.Enter boolean skipped) {
             if (skipped) {
                 equals = self == other;
             }
@@ -712,12 +542,8 @@ public class MockMethodAdvice extends MockMethodDispatcher {
 
         @SuppressWarnings("unused")
         @Advice.OnMethodEnter(skipOn = Advice.OnNonDefaultValue.class)
-        private static Callable<?> enter(
-                @Identifier String identifier,
-                @Advice.Origin Class<?> type,
-                @Advice.Origin Method origin,
-                @Advice.AllArguments Object[] arguments)
-                throws Throwable {
+        @Nullable
+        private static Callable<?> enter(@Identifier String identifier, @Advice.Origin Class<?> type, @Advice.Origin Method origin, @Advice.AllArguments Object[] arguments) throws Throwable {
             MockMethodDispatcher dispatcher = MockMethodDispatcher.getStatic(identifier, type);
             if (dispatcher == null || !dispatcher.isMockedStatic(type)) {
                 return null;
@@ -726,12 +552,9 @@ public class MockMethodAdvice extends MockMethodDispatcher {
             }
         }
 
-        @SuppressWarnings({"unused", "UnusedAssignment"})
+        @SuppressWarnings({ "unused", "UnusedAssignment" })
         @Advice.OnMethodExit
-        private static void exit(
-                @Advice.Return(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object returned,
-                @Advice.Enter Callable<?> mocked)
-                throws Throwable {
+        private static void exit(@Advice.Return(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object returned, @Advice.Enter Callable<?> mocked) throws Throwable {
             if (mocked != null) {
                 returned = mocked.call();
             }
@@ -741,14 +564,9 @@ public class MockMethodAdvice extends MockMethodDispatcher {
     public static class ForReadObject {
 
         @SuppressWarnings("unused")
-        public static void doReadObject(
-                @Identifier String identifier,
-                @This MockAccess thiz,
-                @Argument(0) ObjectInputStream objectInputStream)
-                throws IOException, ClassNotFoundException {
+        public static void doReadObject(@Identifier String identifier, @This MockAccess thiz, @Argument(0) ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
             objectInputStream.defaultReadObject();
-            MockMethodAdvice mockMethodAdvice =
-                    (MockMethodAdvice) MockMethodDispatcher.get(identifier, thiz);
+            MockMethodAdvice mockMethodAdvice = (MockMethodAdvice) MockMethodDispatcher.get(identifier, thiz);
             if (mockMethodAdvice != null) {
                 mockMethodAdvice.interceptors.put(thiz, thiz.getMockitoInterceptor());
             }

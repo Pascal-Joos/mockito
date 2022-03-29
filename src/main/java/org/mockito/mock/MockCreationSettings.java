@@ -4,9 +4,9 @@
  */
 package org.mockito.mock;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
-
 import org.mockito.Incubating;
 import org.mockito.MockSettings;
 import org.mockito.NotExtensible;
@@ -111,6 +111,7 @@ public interface MockCreationSettings<T> {
      * @since 2.7.14
      */
     @Incubating
+    @Nullable
     Object[] getConstructorArgs();
 
     /**
@@ -120,6 +121,7 @@ public interface MockCreationSettings<T> {
      * @since 1.10.12
      */
     @Incubating
+    @Nullable
     Object getOuterClassInstance();
 
     /**

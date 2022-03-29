@@ -4,10 +4,9 @@
  */
 package org.mockito.internal.handler;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.exceptions.Reporter.invocationListenerThrewException;
-
 import java.util.List;
-
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.InvocationContainer;
 import org.mockito.invocation.MockHandler;
@@ -21,6 +20,7 @@ import org.mockito.mock.MockCreationSettings;
 class InvocationNotifierHandler<T> implements MockHandler<T> {
 
     private final List<InvocationListener> invocationListeners;
+
     private final MockHandler<T> mockHandler;
 
     public InvocationNotifierHandler(MockHandler<T> mockHandler, MockCreationSettings<T> settings) {
@@ -42,8 +42,7 @@ class InvocationNotifierHandler<T> implements MockHandler<T> {
     private void notifyMethodCall(Invocation invocation, Object returnValue) {
         for (InvocationListener listener : invocationListeners) {
             try {
-                listener.reportInvocation(
-                        new NotifiedMethodInvocationReport(invocation, returnValue));
+                listener.reportInvocation(new NotifiedMethodInvocationReport(invocation, returnValue));
             } catch (Throwable listenerThrowable) {
                 throw invocationListenerThrewException(listener, listenerThrowable);
             }
@@ -53,8 +52,7 @@ class InvocationNotifierHandler<T> implements MockHandler<T> {
     private void notifyMethodCallException(Invocation invocation, Throwable exception) {
         for (InvocationListener listener : invocationListeners) {
             try {
-                listener.reportInvocation(
-                        new NotifiedMethodInvocationReport(invocation, exception));
+                listener.reportInvocation(new NotifiedMethodInvocationReport(invocation, exception));
             } catch (Throwable listenerThrowable) {
                 throw invocationListenerThrewException(listener, listenerThrowable);
             }

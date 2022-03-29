@@ -4,8 +4,8 @@
  */
 package org.mockito.invocation;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
-
 import org.mockito.Incubating;
 import org.mockito.MockSettings;
 import org.mockito.mock.MockCreationSettings;
