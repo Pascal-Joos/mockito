@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.configuration.injection;
 
+import org.mockito.Initializer;
 import java.lang.reflect.Field;
 import java.util.Set;
 
@@ -17,8 +18,8 @@ public abstract class MockInjectionStrategy {
      */
     public static MockInjectionStrategy nop() {
         return new MockInjectionStrategy() {
-            protected boolean processInjection(
-                    Field field, Object fieldOwner, Set<Object> mockCandidates) {
+
+            protected boolean processInjection(Field field, Object fieldOwner, Set<Object> mockCandidates) {
                 return false;
             }
         };
@@ -36,6 +37,7 @@ public abstract class MockInjectionStrategy {
      * @param strategy Queued strategy.
      * @return The passed strategy instance to allow chaining.
      */
+    @Initializer
     public MockInjectionStrategy thenTry(MockInjectionStrategy strategy) {
         if (nextStrategy != null) {
             nextStrategy.thenTry(strategy);
@@ -82,11 +84,9 @@ public abstract class MockInjectionStrategy {
      * @param mockCandidates Pool of mocks to inject.
      * @return <code>true</code> if injection occurred, <code>false</code> otherwise
      */
-    protected abstract boolean processInjection(
-            Field field, Object fieldOwner, Set<Object> mockCandidates);
+    protected abstract boolean processInjection(Field field, Object fieldOwner, Set<Object> mockCandidates);
 
-    private boolean relayProcessToNextStrategy(
-            Field field, Object fieldOwner, Set<Object> mockCandidates) {
+    private boolean relayProcessToNextStrategy(Field field, Object fieldOwner, Set<Object> mockCandidates) {
         return nextStrategy != null && nextStrategy.process(field, fieldOwner, mockCandidates);
     }
 }

@@ -4,8 +4,8 @@
  */
 package org.mockito.listeners;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
-
 import org.mockito.invocation.Invocation;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.stubbing.Stubbing;
@@ -27,6 +27,7 @@ public interface StubbingLookupEvent {
      * @return Looked up stubbing. It can be <code>null</code>, which indicates that the invocation was not stubbed
      * @since 2.24.6
      */
+    @Nullable
     Stubbing getStubbingFound();
 
     /**

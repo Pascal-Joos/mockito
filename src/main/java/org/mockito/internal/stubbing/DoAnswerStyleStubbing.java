@@ -4,10 +4,11 @@
  */
 package org.mockito.internal.stubbing;
 
+import javax.annotation.Nullable;
+import org.mockito.Initializer;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 
@@ -17,9 +18,12 @@ import org.mockito.stubbing.Answer;
 class DoAnswerStyleStubbing implements Serializable {
 
     private final List<Answer<?>> answers = new ArrayList<Answer<?>>();
+
+    @Nullable
     private Strictness stubbingStrictness;
 
-    void setAnswers(List<Answer<?>> answers, Strictness stubbingStrictness) {
+    @Initializer
+    void setAnswers(List<Answer<?>> answers, @Nullable Strictness stubbingStrictness) {
         this.stubbingStrictness = stubbingStrictness;
         this.answers.addAll(answers);
     }
@@ -37,6 +41,7 @@ class DoAnswerStyleStubbing implements Serializable {
         return answers;
     }
 
+    @Nullable
     Strictness getStubbingStrictness() {
         return stubbingStrictness;
     }
