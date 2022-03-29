@@ -4,9 +4,9 @@
  */
 package org.mockito.internal.stubbing.defaultanswers;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.lang.reflect.Array;
-
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -47,21 +47,23 @@ import org.mockito.stubbing.Answer;
 public class ReturnsMoreEmptyValues implements Answer<Object>, Serializable {
 
     private static final long serialVersionUID = -2816745041482698471L;
+
     private final Answer<Object> delegate = new ReturnsEmptyValues();
 
     /* (non-Javadoc)
      * @see org.mockito.stubbing.Answer#answer(org.mockito.invocation.InvocationOnMock)
      */
+    @Nullable
     public Object answer(InvocationOnMock invocation) throws Throwable {
         Object ret = delegate.answer(invocation);
         if (ret != null) {
             return ret;
         }
-
         Class<?> returnType = invocation.getMethod().getReturnType();
         return returnValueFor(returnType);
     }
 
+    @Nullable
     Object returnValueFor(Class<?> type) {
         if (type == String.class) {
             return "";
