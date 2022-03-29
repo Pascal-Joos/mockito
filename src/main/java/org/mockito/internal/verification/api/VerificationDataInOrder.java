@@ -4,8 +4,8 @@
  */
 package org.mockito.internal.verification.api;
 
+import javax.annotation.Nullable;
 import java.util.List;
-
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MatchableInvocation;
 

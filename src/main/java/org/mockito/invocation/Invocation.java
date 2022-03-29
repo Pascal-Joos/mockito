@@ -4,8 +4,8 @@
  */
 package org.mockito.invocation;
 
+import javax.annotation.Nullable;
 import java.util.List;
-
 import org.mockito.ArgumentMatcher;
 import org.mockito.NotExtensible;
 
@@ -78,6 +78,7 @@ public interface Invocation extends InvocationOnMock, DescribedInvocation {
      * @return the stubbing information for this invocation. May return null - this means
      * the invocation was not stubbed.
      */
+    @Nullable
     StubInfo stubInfo();
 
     /**

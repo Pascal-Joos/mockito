@@ -5,7 +5,6 @@
 package org.mockito.runners;
 
 import java.lang.reflect.InvocationTargetException;
-
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -30,6 +29,7 @@ import org.mockito.plugins.MockitoLogger;
 public class ConsoleSpammingMockitoJUnitRunner extends Runner implements Filterable {
 
     private final MockitoLogger logger;
+
     private final InternalRunner runner;
 
     public ConsoleSpammingMockitoJUnitRunner(Class<?> klass) throws InvocationTargetException {
@@ -43,23 +43,21 @@ public class ConsoleSpammingMockitoJUnitRunner extends Runner implements Filtera
 
     @Override
     public void run(RunNotifier notifier) {
-        RunListener listener =
-                new RunListener() {
-                    WarningsCollector warningsCollector;
+        RunListener listener = new RunListener() {
 
-                    @Override
-                    public void testStarted(Description description) throws Exception {
-                        warningsCollector = new WarningsCollector();
-                    }
+            WarningsCollector warningsCollector;
 
-                    @Override
-                    public void testFailure(Failure failure) throws Exception {
-                        logger.log(warningsCollector.getWarnings());
-                    }
-                };
+            @Override
+            public void testStarted(Description description) throws Exception {
+                warningsCollector = new WarningsCollector();
+            }
 
+            @Override
+            public void testFailure(Failure failure) throws Exception {
+                logger.log(warningsCollector.getWarnings());
+            }
+        };
         notifier.addListener(listener);
-
         runner.run(notifier);
     }
 

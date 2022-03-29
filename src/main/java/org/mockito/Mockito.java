@@ -4,6 +4,7 @@
  */
 package org.mockito;
 
+import javax.annotation.Nullable;
 import org.mockito.Initializer;
 import org.mockito.exceptions.misusing.PotentialStubbingProblem;
 import org.mockito.exceptions.misusing.UnnecessaryStubbingException;
@@ -31,7 +32,6 @@ import org.mockito.session.MockitoSessionBuilder;
 import org.mockito.session.MockitoSessionLogger;
 import org.mockito.stubbing.*;
 import org.mockito.verification.*;
-
 import java.util.function.Function;
 
 /**
@@ -180,8 +180,6 @@ import java.util.function.Function;
  * verify whatever interactions you are interested in.
  * </p>
  *
- *
- *
  * <h3 id="2">2. <a class="meaningful_link" href="#stubbing" name="stubbing">How about some stubbing?</a></h3>
  *
  * <pre class="code"><code class="java">
@@ -225,8 +223,6 @@ import java.util.function.Function;
  * e.g. when stubbing exactly the same method calls or sometimes when argument matchers are used, etc.</li>
  *
  * </ul>
- *
- *
  *
  * <h3 id="3">3. <a class="meaningful_link" href="#argument_matchers" name="argument_matchers">Argument matchers</a></h3>
  *
@@ -286,9 +282,6 @@ import java.util.function.Function;
  * This implementation is due to static type safety imposed by the java compiler.
  * The consequence is that you cannot use <code>anyObject()</code>, <code>eq()</code> methods outside of verified/stubbed method.
  *
- *
- *
- *
  * <h3 id="4">4. <a class="meaningful_link" href="#exact_verification" name="exact_verification">Verifying exact number of invocations</a> /
  * <a class="meaningful_link" href="#at_least_verification" name="at_least_verification">at least x</a> / never</h3>
  *
@@ -325,9 +318,6 @@ import java.util.function.Function;
  * <p>
  * <b>times(1) is the default.</b> Therefore using times(1) explicitly can be
  * omitted.
- *
- *
- *
  *
  * <h3 id="5">5. <a class="meaningful_link" href="#stubbing_with_exceptions" name="stubbing_with_exceptions">Stubbing void methods with exceptions</a></h3>
  *
@@ -383,9 +373,6 @@ import java.util.function.Function;
  * Also, you can create an InOrder object passing only the mocks that are relevant for
  * in-order verification.
  *
- *
- *
- *
  * <h3 id="7">7. <a class="meaningful_link" href="#never_verification" name="never_verification">Making sure interaction(s) never happened on mock</a></h3>
  *
  * <pre class="code"><code class="java">
@@ -402,9 +389,6 @@ import java.util.function.Function;
  * verifyZeroInteractions(mockTwo, mockThree);
  *
  * </code></pre>
- *
- *
- *
  *
  * <h3 id="8">8. <a class="meaningful_link" href="#finding_redundant_invocations" name="finding_redundant_invocations">Finding redundant invocations</a></h3>
  *
@@ -429,9 +413,6 @@ import java.util.function.Function;
  * See also {@link Mockito#never()} - it is more explicit and
  * communicates the intent well.
  * <p>
- *
- *
- *
  *
  * <h3 id="9">9. <a class="meaningful_link" href="#mock_annotation" name="mock_annotation">Shorthand for mocks creation - <code>&#064;Mock</code> annotation</a></h3>
  *
@@ -466,9 +447,6 @@ import java.util.function.Function;
  * For JUnit5 tests, refer to the JUnit5 extension described in <a href="#45">section 45</a>.
  * <p>
  * Read more here: {@link MockitoAnnotations}
- *
- *
- *
  *
  * <h3 id="10">10. <a class="meaningful_link" href="#stubbing_consecutive_calls" name="stubbing_consecutive_calls">Stubbing consecutive calls</a> (iterator-style stubbing)</h3>
  *
@@ -514,8 +492,6 @@ import java.util.function.Function;
  *   .thenReturn("two")
  * </code></pre>
  *
- *
- *
  * <h3 id="11">11. <a class="meaningful_link" href="#answer_stubs" name="answer_stubs">Stubbing with callbacks</a></h3>
  *
  * Allows stubbing with generic {@link Answer} interface.
@@ -538,9 +514,6 @@ import java.util.function.Function;
  * //Following prints "called with arguments: [foo]"
  * System.out.println(mock.someMethod("foo"));
  * </code></pre>
- *
- *
- *
  *
  * <h3 id="12">12. <a class="meaningful_link" href="#do_family_methods_stubs" name="do_family_methods_stubs"><code>doReturn()</code>|<code>doThrow()</code>|
  * <code>doAnswer()</code>|<code>doNothing()</code>|<code>doCallRealMethod()</code> family of methods</a></h3>
@@ -581,9 +554,6 @@ import java.util.function.Function;
  * {@link Mockito#doNothing()}
  * <p>
  * {@link Mockito#doCallRealMethod()}
- *
- *
- *
  *
  * <h3 id="13">13. <a class="meaningful_link" href="#spy" name="spy">Spying on real objects</a></h3>
  *
@@ -653,9 +623,6 @@ import java.util.function.Function;
  * </li>
  * </ol>
  *
- *
- *
- *
  * <h3 id="14">14. Changing <a class="meaningful_link" href="#defaultreturn" name="defaultreturn">default return values of unstubbed invocations</a> (Since 1.7)</h3>
  *
  * You can create a mock with specified strategy for its return values.
@@ -671,9 +638,6 @@ import java.util.function.Function;
  *
  * <p>
  * Read more about this interesting implementation of <i>Answer</i>: {@link Mockito#RETURNS_SMART_NULLS}
- *
- *
- *
  *
  * <h3 id="15">15. <a class="meaningful_link" href="#captors" name="captors">Capturing arguments</a> for further assertions (Since 1.8.0)</h3>
  *
@@ -699,9 +663,6 @@ import java.util.function.Function;
  * <li>you just need it to assert on argument values to complete verification</li>
  * </ul>
  * Custom argument matchers via {@link ArgumentMatcher} are usually better for stubbing.
- *
- *
- *
  *
  * <h3 id="16">16. <a class="meaningful_link" href="#partial_mocks" name="partial_mocks">Real partial mocks</a> (Since 1.8.0)</h3>
  *
@@ -732,9 +693,6 @@ import java.util.function.Function;
  * dealing with code you cannot change easily (3rd party interfaces, interim refactoring of legacy code etc.)
  * However, I wouldn't use partial mocks for new, test-driven & well-designed code.
  *
- *
- *
- *
  * <h3 id="17">17. <a class="meaningful_link" href="#resetting_mocks" name="resetting_mocks">Resetting mocks</a> (Since 1.8.0)</h3>
  *
  * Smart Mockito users hardly use this feature because they know it could be a sign of poor tests.
@@ -759,9 +717,6 @@ import java.util.function.Function;
  *   //at this point the mock forgot any interactions & stubbing
  * </code></pre>
  *
- *
- *
- *
  * <h3 id="18">18. <a class="meaningful_link" href="#framework_validation" name="framework_validation">Troubleshooting & validating framework usage</a> (Since 1.8.0)</h3>
  *
  * First of all, in case of any trouble, I encourage you to read the Mockito FAQ:
@@ -772,9 +727,6 @@ import java.util.function.Function;
  * <p>
  * Next, you should know that Mockito validates if you use it correctly <b>all the time</b>.
  * However, there's a gotcha so please read the javadoc for {@link Mockito#validateMockitoUsage()}
- *
- *
- *
  *
  * <h3 id="19">19. <a class="meaningful_link" href="#bdd_mockito" name="bdd_mockito">Aliases for behavior driven development</a> (Since 1.8.0)</h3>
  *
@@ -807,9 +759,6 @@ import java.util.function.Function;
  * }
  * </code></pre>
  *
- *
- *
- *
  * <h3 id="20">20. <a class="meaningful_link" href="#serializable_mocks" name="serializable_mocks">Serializable mocks</a> (Since 1.8.1)</h3>
  *
  * Mocks can be made serializable. With this feature you can use a mock in a place that requires dependencies to be serializable.
@@ -838,9 +787,6 @@ import java.util.function.Function;
  *                 .serializable());
  * </code></pre>
  *
- *
- *
- *
  * <h3 id="21">21. New annotations: <a class="meaningful_link" href="#captor_annotation" name="captor_annotation"><code>&#064;Captor</code></a>,
  * <a class="meaningful_link" href="#spy_annotation" name="spy_annotation"><code>&#064;Spy</code></a>,
  * <a class="meaningful_link" href="#injectmocks_annotation" name="injectmocks_annotation"><code>&#064;InjectMocks</code></a> (Since 1.8.3)</h3>
@@ -865,9 +811,6 @@ import java.util.function.Function;
  * Just like for &#064;{@link Mock} annotation you can use the built-in runner: {@link MockitoJUnitRunner} or rule:
  * {@link MockitoRule}.
  * <p>
- *
- *
- *
  *
  * <h3 id="22">22. <a class="meaningful_link" href="#verification_timeout" name="verification_timeout">Verification with timeout</a> (Since 1.8.5)</h3>
  * <p>
@@ -895,9 +838,6 @@ import java.util.function.Function;
  *   verify(mock, timeout(100).atLeast(2)).someMethod();
  * </code></pre>
  *
- *
- *
- *
  * <h3 id="23">23. <a class="meaningful_link" href="#automatic_instantiation" name="automatic_instantiation">Automatic instantiation of <code>&#064;Spies</code>,
  * <code>&#064;InjectMocks</code></a> and <a class="meaningful_link" href="#constructor_injection" name="constructor_injection">constructor injection goodness</a> (Since 1.9.0)</h3>
  *
@@ -919,9 +859,6 @@ import java.util.function.Function;
  * &#064;InjectMocks LocalPub;
  * </code></pre>
  *
- *
- *
- *
  * <h3 id="24">24. <a class="meaningful_link" href="#one_liner_stub" name="one_liner_stub">One-liner stubs</a> (Since 1.9.0)</h3>
  * <p>
  * Mockito will now allow you to create mocks when stubbing.
@@ -934,9 +871,6 @@ import java.util.function.Function;
  *
  *   &#064;Test public void should... {}
  * </code></pre>
- *
- *
- *
  *
  * <h3 id="25">25. <a class="meaningful_link" href="#ignore_stubs_verification" name="ignore_stubs_verification">Verification ignoring stubs</a> (Since 1.9.0)</h3>
  * <p>
@@ -963,9 +897,6 @@ import java.util.function.Function;
  * </code></pre>
  * <p>
  * Advanced examples and more details can be found in javadoc for {@link Mockito#ignoreStubs(Object...)}
- *
- *
- *
  *
  * <h3 id="26">26. <a class="meaningful_link" href="#mocking_details" name="mocking_details">Mocking details</a> (Improved in 2.2.x)</h3>
  * <p>
@@ -1027,9 +958,6 @@ import java.util.function.Function;
  * <p>
  * See more information in docs for {@link AdditionalAnswers#delegatesTo(Object)}.
  *
- *
- *
- *
  * <h3 id="28">28. <a class="meaningful_link" href="#mock_maker_plugin" name="mock_maker_plugin"><code>MockMaker</code> API</a> (Since 1.9.5)</h3>
  * <p>Driven by requirements and patches from Google Android guys Mockito now offers an extension point
  *   that allows replacing the proxy generation engine. By default, Mockito uses <a href="https://github.com/raphw/byte-buddy">Byte Buddy</a>
@@ -1038,9 +966,6 @@ import java.util.function.Function;
  *   to use Mockito for Android testing with a help of <a href="https://github.com/crittercism/dexmaker">dexmaker</a>.
  * <p>For more details, motivations and examples please refer to
  * the docs for {@link org.mockito.plugins.MockMaker}.
- *
- *
- *
  *
  * <h3 id="29">29. <a class="meaningful_link" href="#BDD_behavior_verification" name="BDD_behavior_verification">BDD style verification</a> (Since 1.10.0)</h3>
  *
@@ -1056,9 +981,6 @@ import java.util.function.Function;
  * </code></pre>
  *
  * For more information and an example see {@link BDDMockito#then(Object)}
- *
- *
- *
  *
  * <h3 id="30">30. <a class="meaningful_link" href="#spying_abstract_classes" name="spying_abstract_classes">Spying or mocking abstract classes (Since 1.10.12, further enhanced in 2.7.13 and 2.7.14)</a></h3>
  *
@@ -1091,9 +1013,6 @@ import java.util.function.Function;
  *
  * For more information please see {@link MockSettings#useConstructor(Object...)}.
  *
- *
- *
- *
  * <h3 id="31">31. <a class="meaningful_link" href="#serilization_across_classloader" name="serilization_across_classloader">Mockito mocks can be <em>serialized</em> / <em>deserialized</em> across classloaders (Since 1.10.0)</a></h3>
  *
  * Mockito introduces serialization across classloader.
@@ -1110,9 +1029,6 @@ import java.util.function.Function;
  * </code></pre>
  *
  * For more details see {@link MockSettings#serializable(SerializableMode)}.
- *
- *
- *
  *
  * <h3 id="32">32. <a class="meaningful_link" href="#better_generic_support_with_deep_stubs" name="better_generic_support_with_deep_stubs">Better generic support with deep stubs (Since 1.10.0)</a></h3>
  *
@@ -1131,9 +1047,6 @@ import java.util.function.Function;
  * </code></pre>
  *
  * Please note that in most scenarios a mock returning a mock is wrong.
- *
- *
- *
  *
  * <h3 id="33">33. <a class="meaningful_link" href="#mockito_junit_rule" name="mockito_junit_rule">Mockito JUnit rule (Since 1.10.17)</a></h3>
  *
@@ -1157,15 +1070,11 @@ import java.util.function.Function;
  *
  * For more information see {@link MockitoJUnit#rule()}.
  *
- *
- *
- *
  * <h3 id="34">34. <a class="meaningful_link" href="#plugin_switch" name="plugin_switch">Switch <em>on</em> or <em>off</em> plugins (Since 1.10.15)</a></h3>
  *
  * An incubating feature made it's way in mockito that will allow to toggle a mockito-plugin.
  *
  * More information here {@link org.mockito.plugins.PluginSwitch}.
- *
  *
  * <h3 id="35">35. <a class="meaningful_link" href="#Custom_verification_failure_message" name="Custom_verification_failure_message">Custom verification failure message</a> (Since 2.1.0)</h3>
  * <p>
@@ -1539,7 +1448,6 @@ import java.util.function.Function;
  * Hence, we introduced a new API to explicitly clear mock state (only make sense in inline mocking!).
  * See example usage in {@link MockitoFramework#clearInlineMocks()}.
  * If you have feedback or a better idea how to solve the problem please reach out.
- *
  *
  * <h3 id="48">48. <a class="meaningful_link" href="#static_mocks" name="static_mocks">Mocking static methods</a> (since 3.4.0)</h3>
  *
@@ -2024,16 +1932,13 @@ public class Mockito extends ArgumentMatchers {
      * <p>Note that the spy won't have any annotations of the spied type, because CGLIB won't rewrite them.
      * It may troublesome for code that rely on the spy to have these annotations.</p>
      *
-     *
      * @param object
      *            to spy on
      * @return a spy of the real object
      */
     @CheckReturnValue
     public static <T> T spy(T object) {
-        return MOCKITO_CORE.mock(
-                (Class<T>) object.getClass(),
-                withSettings().spiedInstance(object).defaultAnswer(CALLS_REAL_METHODS));
+        return MOCKITO_CORE.mock((Class<T>) object.getClass(), withSettings().spiedInstance(object).defaultAnswer(CALLS_REAL_METHODS));
     }
 
     /**
@@ -2066,8 +1971,7 @@ public class Mockito extends ArgumentMatchers {
     @Incubating
     @CheckReturnValue
     public static <T> T spy(Class<T> classToSpy) {
-        return MOCKITO_CORE.mock(
-                classToSpy, withSettings().useConstructor().defaultAnswer(CALLS_REAL_METHODS));
+        return MOCKITO_CORE.mock(classToSpy, withSettings().useConstructor().defaultAnswer(CALLS_REAL_METHODS));
     }
 
     /**
@@ -2176,22 +2080,17 @@ public class Mockito extends ArgumentMatchers {
      */
     @Incubating
     @CheckReturnValue
-    public static <T> MockedConstruction<T> mockConstructionWithAnswer(
-            Class<T> classToMock, Answer defaultAnswer, Answer... additionalAnswers) {
-        return mockConstruction(
-                classToMock,
-                context -> {
-                    if (context.getCount() == 1 || additionalAnswers.length == 0) {
-                        return withSettings().defaultAnswer(defaultAnswer);
-                    } else if (context.getCount() >= additionalAnswers.length) {
-                        return withSettings()
-                                .defaultAnswer(additionalAnswers[additionalAnswers.length - 1]);
-                    } else {
-                        return withSettings()
-                                .defaultAnswer(additionalAnswers[context.getCount() - 2]);
-                    }
-                },
-                (mock, context) -> {});
+    public static <T> MockedConstruction<T> mockConstructionWithAnswer(Class<T> classToMock, Answer defaultAnswer, Answer... additionalAnswers) {
+        return mockConstruction(classToMock, context -> {
+            if (context.getCount() == 1 || additionalAnswers.length == 0) {
+                return withSettings().defaultAnswer(defaultAnswer);
+            } else if (context.getCount() >= additionalAnswers.length) {
+                return withSettings().defaultAnswer(additionalAnswers[additionalAnswers.length - 1]);
+            } else {
+                return withSettings().defaultAnswer(additionalAnswers[context.getCount() - 2]);
+            }
+        }, (mock, context) -> {
+        });
     }
 
     /**
@@ -2207,7 +2106,8 @@ public class Mockito extends ArgumentMatchers {
     @Incubating
     @CheckReturnValue
     public static <T> MockedConstruction<T> mockConstruction(Class<T> classToMock) {
-        return mockConstruction(classToMock, index -> withSettings(), (mock, context) -> {});
+        return mockConstruction(classToMock, index -> withSettings(), (mock, context) -> {
+        });
     }
 
     /**
@@ -2223,8 +2123,7 @@ public class Mockito extends ArgumentMatchers {
      */
     @Incubating
     @CheckReturnValue
-    public static <T> MockedConstruction<T> mockConstruction(
-            Class<T> classToMock, MockedConstruction.MockInitializer<T> mockInitializer) {
+    public static <T> MockedConstruction<T> mockConstruction(Class<T> classToMock, MockedConstruction.MockInitializer<T> mockInitializer) {
         return mockConstruction(classToMock, withSettings(), mockInitializer);
     }
 
@@ -2241,8 +2140,7 @@ public class Mockito extends ArgumentMatchers {
      */
     @Incubating
     @CheckReturnValue
-    public static <T> MockedConstruction<T> mockConstruction(
-            Class<T> classToMock, MockSettings mockSettings) {
+    public static <T> MockedConstruction<T> mockConstruction(Class<T> classToMock, MockSettings mockSettings) {
         return mockConstruction(classToMock, context -> mockSettings);
     }
 
@@ -2259,10 +2157,9 @@ public class Mockito extends ArgumentMatchers {
      */
     @Incubating
     @CheckReturnValue
-    public static <T> MockedConstruction<T> mockConstruction(
-            Class<T> classToMock,
-            Function<MockedConstruction.Context, MockSettings> mockSettingsFactory) {
-        return mockConstruction(classToMock, mockSettingsFactory, (mock, context) -> {});
+    public static <T> MockedConstruction<T> mockConstruction(Class<T> classToMock, Function<MockedConstruction.Context, MockSettings> mockSettingsFactory) {
+        return mockConstruction(classToMock, mockSettingsFactory, (mock, context) -> {
+        });
     }
 
     /**
@@ -2279,10 +2176,7 @@ public class Mockito extends ArgumentMatchers {
      */
     @Incubating
     @CheckReturnValue
-    public static <T> MockedConstruction<T> mockConstruction(
-            Class<T> classToMock,
-            MockSettings mockSettings,
-            MockedConstruction.MockInitializer<T> mockInitializer) {
+    public static <T> MockedConstruction<T> mockConstruction(Class<T> classToMock, MockSettings mockSettings, MockedConstruction.MockInitializer<T> mockInitializer) {
         return mockConstruction(classToMock, index -> mockSettings, mockInitializer);
     }
 
@@ -2300,10 +2194,7 @@ public class Mockito extends ArgumentMatchers {
      */
     @Incubating
     @CheckReturnValue
-    public static <T> MockedConstruction<T> mockConstruction(
-            Class<T> classToMock,
-            Function<MockedConstruction.Context, MockSettings> mockSettingsFactory,
-            MockedConstruction.MockInitializer<T> mockInitializer) {
+    public static <T> MockedConstruction<T> mockConstruction(Class<T> classToMock, Function<MockedConstruction.Context, MockSettings> mockSettingsFactory, MockedConstruction.MockInitializer<T> mockInitializer) {
         return MOCKITO_CORE.mockConstruction(classToMock, mockSettingsFactory, mockInitializer);
     }
 
@@ -2619,10 +2510,9 @@ public class Mockito extends ArgumentMatchers {
      */
     // Additional method helps users of JDK7+ to hide heap pollution / unchecked generics array
     // creation
-    @SuppressWarnings({"unchecked", "varargs"})
+    @SuppressWarnings({ "unchecked", "varargs" })
     @CheckReturnValue
-    public static Stubber doThrow(
-            Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... toBeThrownNext) {
+    public static Stubber doThrow(Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... toBeThrownNext) {
         return MOCKITO_CORE.stubber().doThrow(toBeThrown, toBeThrownNext);
     }
 
@@ -2832,7 +2722,7 @@ public class Mockito extends ArgumentMatchers {
      * @return stubber - to select a method for stubbing
      * @since 2.1.0
      */
-    @SuppressWarnings({"unchecked", "varargs"})
+    @SuppressWarnings({ "unchecked", "varargs" })
     @CheckReturnValue
     public static Stubber doReturn(Object toBeReturned, Object... toBeReturnedNext) {
         return MOCKITO_CORE.stubber().doReturn(toBeReturned, toBeReturnedNext);

@@ -4,6 +4,8 @@
  */
 package org.mockito.creation.instance;
 
+import javax.annotation.Nullable;
+
 /**
  * Provides instances of classes.
  * See more information about Mockito plugin {@link org.mockito.plugins.InstantiatorProvider2}
