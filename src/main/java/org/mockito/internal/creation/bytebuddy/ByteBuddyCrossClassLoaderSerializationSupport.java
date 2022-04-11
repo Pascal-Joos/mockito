@@ -4,15 +4,14 @@
  */
 package org.mockito.internal.creation.bytebuddy;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.ForWriteReplace;
 import static org.mockito.internal.util.StringUtil.join;
-
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
 import org.mockito.Incubating;
 import org.mockito.exceptions.base.MockitoSerializationIssue;
 import org.mockito.internal.configuration.plugins.Plugins;
@@ -52,9 +51,13 @@ import org.mockito.plugins.MemberAccessor;
  */
 @Incubating
 class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
+
     private static final long serialVersionUID = 7411152578314420778L;
+
     private static final String MOCKITO_PROXY_MARKER = "ByteBuddyMockitoProxyMarker";
+
     private boolean instanceLocalCurrentlySerializingFlag = false;
+
     private final Lock mutex = new ReentrantLock();
 
     /**
@@ -110,20 +113,11 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
                 return mockitoMock;
             }
             mockReplacementStarted();
-
             return new CrossClassLoaderSerializationProxy(mockitoMock);
         } catch (IOException ioe) {
             MockName mockName = MockUtil.getMockName(mockitoMock);
-            String mockedType =
-                    MockUtil.getMockSettings(mockitoMock).getTypeToMock().getCanonicalName();
-            throw new MockitoSerializationIssue(
-                    join(
-                            "The mock '" + mockName + "' of type '" + mockedType + "'",
-                            "The Java Standard Serialization reported an '"
-                                    + ioe.getClass().getSimpleName()
-                                    + "' saying :",
-                            "  " + ioe.getMessage()),
-                    ioe);
+            String mockedType = MockUtil.getMockSettings(mockitoMock).getTypeToMock().getCanonicalName();
+            throw new MockitoSerializationIssue(join("The mock '" + mockName + "' of type '" + mockedType + "'", "The Java Standard Serialization reported an '" + ioe.getClass().getSimpleName() + "' saying :", "  " + ioe.getMessage()), ioe);
         } finally {
             // unmark
             mockReplacementCompleted();
@@ -157,8 +151,11 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
     public static class CrossClassLoaderSerializationProxy implements Serializable {
 
         private static final long serialVersionUID = -7600267929109286514L;
+
         private final byte[] serializedMock;
+
         private final Class<?> typeToMock;
+
         private final Set<Class<?>> extraInterfaces;
 
         /**
@@ -173,12 +170,9 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
         public CrossClassLoaderSerializationProxy(Object mockitoMock) throws IOException {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ObjectOutputStream objectOutputStream = new MockitoMockObjectOutputStream(out);
-
             objectOutputStream.writeObject(mockitoMock);
-
             objectOutputStream.close();
             out.close();
-
             MockCreationSettings<?> mockSettings = MockUtil.getMockSettings(mockitoMock);
             this.serializedMock = out.toByteArray();
             this.typeToMock = mockSettings.getTypeToMock();
@@ -196,31 +190,15 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
         private Object readResolve() throws ObjectStreamException {
             try {
                 ByteArrayInputStream bis = new ByteArrayInputStream(serializedMock);
-                ObjectInputStream objectInputStream =
-                        new MockitoMockObjectInputStream(bis, typeToMock, extraInterfaces);
-
+                ObjectInputStream objectInputStream = new MockitoMockObjectInputStream(bis, typeToMock, extraInterfaces);
                 Object deserializedMock = objectInputStream.readObject();
-
                 bis.close();
                 objectInputStream.close();
-
                 return deserializedMock;
             } catch (IOException ioe) {
-                throw new MockitoSerializationIssue(
-                        join(
-                                "Mockito mock cannot be deserialized to a mock of '"
-                                        + typeToMock.getCanonicalName()
-                                        + "'. The error was :",
-                                "  " + ioe.getMessage(),
-                                "If you are unsure what is the reason of this exception, feel free to contact us on the mailing list."),
-                        ioe);
+                throw new MockitoSerializationIssue(join("Mockito mock cannot be deserialized to a mock of '" + typeToMock.getCanonicalName() + "'. The error was :", "  " + ioe.getMessage(), "If you are unsure what is the reason of this exception, feel free to contact us on the mailing list."), ioe);
             } catch (ClassNotFoundException cce) {
-                throw new MockitoSerializationIssue(
-                        join(
-                                "A class couldn't be found while deserializing a Mockito mock, you should check your classpath. The error was :",
-                                "  " + cce.getMessage(),
-                                "If you are still unsure what is the reason of this exception, feel free to contact us on the mailing list."),
-                        cce);
+                throw new MockitoSerializationIssue(join("A class couldn't be found while deserializing a Mockito mock, you should check your classpath. The error was :", "  " + cce.getMessage(), "If you are still unsure what is the reason of this exception, feel free to contact us on the mailing list."), cce);
             }
         }
     }
@@ -242,16 +220,17 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
      * </p>
      */
     public static class MockitoMockObjectInputStream extends ObjectInputStream {
+
         private final Class<?> typeToMock;
+
         private final Set<Class<?>> extraInterfaces;
 
-        public MockitoMockObjectInputStream(
-                InputStream in, Class<?> typeToMock, Set<Class<?>> extraInterfaces)
-                throws IOException {
+        public MockitoMockObjectInputStream(InputStream in, Class<?> typeToMock, Set<Class<?>> extraInterfaces) throws IOException {
             super(in);
             this.typeToMock = typeToMock;
             this.extraInterfaces = extraInterfaces;
-            enableResolveObject(true); // ensure resolving is enabled
+            // ensure resolving is enabled
+            enableResolveObject(true);
         }
 
         /**
@@ -267,33 +246,18 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
          * @throws ClassNotFoundException
          */
         @Override
-        protected Class<?> resolveClass(ObjectStreamClass desc)
-                throws IOException, ClassNotFoundException {
+        protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
             if (notMarkedAsAMockitoMock(readObject())) {
                 return super.resolveClass(desc);
             }
-
             // create the Mockito mock class before it can even be deserialized
             try {
                 @SuppressWarnings("unchecked")
-                Class<?> proxyClass =
-                        ((ClassCreatingMockMaker) Plugins.getMockMaker())
-                                .createMockType(
-                                        new CreationSettings()
-                                                .setTypeToMock(typeToMock)
-                                                .setExtraInterfaces(extraInterfaces)
-                                                .setSerializableMode(
-                                                        SerializableMode.ACROSS_CLASSLOADERS));
-
+                Class<?> proxyClass = ((ClassCreatingMockMaker) Plugins.getMockMaker()).createMockType(new CreationSettings().setTypeToMock(typeToMock).setExtraInterfaces(extraInterfaces).setSerializableMode(SerializableMode.ACROSS_CLASSLOADERS));
                 hackClassNameToMatchNewlyCreatedClass(desc, proxyClass);
                 return proxyClass;
             } catch (ClassCastException cce) {
-                throw new MockitoSerializationIssue(
-                        join(
-                                "A Byte Buddy-generated mock cannot be deserialized into a non-Byte Buddy generated mock class",
-                                "",
-                                "The mock maker in use was: " + Plugins.getMockMaker().getClass()),
-                        cce);
+                throw new MockitoSerializationIssue(join("A Byte Buddy-generated mock cannot be deserialized into a non-Byte Buddy generated mock class", "", "The mock maker in use was: " + Plugins.getMockMaker().getClass()), cce);
             }
         }
 
@@ -315,25 +279,17 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
          * @param proxyClass   The proxy class whose name will be applied.
          * @throws java.io.InvalidObjectException
          */
-        private void hackClassNameToMatchNewlyCreatedClass(
-                ObjectStreamClass descInstance, Class<?> proxyClass) throws ObjectStreamException {
+        private void hackClassNameToMatchNewlyCreatedClass(ObjectStreamClass descInstance, Class<?> proxyClass) throws ObjectStreamException {
             try {
                 MemberAccessor accessor = Plugins.getMemberAccessor();
                 Field classNameField = descInstance.getClass().getDeclaredField("name");
                 try {
                     accessor.set(classNameField, descInstance, proxyClass.getCanonicalName());
                 } catch (IllegalAccessException e) {
-                    throw new MockitoSerializationIssue(
-                            "Access to " + classNameField + " was denied", e);
+                    throw new MockitoSerializationIssue("Access to " + classNameField + " was denied", e);
                 }
             } catch (NoSuchFieldException nsfe) {
-                throw new MockitoSerializationIssue(
-                        join(
-                                "Wow, the class 'ObjectStreamClass' in the JDK don't have the field 'name',",
-                                "this is definitely a bug in our code as it means the JDK team changed a few internal things.",
-                                "",
-                                "Please report an issue with the JDK used, a code sample and a link to download the JDK would be welcome."),
-                        nsfe);
+                throw new MockitoSerializationIssue(join("Wow, the class 'ObjectStreamClass' in the JDK don't have the field 'name',", "this is definitely a bug in our code as it means the JDK team changed a few internal things.", "", "Please report an issue with the JDK used, a code sample and a link to download the JDK would be welcome."), nsfe);
             }
         }
 
@@ -360,6 +316,7 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
      * </p>
      */
     private static class MockitoMockObjectOutputStream extends ObjectOutputStream {
+
         private static final String NOTHING = "";
 
         public MockitoMockObjectOutputStream(ByteArrayOutputStream out) throws IOException {
@@ -400,6 +357,7 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
      * It will be applied before the creation of the mock when the mock setting says it should serializable.
      */
     public interface CrossClassLoaderSerializableMock {
+
         Object writeReplace();
     }
 }

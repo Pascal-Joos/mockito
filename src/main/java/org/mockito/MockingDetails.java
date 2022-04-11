@@ -4,8 +4,8 @@
  */
 package org.mockito;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
-
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;

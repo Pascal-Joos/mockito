@@ -4,8 +4,8 @@
  */
 package org.mockito.internal.stubbing.defaultanswers;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
-
 import org.mockito.configuration.IMockitoConfiguration;
 import org.mockito.internal.configuration.GlobalConfiguration;
 import org.mockito.invocation.InvocationOnMock;
@@ -20,6 +20,7 @@ public class GloballyConfiguredAnswer implements Answer<Object>, Serializable {
 
     private static final long serialVersionUID = 3585893470101750917L;
 
+    @Nullable
     public Object answer(InvocationOnMock invocation) throws Throwable {
         return new GlobalConfiguration().getDefaultAnswer().answer(invocation);
     }

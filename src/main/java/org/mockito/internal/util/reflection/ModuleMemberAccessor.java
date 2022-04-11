@@ -4,9 +4,9 @@
  */
 package org.mockito.internal.util.reflection;
 
+import javax.annotation.Nullable;
 import net.bytebuddy.ClassFileVersion;
 import org.mockito.plugins.MemberAccessor;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -25,14 +25,12 @@ public class ModuleMemberAccessor implements MemberAccessor {
     }
 
     @Override
-    public Object newInstance(Constructor<?> constructor, Object... arguments)
-            throws InstantiationException, InvocationTargetException, IllegalAccessException {
+    public Object newInstance(Constructor<?> constructor, Object... arguments) throws InstantiationException, InvocationTargetException, IllegalAccessException {
         return delegate.newInstance(constructor, arguments);
     }
 
     @Override
-    public Object invoke(Method method, Object target, Object... arguments)
-            throws InvocationTargetException, IllegalAccessException {
+    public Object invoke(Method method, Object target, Object... arguments) throws InvocationTargetException, IllegalAccessException {
         return delegate.invoke(method, target, arguments);
     }
 

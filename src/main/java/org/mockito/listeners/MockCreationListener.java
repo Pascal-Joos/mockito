@@ -4,6 +4,7 @@
  */
 package org.mockito.listeners;
 
+import javax.annotation.Nullable;
 import org.mockito.mock.MockCreationSettings;
 
 /**
@@ -26,5 +27,6 @@ public interface MockCreationListener extends MockitoListener {
      * @param mock the type being mocked
      * @param settings the settings used for creation
      */
-    default void onStaticMockCreated(Class<?> mock, MockCreationSettings settings) {}
+    default void onStaticMockCreated(Class<?> mock, MockCreationSettings settings) {
+    }
 }
