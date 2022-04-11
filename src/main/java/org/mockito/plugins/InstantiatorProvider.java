@@ -4,6 +4,7 @@
  */
 package org.mockito.plugins;
 
+import javax.annotation.Nullable;
 import org.mockito.internal.creation.instance.Instantiator;
 import org.mockito.mock.MockCreationSettings;
 
@@ -67,5 +68,5 @@ public interface InstantiatorProvider {
      * Returns an instantiator, used to create new class instances.
      */
     @Deprecated
-    Instantiator getInstantiator(MockCreationSettings<?> settings);
+    Instantiator getInstantiator(@Nullable MockCreationSettings<?> settings);
 }

@@ -4,18 +4,20 @@
  */
 package org.mockito.internal.util.reflection;
 
+import javax.annotation.Nullable;
+
 /**
  * Report on field initialization
  */
 public class FieldInitializationReport {
+
     private final Object fieldInstance;
+
     private final boolean wasInitialized;
+
     private final boolean wasInitializedUsingConstructorArgs;
 
-    public FieldInitializationReport(
-            Object fieldInstance,
-            boolean wasInitialized,
-            boolean wasInitializedUsingConstructorArgs) {
+    public FieldInitializationReport(Object fieldInstance, boolean wasInitialized, boolean wasInitializedUsingConstructorArgs) {
         this.fieldInstance = fieldInstance;
         this.wasInitialized = wasInitialized;
         this.wasInitializedUsingConstructorArgs = wasInitializedUsingConstructorArgs;

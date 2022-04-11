@@ -4,11 +4,10 @@
  */
 package org.mockito.internal.verification;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.exceptions.Reporter.cannotVerifyToString;
 import static org.mockito.internal.util.ObjectMethodsGuru.isToStringMethod;
-
 import java.util.List;
-
 import org.mockito.internal.invocation.InvocationMatcher;
 import org.mockito.internal.stubbing.InvocationContainerImpl;
 import org.mockito.internal.verification.api.VerificationData;
@@ -18,9 +17,10 @@ import org.mockito.invocation.MatchableInvocation;
 public class VerificationDataImpl implements VerificationData {
 
     private final InvocationMatcher wanted;
+
     private final InvocationContainerImpl invocations;
 
-    public VerificationDataImpl(InvocationContainerImpl invocations, InvocationMatcher wanted) {
+    public VerificationDataImpl(InvocationContainerImpl invocations, @Nullable InvocationMatcher wanted) {
         this.invocations = invocations;
         this.wanted = wanted;
         this.assertWantedIsVerifiable();

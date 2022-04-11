@@ -4,10 +4,10 @@
  */
 package org.mockito.internal.junit;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockitoLogger;
 
@@ -17,6 +17,7 @@ import org.mockito.plugins.MockitoLogger;
 public class MismatchReportingTestListener implements MockitoTestListener {
 
     private final MockitoLogger logger;
+
     private List<Object> mocks = new LinkedList<Object>();
 
     public MismatchReportingTestListener(MockitoLogger logger) {
@@ -30,13 +31,10 @@ public class MismatchReportingTestListener implements MockitoTestListener {
         // TODO make it better, it's easy to forget to clean up mocks and we still create new
         // instance of list that nobody will read, it's also duplicated
         mocks = new LinkedList<Object>();
-
         if (event.getFailure() != null) {
             // print unused stubbings only when test succeeds to avoid reporting multiple problems
             // and confusing users
-            new ArgMismatchFinder()
-                    .getStubbingArgMismatches(createdMocks)
-                    .format(event.getTestName(), logger);
+            new ArgMismatchFinder().getStubbingArgMismatches(createdMocks).format(event.getTestName(), logger);
         }
     }
 
