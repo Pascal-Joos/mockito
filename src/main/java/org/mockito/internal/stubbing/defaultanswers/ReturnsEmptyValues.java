@@ -4,12 +4,11 @@
  */
 package org.mockito.internal.stubbing.defaultanswers;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.util.ObjectMethodsGuru.isCompareToMethod;
 import static org.mockito.internal.util.ObjectMethodsGuru.isToStringMethod;
-
 import java.io.Serializable;
 import java.util.*;
-
 import org.mockito.internal.util.JavaEightUtil;
 import org.mockito.internal.util.MockUtil;
 import org.mockito.internal.util.Primitives;
@@ -56,15 +55,13 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
     /* (non-Javadoc)
      * @see org.mockito.stubbing.Answer#answer(org.mockito.invocation.InvocationOnMock)
      */
+    @Nullable
     public Object answer(InvocationOnMock invocation) {
         if (isToStringMethod(invocation.getMethod())) {
             Object mock = invocation.getMock();
             MockName name = MockUtil.getMockName(mock);
             if (name.isDefault()) {
-                return "Mock for "
-                        + MockUtil.getMockSettings(mock).getTypeToMock().getSimpleName()
-                        + ", hashCode: "
-                        + mock.hashCode();
+                return "Mock for " + MockUtil.getMockSettings(mock).getTypeToMock().getSimpleName() + ", hashCode: " + mock.hashCode();
             } else {
                 return name.toString();
             }
@@ -75,11 +72,11 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
             // Only for compareTo() method by the Comparable interface
             return invocation.getMock() == invocation.getArgument(0) ? 0 : 1;
         }
-
         Class<?> returnType = invocation.getMethod().getReturnType();
         return returnValueFor(returnType);
     }
 
+    @Nullable
     Object returnValueFor(Class<?> type) {
         if (Primitives.isPrimitiveOrWrapper(type)) {
             return Primitives.defaultValue(type);
@@ -137,7 +134,6 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
         } else if ("java.time.Period".equals(type.getName())) {
             return JavaEightUtil.emptyPeriod();
         }
-
         // Let's not care about the rest of collections.
         return null;
     }

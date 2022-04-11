@@ -4,34 +4,29 @@
  */
 package org.mockito.internal.creation.bytebuddy;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Set;
-
 import org.mockito.mock.SerializableMode;
 
 class MockFeatures<T> {
 
     final Class<T> mockedType;
+
     final Set<Class<?>> interfaces;
+
     final SerializableMode serializableMode;
+
     final boolean stripAnnotations;
 
-    private MockFeatures(
-            Class<T> mockedType,
-            Set<Class<?>> interfaces,
-            SerializableMode serializableMode,
-            boolean stripAnnotations) {
+    private MockFeatures(Class<T> mockedType, Set<Class<?>> interfaces, SerializableMode serializableMode, boolean stripAnnotations) {
         this.mockedType = mockedType;
         this.interfaces = Collections.unmodifiableSet(interfaces);
         this.serializableMode = serializableMode;
         this.stripAnnotations = stripAnnotations;
     }
 
-    public static <T> MockFeatures<T> withMockFeatures(
-            Class<T> mockedType,
-            Set<Class<?>> interfaces,
-            SerializableMode serializableMode,
-            boolean stripAnnotations) {
+    public static <T> MockFeatures<T> withMockFeatures(Class<T> mockedType, Set<Class<?>> interfaces, SerializableMode serializableMode, boolean stripAnnotations) {
         return new MockFeatures<T>(mockedType, interfaces, serializableMode, stripAnnotations);
     }
 }

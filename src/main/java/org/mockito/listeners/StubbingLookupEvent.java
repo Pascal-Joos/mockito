@@ -4,8 +4,8 @@
  */
 package org.mockito.listeners;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
-
 import org.mockito.invocation.Invocation;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.stubbing.Stubbing;

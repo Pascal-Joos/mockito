@@ -4,10 +4,10 @@
  */
 package org.mockito.internal.junit;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
-
 import org.mockito.internal.creation.settings.CreationSettings;
 import org.mockito.internal.listeners.AutoCleanableListener;
 import org.mockito.mock.MockCreationSettings;
@@ -22,17 +22,18 @@ import org.mockito.quality.Strictness;
 public class UniversalTestListener implements MockitoTestListener, AutoCleanableListener {
 
     private Strictness currentStrictness;
+
     private final MockitoLogger logger;
 
-    private Map<Object, MockCreationSettings> mocks =
-            new IdentityHashMap<Object, MockCreationSettings>();
+    private Map<Object, MockCreationSettings> mocks = new IdentityHashMap<Object, MockCreationSettings>();
+
     private DefaultStubbingLookupListener stubbingLookupListener;
+
     private boolean listenerDirty;
 
     public UniversalTestListener(Strictness initialStrictness, MockitoLogger logger) {
         this.currentStrictness = initialStrictness;
         this.logger = logger;
-
         // creating single stubbing lookup listener per junit rule instance / test method
         // this way, when strictness is updated in the middle of the test it will affect the
         // behavior of the stubbing listener
@@ -48,8 +49,7 @@ public class UniversalTestListener implements MockitoTestListener, AutoCleanable
         // instance of list that nobody will read, it's also duplicated
         // TODO clean up all other state, null out stubbingLookupListener
         mocks = new IdentityHashMap<Object, MockCreationSettings>();
-
-        switch (currentStrictness) {
+        switch(currentStrictness) {
             case WARN:
                 emitWarnings(logger, event, createdMocks);
                 break;
@@ -72,27 +72,21 @@ public class UniversalTestListener implements MockitoTestListener, AutoCleanable
         }
     }
 
-    private static void emitWarnings(
-            MockitoLogger logger, TestFinishedEvent event, Collection<Object> mocks) {
+    private static void emitWarnings(MockitoLogger logger, TestFinishedEvent event, Collection<Object> mocks) {
         if (event.getFailure() != null) {
             // print stubbing mismatches only when there is a test failure
             // to avoid false negatives. Give hint only when test fails.
-            new ArgMismatchFinder()
-                    .getStubbingArgMismatches(mocks)
-                    .format(event.getTestName(), logger);
+            new ArgMismatchFinder().getStubbingArgMismatches(mocks).format(event.getTestName(), logger);
         } else {
             // print unused stubbings only when test succeeds to avoid reporting multiple problems
             // and confusing users
-            new UnusedStubbingsFinder()
-                    .getUnusedStubbings(mocks)
-                    .format(event.getTestName(), logger);
+            new UnusedStubbingsFinder().getUnusedStubbings(mocks).format(event.getTestName(), logger);
         }
     }
 
     @Override
     public void onMockCreated(Object mock, MockCreationSettings settings) {
         this.mocks.put(mock, settings);
-
         // It is not ideal that we modify the state of MockCreationSettings object
         // MockCreationSettings is intended to be an immutable view of the creation settings
         // In future, we should start passing MockSettings object to the creation listener
