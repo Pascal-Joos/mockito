@@ -4,6 +4,7 @@
  */
 package org.mockito.stubbing;
 
+import javax.annotation.Nullable;
 import org.mockito.invocation.InvocationOnMock;
 
 /**
@@ -29,6 +30,7 @@ import org.mockito.invocation.InvocationOnMock;
  * @param <T> the type to return.
  */
 public interface Answer<T> {
+
     /**
      * @param invocation the invocation on the mock.
      *

@@ -4,6 +4,7 @@
  */
 package org.mockito.listeners;
 
+import javax.annotation.Nullable;
 import org.mockito.invocation.DescribedInvocation;
 
 /**
@@ -16,6 +17,7 @@ import org.mockito.invocation.DescribedInvocation;
  * </p>
  */
 public interface MethodInvocationReport {
+
     /**
      * @return Information on the method call, never {@code null}
      */
@@ -39,5 +41,6 @@ public interface MethodInvocationReport {
     /**
      * @return Location of the stub invocation
      */
+    @Nullable
     String getLocationOfStubbing();
 }

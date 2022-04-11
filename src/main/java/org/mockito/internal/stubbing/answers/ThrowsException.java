@@ -4,8 +4,8 @@
  */
 package org.mockito.internal.stubbing.answers;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
-
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.ValidableAnswer;
 
@@ -15,6 +15,8 @@ import org.mockito.stubbing.ValidableAnswer;
 public class ThrowsException extends AbstractThrowsException implements Serializable {
 
     private static final long serialVersionUID = 1128820328555183980L;
+
+    @Nullable
     private final Throwable throwable;
 
     /**
@@ -22,11 +24,12 @@ public class ThrowsException extends AbstractThrowsException implements Serializ
      * {@linkplain ValidableAnswer#validateFor(InvocationOnMock) answer validation}
      * will fail.
      */
-    public ThrowsException(Throwable throwable) {
+    public ThrowsException(@Nullable Throwable throwable) {
         this.throwable = throwable;
     }
 
     @Override
+    @Nullable
     protected Throwable getThrowable() {
         return throwable;
     }
