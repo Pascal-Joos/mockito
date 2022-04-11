@@ -4,11 +4,11 @@
  */
 package org.mockito.internal.creation.bytebuddy;
 
+import javax.annotation.Nullable;
 import org.mockito.Incubating;
 import org.mockito.MockedConstruction;
 import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
-
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -22,6 +22,7 @@ import java.util.function.Function;
  * The programmatic API could look like {@code mock(Final.class, withSettings().finalClasses())}.
  */
 public class ByteBuddyMockMaker implements ClassCreatingMockMaker {
+
     private ClassCreatingMockMaker defaultByteBuddyMockMaker = new SubclassByteBuddyMockMaker();
 
     @Override
@@ -30,8 +31,7 @@ public class ByteBuddyMockMaker implements ClassCreatingMockMaker {
     }
 
     @Override
-    public <T> Optional<T> createSpy(
-            MockCreationSettings<T> settings, MockHandler handler, T object) {
+    public <T> Optional<T> createSpy(MockCreationSettings<T> settings, MockHandler handler, T object) {
         return defaultByteBuddyMockMaker.createSpy(settings, handler, object);
     }
 
@@ -41,6 +41,7 @@ public class ByteBuddyMockMaker implements ClassCreatingMockMaker {
     }
 
     @Override
+    @Nullable
     public MockHandler getHandler(Object mock) {
         return defaultByteBuddyMockMaker.getHandler(mock);
     }
@@ -57,18 +58,12 @@ public class ByteBuddyMockMaker implements ClassCreatingMockMaker {
     }
 
     @Override
-    public <T> StaticMockControl<T> createStaticMock(
-            Class<T> type, MockCreationSettings<T> settings, MockHandler handler) {
+    public <T> StaticMockControl<T> createStaticMock(Class<T> type, MockCreationSettings<T> settings, MockHandler handler) {
         return defaultByteBuddyMockMaker.createStaticMock(type, settings, handler);
     }
 
     @Override
-    public <T> ConstructionMockControl<T> createConstructionMock(
-            Class<T> type,
-            Function<MockedConstruction.Context, MockCreationSettings<T>> settingsFactory,
-            Function<MockedConstruction.Context, MockHandler<T>> handlerFactory,
-            MockedConstruction.MockInitializer<T> mockInitializer) {
-        return defaultByteBuddyMockMaker.createConstructionMock(
-                type, settingsFactory, handlerFactory, mockInitializer);
+    public <T> ConstructionMockControl<T> createConstructionMock(Class<T> type, Function<MockedConstruction.Context, MockCreationSettings<T>> settingsFactory, Function<MockedConstruction.Context, MockHandler<T>> handlerFactory, MockedConstruction.MockInitializer<T> mockInitializer) {
+        return defaultByteBuddyMockMaker.createConstructionMock(type, settingsFactory, handlerFactory, mockInitializer);
     }
 }

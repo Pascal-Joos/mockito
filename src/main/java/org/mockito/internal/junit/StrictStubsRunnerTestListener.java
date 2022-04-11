@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.junit;
 
+import javax.annotation.Nullable;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.quality.Strictness;
 
@@ -12,11 +13,11 @@ import org.mockito.quality.Strictness;
  */
 public class StrictStubsRunnerTestListener implements MockitoTestListener {
 
-    private final DefaultStubbingLookupListener stubbingLookupListener =
-            new DefaultStubbingLookupListener(Strictness.STRICT_STUBS);
+    private final DefaultStubbingLookupListener stubbingLookupListener = new DefaultStubbingLookupListener(Strictness.STRICT_STUBS);
 
     @Override
-    public void testFinished(TestFinishedEvent event) {}
+    public void testFinished(TestFinishedEvent event) {
+    }
 
     @Override
     public void onMockCreated(Object mock, MockCreationSettings settings) {
