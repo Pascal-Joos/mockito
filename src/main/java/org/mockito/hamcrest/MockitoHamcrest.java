@@ -4,10 +4,10 @@
  */
 package org.mockito.hamcrest;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.hamcrest.MatcherGenericTypeExtractor.genericTypeOfMatcher;
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
 import static org.mockito.internal.util.Primitives.defaultValue;
-
 import org.hamcrest.Matcher;
 import org.mockito.ArgumentMatcher;
 import org.mockito.internal.hamcrest.HamcrestArgumentMatcher;
@@ -175,8 +175,6 @@ public class MockitoHamcrest {
     }
 
     private static <T> void reportMatcher(Matcher<T> matcher) {
-        mockingProgress()
-                .getArgumentMatcherStorage()
-                .reportMatcher(new HamcrestArgumentMatcher<T>(matcher));
+        mockingProgress().getArgumentMatcherStorage().reportMatcher(new HamcrestArgumentMatcher<T>(matcher));
     }
 }

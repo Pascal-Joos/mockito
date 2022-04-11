@@ -4,10 +4,9 @@
  */
 package org.mockito;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.util.Primitives.defaultValue;
-
 import java.util.List;
-
 import org.mockito.internal.matchers.CapturingMatcher;
 
 /**
@@ -62,6 +61,7 @@ import org.mockito.internal.matchers.CapturingMatcher;
 public class ArgumentCaptor<T> {
 
     private final CapturingMatcher<T> capturingMatcher = new CapturingMatcher<T>();
+
     private final Class<? extends T> clazz;
 
     private ArgumentCaptor(Class<? extends T> clazz) {

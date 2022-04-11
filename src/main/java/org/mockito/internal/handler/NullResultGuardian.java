@@ -4,8 +4,8 @@
  */
 package org.mockito.internal.handler;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.util.Primitives.defaultValue;
-
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.InvocationContainer;
 import org.mockito.invocation.MockHandler;

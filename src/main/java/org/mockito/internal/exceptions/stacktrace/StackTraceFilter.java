@@ -4,11 +4,11 @@
  */
 package org.mockito.internal.exceptions.stacktrace;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.mockito.exceptions.stacktrace.StackTraceCleaner;
 import org.mockito.internal.configuration.plugins.Plugins;
 
@@ -16,22 +16,18 @@ public class StackTraceFilter implements Serializable {
 
     static final long serialVersionUID = -5499819791513105700L;
 
-    private static final StackTraceCleaner CLEANER =
-            Plugins.getStackTraceCleanerProvider()
-                    .getStackTraceCleaner(new DefaultStackTraceCleaner());
+    private static final StackTraceCleaner CLEANER = Plugins.getStackTraceCleanerProvider().getStackTraceCleaner(new DefaultStackTraceCleaner());
 
+    @Nullable
     private static Object JAVA_LANG_ACCESS;
+
+    @Nullable
     private static Method GET_STACK_TRACE_ELEMENT;
 
     static {
         try {
-            JAVA_LANG_ACCESS =
-                    Class.forName("sun.misc.SharedSecrets")
-                            .getMethod("getJavaLangAccess")
-                            .invoke(null);
-            GET_STACK_TRACE_ELEMENT =
-                    Class.forName("sun.misc.JavaLangAccess")
-                            .getMethod("getStackTraceElement", Throwable.class, int.class);
+            JAVA_LANG_ACCESS = Class.forName("sun.misc.SharedSecrets").getMethod("getJavaLangAccess").invoke(null);
+            GET_STACK_TRACE_ELEMENT = Class.forName("sun.misc.JavaLangAccess").getMethod("getStackTraceElement", Throwable.class, int.class);
         } catch (Exception ignored) {
             // Use the slow computational path for filtering stacktraces if fast path does not exist
             // in JVM
@@ -72,12 +68,11 @@ public class StackTraceFilter implements Serializable {
      *     not be filtered out per {@link StackTraceFilter#CLEANER}.
      * @return The first {@link StackTraceElement} outside of the {@link StackTraceFilter#CLEANER}
      */
+    @Nullable
     public StackTraceElement filterFirst(Throwable target, boolean isInline) {
         boolean shouldSkip = isInline;
-
         if (GET_STACK_TRACE_ELEMENT != null) {
             int i = 0;
-
             // The assumption here is that the CLEANER filter will not filter out every single
             // element. However, since we don't want to compute the full length of the stacktrace,
             // we don't know the upper boundary. Therefore, simply increment the counter and go as
@@ -85,10 +80,7 @@ public class StackTraceFilter implements Serializable {
             // don't, we fall back to the old slow path.
             while (true) {
                 try {
-                    StackTraceElement stackTraceElement =
-                            (StackTraceElement)
-                                    GET_STACK_TRACE_ELEMENT.invoke(JAVA_LANG_ACCESS, target, i);
-
+                    StackTraceElement stackTraceElement = (StackTraceElement) GET_STACK_TRACE_ELEMENT.invoke(JAVA_LANG_ACCESS, target, i);
                     if (CLEANER.isIn(stackTraceElement)) {
                         if (shouldSkip) {
                             shouldSkip = false;
@@ -103,7 +95,6 @@ public class StackTraceFilter implements Serializable {
                 i++;
             }
         }
-
         // If we can't use the fast path of retrieving stackTraceElements, use the slow path by
         // iterating over the actual stacktrace
         for (StackTraceElement stackTraceElement : target.getStackTrace()) {

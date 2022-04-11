@@ -4,9 +4,9 @@
  */
 package org.mockito.internal.configuration.plugins;
 
+import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.net.URL;
-
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.util.io.IOUtil;
 import org.mockito.plugins.PluginSwitch;
@@ -19,6 +19,7 @@ class PluginFinder {
         this.pluginSwitch = pluginSwitch;
     }
 
+    @Nullable
     String findPluginClass(Iterable<URL> resources) {
         for (URL resource : resources) {
             InputStream s = null;
@@ -35,8 +36,7 @@ class PluginFinder {
                 }
                 return pluginClassName;
             } catch (Exception e) {
-                throw new MockitoException(
-                        "Problems reading plugin implementation from: " + resource, e);
+                throw new MockitoException("Problems reading plugin implementation from: " + resource, e);
             } finally {
                 IOUtil.closeQuietly(s);
             }
