@@ -4,20 +4,16 @@
  */
 package org.mockito.internal.stubbing.answers;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.exceptions.Reporter.wrongTypeReturnedByDefaultAnswer;
-
 import org.mockito.invocation.InvocationOnMock;
 
 public abstract class DefaultAnswerValidator {
-    public static void validateReturnValueFor(InvocationOnMock invocation, Object returnedValue)
-            throws Throwable {
+
+    public static void validateReturnValueFor(InvocationOnMock invocation, @Nullable Object returnedValue) throws Throwable {
         InvocationInfo invocationInfo = new InvocationInfo(invocation);
         if (returnedValue != null && !invocationInfo.isValidReturnType(returnedValue.getClass())) {
-            throw wrongTypeReturnedByDefaultAnswer(
-                    invocation.getMock(),
-                    invocationInfo.printMethodReturnType(),
-                    returnedValue.getClass().getSimpleName(),
-                    invocationInfo.getMethodName());
+            throw wrongTypeReturnedByDefaultAnswer(invocation.getMock(), invocationInfo.printMethodReturnType(), returnedValue.getClass().getSimpleName(), invocationInfo.getMethodName());
         }
     }
 }

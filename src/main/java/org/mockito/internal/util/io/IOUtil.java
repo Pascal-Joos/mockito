@@ -4,11 +4,11 @@
  */
 package org.mockito.internal.util.io;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.mockito.exceptions.base.MockitoException;
 
 /**
@@ -50,7 +50,7 @@ public class IOUtil {
      *
      * @param closeable the target, may be null
      */
-    public static void closeQuietly(Closeable closeable) {
+    public static void closeQuietly(@Nullable Closeable closeable) {
         try {
             close(closeable);
         } catch (MockitoException ignored) {
@@ -63,7 +63,7 @@ public class IOUtil {
      *
      * @param closeable the target, may be null
      */
-    public static void close(Closeable closeable) {
+    public static void close(@Nullable Closeable closeable) {
         if (closeable != null) {
             try {
                 closeable.close();

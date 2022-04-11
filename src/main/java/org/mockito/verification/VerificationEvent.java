@@ -4,6 +4,7 @@
  */
 package org.mockito.verification;
 
+import javax.annotation.Nullable;
 import org.mockito.Incubating;
 import org.mockito.internal.verification.api.VerificationData;
 
@@ -12,6 +13,7 @@ import org.mockito.internal.verification.api.VerificationData;
  */
 @Incubating
 public interface VerificationEvent {
+
     /**
      * @return The mock that a verification happened on.
      */
@@ -33,5 +35,6 @@ public interface VerificationEvent {
      *
      * @return null or the error.
      */
+    @Nullable
     Throwable getVerificationError();
 }
