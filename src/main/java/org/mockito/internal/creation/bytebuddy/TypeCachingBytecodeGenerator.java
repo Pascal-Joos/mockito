@@ -7,12 +7,10 @@ package org.mockito.internal.creation.bytebuddy;
 import java.lang.ref.ReferenceQueue;
 import java.util.Set;
 import java.util.concurrent.Callable;
-
 import net.bytebuddy.TypeCache;
 import org.mockito.mock.SerializableMode;
 
-class TypeCachingBytecodeGenerator extends ReferenceQueue<ClassLoader>
-        implements BytecodeGenerator {
+class TypeCachingBytecodeGenerator extends ReferenceQueue<ClassLoader> implements BytecodeGenerator {
 
     private final Object BOOTSTRAP_LOCK = new Object();
 
@@ -22,9 +20,7 @@ class TypeCachingBytecodeGenerator extends ReferenceQueue<ClassLoader>
 
     public TypeCachingBytecodeGenerator(BytecodeGenerator bytecodeGenerator, boolean weak) {
         this.bytecodeGenerator = bytecodeGenerator;
-        typeCache =
-                new TypeCache.WithInlineExpunction<MockitoMockKey>(
-                        weak ? TypeCache.Sort.WEAK : TypeCache.Sort.SOFT);
+        typeCache = new TypeCache.WithInlineExpunction<MockitoMockKey>(weak ? TypeCache.Sort.WEAK : TypeCache.Sort.SOFT);
     }
 
     @SuppressWarnings("unchecked")
@@ -32,21 +28,13 @@ class TypeCachingBytecodeGenerator extends ReferenceQueue<ClassLoader>
     public <T> Class<T> mockClass(final MockFeatures<T> params) {
         try {
             ClassLoader classLoader = params.mockedType.getClassLoader();
-            return (Class<T>)
-                    typeCache.findOrInsert(
-                            classLoader,
-                            new MockitoMockKey(
-                                    params.mockedType,
-                                    params.interfaces,
-                                    params.serializableMode,
-                                    params.stripAnnotations),
-                            new Callable<Class<?>>() {
-                                @Override
-                                public Class<?> call() throws Exception {
-                                    return bytecodeGenerator.mockClass(params);
-                                }
-                            },
-                            BOOTSTRAP_LOCK);
+            return (Class<T>) typeCache.findOrInsert(classLoader, new MockitoMockKey(params.mockedType, params.interfaces, params.serializableMode, params.stripAnnotations), new Callable<Class<?>>() {
+
+                @Override
+                public Class<?> call() throws Exception {
+                    return bytecodeGenerator.mockClass(params);
+                }
+            }, BOOTSTRAP_LOCK);
         } catch (IllegalArgumentException exception) {
             Throwable cause = exception.getCause();
             if (cause instanceof RuntimeException) {
@@ -70,13 +58,10 @@ class TypeCachingBytecodeGenerator extends ReferenceQueue<ClassLoader>
     private static class MockitoMockKey extends TypeCache.SimpleKey {
 
         private final SerializableMode serializableMode;
+
         private final boolean stripAnnotations;
 
-        private MockitoMockKey(
-                Class<?> type,
-                Set<Class<?>> additionalType,
-                SerializableMode serializableMode,
-                boolean stripAnnotations) {
+        private MockitoMockKey(Class<?> type, Set<Class<?>> additionalType, SerializableMode serializableMode, boolean stripAnnotations) {
             super(type, additionalType);
             this.serializableMode = serializableMode;
             this.stripAnnotations = stripAnnotations;
@@ -84,12 +69,14 @@ class TypeCachingBytecodeGenerator extends ReferenceQueue<ClassLoader>
 
         @Override
         public boolean equals(Object object) {
-            if (this == object) return true;
-            if (object == null || getClass() != object.getClass()) return false;
-            if (!super.equals(object)) return false;
+            if (this == object)
+                return true;
+            if (object == null || getClass() != object.getClass())
+                return false;
+            if (!super.equals(object))
+                return false;
             MockitoMockKey that = (MockitoMockKey) object;
-            return stripAnnotations == that.stripAnnotations
-                    && serializableMode.equals(that.serializableMode);
+            return stripAnnotations == that.stripAnnotations && serializableMode.equals(that.serializableMode);
         }
 
         @Override

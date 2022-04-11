@@ -4,6 +4,7 @@
  */
 package org.mockito.internal;
 
+import javax.annotation.Nullable;
 import org.mockito.*;
 import org.mockito.exceptions.misusing.NotAMockException;
 import org.mockito.internal.creation.MockSettingsImpl;
@@ -30,11 +31,9 @@ import org.mockito.stubbing.LenientStubber;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.stubbing.Stubber;
 import org.mockito.verification.VerificationMode;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-
 import static org.mockito.internal.exceptions.Reporter.*;
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
 import static org.mockito.internal.util.MockUtil.*;
@@ -50,11 +49,7 @@ public class MockitoCore {
 
     public <T> T mock(Class<T> typeToMock, MockSettings settings) {
         if (!MockSettingsImpl.class.isInstance(settings)) {
-            throw new IllegalArgumentException(
-                    "Unexpected implementation of '"
-                            + settings.getClass().getCanonicalName()
-                            + "'\n"
-                            + "At the moment, you cannot provide your own implementations of that class.");
+            throw new IllegalArgumentException("Unexpected implementation of '" + settings.getClass().getCanonicalName() + "'\n" + "At the moment, you cannot provide your own implementations of that class.");
         }
         MockSettingsImpl impl = MockSettingsImpl.class.cast(settings);
         MockCreationSettings<T> creationSettings = impl.build(typeToMock);
@@ -65,11 +60,7 @@ public class MockitoCore {
 
     public <T> MockedStatic<T> mockStatic(Class<T> classToMock, MockSettings settings) {
         if (!MockSettingsImpl.class.isInstance(settings)) {
-            throw new IllegalArgumentException(
-                    "Unexpected implementation of '"
-                            + settings.getClass().getCanonicalName()
-                            + "'\n"
-                            + "At the moment, you cannot provide your own implementations of that class.");
+            throw new IllegalArgumentException("Unexpected implementation of '" + settings.getClass().getCanonicalName() + "'\n" + "At the moment, you cannot provide your own implementations of that class.");
         }
         MockSettingsImpl impl = MockSettingsImpl.class.cast(settings);
         MockCreationSettings<T> creationSettings = impl.buildStatic(classToMock);
@@ -79,25 +70,16 @@ public class MockitoCore {
         return new MockedStaticImpl<>(control);
     }
 
-    public <T> MockedConstruction<T> mockConstruction(
-            Class<T> typeToMock,
-            Function<MockedConstruction.Context, ? extends MockSettings> settingsFactory,
-            MockedConstruction.MockInitializer<T> mockInitializer) {
-        Function<MockedConstruction.Context, MockCreationSettings<T>> creationSettings =
-                context -> {
-                    MockSettings value = settingsFactory.apply(context);
-                    if (!MockSettingsImpl.class.isInstance(value)) {
-                        throw new IllegalArgumentException(
-                                "Unexpected implementation of '"
-                                        + value.getClass().getCanonicalName()
-                                        + "'\n"
-                                        + "At the moment, you cannot provide your own implementations of that class.");
-                    }
-                    MockSettingsImpl impl = MockSettingsImpl.class.cast(value);
-                    return impl.build(typeToMock);
-                };
-        MockMaker.ConstructionMockControl<T> control =
-                createConstructionMock(typeToMock, creationSettings, mockInitializer);
+    public <T> MockedConstruction<T> mockConstruction(Class<T> typeToMock, Function<MockedConstruction.Context, ? extends MockSettings> settingsFactory, MockedConstruction.MockInitializer<T> mockInitializer) {
+        Function<MockedConstruction.Context, MockCreationSettings<T>> creationSettings = context -> {
+            MockSettings value = settingsFactory.apply(context);
+            if (!MockSettingsImpl.class.isInstance(value)) {
+                throw new IllegalArgumentException("Unexpected implementation of '" + value.getClass().getCanonicalName() + "'\n" + "At the moment, you cannot provide your own implementations of that class.");
+            }
+            MockSettingsImpl impl = MockSettingsImpl.class.cast(value);
+            return impl.build(typeToMock);
+        };
+        MockMaker.ConstructionMockControl<T> control = createConstructionMock(typeToMock, creationSettings, mockInitializer);
         control.enable();
         return new MockedConstructionImpl<>(control);
     }
@@ -124,17 +106,10 @@ public class MockitoCore {
         }
         assertNotStubOnlyMock(mock);
         MockHandler handler = mockingDetails.getMockHandler();
-        mock =
-                (T)
-                        VerificationStartedNotifier.notifyVerificationStarted(
-                                handler.getMockSettings().getVerificationStartedListeners(),
-                                mockingDetails);
-
+        mock = (T) VerificationStartedNotifier.notifyVerificationStarted(handler.getMockSettings().getVerificationStartedListeners(), mockingDetails);
         MockingProgress mockingProgress = mockingProgress();
         VerificationMode actualMode = mockingProgress.maybeVerifyLazily(mode);
-        mockingProgress.verificationStarted(
-                new MockAwareVerificationMode(
-                        mock, actualMode, mockingProgress.verificationListeners()));
+        mockingProgress.verificationStarted(new MockAwareVerificationMode(mock, actualMode, mockingProgress.verificationListeners()));
         return mock;
     }
 
@@ -143,7 +118,6 @@ public class MockitoCore {
         mockingProgress.validateState();
         mockingProgress.reset();
         mockingProgress.resetOngoingStubbing();
-
         for (T m : mocks) {
             resetMock(m);
         }
@@ -154,7 +128,6 @@ public class MockitoCore {
         mockingProgress.validateState();
         mockingProgress.reset();
         mockingProgress.resetOngoingStubbing();
-
         for (T m : mocks) {
             getInvocationContainer(m).clearInvocations();
         }
@@ -198,9 +171,7 @@ public class MockitoCore {
 
     public void verifyNoMoreInteractionsInOrder(List<Object> mocks, InOrderContext inOrderContext) {
         mockingProgress().validateState();
-        VerificationDataInOrder data =
-                new VerificationDataInOrderImpl(
-                        inOrderContext, VerifiableInvocationsFinder.find(mocks), null);
+        VerificationDataInOrder data = new VerificationDataInOrderImpl(inOrderContext, VerifiableInvocationsFinder.find(mocks), null);
         VerificationModeFactory.noMoreInteractions().verifyInOrder(data);
     }
 
@@ -236,7 +207,7 @@ public class MockitoCore {
         return stubber(null);
     }
 
-    public Stubber stubber(Strictness strictness) {
+    public Stubber stubber(@Nullable Strictness strictness) {
         MockingProgress mockingProgress = mockingProgress();
         mockingProgress.stubbingStarted();
         mockingProgress.resetOngoingStubbing();
@@ -253,8 +224,7 @@ public class MockitoCore {
      * @return last invocation
      */
     public Invocation getLastInvocation() {
-        OngoingStubbingImpl ongoingStubbing =
-                ((OngoingStubbingImpl) mockingProgress().pullOngoingStubbing());
+        OngoingStubbingImpl ongoingStubbing = ((OngoingStubbingImpl) mockingProgress().pullOngoingStubbing());
         List<Invocation> allInvocations = ongoingStubbing.getRegisteredInvocations();
         return allInvocations.get(allInvocations.size() - 1);
     }

@@ -4,6 +4,8 @@
  */
 package org.mockito.internal.creation.bytebuddy;
 
+import javax.annotation.Nullable;
+
 public interface BytecodeGenerator {
 
     <T> Class<? extends T> mockClass(MockFeatures<T> features);
