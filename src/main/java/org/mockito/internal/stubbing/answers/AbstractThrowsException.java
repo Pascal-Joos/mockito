@@ -4,9 +4,9 @@
  */
 package org.mockito.internal.stubbing.answers;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.exceptions.Reporter.cannotStubWithNullThrowable;
 import static org.mockito.internal.exceptions.Reporter.checkedExceptionInvalid;
-
 import org.mockito.internal.exceptions.stacktrace.ConditionalStackTraceFilter;
 import org.mockito.internal.util.MockUtil;
 import org.mockito.invocation.InvocationOnMock;
@@ -17,19 +17,18 @@ public abstract class AbstractThrowsException implements Answer<Object>, Validab
 
     private final ConditionalStackTraceFilter filter = new ConditionalStackTraceFilter();
 
+    @Nullable
     protected abstract Throwable getThrowable();
 
     public Object answer(InvocationOnMock invocation) throws Throwable {
         Throwable throwable = getThrowable();
         if (throwable == null) {
-            throw new IllegalStateException(
-                    "throwable is null: " + "you shall not call #answer if #validateFor fails!");
+            throw new IllegalStateException("throwable is null: " + "you shall not call #answer if #validateFor fails!");
         }
         if (MockUtil.isMock(throwable)) {
             throw throwable;
         }
         Throwable t = throwable.fillInStackTrace();
-
         if (t == null) {
             // Custom exceptions sometimes return null, see #866
             throw throwable;
@@ -44,11 +43,9 @@ public abstract class AbstractThrowsException implements Answer<Object>, Validab
         if (throwable == null) {
             throw cannotStubWithNullThrowable();
         }
-
         if (throwable instanceof RuntimeException || throwable instanceof Error) {
             return;
         }
-
         if (!new InvocationInfo(invocation).isValidException(throwable)) {
             throw checkedExceptionInvalid(throwable);
         }

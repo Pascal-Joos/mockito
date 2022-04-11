@@ -4,8 +4,8 @@
  */
 package org.mockito.internal.util;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
-
 import org.mockito.MockingDetails;
 import org.mockito.exceptions.misusing.NotAMockException;
 import org.mockito.internal.debugging.InvocationsPrinter;
@@ -80,13 +80,9 @@ public class DefaultMockingDetails implements MockingDetails {
 
     private void assertGoodMock() {
         if (toInspect == null) {
-            throw new NotAMockException(
-                    "Argument passed to Mockito.mockingDetails() should be a mock, but is null!");
+            throw new NotAMockException("Argument passed to Mockito.mockingDetails() should be a mock, but is null!");
         } else if (!isMock()) {
-            throw new NotAMockException(
-                    "Argument passed to Mockito.mockingDetails() should be a mock, but is an instance of "
-                            + toInspect.getClass()
-                            + "!");
+            throw new NotAMockException("Argument passed to Mockito.mockingDetails() should be a mock, but is an instance of " + toInspect.getClass() + "!");
         }
     }
 }
