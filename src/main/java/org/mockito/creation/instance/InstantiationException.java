@@ -4,6 +4,7 @@
  */
 package org.mockito.creation.instance;
 
+import javax.annotation.Nullable;
 import org.mockito.exceptions.base.MockitoException;
 
 /**
@@ -23,7 +24,7 @@ public class InstantiationException extends MockitoException {
     /**
      * @since 2.15.4
      */
-    public InstantiationException(String message, Throwable cause) {
+    public InstantiationException(@Nullable String message, @Nullable Throwable cause) {
         super(message, cause);
     }
 }
