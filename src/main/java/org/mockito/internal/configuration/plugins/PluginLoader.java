@@ -4,15 +4,16 @@
  */
 package org.mockito.internal.configuration.plugins;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-
 import org.mockito.plugins.PluginSwitch;
 
 class PluginLoader {
 
     private final DefaultMockitoPlugins plugins;
+
     private final PluginInitializer initializer;
 
     PluginLoader(DefaultMockitoPlugins plugins, PluginInitializer initializer) {
@@ -21,9 +22,7 @@ class PluginLoader {
     }
 
     PluginLoader(PluginSwitch pluginSwitch) {
-        this(
-                new DefaultMockitoPlugins(),
-                new PluginInitializer(pluginSwitch, null, new DefaultMockitoPlugins()));
+        this(new DefaultMockitoPlugins(), new PluginInitializer(pluginSwitch, null, new DefaultMockitoPlugins()));
     }
 
     /**
@@ -35,9 +34,7 @@ class PluginLoader {
      */
     @Deprecated
     PluginLoader(PluginSwitch pluginSwitch, String alias) {
-        this(
-                new DefaultMockitoPlugins(),
-                new PluginInitializer(pluginSwitch, alias, new DefaultMockitoPlugins()));
+        this(new DefaultMockitoPlugins(), new PluginInitializer(pluginSwitch, alias, new DefaultMockitoPlugins()));
     }
 
     /**
@@ -56,9 +53,7 @@ class PluginLoader {
      * @return An object of either {@code preferredPluginType} or {@code alternatePluginType}
      */
     @SuppressWarnings("unchecked")
-    <PreferredType, AlternateType> Object loadPlugin(
-            final Class<PreferredType> preferredPluginType,
-            final Class<AlternateType> alternatePluginType) {
+    <PreferredType, AlternateType> Object loadPlugin(final Class<PreferredType> preferredPluginType, @Nullable final Class<AlternateType> alternatePluginType) {
         try {
             PreferredType preferredPlugin = initializer.loadImpl(preferredPluginType);
             if (preferredPlugin != null) {
@@ -69,25 +64,15 @@ class PluginLoader {
                     return alternatePlugin;
                 }
             }
-
             return plugins.getDefaultPlugin(preferredPluginType);
         } catch (final Throwable t) {
-            return Proxy.newProxyInstance(
-                    preferredPluginType.getClassLoader(),
-                    new Class<?>[] {preferredPluginType},
-                    new InvocationHandler() {
-                        @Override
-                        public Object invoke(Object proxy, Method method, Object[] args)
-                                throws Throwable {
-                            throw new IllegalStateException(
-                                    "Could not initialize plugin: "
-                                            + preferredPluginType
-                                            + " (alternate: "
-                                            + alternatePluginType
-                                            + ")",
-                                    t);
-                        }
-                    });
+            return Proxy.newProxyInstance(preferredPluginType.getClassLoader(), new Class<?>[] { preferredPluginType }, new InvocationHandler() {
+
+                @Override
+                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                    throw new IllegalStateException("Could not initialize plugin: " + preferredPluginType + " (alternate: " + alternatePluginType + ")", t);
+                }
+            });
         }
     }
 }

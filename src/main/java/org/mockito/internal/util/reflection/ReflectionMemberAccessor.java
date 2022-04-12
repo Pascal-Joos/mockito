@@ -4,35 +4,29 @@
  */
 package org.mockito.internal.util.reflection;
 
+import javax.annotation.Nullable;
 import org.mockito.plugins.MemberAccessor;
-
 import java.lang.reflect.*;
 import java.util.Arrays;
 
 public class ReflectionMemberAccessor implements MemberAccessor {
 
     @Override
-    public Object newInstance(Constructor<?> constructor, Object... arguments)
-            throws InstantiationException, InvocationTargetException, IllegalAccessException {
+    public Object newInstance(Constructor<?> constructor, Object... arguments) throws InstantiationException, InvocationTargetException, IllegalAccessException {
         silentSetAccessible(constructor, true);
         try {
             return constructor.newInstance(arguments);
-        } catch (InvocationTargetException
-                | IllegalAccessException
-                | InstantiationException
-                | IllegalArgumentException e) {
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
-            throw new IllegalStateException(
-                    "Failed to invoke " + constructor + " with " + Arrays.toString(arguments), e);
+            throw new IllegalStateException("Failed to invoke " + constructor + " with " + Arrays.toString(arguments), e);
         } finally {
             silentSetAccessible(constructor, false);
         }
     }
 
     @Override
-    public Object invoke(Method method, Object target, Object... arguments)
-            throws InvocationTargetException, IllegalAccessException {
+    public Object invoke(Method method, @Nullable Object target, Object... arguments) throws InvocationTargetException, IllegalAccessException {
         silentSetAccessible(method, true);
         try {
             return method.invoke(target, arguments);

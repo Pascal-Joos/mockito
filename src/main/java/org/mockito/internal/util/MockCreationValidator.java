@@ -4,14 +4,13 @@
  */
 package org.mockito.internal.util;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.exceptions.Reporter.cannotMockClass;
 import static org.mockito.internal.exceptions.Reporter.extraInterfacesCannotContainMockedType;
 import static org.mockito.internal.exceptions.Reporter.mockedTypeIsInconsistentWithDelegatedInstanceType;
 import static org.mockito.internal.exceptions.Reporter.mockedTypeIsInconsistentWithSpiedInstanceType;
 import static org.mockito.internal.exceptions.Reporter.usingConstructorWithFancySerializable;
-
 import java.util.Collection;
-
 import org.mockito.mock.SerializableMode;
 import org.mockito.plugins.MockMaker.TypeMockability;
 
@@ -25,12 +24,10 @@ public class MockCreationValidator {
         }
     }
 
-    public void validateExtraInterfaces(
-            Class<?> classToMock, Collection<Class<?>> extraInterfaces) {
+    public void validateExtraInterfaces(Class<?> classToMock, Collection<Class<?>> extraInterfaces) {
         if (extraInterfaces == null) {
             return;
         }
-
         for (Class<?> i : extraInterfaces) {
             if (classToMock == i) {
                 throw extraInterfacesCannotContainMockedType(classToMock);
@@ -38,7 +35,7 @@ public class MockCreationValidator {
         }
     }
 
-    public void validateMockedType(Class<?> classToMock, Object spiedInstance) {
+    public void validateMockedType(Class<?> classToMock, @Nullable Object spiedInstance) {
         if (classToMock == null || spiedInstance == null) {
             return;
         }
