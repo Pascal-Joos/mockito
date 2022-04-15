@@ -4,6 +4,7 @@
  */
 package org.mockito;
 
+import javax.annotation.Nullable;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.stubbing.Stubber;
@@ -108,7 +109,7 @@ public class BDDMockito extends Mockito {
          * See original {@link OngoingStubbing#thenReturn(Object, Object[])}
          * @since 1.8.0
          */
-        @SuppressWarnings({"unchecked", "varargs"})
+        @SuppressWarnings({ "unchecked", "varargs" })
         BDDMyOngoingStubbing<T> willReturn(T value, T... values);
 
         /**
@@ -129,10 +130,8 @@ public class BDDMockito extends Mockito {
          */
         // Additional method helps users of JDK7+ to hide heap pollution / unchecked generics array
         // creation
-        @SuppressWarnings({"unchecked", "varargs"})
-        BDDMyOngoingStubbing<T> willThrow(
-                Class<? extends Throwable> throwableType,
-                Class<? extends Throwable>... throwableTypes);
+        @SuppressWarnings({ "unchecked", "varargs" })
+        BDDMyOngoingStubbing<T> willThrow(Class<? extends Throwable> throwableType, Class<? extends Throwable>... throwableTypes);
 
         /**
          * See original {@link OngoingStubbing#thenCallRealMethod()}
@@ -151,7 +150,7 @@ public class BDDMockito extends Mockito {
 
         private final OngoingStubbing<T> mockitoOngoingStubbing;
 
-        public BDDOngoingStubbingImpl(OngoingStubbing<T> ongoingStubbing) {
+        public BDDOngoingStubbingImpl(@Nullable OngoingStubbing<T> ongoingStubbing) {
             this.mockitoOngoingStubbing = ongoingStubbing;
         }
 
@@ -179,11 +178,8 @@ public class BDDMockito extends Mockito {
             return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenThrow(throwableType));
         }
 
-        public BDDMyOngoingStubbing<T> willThrow(
-                Class<? extends Throwable> throwableType,
-                Class<? extends Throwable>... throwableTypes) {
-            return new BDDOngoingStubbingImpl<T>(
-                    mockitoOngoingStubbing.thenThrow(throwableType, throwableTypes));
+        public BDDMyOngoingStubbing<T> willThrow(Class<? extends Throwable> throwableType, Class<? extends Throwable>... throwableTypes) {
+            return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenThrow(throwableType, throwableTypes));
         }
 
         public BDDMyOngoingStubbing<T> willCallRealMethod() {
@@ -345,6 +341,7 @@ public class BDDMockito extends Mockito {
      * @since 1.8.0
      */
     public interface BDDStubber {
+
         /**
          * See original {@link Stubber#doAnswer(Answer)}
          * @since 1.8.0
@@ -384,7 +381,7 @@ public class BDDMockito extends Mockito {
          * See original {@link Stubber#doReturn(Object)}
          * @since 2.1.0
          */
-        @SuppressWarnings({"unchecked", "varargs"})
+        @SuppressWarnings({ "unchecked", "varargs" })
         BDDStubber willReturn(Object toBeReturned, Object... nextToBeReturned);
 
         /**
@@ -403,10 +400,8 @@ public class BDDMockito extends Mockito {
          * See original {@link Stubber#doThrow(Class, Class[])}
          * @since 2.1.0
          */
-        @SuppressWarnings({"unchecked", "varargs"})
-        BDDStubber willThrow(
-                Class<? extends Throwable> toBeThrown,
-                Class<? extends Throwable>... nextToBeThrown);
+        @SuppressWarnings({ "unchecked", "varargs" })
+        BDDStubber willThrow(Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... nextToBeThrown);
 
         /**
          * See original {@link Stubber#doCallRealMethod()}
@@ -458,8 +453,7 @@ public class BDDMockito extends Mockito {
         }
 
         public BDDStubber willReturn(Object toBeReturned, Object... nextToBeReturned) {
-            return new BDDStubberImpl(
-                    mockitoStubber.doReturn(toBeReturned).doReturn(nextToBeReturned));
+            return new BDDStubberImpl(mockitoStubber.doReturn(toBeReturned).doReturn(nextToBeReturned));
         }
 
         public BDDStubber willThrow(Throwable... toBeThrown) {
@@ -470,9 +464,7 @@ public class BDDMockito extends Mockito {
             return new BDDStubberImpl(mockitoStubber.doThrow(toBeThrown));
         }
 
-        public BDDStubber willThrow(
-                Class<? extends Throwable> toBeThrown,
-                Class<? extends Throwable>... nextToBeThrown) {
+        public BDDStubber willThrow(Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... nextToBeThrown) {
             return new BDDStubberImpl(mockitoStubber.doThrow(toBeThrown, nextToBeThrown));
         }
 
@@ -501,8 +493,7 @@ public class BDDMockito extends Mockito {
      * see original {@link Mockito#doThrow(Class)}
      * @since 1.9.0
      */
-    public static BDDStubber willThrow(
-            Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... throwableTypes) {
+    public static BDDStubber willThrow(Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... throwableTypes) {
         return new BDDStubberImpl(Mockito.doThrow(toBeThrown, throwableTypes));
     }
 
@@ -542,7 +533,7 @@ public class BDDMockito extends Mockito {
      * see original {@link Mockito#doReturn(Object, Object...)}
      * @since 2.1.0
      */
-    @SuppressWarnings({"unchecked", "varargs"})
+    @SuppressWarnings({ "unchecked", "varargs" })
     public static BDDStubber willReturn(Object toBeReturned, Object... toBeReturnedNext) {
         return new BDDStubberImpl(Mockito.doReturn(toBeReturned, toBeReturnedNext));
     }

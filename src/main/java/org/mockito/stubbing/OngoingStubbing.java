@@ -4,6 +4,7 @@
  */
 package org.mockito.stubbing;
 
+import javax.annotation.Nullable;
 import org.mockito.Mockito;
 import org.mockito.NotExtensible;
 
@@ -47,7 +48,7 @@ public interface OngoingStubbing<T> {
      *
      * @return object that allows stubbing consecutive calls
      */
-    OngoingStubbing<T> thenReturn(T value);
+    OngoingStubbing<T> thenReturn(@Nullable T value);
 
     /**
      * Sets consecutive return values to be returned when the method is called. E.g:
@@ -66,7 +67,7 @@ public interface OngoingStubbing<T> {
      */
     // Additional method helps users of JDK7+ to hide heap pollution / unchecked generics array
     // creation warnings (on call site)
-    @SuppressWarnings({"unchecked", "varargs"})
+    @SuppressWarnings({ "unchecked", "varargs" })
     OngoingStubbing<T> thenReturn(T value, T... values);
 
     /**
@@ -89,6 +90,7 @@ public interface OngoingStubbing<T> {
      *
      * @return object that allows stubbing consecutive calls
      */
+    @Nullable
     OngoingStubbing<T> thenThrow(Throwable... throwables);
 
     /**
@@ -149,9 +151,8 @@ public interface OngoingStubbing<T> {
      */
     // Additional method helps users of JDK7+ to hide heap pollution / unchecked generics array
     // creation warnings (on call site)
-    @SuppressWarnings({"unchecked", "varargs"})
-    OngoingStubbing<T> thenThrow(
-            Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... nextToBeThrown);
+    @SuppressWarnings({ "unchecked", "varargs" })
+    OngoingStubbing<T> thenThrow(Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... nextToBeThrown);
 
     /**
      * Sets the real implementation to be called when the method is called on a mock object.

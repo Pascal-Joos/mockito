@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.util.reflection;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -34,8 +35,7 @@ public class GenericTypeExtractor {
      *                            it will be used for generic type extraction
      * @return generic interface if found, Object.class if not found.
      */
-    public static Class<?> genericTypeOf(
-            Class<?> rootClass, Class<?> targetBaseClass, Class<?> targetBaseInterface) {
+    public static Class<?> genericTypeOf(Class<?> rootClass, Class<?> targetBaseClass, Class<?> targetBaseInterface) {
         // looking for candidates in the hierarchy of rootClass
         Class<?> match = rootClass;
         while (match != Object.class) {
@@ -58,6 +58,7 @@ public class GenericTypeExtractor {
      * Finds generic interface implementation based on the source class and the target interface.
      * Returns null if not found. Recurses the interface hierarchy.
      */
+    @Nullable
     private static Type findGenericInterface(Class<?> sourceClass, Class<?> targetBaseInterface) {
         for (int i = 0; i < sourceClass.getInterfaces().length; i++) {
             Class<?> inter = sourceClass.getInterfaces()[i];
