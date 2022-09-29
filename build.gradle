@@ -111,7 +111,7 @@ tasks.withType(JavaCompile) {
     if (!name.toLowerCase().contains("test")) {
         options.errorprone {
             check("NullAway", CheckSeverity.ERROR)
-            check("TypeAnnotatorScanner", CheckSeverity.ERROR)
+            check("TypeAnnotatorScanner", CheckSeverity.OFF)
             option("NullAway:AnnotatedPackages", "org.mockito")
             option("NullAway:SerializeFixMetadata", "false")
             option("NullAway:FixSerializationConfigPath", "/tmp/NullAwayFix/nullaway.xml")
