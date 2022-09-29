@@ -96,8 +96,8 @@ dependencies {
 
     testUtil sourceSets.test.output
 
-    annotationProcessor "com.uber.nullaway:nullaway:0.9.6"
-    annotationProcessor "edu.ucr.cs.riple.nullawayannotator:css:1.2.3-LOCAL"
+    annotationProcessor "com.uber.nullaway:nullaway:0.10.2"
+    annotationProcessor "edu.ucr.cs.riple.nullawayannotator:type-annotator-scanner:1.3.3-LOCAL"
 
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
     errorprone "com.google.errorprone:error_prone_core:2.3.2"
@@ -111,11 +111,11 @@ tasks.withType(JavaCompile) {
     if (!name.toLowerCase().contains("test")) {
         options.errorprone {
             check("NullAway", CheckSeverity.ERROR)
-            check("CSS", CheckSeverity.ERROR)
+            check("TypeAnnotatorScanner", CheckSeverity.ERROR)
             option("NullAway:AnnotatedPackages", "org.mockito")
-            option("NullAway:SerializeFixMetadata", "true")
-            option("NullAway:FixSerializationConfigPath", "/tmp/NullAwayFix/config.xml")
-            option("CSS:ConfigPath", "/tmp/NullAwayFix/css.xml")
+            option("NullAway:SerializeFixMetadata", "false")
+            option("NullAway:FixSerializationConfigPath", "/tmp/NullAwayFix/nullaway.xml")
+            option("TypeAnnotatorScanner:ConfigPath", "/tmp/NullAwayFix/scanner.xml")
         }
         options.compilerArgs << "-Xmaxerrs" << "100000"
     }
