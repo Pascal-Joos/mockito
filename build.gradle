@@ -115,7 +115,7 @@ tasks.withType(JavaCompile) {
             check("TypeAnnotatorScanner", CheckSeverity.ERROR)
             check("ExhaustiveFixSerializer", CheckSeverity.OFF)
             option("NullAway:AnnotatedPackages", "org.mockito")
-            option("NullAway:SerializeFixMetadata", "false")
+            option("NullAway:SerializeFixMetadata", "true")
             option("NullAway:FixSerializationConfigPath", "/tmp/NullAwayFix/nullaway.xml")
             option("TypeAnnotatorScanner:ConfigPath", "/tmp/NullAwayFix/scanner.xml")
         }
