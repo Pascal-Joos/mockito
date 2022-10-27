@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.util.reflection;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 
 /**
@@ -55,6 +56,7 @@ public class FieldInitializationReport {
      *
      * @return Class of the instance
      */
+    @NullUnmarked
     public Class<?> fieldClass() {
         return fieldInstance != null ? fieldInstance.getClass() : null;
     }

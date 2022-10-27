@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.util.reflection;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.agent.ByteBuddyAgent;
@@ -27,6 +28,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
     @Nullable
     private static final Instrumentation INSTRUMENTATION;
 
+    @SuppressWarnings("NullAway.Init")
     private static final Dispatcher DISPATCHER;
 
     @Nullable
@@ -192,6 +194,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
         }
     }
 
+    @NullUnmarked
     private static void assureArguments(AccessibleObject target, @Nullable Object owner, @Nullable Class<?> type, Object[] values, Class<?>[] types) {
         if (owner != null) {
             if (!type.isAssignableFrom(owner.getClass())) {

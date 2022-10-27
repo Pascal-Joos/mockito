@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.creation.bytebuddy;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
@@ -185,6 +186,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
         }
     }
 
+    @NullUnmarked
     private void assureCanReadMockito(Set<Class<?>> types) {
         if (redefineModule == null) {
             return;

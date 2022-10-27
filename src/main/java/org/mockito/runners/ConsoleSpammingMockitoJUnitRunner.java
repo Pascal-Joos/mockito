@@ -4,6 +4,7 @@
  */
 package org.mockito.runners;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import org.junit.runner.Description;
@@ -55,6 +56,7 @@ public class ConsoleSpammingMockitoJUnitRunner extends Runner implements Filtera
             }
 
             @Override
+            @NullUnmarked
             public void testFailure(Failure failure) throws Exception {
                 logger.log(warningsCollector.getWarnings());
             }

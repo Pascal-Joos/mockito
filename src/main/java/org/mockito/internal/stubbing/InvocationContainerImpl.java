@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.stubbing;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
 import java.io.Serializable;
@@ -38,6 +39,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
     @Nullable
     private final Strictness mockStrictness;
 
+    @SuppressWarnings("NullAway.Init")
     private MatchableInvocation invocationForStubbing;
 
     public InvocationContainerImpl(MockCreationSettings mockSettings) {
@@ -89,6 +91,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
         return findAnswerFor(invocation).answer(invocation);
     }
 
+    @NullUnmarked
     public StubbedInvocationMatcher findAnswerFor(Invocation invocation) {
         synchronized (stubbed) {
             for (StubbedInvocationMatcher s : stubbed) {

@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.stubbing.answers;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import static org.mockito.internal.exceptions.Reporter.cannotStubVoidMethodWithAReturnValue;
 import static org.mockito.internal.exceptions.Reporter.wrongTypeOfReturnValue;
@@ -42,10 +43,12 @@ public class Returns implements Answer<Object>, ValidableAnswer, Serializable {
         }
     }
 
+    @NullUnmarked
     private String printReturnType() {
         return value.getClass().getSimpleName();
     }
 
+    @NullUnmarked
     private Class<?> returnType() {
         return value.getClass();
     }

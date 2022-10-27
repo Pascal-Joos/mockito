@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.creation;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import static java.util.Arrays.asList;
 import static org.mockito.internal.exceptions.Reporter.defaultAnswerDoesNotAcceptNullParameter;
@@ -154,6 +155,7 @@ public class MockSettingsImpl<T> extends CreationSettings<T> implements MockSett
 
     @Override
     @Nullable
+    @NullUnmarked
     public Object[] getConstructorArgs() {
         if (outerClassInstance == null) {
             return constructorArgs;

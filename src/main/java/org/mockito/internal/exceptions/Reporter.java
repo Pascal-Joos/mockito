@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.exceptions;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import static org.mockito.internal.reporting.Pluralizer.pluralize;
 import static org.mockito.internal.reporting.Pluralizer.were_exactly_x_interactions;
@@ -228,6 +229,7 @@ public class Reporter {
         return new VerificationInOrderFailure(join("Verification in order failure:" + message));
     }
 
+    @NullUnmarked
     public static MockitoAssertionError noMoreInteractionsWanted(@Nullable Invocation undesired, List<VerificationAwareInvocation> invocations) {
         ScenarioPrinter scenarioPrinter = new ScenarioPrinter();
         String scenario = scenarioPrinter.print(invocations);

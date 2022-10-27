@@ -4,6 +4,7 @@
  */
 package org.mockito.runners;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import org.junit.runner.Description;
@@ -53,6 +54,7 @@ public class VerboseMockitoJUnitRunner extends Runner implements Filterable {
 
             @Override
             @SuppressWarnings("deprecation")
+            @NullUnmarked
             public void testFailure(final Failure failure) throws Exception {
                 String warnings = warningsCollector.getWarnings();
                 new JUnitFailureHacker().appendWarnings(failure, warnings);

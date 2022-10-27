@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.creation.bytebuddy.inject;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
@@ -39,12 +40,14 @@ public abstract class MockMethodDispatcher {
     }
 
     @SuppressWarnings("unused")
+    @NullUnmarked
     public static boolean isConstructorMock(String identifier, Class<?> type) {
         return DISPATCHERS.get(identifier).isConstructorMock(type);
     }
 
     @SuppressWarnings("unused")
     @Nullable
+    @NullUnmarked
     public static Object handleConstruction(String identifier, Class<?> type, Object object, Object[] arguments, String[] parameterTypeNames) {
         return DISPATCHERS.get(identifier).handleConstruction(type, object, arguments, parameterTypeNames);
     }

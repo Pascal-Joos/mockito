@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.util.concurrent;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
@@ -353,6 +354,7 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K> implements Runnab
 
         final Map.Entry<WeakKey<K>, V> entry;
 
+        @NullUnmarked
         private SimpleEntry(K key, @Nullable Map.Entry<WeakKey<K>, V> entry) {
             this.key = key;
             this.entry = entry;

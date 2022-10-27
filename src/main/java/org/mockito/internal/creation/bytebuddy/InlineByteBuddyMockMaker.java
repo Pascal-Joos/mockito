@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.creation.bytebuddy;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -169,6 +170,7 @@ public class InlineByteBuddyMockMaker implements ClassCreatingMockMaker, InlineM
 
     private final ThreadLocal<Object> currentSpied = new ThreadLocal<>();
 
+    @NullUnmarked
     public InlineByteBuddyMockMaker() {
         if (INITIALIZATION_ERROR != null) {
             String detail;
@@ -229,6 +231,7 @@ public class InlineByteBuddyMockMaker implements ClassCreatingMockMaker, InlineM
 
     @Override
     @Nullable
+    @NullUnmarked
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
         return doCreateMock(settings, handler, false);
     }
@@ -353,6 +356,7 @@ public class InlineByteBuddyMockMaker implements ClassCreatingMockMaker, InlineM
         return new TypeMockability() {
 
             @Override
+            @NullUnmarked
             public boolean mockable() {
                 return INSTRUMENTATION.isModifiableClass(type) && !EXCLUDES.contains(type);
             }

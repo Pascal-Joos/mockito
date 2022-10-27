@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.util;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
@@ -55,6 +56,7 @@ public class MockUtil {
         mockMaker.resetMock(mock, newHandler, settings);
     }
 
+    @NullUnmarked
     public static <T> MockHandler<T> getMockHandler(T mock) {
         if (mock == null) {
             throw new NotAMockException("Argument should be a mock, but is null!");

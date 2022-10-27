@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.util;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class Primitives {
      * @param <T>   The type
      * @return The primitive type if relevant, otherwise <code>null</code>
      */
+    @NullUnmarked
     public static <T> Class<T> primitiveTypeOf(Class<T> clazz) {
         if (clazz.isPrimitive()) {
             return clazz;

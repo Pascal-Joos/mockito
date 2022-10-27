@@ -4,6 +4,7 @@
  */
 package org.mockito.internal;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import org.mockito.*;
 import org.mockito.exceptions.misusing.NotAMockException;
@@ -223,6 +224,7 @@ public class MockitoCore {
      *
      * @return last invocation
      */
+    @NullUnmarked
     public Invocation getLastInvocation() {
         OngoingStubbingImpl ongoingStubbing = ((OngoingStubbingImpl) mockingProgress().pullOngoingStubbing());
         List<Invocation> allInvocations = ongoingStubbing.getRegisteredInvocations();

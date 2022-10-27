@@ -24,6 +24,7 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
 
     private static final long serialVersionUID = -6789800638070123629L;
 
+    @SuppressWarnings("NullAway.Init")
     protected Class<T> typeToMock;
 
     protected Set<Class<?>> extraInterfaces = new LinkedHashSet<Class<?>>();
@@ -34,8 +35,10 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
     @Nullable
     protected Object spiedInstance;
 
+    @SuppressWarnings("NullAway.Init")
     protected Answer<Object> defaultAnswer;
 
+    @SuppressWarnings("NullAway.Init")
     protected MockName mockName;
 
     protected SerializableMode serializableMode = SerializableMode.NONE;

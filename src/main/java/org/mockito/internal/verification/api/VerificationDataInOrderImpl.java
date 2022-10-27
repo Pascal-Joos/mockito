@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.verification.api;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import java.util.List;
 import org.mockito.invocation.Invocation;
@@ -33,6 +34,7 @@ public class VerificationDataInOrderImpl implements VerificationDataInOrder {
     }
 
     @Nullable
+    @NullUnmarked
     public MatchableInvocation getWanted() {
         return wanted;
     }

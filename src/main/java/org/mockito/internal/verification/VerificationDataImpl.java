@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.verification;
 
+import org.mockito.NullUnmarked;
 import javax.annotation.Nullable;
 import static org.mockito.internal.exceptions.Reporter.cannotVerifyToString;
 import static org.mockito.internal.util.ObjectMethodsGuru.isToStringMethod;
@@ -20,6 +21,7 @@ public class VerificationDataImpl implements VerificationData {
 
     private final InvocationContainerImpl invocations;
 
+    @NullUnmarked
     public VerificationDataImpl(InvocationContainerImpl invocations, @Nullable InvocationMatcher wanted) {
         this.invocations = invocations;
         this.wanted = wanted;
