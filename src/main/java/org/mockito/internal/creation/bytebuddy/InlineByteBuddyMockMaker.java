@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.creation.bytebuddy;
 
+import org.mockito.NullUnmarked;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,7 +20,6 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
-
 import net.bytebuddy.agent.ByteBuddyAgent;
 import org.mockito.Incubating;
 import org.mockito.MockedConstruction;
@@ -36,7 +36,6 @@ import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.InlineMockMaker;
 import org.mockito.plugins.MemberAccessor;
-
 import static org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.*;
 import static org.mockito.internal.util.StringUtil.*;
 
@@ -99,11 +98,12 @@ import static org.mockito.internal.util.StringUtil.*;
  * support this feature.
  */
 @Incubating
-public class InlineByteBuddyMockMaker
-        implements ClassCreatingMockMaker, InlineMockMaker, Instantiator {
+public class InlineByteBuddyMockMaker implements ClassCreatingMockMaker, InlineMockMaker, Instantiator {
 
+    @SuppressWarnings("NullAway.Init")
     private static final Instrumentation INSTRUMENTATION;
 
+    @SuppressWarnings("NullAway.Init")
     private static final Throwable INITIALIZATION_ERROR;
 
     static {
@@ -113,31 +113,16 @@ public class InlineByteBuddyMockMaker
             try {
                 instrumentation = ByteBuddyAgent.install();
                 if (!instrumentation.isRetransformClassesSupported()) {
-                    throw new IllegalStateException(
-                            join(
-                                    "Byte Buddy requires retransformation for creating inline mocks. This feature is unavailable on the current VM.",
-                                    "",
-                                    "You cannot use this mock maker on this VM"));
+                    throw new IllegalStateException(join("Byte Buddy requires retransformation for creating inline mocks. This feature is unavailable on the current VM.", "", "You cannot use this mock maker on this VM"));
                 }
                 File boot = File.createTempFile("mockitoboot", ".jar");
                 boot.deleteOnExit();
                 JarOutputStream outputStream = new JarOutputStream(new FileOutputStream(boot));
                 try {
-                    String source =
-                            "org/mockito/internal/creation/bytebuddy/inject/MockMethodDispatcher";
-                    InputStream inputStream =
-                            InlineByteBuddyMockMaker.class
-                                    .getClassLoader()
-                                    .getResourceAsStream(source + ".raw");
+                    String source = "org/mockito/internal/creation/bytebuddy/inject/MockMethodDispatcher";
+                    InputStream inputStream = InlineByteBuddyMockMaker.class.getClassLoader().getResourceAsStream(source + ".raw");
                     if (inputStream == null) {
-                        throw new IllegalStateException(
-                                join(
-                                        "The MockMethodDispatcher class file is not locatable: "
-                                                + source
-                                                + ".raw",
-                                        "",
-                                        "The class loader responsible for looking up the resource: "
-                                                + InlineByteBuddyMockMaker.class.getClassLoader()));
+                        throw new IllegalStateException(join("The MockMethodDispatcher class file is not locatable: " + source + ".raw", "", "The class loader responsible for looking up the resource: " + InlineByteBuddyMockMaker.class.getClassLoader()));
                     }
                     outputStream.putNextEntry(new JarEntry(source + ".class"));
                     try {
@@ -157,27 +142,12 @@ public class InlineByteBuddyMockMaker
                     instrumentation.appendToBootstrapClassLoaderSearch(jarfile);
                 }
                 try {
-                    Class.forName(
-                            "org.mockito.internal.creation.bytebuddy.inject.MockMethodDispatcher",
-                            false,
-                            null);
+                    Class.forName("org.mockito.internal.creation.bytebuddy.inject.MockMethodDispatcher", false, null);
                 } catch (ClassNotFoundException cnfe) {
-                    throw new IllegalStateException(
-                            join(
-                                    "Mockito failed to inject the MockMethodDispatcher class into the bootstrap class loader",
-                                    "",
-                                    "It seems like your current VM does not support the instrumentation API correctly."),
-                            cnfe);
+                    throw new IllegalStateException(join("Mockito failed to inject the MockMethodDispatcher class into the bootstrap class loader", "", "It seems like your current VM does not support the instrumentation API correctly."), cnfe);
                 }
             } catch (IOException ioe) {
-                throw new IllegalStateException(
-                        join(
-                                "Mockito could not self-attach a Java agent to the current VM. This feature is required for inline mocking.",
-                                "This error occured due to an I/O error during the creation of this agent: "
-                                        + ioe,
-                                "",
-                                "Potentially, the current VM does not support the instrumentation API correctly"),
-                        ioe);
+                throw new IllegalStateException(join("Mockito could not self-attach a Java agent to the current VM. This feature is required for inline mocking.", "This error occured due to an I/O error during the creation of this agent: " + ioe, "", "Potentially, the current VM does not support the instrumentation API correctly"), ioe);
             }
         } catch (Throwable throwable) {
             instrumentation = null;
@@ -189,107 +159,73 @@ public class InlineByteBuddyMockMaker
 
     private final BytecodeGenerator bytecodeGenerator;
 
-    private final WeakConcurrentMap<Object, MockMethodInterceptor> mocks =
-            new WeakConcurrentMap.WithInlinedExpunction<Object, MockMethodInterceptor>();
+    private final WeakConcurrentMap<Object, MockMethodInterceptor> mocks = new WeakConcurrentMap.WithInlinedExpunction<Object, MockMethodInterceptor>();
 
-    private final DetachedThreadLocal<Map<Class<?>, MockMethodInterceptor>> mockedStatics =
-            new DetachedThreadLocal<>(DetachedThreadLocal.Cleaner.INLINE);
+    private final DetachedThreadLocal<Map<Class<?>, MockMethodInterceptor>> mockedStatics = new DetachedThreadLocal<>(DetachedThreadLocal.Cleaner.INLINE);
 
-    private final DetachedThreadLocal<Map<Class<?>, BiConsumer<Object, MockedConstruction.Context>>>
-            mockedConstruction = new DetachedThreadLocal<>(DetachedThreadLocal.Cleaner.INLINE);
+    private final DetachedThreadLocal<Map<Class<?>, BiConsumer<Object, MockedConstruction.Context>>> mockedConstruction = new DetachedThreadLocal<>(DetachedThreadLocal.Cleaner.INLINE);
 
     private final ThreadLocal<Boolean> mockitoConstruction = ThreadLocal.withInitial(() -> false);
 
     private final ThreadLocal<Object> currentSpied = new ThreadLocal<>();
 
+    @NullUnmarked
     public InlineByteBuddyMockMaker() {
         if (INITIALIZATION_ERROR != null) {
             String detail;
-            if (System.getProperty("java.specification.vendor", "")
-                    .toLowerCase()
-                    .contains("android")) {
-                detail =
-                        "It appears as if you are trying to run this mock maker on Android which does not support the instrumentation API.";
+            if (System.getProperty("java.specification.vendor", "").toLowerCase().contains("android")) {
+                detail = "It appears as if you are trying to run this mock maker on Android which does not support the instrumentation API.";
             } else {
                 try {
-                    if (Class.forName("javax.tools.ToolProvider")
-                                    .getMethod("getSystemJavaCompiler")
-                                    .invoke(null)
-                            == null) {
-                        detail =
-                                "It appears as if you are running on a JRE. Either install a JDK or add JNA to the class path.";
+                    if (Class.forName("javax.tools.ToolProvider").getMethod("getSystemJavaCompiler").invoke(null) == null) {
+                        detail = "It appears as if you are running on a JRE. Either install a JDK or add JNA to the class path.";
                     } else {
-                        detail =
-                                "It appears as if your JDK does not supply a working agent attachment mechanism.";
+                        detail = "It appears as if your JDK does not supply a working agent attachment mechanism.";
                     }
                 } catch (Throwable ignored) {
-                    detail =
-                            "It appears as if you are running an incomplete JVM installation that might not support all tooling APIs";
+                    detail = "It appears as if you are running an incomplete JVM installation that might not support all tooling APIs";
                 }
             }
-            throw new MockitoInitializationException(
-                    join(
-                            "Could not initialize inline Byte Buddy mock maker.",
-                            "",
-                            detail,
-                            Platform.describe()),
-                    INITIALIZATION_ERROR);
+            throw new MockitoInitializationException(join("Could not initialize inline Byte Buddy mock maker.", "", detail, Platform.describe()), INITIALIZATION_ERROR);
         }
-
         ThreadLocal<Class<?>> currentConstruction = new ThreadLocal<>();
         ThreadLocal<Boolean> isSuspended = ThreadLocal.withInitial(() -> false);
-        Predicate<Class<?>> isMockConstruction =
-                type -> {
-                    if (isSuspended.get()) {
-                        return false;
-                    } else if (mockitoConstruction.get() || currentConstruction.get() != null) {
-                        return true;
+        Predicate<Class<?>> isMockConstruction = type -> {
+            if (isSuspended.get()) {
+                return false;
+            } else if (mockitoConstruction.get() || currentConstruction.get() != null) {
+                return true;
+            }
+            Map<Class<?>, ?> interceptors = mockedConstruction.get();
+            if (interceptors != null && interceptors.containsKey(type)) {
+                currentConstruction.set(type);
+                return true;
+            } else {
+                return false;
+            }
+        };
+        ConstructionCallback onConstruction = (type, object, arguments, parameterTypeNames) -> {
+            if (mockitoConstruction.get()) {
+                return currentSpied.get();
+            } else if (currentConstruction.get() != type) {
+                return null;
+            }
+            currentConstruction.remove();
+            isSuspended.set(true);
+            try {
+                Map<Class<?>, BiConsumer<Object, MockedConstruction.Context>> interceptors = mockedConstruction.get();
+                if (interceptors != null) {
+                    BiConsumer<Object, MockedConstruction.Context> interceptor = interceptors.get(type);
+                    if (interceptor != null) {
+                        interceptor.accept(object, new InlineConstructionMockContext(arguments, object.getClass(), parameterTypeNames));
                     }
-                    Map<Class<?>, ?> interceptors = mockedConstruction.get();
-                    if (interceptors != null && interceptors.containsKey(type)) {
-                        currentConstruction.set(type);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                };
-        ConstructionCallback onConstruction =
-                (type, object, arguments, parameterTypeNames) -> {
-                    if (mockitoConstruction.get()) {
-                        return currentSpied.get();
-                    } else if (currentConstruction.get() != type) {
-                        return null;
-                    }
-                    currentConstruction.remove();
-                    isSuspended.set(true);
-                    try {
-                        Map<Class<?>, BiConsumer<Object, MockedConstruction.Context>> interceptors =
-                                mockedConstruction.get();
-                        if (interceptors != null) {
-                            BiConsumer<Object, MockedConstruction.Context> interceptor =
-                                    interceptors.get(type);
-                            if (interceptor != null) {
-                                interceptor.accept(
-                                        object,
-                                        new InlineConstructionMockContext(
-                                                arguments, object.getClass(), parameterTypeNames));
-                            }
-                        }
-                    } finally {
-                        isSuspended.set(false);
-                    }
-                    return null;
-                };
-
-        bytecodeGenerator =
-                new TypeCachingBytecodeGenerator(
-                        new InlineBytecodeGenerator(
-                                INSTRUMENTATION,
-                                mocks,
-                                mockedStatics,
-                                isMockConstruction,
-                                onConstruction),
-                        true);
+                }
+            } finally {
+                isSuspended.set(false);
+            }
+            return null;
+        };
+        bytecodeGenerator = new TypeCachingBytecodeGenerator(new InlineBytecodeGenerator(INSTRUMENTATION, mocks, mockedStatics, isMockConstruction, onConstruction), true);
     }
 
     @Override
@@ -298,8 +234,7 @@ public class InlineByteBuddyMockMaker
     }
 
     @Override
-    public <T> Optional<T> createSpy(
-            MockCreationSettings<T> settings, MockHandler handler, T object) {
+    public <T> Optional<T> createSpy(MockCreationSettings<T> settings, MockHandler handler, T object) {
         if (object == null) {
             throw new MockitoConfigurationException("Spy instance must not be null");
         }
@@ -311,12 +246,9 @@ public class InlineByteBuddyMockMaker
         }
     }
 
-    private <T> T doCreateMock(
-            MockCreationSettings<T> settings,
-            MockHandler handler,
-            boolean nullOnNonInlineConstruction) {
+    @NullUnmarked
+    private <T> T doCreateMock(MockCreationSettings<T> settings, MockHandler handler, boolean nullOnNonInlineConstruction) {
         Class<? extends T> type = createMockType(settings);
-
         try {
             T instance;
             try {
@@ -326,92 +258,44 @@ public class InlineByteBuddyMockMaker
                 if (nullOnNonInlineConstruction) {
                     return null;
                 }
-                Instantiator instantiator =
-                        Plugins.getInstantiatorProvider().getInstantiator(settings);
+                Instantiator instantiator = Plugins.getInstantiatorProvider().getInstantiator(settings);
                 instance = instantiator.newInstance(type);
             }
-            MockMethodInterceptor mockMethodInterceptor =
-                    new MockMethodInterceptor(handler, settings);
+            MockMethodInterceptor mockMethodInterceptor = new MockMethodInterceptor(handler, settings);
             mocks.put(instance, mockMethodInterceptor);
             if (instance instanceof MockAccess) {
                 ((MockAccess) instance).setMockitoInterceptor(mockMethodInterceptor);
             }
             return instance;
         } catch (org.mockito.creation.instance.InstantiationException e) {
-            throw new MockitoException(
-                    "Unable to create mock instance of type '" + type.getSimpleName() + "'", e);
+            throw new MockitoException("Unable to create mock instance of type '" + type.getSimpleName() + "'", e);
         }
     }
 
     @Override
     public <T> Class<? extends T> createMockType(MockCreationSettings<T> settings) {
         try {
-            return bytecodeGenerator.mockClass(
-                    MockFeatures.withMockFeatures(
-                            settings.getTypeToMock(),
-                            settings.getExtraInterfaces(),
-                            settings.getSerializableMode(),
-                            settings.isStripAnnotations()));
+            return bytecodeGenerator.mockClass(MockFeatures.withMockFeatures(settings.getTypeToMock(), settings.getExtraInterfaces(), settings.getSerializableMode(), settings.isStripAnnotations()));
         } catch (Exception bytecodeGenerationFailed) {
             throw prettifyFailure(settings, bytecodeGenerationFailed);
         }
     }
 
-    private <T> RuntimeException prettifyFailure(
-            MockCreationSettings<T> mockFeatures, Exception generationFailed) {
+    private <T> RuntimeException prettifyFailure(MockCreationSettings<T> mockFeatures, Exception generationFailed) {
         if (mockFeatures.getTypeToMock().isArray()) {
-            throw new MockitoException(
-                    join("Arrays cannot be mocked: " + mockFeatures.getTypeToMock() + ".", ""),
-                    generationFailed);
+            throw new MockitoException(join("Arrays cannot be mocked: " + mockFeatures.getTypeToMock() + ".", ""), generationFailed);
         }
         if (Modifier.isFinal(mockFeatures.getTypeToMock().getModifiers())) {
-            throw new MockitoException(
-                    join(
-                            "Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".",
-                            "Can not mock final classes with the following settings :",
-                            " - explicit serialization (e.g. withSettings().serializable())",
-                            " - extra interfaces (e.g. withSettings().extraInterfaces(...))",
-                            "",
-                            "You are seeing this disclaimer because Mockito is configured to create inlined mocks.",
-                            "You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.",
-                            "",
-                            "Underlying exception : " + generationFailed),
-                    generationFailed);
+            throw new MockitoException(join("Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".", "Can not mock final classes with the following settings :", " - explicit serialization (e.g. withSettings().serializable())", " - extra interfaces (e.g. withSettings().extraInterfaces(...))", "", "You are seeing this disclaimer because Mockito is configured to create inlined mocks.", "You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.", "", "Underlying exception : " + generationFailed), generationFailed);
         }
         if (Modifier.isPrivate(mockFeatures.getTypeToMock().getModifiers())) {
-            throw new MockitoException(
-                    join(
-                            "Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".",
-                            "Most likely it is a private class that is not visible by Mockito",
-                            "",
-                            "You are seeing this disclaimer because Mockito is configured to create inlined mocks.",
-                            "You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.",
-                            ""),
-                    generationFailed);
+            throw new MockitoException(join("Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".", "Most likely it is a private class that is not visible by Mockito", "", "You are seeing this disclaimer because Mockito is configured to create inlined mocks.", "You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.", ""), generationFailed);
         }
-        throw new MockitoException(
-                join(
-                        "Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".",
-                        "",
-                        "If you're not sure why you're getting this error, please report to the mailing list.",
-                        "",
-                        Platform.warnForVM(
-                                "IBM J9 VM",
-                                "Early IBM virtual machine are known to have issues with Mockito, please upgrade to an up-to-date version.\n",
-                                "Hotspot",
-                                Platform.isJava8BelowUpdate45()
-                                        ? "Java 8 early builds have bugs that were addressed in Java 1.8.0_45, please update your JDK!\n"
-                                        : ""),
-                        Platform.describe(),
-                        "",
-                        "You are seeing this disclaimer because Mockito is configured to create inlined mocks.",
-                        "You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.",
-                        "",
-                        "Underlying exception : " + generationFailed),
-                generationFailed);
+        throw new MockitoException(join("Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".", "", "If you're not sure why you're getting this error, please report to the mailing list.", "", Platform.warnForVM("IBM J9 VM", "Early IBM virtual machine are known to have issues with Mockito, please upgrade to an up-to-date version.\n", "Hotspot", Platform.isJava8BelowUpdate45() ? "Java 8 early builds have bugs that were addressed in Java 1.8.0_45, please update your JDK!\n" : ""), Platform.describe(), "", "You are seeing this disclaimer because Mockito is configured to create inlined mocks.", "You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.", "", "Underlying exception : " + generationFailed), generationFailed);
     }
 
     @Override
+    @NullUnmarked
     public MockHandler getHandler(Object mock) {
         MockMethodInterceptor interceptor;
         if (mock instanceof Class<?>) {
@@ -429,21 +313,16 @@ public class InlineByteBuddyMockMaker
 
     @Override
     public void resetMock(Object mock, MockHandler newHandler, MockCreationSettings settings) {
-        MockMethodInterceptor mockMethodInterceptor =
-                new MockMethodInterceptor(newHandler, settings);
+        MockMethodInterceptor mockMethodInterceptor = new MockMethodInterceptor(newHandler, settings);
         if (mock instanceof Class<?>) {
             Map<Class<?>, MockMethodInterceptor> interceptors = mockedStatics.get();
             if (interceptors == null || !interceptors.containsKey(mock)) {
-                throw new MockitoException(
-                        "Cannot reset "
-                                + mock
-                                + " which is not currently registered as a static mock");
+                throw new MockitoException("Cannot reset " + mock + " which is not currently registered as a static mock");
             }
             interceptors.put((Class<?>) mock, mockMethodInterceptor);
         } else {
             if (!mocks.containsKey(mock)) {
-                throw new MockitoException(
-                        "Cannot reset " + mock + " which is not currently registered as a mock");
+                throw new MockitoException("Cannot reset " + mock + " which is not currently registered as a mock");
             }
             mocks.put(mock, mockMethodInterceptor);
             if (mock instanceof MockAccess) {
@@ -472,6 +351,7 @@ public class InlineByteBuddyMockMaker
     @Override
     public TypeMockability isTypeMockable(final Class<?> type) {
         return new TypeMockability() {
+
             @Override
             public boolean mockable() {
                 return INSTRUMENTATION.isModifiableClass(type) && !EXCLUDES.contains(type);
@@ -494,60 +374,35 @@ public class InlineByteBuddyMockMaker
     }
 
     @Override
-    public <T> StaticMockControl<T> createStaticMock(
-            Class<T> type, MockCreationSettings<T> settings, MockHandler handler) {
+    public <T> StaticMockControl<T> createStaticMock(Class<T> type, MockCreationSettings<T> settings, MockHandler handler) {
         if (type == ConcurrentHashMap.class) {
-            throw new MockitoException(
-                    "It is not possible to mock static methods of ConcurrentHashMap "
-                            + "to avoid infinitive loops within Mockito's implementation of static mock handling");
-        } else if (type == Thread.class
-                || type == System.class
-                || type == Arrays.class
-                || ClassLoader.class.isAssignableFrom(type)) {
-            throw new MockitoException(
-                    "It is not possible to mock static methods of "
-                            + type.getTypeName()
-                            + " to avoid interfering with class loading what leads to infinite loops");
+            throw new MockitoException("It is not possible to mock static methods of ConcurrentHashMap " + "to avoid infinitive loops within Mockito's implementation of static mock handling");
+        } else if (type == Thread.class || type == System.class || type == Arrays.class || ClassLoader.class.isAssignableFrom(type)) {
+            throw new MockitoException("It is not possible to mock static methods of " + type.getTypeName() + " to avoid interfering with class loading what leads to infinite loops");
         }
-
         bytecodeGenerator.mockClassStatic(type);
-
         Map<Class<?>, MockMethodInterceptor> interceptors = mockedStatics.get();
         if (interceptors == null) {
             interceptors = new WeakHashMap<>();
             mockedStatics.set(interceptors);
         }
-
         return new InlineStaticMockControl<>(type, interceptors, settings, handler);
     }
 
     @Override
-    public <T> ConstructionMockControl<T> createConstructionMock(
-            Class<T> type,
-            Function<MockedConstruction.Context, MockCreationSettings<T>> settingsFactory,
-            Function<MockedConstruction.Context, MockHandler<T>> handlerFactory,
-            MockedConstruction.MockInitializer<T> mockInitializer) {
+    public <T> ConstructionMockControl<T> createConstructionMock(Class<T> type, Function<MockedConstruction.Context, MockCreationSettings<T>> settingsFactory, Function<MockedConstruction.Context, MockHandler<T>> handlerFactory, MockedConstruction.MockInitializer<T> mockInitializer) {
         if (type == Object.class) {
-            throw new MockitoException(
-                    "It is not possible to mock construction of the Object class "
-                            + "to avoid inference with default object constructor chains");
+            throw new MockitoException("It is not possible to mock construction of the Object class " + "to avoid inference with default object constructor chains");
         } else if (type.isPrimitive() || Modifier.isAbstract(type.getModifiers())) {
-            throw new MockitoException(
-                    "It is not possible to construct primitive types or abstract types: "
-                            + type.getTypeName());
+            throw new MockitoException("It is not possible to construct primitive types or abstract types: " + type.getTypeName());
         }
-
         bytecodeGenerator.mockClassConstruction(type);
-
-        Map<Class<?>, BiConsumer<Object, MockedConstruction.Context>> interceptors =
-                mockedConstruction.get();
+        Map<Class<?>, BiConsumer<Object, MockedConstruction.Context>> interceptors = mockedConstruction.get();
         if (interceptors == null) {
             interceptors = new WeakHashMap<>();
             mockedConstruction.set(interceptors);
         }
-
-        return new InlineConstructionMockControl<>(
-                type, settingsFactory, handlerFactory, mockInitializer, interceptors);
+        return new InlineConstructionMockControl<>(type, settingsFactory, handlerFactory, mockInitializer, interceptors);
     }
 
     @Override
@@ -583,6 +438,7 @@ public class InlineByteBuddyMockMaker
         }
     }
 
+    @NullUnmarked
     private Object makeStandardArgument(Class<?> type) {
         if (type == boolean.class) {
             return false;
@@ -615,11 +471,7 @@ public class InlineByteBuddyMockMaker
 
         private final MockHandler handler;
 
-        private InlineStaticMockControl(
-                Class<T> type,
-                Map<Class<?>, MockMethodInterceptor> interceptors,
-                MockCreationSettings<T> settings,
-                MockHandler handler) {
+        private InlineStaticMockControl(Class<T> type, Map<Class<?>, MockMethodInterceptor> interceptors, MockCreationSettings<T> settings, MockHandler handler) {
             this.type = type;
             this.interceptors = interceptors;
             this.settings = settings;
@@ -633,30 +485,15 @@ public class InlineByteBuddyMockMaker
 
         @Override
         public void enable() {
-            if (interceptors.putIfAbsent(type, new MockMethodInterceptor(handler, settings))
-                    != null) {
-                throw new MockitoException(
-                        join(
-                                "For "
-                                        + type.getName()
-                                        + ", static mocking is already registered in the current thread",
-                                "",
-                                "To create a new mock, the existing static mock registration must be deregistered"));
+            if (interceptors.putIfAbsent(type, new MockMethodInterceptor(handler, settings)) != null) {
+                throw new MockitoException(join("For " + type.getName() + ", static mocking is already registered in the current thread", "", "To create a new mock, the existing static mock registration must be deregistered"));
             }
         }
 
         @Override
         public void disable() {
             if (interceptors.remove(type) == null) {
-                throw new MockitoException(
-                        join(
-                                "Could not deregister "
-                                        + type.getName()
-                                        + " as a static mock since it is not currently registered",
-                                "",
-                                "To register a static mock, use Mockito.mockStatic("
-                                        + type.getSimpleName()
-                                        + ".class)"));
+                throw new MockitoException(join("Could not deregister " + type.getName() + " as a static mock since it is not currently registered", "", "To register a static mock, use Mockito.mockStatic(" + type.getSimpleName() + ".class)"));
             }
         }
     }
@@ -666,6 +503,7 @@ public class InlineByteBuddyMockMaker
         private final Class<T> type;
 
         private final Function<MockedConstruction.Context, MockCreationSettings<T>> settingsFactory;
+
         private final Function<MockedConstruction.Context, MockHandler<T>> handlerFactory;
 
         private final MockedConstruction.MockInitializer<T> mockInitializer;
@@ -673,14 +511,10 @@ public class InlineByteBuddyMockMaker
         private final Map<Class<?>, BiConsumer<Object, MockedConstruction.Context>> interceptors;
 
         private final List<Object> all = new ArrayList<>();
+
         private int count;
 
-        private InlineConstructionMockControl(
-                Class<T> type,
-                Function<MockedConstruction.Context, MockCreationSettings<T>> settingsFactory,
-                Function<MockedConstruction.Context, MockHandler<T>> handlerFactory,
-                MockedConstruction.MockInitializer<T> mockInitializer,
-                Map<Class<?>, BiConsumer<Object, MockedConstruction.Context>> interceptors) {
+        private InlineConstructionMockControl(Class<T> type, Function<MockedConstruction.Context, MockCreationSettings<T>> settingsFactory, Function<MockedConstruction.Context, MockHandler<T>> handlerFactory, MockedConstruction.MockInitializer<T> mockInitializer, Map<Class<?>, BiConsumer<Object, MockedConstruction.Context>> interceptors) {
             this.type = type;
             this.settingsFactory = settingsFactory;
             this.handlerFactory = handlerFactory;
@@ -695,49 +529,29 @@ public class InlineByteBuddyMockMaker
 
         @Override
         public void enable() {
-            if (interceptors.putIfAbsent(
-                            type,
-                            (object, context) -> {
-                                ((InlineConstructionMockContext) context).count = ++count;
-                                MockMethodInterceptor interceptor =
-                                        new MockMethodInterceptor(
-                                                handlerFactory.apply(context),
-                                                settingsFactory.apply(context));
-                                mocks.put(object, interceptor);
-                                try {
-                                    @SuppressWarnings("unchecked")
-                                    T cast = (T) object;
-                                    mockInitializer.prepare(cast, context);
-                                } catch (Throwable t) {
-                                    mocks.remove(object); // TODO: filter stack trace?
-                                    throw new MockitoException(
-                                            "Could not initialize mocked construction", t);
-                                }
-                                all.add(object);
-                            })
-                    != null) {
-                throw new MockitoException(
-                        join(
-                                "For "
-                                        + type.getName()
-                                        + ", static mocking is already registered in the current thread",
-                                "",
-                                "To create a new mock, the existing static mock registration must be deregistered"));
+            if (interceptors.putIfAbsent(type, (object, context) -> {
+                ((InlineConstructionMockContext) context).count = ++count;
+                MockMethodInterceptor interceptor = new MockMethodInterceptor(handlerFactory.apply(context), settingsFactory.apply(context));
+                mocks.put(object, interceptor);
+                try {
+                    @SuppressWarnings("unchecked")
+                    T cast = (T) object;
+                    mockInitializer.prepare(cast, context);
+                } catch (Throwable t) {
+                    // TODO: filter stack trace?
+                    mocks.remove(object);
+                    throw new MockitoException("Could not initialize mocked construction", t);
+                }
+                all.add(object);
+            }) != null) {
+                throw new MockitoException(join("For " + type.getName() + ", static mocking is already registered in the current thread", "", "To create a new mock, the existing static mock registration must be deregistered"));
             }
         }
 
         @Override
         public void disable() {
             if (interceptors.remove(type) == null) {
-                throw new MockitoException(
-                        join(
-                                "Could not deregister "
-                                        + type.getName()
-                                        + " as a static mock since it is not currently registered",
-                                "",
-                                "To register a static mock, use Mockito.mockStatic("
-                                        + type.getSimpleName()
-                                        + ".class)"));
+                throw new MockitoException(join("Could not deregister " + type.getName() + " as a static mock since it is not currently registered", "", "To register a static mock, use Mockito.mockStatic(" + type.getSimpleName() + ".class)"));
             }
             all.clear();
         }
@@ -767,11 +581,12 @@ public class InlineByteBuddyMockMaker
         private int count;
 
         private final Object[] arguments;
+
         private final Class<?> type;
+
         private final String[] parameterTypeNames;
 
-        private InlineConstructionMockContext(
-                Object[] arguments, Class<?> type, String[] parameterTypeNames) {
+        private InlineConstructionMockContext(Object[] arguments, Class<?> type, String[] parameterTypeNames) {
             this.arguments = arguments;
             this.type = type;
             this.parameterTypeNames = parameterTypeNames;
@@ -780,8 +595,7 @@ public class InlineByteBuddyMockMaker
         @Override
         public int getCount() {
             if (count == 0) {
-                throw new MockitoConfigurationException(
-                        "mocked construction context is not initialized");
+                throw new MockitoConfigurationException("mocked construction context is not initialized");
             }
             return count;
         }
@@ -795,26 +609,16 @@ public class InlineByteBuddyMockMaker
                     parameterTypes[index++] = PRIMITIVES.get(parameterTypeName);
                 } else {
                     try {
-                        parameterTypes[index++] =
-                                Class.forName(parameterTypeName, false, type.getClassLoader());
+                        parameterTypes[index++] = Class.forName(parameterTypeName, false, type.getClassLoader());
                     } catch (ClassNotFoundException e) {
-                        throw new MockitoException(
-                                "Could not find parameter of type " + parameterTypeName, e);
+                        throw new MockitoException("Could not find parameter of type " + parameterTypeName, e);
                     }
                 }
             }
             try {
                 return type.getDeclaredConstructor(parameterTypes);
             } catch (NoSuchMethodException e) {
-                throw new MockitoException(
-                        join(
-                                "Could not resolve constructor of type",
-                                "",
-                                type.getTypeName(),
-                                "",
-                                "with arguments of types",
-                                Arrays.toString(parameterTypes)),
-                        e);
+                throw new MockitoException(join("Could not resolve constructor of type", "", type.getTypeName(), "", "with arguments of types", Arrays.toString(parameterTypes)), e);
             }
         }
 

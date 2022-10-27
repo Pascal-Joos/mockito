@@ -4,11 +4,10 @@
  */
 package org.mockito.internal.configuration.injection.scanner;
 
+import org.mockito.NullUnmarked;
 import static org.mockito.internal.util.collections.Sets.newMockSafeHashSet;
-
 import java.lang.reflect.Field;
 import java.util.Set;
-
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.internal.util.MockUtil;
@@ -18,7 +17,9 @@ import org.mockito.internal.util.reflection.FieldReader;
  * Scan mocks, and prepare them if needed.
  */
 public class MockScanner {
+
     private final Object instance;
+
     private final Class<?> clazz;
 
     /**
@@ -55,7 +56,6 @@ public class MockScanner {
         for (Field field : clazz.getDeclaredFields()) {
             // mock or spies only
             FieldReader fieldReader = new FieldReader(instance, field);
-
             Object mockInstance = preparedMock(fieldReader.read(), field);
             if (mockInstance != null) {
                 mocks.add(mockInstance);
@@ -64,6 +64,7 @@ public class MockScanner {
         return mocks;
     }
 
+    @NullUnmarked
     private Object preparedMock(Object instance, Field field) {
         if (isAnnotatedByMockOrSpy(field)) {
             return instance;

@@ -4,10 +4,10 @@
  */
 package org.mockito.internal.stubbing;
 
+import org.mockito.NullUnmarked;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 
@@ -17,6 +17,8 @@ import org.mockito.stubbing.Answer;
 class DoAnswerStyleStubbing implements Serializable {
 
     private final List<Answer<?>> answers = new ArrayList<Answer<?>>();
+
+    @SuppressWarnings("NullAway.Init")
     private Strictness stubbingStrictness;
 
     void setAnswers(List<Answer<?>> answers, Strictness stubbingStrictness) {
@@ -28,6 +30,7 @@ class DoAnswerStyleStubbing implements Serializable {
         return answers.isEmpty();
     }
 
+    @NullUnmarked
     void clear() {
         answers.clear();
         stubbingStrictness = null;

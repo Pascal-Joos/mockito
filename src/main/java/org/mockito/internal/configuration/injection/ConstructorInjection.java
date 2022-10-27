@@ -4,14 +4,13 @@
  */
 package org.mockito.internal.configuration.injection;
 
+import org.mockito.NullUnmarked;
 import static org.mockito.internal.exceptions.Reporter.fieldInitialisationThrewException;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.util.reflection.FieldInitializationReport;
 import org.mockito.internal.util.reflection.FieldInitializer;
@@ -37,15 +36,13 @@ import org.mockito.internal.util.reflection.FieldInitializer.ConstructorArgument
  */
 public class ConstructorInjection extends MockInjectionStrategy {
 
-    public ConstructorInjection() {}
+    public ConstructorInjection() {
+    }
 
     public boolean processInjection(Field field, Object fieldOwner, Set<Object> mockCandidates) {
         try {
-            SimpleArgumentResolver simpleArgumentResolver =
-                    new SimpleArgumentResolver(mockCandidates);
-            FieldInitializationReport report =
-                    new FieldInitializer(fieldOwner, field, simpleArgumentResolver).initialize();
-
+            SimpleArgumentResolver simpleArgumentResolver = new SimpleArgumentResolver(mockCandidates);
+            FieldInitializationReport report = new FieldInitializer(fieldOwner, field, simpleArgumentResolver).initialize();
             return report.fieldWasInitializedUsingContructorArgs();
         } catch (MockitoException e) {
             if (e.getCause() instanceof InvocationTargetException) {
@@ -61,6 +58,7 @@ public class ConstructorInjection extends MockInjectionStrategy {
      * Returns mocks that match the argument type, if not possible assigns null.
      */
     static class SimpleArgumentResolver implements ConstructorArgumentResolver {
+
         final Set<Object> objects;
 
         public SimpleArgumentResolver(Set<Object> objects) {
@@ -75,9 +73,11 @@ public class ConstructorInjection extends MockInjectionStrategy {
             return argumentInstances.toArray();
         }
 
+        @NullUnmarked
         private Object objectThatIsAssignableFrom(Class<?> argType) {
             for (Object object : objects) {
-                if (argType.isAssignableFrom(object.getClass())) return object;
+                if (argType.isAssignableFrom(object.getClass()))
+                    return object;
             }
             return null;
         }

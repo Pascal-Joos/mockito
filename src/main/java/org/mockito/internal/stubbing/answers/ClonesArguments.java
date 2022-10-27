@@ -4,8 +4,8 @@
  */
 package org.mockito.internal.stubbing.answers;
 
+import org.mockito.NullUnmarked;
 import java.lang.reflect.Array;
-
 import org.mockito.creation.instance.Instantiator;
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.internal.stubbing.defaultanswers.ReturnsEmptyValues;
@@ -16,6 +16,8 @@ import org.mockito.stubbing.Answer;
 // TODO this needs documentation and further analysis - what if someone changes the answer?
 // we might think about implementing it straight on MockSettings
 public class ClonesArguments implements Answer<Object> {
+
+    @NullUnmarked
     public Object answer(InvocationOnMock invocation) throws Throwable {
         Object[] arguments = invocation.getArguments();
         for (int i = 0; i < arguments.length; i++) {
@@ -29,8 +31,7 @@ public class ClonesArguments implements Answer<Object> {
                     }
                     arguments[i] = newInstance;
                 } else {
-                    Instantiator instantiator =
-                            Plugins.getInstantiatorProvider().getInstantiator(null);
+                    Instantiator instantiator = Plugins.getInstantiatorProvider().getInstantiator(null);
                     Object newInstance = instantiator.newInstance(from.getClass());
                     new LenientCopyTool().copyToRealObject(from, newInstance);
                     arguments[i] = newInstance;

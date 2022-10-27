@@ -4,12 +4,13 @@
  */
 package org.mockito.internal.configuration.plugins;
 
+import org.mockito.NullUnmarked;
 import java.io.InputStream;
-
 import org.mockito.internal.util.io.IOUtil;
 
 class PluginFileReader {
 
+    @NullUnmarked
     String readPluginClass(InputStream input) {
         for (String line : IOUtil.readLines(input)) {
             String stripped = stripCommentAndWhitespace(line);

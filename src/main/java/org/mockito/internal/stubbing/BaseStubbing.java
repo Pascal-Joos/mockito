@@ -4,9 +4,9 @@
  */
 package org.mockito.internal.stubbing;
 
+import org.mockito.NullUnmarked;
 import static org.mockito.internal.exceptions.Reporter.notAnException;
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
-
 import org.mockito.internal.stubbing.answers.CallsRealMethods;
 import org.mockito.internal.stubbing.answers.Returns;
 import org.mockito.internal.stubbing.answers.ThrowsException;
@@ -35,6 +35,7 @@ public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
     }
 
     @Override
+    @NullUnmarked
     public OngoingStubbing<T> thenReturn(T value, T... values) {
         OngoingStubbing<T> stubbing = thenReturn(value);
         if (values == null) {
@@ -54,6 +55,7 @@ public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
     }
 
     @Override
+    @NullUnmarked
     public OngoingStubbing<T> thenThrow(Throwable... throwables) {
         if (throwables == null) {
             return thenThrow((Throwable) null);
@@ -79,8 +81,8 @@ public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
     }
 
     @Override
-    public OngoingStubbing<T> thenThrow(
-            Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... nextToBeThrown) {
+    @NullUnmarked
+    public OngoingStubbing<T> thenThrow(Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... nextToBeThrown) {
         if (nextToBeThrown == null) {
             return thenThrow((Class<Throwable>) null);
         }

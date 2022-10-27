@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.creation.instance;
 
+import org.mockito.NullUnmarked;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.InstantiatorProvider;
 import org.mockito.plugins.InstantiatorProvider2;
@@ -12,6 +13,7 @@ import org.mockito.plugins.InstantiatorProvider2;
  * Adapts new public API {@link InstantiatorProvider2} onto old, deprecated API {@link InstantiatorProvider}
  */
 public class InstantiatorProvider2Adapter implements InstantiatorProvider {
+
     private final InstantiatorProvider2 provider;
 
     public InstantiatorProvider2Adapter(InstantiatorProvider2 provider) {
@@ -21,7 +23,9 @@ public class InstantiatorProvider2Adapter implements InstantiatorProvider {
     @Override
     public Instantiator getInstantiator(final MockCreationSettings<?> settings) {
         return new Instantiator() {
+
             @Override
+            @NullUnmarked
             public <T> T newInstance(Class<T> cls) throws InstantiationException {
                 try {
                     return provider.getInstantiator(settings).newInstance(cls);

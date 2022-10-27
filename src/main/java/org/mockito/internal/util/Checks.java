@@ -4,11 +4,14 @@
  */
 package org.mockito.internal.util;
 
+import org.mockito.NullUnmarked;
+
 /**
  * Pre-made preconditions
  */
 public class Checks {
 
+    @NullUnmarked
     public static <T> T checkNotNull(T value, String checkedValue) {
         return checkNotNull(value, checkedValue, null);
     }

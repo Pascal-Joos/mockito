@@ -4,20 +4,22 @@
  */
 package org.mockito.internal.verification;
 
+import org.mockito.NullUnmarked;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-
 import org.mockito.invocation.Invocation;
 
 public class SingleRegisteredInvocation implements RegisteredInvocations, Serializable {
 
+    @SuppressWarnings("NullAway.Init")
     private Invocation invocation;
 
     public void add(Invocation invocation) {
         this.invocation = invocation;
     }
 
+    @NullUnmarked
     public void removeLast() {
         invocation = null;
     }
@@ -26,6 +28,7 @@ public class SingleRegisteredInvocation implements RegisteredInvocations, Serial
         return Collections.emptyList();
     }
 
+    @NullUnmarked
     public void clear() {
         invocation = null;
     }

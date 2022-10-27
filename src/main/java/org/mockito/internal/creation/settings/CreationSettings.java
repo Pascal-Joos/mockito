@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.mockito.listeners.InvocationListener;
 import org.mockito.listeners.StubbingLookupListener;
 import org.mockito.listeners.VerificationStartedListener;
@@ -21,34 +20,54 @@ import org.mockito.mock.SerializableMode;
 import org.mockito.stubbing.Answer;
 
 public class CreationSettings<T> implements MockCreationSettings<T>, Serializable {
+
     private static final long serialVersionUID = -6789800638070123629L;
 
+    @SuppressWarnings("NullAway.Init")
     protected Class<T> typeToMock;
+
     protected Set<Class<?>> extraInterfaces = new LinkedHashSet<Class<?>>();
+
+    @SuppressWarnings("NullAway.Init")
     protected String name;
+
+    @SuppressWarnings("NullAway.Init")
     protected Object spiedInstance;
+
+    @SuppressWarnings("NullAway.Init")
     protected Answer<Object> defaultAnswer;
+
+    @SuppressWarnings("NullAway.Init")
     protected MockName mockName;
+
     protected SerializableMode serializableMode = SerializableMode.NONE;
+
     protected List<InvocationListener> invocationListeners = new ArrayList<InvocationListener>();
 
     // Other listeners in this class may also need concurrency-safe implementation. However, no
     // issue was reported about it.
     // If we do it, we need to understand usage patterns and choose the right concurrent
     // implementation.
-    protected List<StubbingLookupListener> stubbingLookupListeners =
-            new CopyOnWriteArrayList<StubbingLookupListener>();
+    protected List<StubbingLookupListener> stubbingLookupListeners = new CopyOnWriteArrayList<StubbingLookupListener>();
 
-    protected List<VerificationStartedListener> verificationStartedListeners =
-            new LinkedList<VerificationStartedListener>();
+    protected List<VerificationStartedListener> verificationStartedListeners = new LinkedList<VerificationStartedListener>();
+
     protected boolean stubOnly;
+
     protected boolean stripAnnotations;
+
     private boolean useConstructor;
+
+    @SuppressWarnings("NullAway.Init")
     private Object outerClassInstance;
+
+    @SuppressWarnings("NullAway.Init")
     private Object[] constructorArgs;
+
     protected boolean lenient;
 
-    public CreationSettings() {}
+    public CreationSettings() {
+    }
 
     @SuppressWarnings("unchecked")
     public CreationSettings(CreationSettings copy) {

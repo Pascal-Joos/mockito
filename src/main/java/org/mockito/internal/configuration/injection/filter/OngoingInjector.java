@@ -4,6 +4,8 @@
  */
 package org.mockito.internal.configuration.injection.filter;
 
+import org.mockito.NullUnmarked;
+
 /**
  * Allow the ongoing injection of a mock candidate.
  */
@@ -23,10 +25,11 @@ public interface OngoingInjector {
     /**
      * Injector that will do nothing, and will return <code>null</code> as no mocks will be injected
      */
-    OngoingInjector nop =
-            new OngoingInjector() {
-                public Object thenInject() {
-                    return null;
-                }
-            };
+    OngoingInjector nop = new OngoingInjector() {
+
+        @NullUnmarked
+        public Object thenInject() {
+            return null;
+        }
+    };
 }

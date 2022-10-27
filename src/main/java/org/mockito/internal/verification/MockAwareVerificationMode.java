@@ -4,8 +4,8 @@
  */
 package org.mockito.internal.verification;
 
+import org.mockito.NullUnmarked;
 import java.util.Set;
-
 import org.mockito.internal.verification.api.VerificationData;
 import org.mockito.listeners.VerificationListener;
 import org.mockito.verification.VerificationEvent;
@@ -14,16 +14,18 @@ import org.mockito.verification.VerificationMode;
 public class MockAwareVerificationMode implements VerificationMode {
 
     private final Object mock;
+
     private final VerificationMode mode;
+
     private final Set<VerificationListener> listeners;
 
-    public MockAwareVerificationMode(
-            Object mock, VerificationMode mode, Set<VerificationListener> listeners) {
+    public MockAwareVerificationMode(Object mock, VerificationMode mode, Set<VerificationListener> listeners) {
         this.mock = mock;
         this.mode = mode;
         this.listeners = listeners;
     }
 
+    @NullUnmarked
     public void verify(VerificationData data) {
         try {
             mode.verify(data);

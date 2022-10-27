@@ -4,8 +4,8 @@
  */
 package org.mockito.internal.handler;
 
+import org.mockito.NullUnmarked;
 import static org.mockito.internal.matchers.Equality.areEqual;
-
 import org.mockito.invocation.DescribedInvocation;
 import org.mockito.invocation.Invocation;
 import org.mockito.listeners.MethodInvocationReport;
@@ -14,17 +14,20 @@ import org.mockito.listeners.MethodInvocationReport;
  * Report on a method call
  */
 public class NotifiedMethodInvocationReport implements MethodInvocationReport {
+
     private final Invocation invocation;
+
     private final Object returnedValue;
+
     private final Throwable throwable;
 
     /**
      * Build a new {@link org.mockito.listeners.MethodInvocationReport} with a return value.
      *
-     *
      * @param invocation Information on the method call
      * @param returnedValue The value returned by the method invocation
      */
+    @NullUnmarked
     public NotifiedMethodInvocationReport(Invocation invocation, Object returnedValue) {
         this.invocation = invocation;
         this.returnedValue = returnedValue;
@@ -34,10 +37,10 @@ public class NotifiedMethodInvocationReport implements MethodInvocationReport {
     /**
      * Build a new {@link org.mockito.listeners.MethodInvocationReport} with a return value.
      *
-     *
      * @param invocation Information on the method call
      * @param throwable Tha throwable raised by the method invocation
      */
+    @NullUnmarked
     public NotifiedMethodInvocationReport(Invocation invocation, Throwable throwable) {
         this.invocation = invocation;
         this.returnedValue = null;
@@ -60,21 +63,18 @@ public class NotifiedMethodInvocationReport implements MethodInvocationReport {
         return throwable != null;
     }
 
+    @NullUnmarked
     public String getLocationOfStubbing() {
-        return (invocation.stubInfo() == null)
-                ? null
-                : invocation.stubInfo().stubbedAt().toString();
+        return (invocation.stubInfo() == null) ? null : invocation.stubInfo().stubbedAt().toString();
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         NotifiedMethodInvocationReport that = (NotifiedMethodInvocationReport) o;
-
-        return areEqual(invocation, that.invocation)
-                && areEqual(returnedValue, that.returnedValue)
-                && areEqual(throwable, that.throwable);
+        return areEqual(invocation, that.invocation) && areEqual(returnedValue, that.returnedValue) && areEqual(throwable, that.throwable);
     }
 
     public int hashCode() {

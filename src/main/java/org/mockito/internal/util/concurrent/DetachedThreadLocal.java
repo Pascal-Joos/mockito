@@ -4,6 +4,8 @@
  */
 package org.mockito.internal.util.concurrent;
 
+import org.mockito.NullUnmarked;
+
 /**
  * <p>
  * A detached local that allows for explicit control of setting and removing values from a thread-local
@@ -16,25 +18,25 @@ public class DetachedThreadLocal<T> implements Runnable {
     final WeakConcurrentMap<Thread, T> map;
 
     public DetachedThreadLocal(Cleaner cleaner) {
-        switch (cleaner) {
+        switch(cleaner) {
             case THREAD:
             case MANUAL:
-                map =
-                        new WeakConcurrentMap<Thread, T>(cleaner == Cleaner.THREAD) {
-                            @Override
-                            protected T defaultValue(Thread key) {
-                                return DetachedThreadLocal.this.initialValue(key);
-                            }
-                        };
+                map = new WeakConcurrentMap<Thread, T>(cleaner == Cleaner.THREAD) {
+
+                    @Override
+                    protected T defaultValue(Thread key) {
+                        return DetachedThreadLocal.this.initialValue(key);
+                    }
+                };
                 break;
             case INLINE:
-                map =
-                        new WeakConcurrentMap.WithInlinedExpunction<Thread, T>() {
-                            @Override
-                            protected T defaultValue(Thread key) {
-                                return DetachedThreadLocal.this.initialValue(key);
-                            }
-                        };
+                map = new WeakConcurrentMap.WithInlinedExpunction<Thread, T>() {
+
+                    @Override
+                    protected T defaultValue(Thread key) {
+                        return DetachedThreadLocal.this.initialValue(key);
+                    }
+                };
                 break;
             default:
                 throw new AssertionError();
@@ -104,6 +106,7 @@ public class DetachedThreadLocal<T> implements Runnable {
      * @param thread The thread for which an initial value is created.
      * @return The initial value for any thread local. If no default is set, the default value is {@code null}.
      */
+    @NullUnmarked
     protected T initialValue(Thread thread) {
         return null;
     }
@@ -135,8 +138,7 @@ public class DetachedThreadLocal<T> implements Runnable {
      * ({@link Cleaner#MANUAL}).
      */
     public enum Cleaner {
-        THREAD,
-        INLINE,
-        MANUAL
+
+        THREAD, INLINE, MANUAL
     }
 }

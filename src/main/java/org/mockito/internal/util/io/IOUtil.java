@@ -4,11 +4,11 @@
  */
 package org.mockito.internal.util.io;
 
+import org.mockito.NullUnmarked;
 import java.io.*;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.mockito.exceptions.base.MockitoException;
 
 /**
@@ -19,6 +19,7 @@ public class IOUtil {
     /**
      * Writes text to file
      */
+    @NullUnmarked
     public static void writeText(String text, File output) {
         PrintWriter pw = null;
         try {

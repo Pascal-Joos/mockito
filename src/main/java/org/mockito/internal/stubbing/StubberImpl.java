@@ -4,16 +4,15 @@
  */
 package org.mockito.internal.stubbing;
 
+import org.mockito.NullUnmarked;
 import static org.mockito.internal.exceptions.Reporter.notAMockPassedToWhenMethod;
 import static org.mockito.internal.exceptions.Reporter.notAnException;
 import static org.mockito.internal.exceptions.Reporter.nullPassedToWhenMethod;
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
 import static org.mockito.internal.stubbing.answers.DoesNothing.doesNothing;
 import static org.mockito.internal.util.MockUtil.isMock;
-
 import java.util.LinkedList;
 import java.util.List;
-
 import org.mockito.internal.stubbing.answers.CallsRealMethods;
 import org.mockito.internal.stubbing.answers.Returns;
 import org.mockito.internal.stubbing.answers.ThrowsException;
@@ -39,14 +38,11 @@ public class StubberImpl implements Stubber {
             mockingProgress().reset();
             throw nullPassedToWhenMethod();
         }
-
         if (!isMock(mock)) {
             mockingProgress().reset();
             throw notAMockPassedToWhenMethod();
         }
-
         MockUtil.getInvocationContainer(mock).setAnswersForStubbing(answers, strictness);
-
         return mock;
     }
 
@@ -60,6 +56,7 @@ public class StubberImpl implements Stubber {
         return doReturnValues(toBeReturned).doReturnValues(nextToBeReturned);
     }
 
+    @NullUnmarked
     private StubberImpl doReturnValues(Object... toBeReturned) {
         if (toBeReturned == null) {
             answers.add(new Returns(null));
@@ -72,6 +69,7 @@ public class StubberImpl implements Stubber {
     }
 
     @Override
+    @NullUnmarked
     public Stubber doThrow(Throwable... toBeThrown) {
         if (toBeThrown == null) {
             answers.add(new ThrowsException(null));
@@ -93,15 +91,12 @@ public class StubberImpl implements Stubber {
     }
 
     @Override
-    public Stubber doThrow(
-            Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... nextToBeThrown) {
+    public Stubber doThrow(Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... nextToBeThrown) {
         Stubber stubber = doThrow(toBeThrown);
-
         if (nextToBeThrown == null) {
             mockingProgress().reset();
             throw notAnException();
         }
-
         for (Class<? extends Throwable> next : nextToBeThrown) {
             stubber = stubber.doThrow(next);
         }

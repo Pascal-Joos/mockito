@@ -4,16 +4,16 @@
  */
 package org.mockito.internal.util;
 
+import org.mockito.NullUnmarked;
 import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class Primitives {
 
-    private static final Map<Class<?>, Class<?>> PRIMITIVE_TYPES =
-            new HashMap<Class<?>, Class<?>>();
-    private static final Map<Class<?>, Object> PRIMITIVE_OR_WRAPPER_DEFAULT_VALUES =
-            new HashMap<Class<?>, Object>();
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_TYPES = new HashMap<Class<?>, Class<?>>();
+
+    private static final Map<Class<?>, Object> PRIMITIVE_OR_WRAPPER_DEFAULT_VALUES = new HashMap<Class<?>, Object>();
 
     /**
      * Returns the primitive type of the given class.
@@ -26,6 +26,7 @@ public class Primitives {
      * @param <T>   The type
      * @return The primitive type if relevant, otherwise <code>null</code>
      */
+    @NullUnmarked
     public static <T> Class<T> primitiveTypeOf(Class<T> clazz) {
         if (clazz.isPrimitive()) {
             return clazz;
@@ -45,8 +46,7 @@ public class Primitives {
 
     public static boolean isAssignableFromWrapper(Class<?> valueClass, Class<?> referenceType) {
         if (isPrimitiveOrWrapper(valueClass) && isPrimitiveOrWrapper(referenceType)) {
-            return Primitives.primitiveTypeOf(valueClass)
-                    .isAssignableFrom(Primitives.primitiveTypeOf(referenceType));
+            return Primitives.primitiveTypeOf(valueClass).isAssignableFrom(Primitives.primitiveTypeOf(referenceType));
         }
         return false;
     }
@@ -58,6 +58,7 @@ public class Primitives {
      * @return The boxed default values as defined in Java Language Specification,
      *         <code>null</code> if the type is neither a primitive nor a wrapper
      */
+    @NullUnmarked
     public static <T> T defaultValue(Class<T> primitiveOrWrapperType) {
         return (T) PRIMITIVE_OR_WRAPPER_DEFAULT_VALUES.get(primitiveOrWrapperType);
     }
@@ -82,7 +83,6 @@ public class Primitives {
         PRIMITIVE_OR_WRAPPER_DEFAULT_VALUES.put(Long.class, 0L);
         PRIMITIVE_OR_WRAPPER_DEFAULT_VALUES.put(Float.class, 0F);
         PRIMITIVE_OR_WRAPPER_DEFAULT_VALUES.put(Double.class, 0D);
-
         PRIMITIVE_OR_WRAPPER_DEFAULT_VALUES.put(boolean.class, false);
         PRIMITIVE_OR_WRAPPER_DEFAULT_VALUES.put(char.class, '\u0000');
         PRIMITIVE_OR_WRAPPER_DEFAULT_VALUES.put(byte.class, (byte) 0);

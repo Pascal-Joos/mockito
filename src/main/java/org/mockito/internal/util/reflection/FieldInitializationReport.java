@@ -4,18 +4,20 @@
  */
 package org.mockito.internal.util.reflection;
 
+import org.mockito.NullUnmarked;
+
 /**
  * Report on field initialization
  */
 public class FieldInitializationReport {
+
     private final Object fieldInstance;
+
     private final boolean wasInitialized;
+
     private final boolean wasInitializedUsingConstructorArgs;
 
-    public FieldInitializationReport(
-            Object fieldInstance,
-            boolean wasInitialized,
-            boolean wasInitializedUsingConstructorArgs) {
+    public FieldInitializationReport(Object fieldInstance, boolean wasInitialized, boolean wasInitializedUsingConstructorArgs) {
         this.fieldInstance = fieldInstance;
         this.wasInitialized = wasInitialized;
         this.wasInitializedUsingConstructorArgs = wasInitializedUsingConstructorArgs;
@@ -53,6 +55,7 @@ public class FieldInitializationReport {
      *
      * @return Class of the instance
      */
+    @NullUnmarked
     public Class<?> fieldClass() {
         return fieldInstance != null ? fieldInstance.getClass() : null;
     }

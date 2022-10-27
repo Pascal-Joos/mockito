@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.junit;
 
+import org.mockito.NullUnmarked;
 import org.junit.runners.model.Statement;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -15,7 +16,10 @@ import org.mockito.quality.Strictness;
 class JUnitSessionStore {
 
     private final MockitoLogger logger;
+
+    @SuppressWarnings("NullAway.Init")
     private MockitoSession session;
+
     protected Strictness strictness;
 
     JUnitSessionStore(MockitoLogger logger, Strictness strictness) {
@@ -25,16 +29,11 @@ class JUnitSessionStore {
 
     Statement createStatement(final Statement base, final String methodName, final Object target) {
         return new Statement() {
+
             public void evaluate() throws Throwable {
                 AutoCloseable closeable;
                 if (session == null) {
-                    session =
-                            Mockito.mockitoSession()
-                                    .name(methodName)
-                                    .strictness(strictness)
-                                    .logger(new MockitoSessionLoggerAdapter(logger))
-                                    .initMocks(target)
-                                    .startMocking();
+                    session = Mockito.mockitoSession().name(methodName).strictness(strictness).logger(new MockitoSessionLoggerAdapter(logger)).initMocks(target).startMocking();
                     closeable = null;
                 } else {
                     closeable = MockitoAnnotations.openMocks(target);
@@ -49,6 +48,7 @@ class JUnitSessionStore {
                 }
             }
 
+            @NullUnmarked
             private Throwable evaluateSafely(Statement base) {
                 try {
                     base.evaluate();

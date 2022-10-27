@@ -4,9 +4,9 @@
  */
 package org.mockito.internal.handler;
 
+import org.mockito.NullUnmarked;
 import static org.mockito.internal.listeners.StubbingLookupNotifier.notifyStubbedAnswerLookup;
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
-
 import org.mockito.internal.creation.settings.CreationSettings;
 import org.mockito.internal.invocation.InvocationMatcher;
 import org.mockito.internal.invocation.MatchersBinder;
@@ -39,35 +39,27 @@ public class MockHandlerImpl<T> implements MockHandler<T> {
 
     public MockHandlerImpl(MockCreationSettings<T> mockSettings) {
         this.mockSettings = mockSettings;
-
         this.matchersBinder = new MatchersBinder();
         this.invocationContainer = new InvocationContainerImpl(mockSettings);
     }
 
+    @NullUnmarked
     public Object handle(Invocation invocation) throws Throwable {
         if (invocationContainer.hasAnswersForStubbing()) {
             // stubbing voids with doThrow() or doAnswer() style
-            InvocationMatcher invocationMatcher =
-                    matchersBinder.bindMatchers(
-                            mockingProgress().getArgumentMatcherStorage(), invocation);
+            InvocationMatcher invocationMatcher = matchersBinder.bindMatchers(mockingProgress().getArgumentMatcherStorage(), invocation);
             invocationContainer.setMethodForStubbing(invocationMatcher);
             return null;
         }
         VerificationMode verificationMode = mockingProgress().pullVerificationMode();
-
-        InvocationMatcher invocationMatcher =
-                matchersBinder.bindMatchers(
-                        mockingProgress().getArgumentMatcherStorage(), invocation);
-
+        InvocationMatcher invocationMatcher = matchersBinder.bindMatchers(mockingProgress().getArgumentMatcherStorage(), invocation);
         mockingProgress().validateState();
-
         // if verificationMode is not null then someone is doing verify()
         if (verificationMode != null) {
             // We need to check if verification was started on the correct mock
             // - see VerifyingWithAnExtraCallToADifferentMockTest (bug 138)
             if (((MockAwareVerificationMode) verificationMode).getMock() == invocation.getMock()) {
-                VerificationDataImpl data =
-                        new VerificationDataImpl(invocationContainer, invocationMatcher);
+                VerificationDataImpl data = new VerificationDataImpl(invocationContainer, invocationMatcher);
                 verificationMode.verify(data);
                 return null;
             } else {
@@ -77,24 +69,16 @@ public class MockHandlerImpl<T> implements MockHandler<T> {
                 mockingProgress().verificationStarted(verificationMode);
             }
         }
-
         // prepare invocation for stubbing
         invocationContainer.setInvocationForPotentialStubbing(invocationMatcher);
         OngoingStubbingImpl<T> ongoingStubbing = new OngoingStubbingImpl<T>(invocationContainer);
         mockingProgress().reportOngoingStubbing(ongoingStubbing);
-
         // look for existing answer for this invocation
         StubbedInvocationMatcher stubbing = invocationContainer.findAnswerFor(invocation);
         // TODO #793 - when completed, we should be able to get rid of the casting below
-        notifyStubbedAnswerLookup(
-                invocation,
-                stubbing,
-                invocationContainer.getStubbingsAscending(),
-                (CreationSettings) mockSettings);
-
+        notifyStubbedAnswerLookup(invocation, stubbing, invocationContainer.getStubbingsAscending(), (CreationSettings) mockSettings);
         if (stubbing != null) {
             stubbing.captureArgumentsFrom(invocation);
-
             try {
                 return stubbing.answer(invocation);
             } finally {
@@ -105,7 +89,6 @@ public class MockHandlerImpl<T> implements MockHandler<T> {
         } else {
             Object ret = mockSettings.getDefaultAnswer().answer(invocation);
             DefaultAnswerValidator.validateReturnValueFor(invocation, ret);
-
             // Mockito uses it to redo setting invocation for potential stubbing in case of partial
             // mocks / spies.
             // Without it, the real method inside 'when' might have delegated to other self method

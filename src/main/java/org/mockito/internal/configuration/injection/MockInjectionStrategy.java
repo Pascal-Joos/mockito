@@ -17,13 +17,14 @@ public abstract class MockInjectionStrategy {
      */
     public static MockInjectionStrategy nop() {
         return new MockInjectionStrategy() {
-            protected boolean processInjection(
-                    Field field, Object fieldOwner, Set<Object> mockCandidates) {
+
+            protected boolean processInjection(Field field, Object fieldOwner, Set<Object> mockCandidates) {
                 return false;
             }
         };
     }
 
+    @SuppressWarnings("NullAway.Init")
     private MockInjectionStrategy nextStrategy;
 
     /**
@@ -82,11 +83,9 @@ public abstract class MockInjectionStrategy {
      * @param mockCandidates Pool of mocks to inject.
      * @return <code>true</code> if injection occurred, <code>false</code> otherwise
      */
-    protected abstract boolean processInjection(
-            Field field, Object fieldOwner, Set<Object> mockCandidates);
+    protected abstract boolean processInjection(Field field, Object fieldOwner, Set<Object> mockCandidates);
 
-    private boolean relayProcessToNextStrategy(
-            Field field, Object fieldOwner, Set<Object> mockCandidates) {
+    private boolean relayProcessToNextStrategy(Field field, Object fieldOwner, Set<Object> mockCandidates) {
         return nextStrategy != null && nextStrategy.process(field, fieldOwner, mockCandidates);
     }
 }

@@ -4,6 +4,7 @@
  */
 package org.mockito.internal;
 
+import org.mockito.NullUnmarked;
 import org.mockito.MockedStatic;
 import org.mockito.MockingDetails;
 import org.mockito.Mockito;
@@ -20,7 +21,6 @@ import org.mockito.invocation.MockHandler;
 import org.mockito.plugins.MockMaker;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
-
 import static org.mockito.internal.exceptions.Reporter.*;
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.*;
 import static org.mockito.internal.util.MockUtil.*;
@@ -42,12 +42,10 @@ public final class MockedStaticImpl<T> implements MockedStatic<T> {
     @Override
     public <S> OngoingStubbing<S> when(Verification verification) {
         assertNotClosed();
-
         try {
             verification.apply();
         } catch (Throwable ignored) {
         }
-
         MockingProgress mockingProgress = mockingProgress();
         mockingProgress.stubbingStarted();
         @SuppressWarnings("unchecked")
@@ -62,68 +60,45 @@ public final class MockedStaticImpl<T> implements MockedStatic<T> {
     @Override
     public void verify(VerificationMode mode, Verification verification) {
         assertNotClosed();
-
         MockingDetails mockingDetails = Mockito.mockingDetails(control.getType());
         MockHandler handler = mockingDetails.getMockHandler();
-
-        VerificationStartedNotifier.notifyVerificationStarted(
-                handler.getMockSettings().getVerificationStartedListeners(), mockingDetails);
-
+        VerificationStartedNotifier.notifyVerificationStarted(handler.getMockSettings().getVerificationStartedListeners(), mockingDetails);
         MockingProgress mockingProgress = mockingProgress();
         VerificationMode actualMode = mockingProgress.maybeVerifyLazily(mode);
-        mockingProgress.verificationStarted(
-                new MockAwareVerificationMode(
-                        control.getType(), actualMode, mockingProgress.verificationListeners()));
-
+        mockingProgress.verificationStarted(new MockAwareVerificationMode(control.getType(), actualMode, mockingProgress.verificationListeners()));
         try {
             verification.apply();
         } catch (MockitoException | MockitoAssertionError e) {
             throw e;
         } catch (Throwable t) {
-            throw new MockitoException(
-                    join(
-                            "An unexpected error occurred while verifying a static stub",
-                            "",
-                            "To correctly verify a stub, invoke a single static method of "
-                                    + control.getType().getName()
-                                    + " in the provided lambda.",
-                            "For example, if a method 'sample' was defined, provide a lambda or anonymous class containing the code",
-                            "",
-                            "() -> " + control.getType().getSimpleName() + ".sample()",
-                            "or",
-                            control.getType().getSimpleName() + "::sample"),
-                    t);
+            throw new MockitoException(join("An unexpected error occurred while verifying a static stub", "", "To correctly verify a stub, invoke a single static method of " + control.getType().getName() + " in the provided lambda.", "For example, if a method 'sample' was defined, provide a lambda or anonymous class containing the code", "", "() -> " + control.getType().getSimpleName() + ".sample()", "or", control.getType().getSimpleName() + "::sample"), t);
         }
     }
 
     @Override
     public void reset() {
         assertNotClosed();
-
         MockingProgress mockingProgress = mockingProgress();
         mockingProgress.validateState();
         mockingProgress.reset();
         mockingProgress.resetOngoingStubbing();
-
         resetMock(control.getType());
     }
 
     @Override
     public void clearInvocations() {
         assertNotClosed();
-
         MockingProgress mockingProgress = mockingProgress();
         mockingProgress.validateState();
         mockingProgress.reset();
         mockingProgress.resetOngoingStubbing();
-
         getInvocationContainer(control.getType()).clearInvocations();
     }
 
     @Override
+    @NullUnmarked
     public void verifyNoMoreInteractions() {
         assertNotClosed();
-
         mockingProgress().validateState();
         InvocationContainerImpl invocations = getInvocationContainer(control.getType());
         VerificationDataImpl data = new VerificationDataImpl(invocations, null);
@@ -131,9 +106,9 @@ public final class MockedStaticImpl<T> implements MockedStatic<T> {
     }
 
     @Override
+    @NullUnmarked
     public void verifyNoInteractions() {
         assertNotClosed();
-
         mockingProgress().validateState();
         InvocationContainerImpl invocations = getInvocationContainer(control.getType());
         VerificationDataImpl data = new VerificationDataImpl(invocations, null);
@@ -148,7 +123,6 @@ public final class MockedStaticImpl<T> implements MockedStatic<T> {
     @Override
     public void close() {
         assertNotClosed();
-
         closed = true;
         control.disable();
     }
@@ -162,11 +136,7 @@ public final class MockedStaticImpl<T> implements MockedStatic<T> {
 
     private void assertNotClosed() {
         if (closed) {
-            throw new MockitoException(
-                    join(
-                            "The static mock created at",
-                            location.toString(),
-                            "is already resolved and cannot longer be used"));
+            throw new MockitoException(join("The static mock created at", location.toString(), "is already resolved and cannot longer be used"));
         }
     }
 
