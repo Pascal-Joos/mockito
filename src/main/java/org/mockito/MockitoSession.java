@@ -4,6 +4,7 @@
  */
 package org.mockito;
 
+import javax.annotation.Nullable;
 import org.mockito.exceptions.misusing.PotentialStubbingProblem;
 import org.mockito.exceptions.misusing.UnfinishedMockingSessionException;
 import org.mockito.exceptions.misusing.UnnecessaryStubbingException;
@@ -142,5 +143,5 @@ public interface MockitoSession {
      * @since 2.15.0
      */
     @Incubating
-    void finishMocking(Throwable failure);
+    void finishMocking(@Nullable Throwable failure);
 }

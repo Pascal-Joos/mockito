@@ -4,10 +4,9 @@
  */
 package org.mockito.internal.creation.bytebuddy;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.util.StringUtil.join;
-
 import java.lang.reflect.Modifier;
-
 import org.mockito.creation.instance.Instantiator;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.configuration.plugins.Plugins;
@@ -34,59 +33,36 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
     }
 
     public SubclassByteBuddyMockMaker(SubclassLoader loader) {
-        cachingMockBytecodeGenerator =
-                new TypeCachingBytecodeGenerator(new SubclassBytecodeGenerator(loader), false);
+        cachingMockBytecodeGenerator = new TypeCachingBytecodeGenerator(new SubclassBytecodeGenerator(loader), false);
     }
 
     @Override
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
         Class<? extends T> mockedProxyType = createMockType(settings);
-
         Instantiator instantiator = Plugins.getInstantiatorProvider().getInstantiator(settings);
         T mockInstance = null;
         try {
             mockInstance = instantiator.newInstance(mockedProxyType);
             MockAccess mockAccess = (MockAccess) mockInstance;
             mockAccess.setMockitoInterceptor(new MockMethodInterceptor(handler, settings));
-
             return ensureMockIsAssignableToMockedType(settings, mockInstance);
         } catch (ClassCastException cce) {
-            throw new MockitoException(
-                    join(
-                            "ClassCastException occurred while creating the mockito mock :",
-                            "  class to mock : " + describeClass(settings.getTypeToMock()),
-                            "  created class : " + describeClass(mockedProxyType),
-                            "  proxy instance class : " + describeClass(mockInstance),
-                            "  instance creation by : " + instantiator.getClass().getSimpleName(),
-                            "",
-                            "You might experience classloading issues, please ask the mockito mailing-list.",
-                            ""),
-                    cce);
+            throw new MockitoException(join("ClassCastException occurred while creating the mockito mock :", "  class to mock : " + describeClass(settings.getTypeToMock()), "  created class : " + describeClass(mockedProxyType), "  proxy instance class : " + describeClass(mockInstance), "  instance creation by : " + instantiator.getClass().getSimpleName(), "", "You might experience classloading issues, please ask the mockito mailing-list.", ""), cce);
         } catch (org.mockito.creation.instance.InstantiationException e) {
-            throw new MockitoException(
-                    "Unable to create mock instance of type '"
-                            + mockedProxyType.getSuperclass().getSimpleName()
-                            + "'",
-                    e);
+            throw new MockitoException("Unable to create mock instance of type '" + mockedProxyType.getSuperclass().getSimpleName() + "'", e);
         }
     }
 
     @Override
     public <T> Class<? extends T> createMockType(MockCreationSettings<T> settings) {
         try {
-            return cachingMockBytecodeGenerator.mockClass(
-                    MockFeatures.withMockFeatures(
-                            settings.getTypeToMock(),
-                            settings.getExtraInterfaces(),
-                            settings.getSerializableMode(),
-                            settings.isStripAnnotations()));
+            return cachingMockBytecodeGenerator.mockClass(MockFeatures.withMockFeatures(settings.getTypeToMock(), settings.getExtraInterfaces(), settings.getSerializableMode(), settings.isStripAnnotations()));
         } catch (Exception bytecodeGenerationFailed) {
             throw prettifyFailure(settings, bytecodeGenerationFailed);
         }
     }
 
-    private static <T> T ensureMockIsAssignableToMockedType(
-            MockCreationSettings<T> settings, T mock) {
+    private static <T> T ensureMockIsAssignableToMockedType(MockCreationSettings<T> settings, T mock) {
         // Force explicit cast to mocked type here, instead of
         // relying on the JVM to implicitly cast on the client call site.
         // This allows us to catch earlier the ClassCastException earlier
@@ -94,56 +70,26 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
         return typeToMock.cast(mock);
     }
 
-    private <T> RuntimeException prettifyFailure(
-            MockCreationSettings<T> mockFeatures, Exception generationFailed) {
+    private <T> RuntimeException prettifyFailure(MockCreationSettings<T> mockFeatures, Exception generationFailed) {
         if (mockFeatures.getTypeToMock().isArray()) {
-            throw new MockitoException(
-                    join("Mockito cannot mock arrays: " + mockFeatures.getTypeToMock() + ".", ""),
-                    generationFailed);
+            throw new MockitoException(join("Mockito cannot mock arrays: " + mockFeatures.getTypeToMock() + ".", ""), generationFailed);
         }
         if (Modifier.isPrivate(mockFeatures.getTypeToMock().getModifiers())) {
-            throw new MockitoException(
-                    join(
-                            "Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".",
-                            "Most likely it is due to mocking a private class that is not visible to Mockito",
-                            ""),
-                    generationFailed);
+            throw new MockitoException(join("Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".", "Most likely it is due to mocking a private class that is not visible to Mockito", ""), generationFailed);
         }
-        throw new MockitoException(
-                join(
-                        "Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".",
-                        "",
-                        "Mockito can only mock non-private & non-final classes.",
-                        "If you're not sure why you're getting this error, please report to the mailing list.",
-                        "",
-                        Platform.warnForVM(
-                                "IBM J9 VM",
-                                "Early IBM virtual machine are known to have issues with Mockito, please upgrade to an up-to-date version.\n",
-                                "Hotspot",
-                                Platform.isJava8BelowUpdate45()
-                                        ? "Java 8 early builds have bugs that were addressed in Java 1.8.0_45, please update your JDK!\n"
-                                        : ""),
-                        Platform.describe(),
-                        "",
-                        "Underlying exception : " + generationFailed),
-                generationFailed);
+        throw new MockitoException(join("Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".", "", "Mockito can only mock non-private & non-final classes.", "If you're not sure why you're getting this error, please report to the mailing list.", "", Platform.warnForVM("IBM J9 VM", "Early IBM virtual machine are known to have issues with Mockito, please upgrade to an up-to-date version.\n", "Hotspot", Platform.isJava8BelowUpdate45() ? "Java 8 early builds have bugs that were addressed in Java 1.8.0_45, please update your JDK!\n" : ""), Platform.describe(), "", "Underlying exception : " + generationFailed), generationFailed);
     }
 
     private static String describeClass(Class<?> type) {
-        return type == null
-                ? "null"
-                : "'"
-                        + type.getCanonicalName()
-                        + "', loaded by classloader : '"
-                        + type.getClassLoader()
-                        + "'";
+        return type == null ? "null" : "'" + type.getCanonicalName() + "', loaded by classloader : '" + type.getClassLoader() + "'";
     }
 
-    private static String describeClass(Object instance) {
+    private static String describeClass(@Nullable Object instance) {
         return instance == null ? "null" : describeClass(instance.getClass());
     }
 
     @Override
+    @Nullable
     public MockHandler getHandler(Object mock) {
         if (!(mock instanceof MockAccess)) {
             return null;
@@ -159,6 +105,7 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
     @Override
     public TypeMockability isTypeMockable(final Class<?> type) {
         return new TypeMockability() {
+
             @Override
             public boolean mockable() {
                 return !type.isPrimitive() && !Modifier.isFinal(type.getModifiers());

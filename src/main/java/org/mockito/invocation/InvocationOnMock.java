@@ -4,9 +4,9 @@
  */
 package org.mockito.invocation;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.lang.reflect.Method;
-
 import org.mockito.NotExtensible;
 
 /**
@@ -85,5 +85,6 @@ public interface InvocationOnMock extends Serializable {
      * @return whatever the real method returns / throws
      * @throws Throwable in case real method throws
      */
+    @Nullable
     Object callRealMethod() throws Throwable;
 }

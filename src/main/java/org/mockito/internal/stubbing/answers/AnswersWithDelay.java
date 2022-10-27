@@ -4,9 +4,9 @@
  */
 package org.mockito.internal.stubbing.answers;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
-
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.ValidableAnswer;
@@ -21,9 +21,11 @@ import org.mockito.stubbing.ValidableAnswer;
  * @see org.mockito.AdditionalAnswers
  */
 public class AnswersWithDelay implements Answer<Object>, ValidableAnswer, Serializable {
+
     private static final long serialVersionUID = 2177950597971260246L;
 
     private final long sleepyTime;
+
     private final Answer<Object> answer;
 
     public AnswersWithDelay(final long sleepyTime, final Answer<Object> answer) {
@@ -32,6 +34,7 @@ public class AnswersWithDelay implements Answer<Object>, ValidableAnswer, Serial
     }
 
     @Override
+    @Nullable
     public Object answer(final InvocationOnMock invocation) throws Throwable {
         TimeUnit.MILLISECONDS.sleep(sleepyTime);
         return answer.answer(invocation);

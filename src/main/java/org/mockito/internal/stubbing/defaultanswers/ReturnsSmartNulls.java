@@ -4,11 +4,10 @@
  */
 package org.mockito.internal.stubbing.defaultanswers;
 
+import javax.annotation.Nullable;
 import static org.mockito.internal.exceptions.Reporter.smartNullPointerException;
 import static org.mockito.internal.util.ObjectMethodsGuru.isToStringMethod;
-
 import java.io.Serializable;
-
 import org.mockito.Mockito;
 import org.mockito.internal.debugging.LocationImpl;
 import org.mockito.invocation.InvocationOnMock;
@@ -40,26 +39,23 @@ public class ReturnsSmartNulls implements Answer<Object>, Serializable {
     private final Answer<Object> delegate = new ReturnsMoreEmptyValues();
 
     @Override
+    @Nullable
     public Object answer(final InvocationOnMock invocation) throws Throwable {
         Object defaultReturnValue = delegate.answer(invocation);
-
         if (defaultReturnValue != null) {
             return defaultReturnValue;
         }
+        return RetrieveGenericsForDefaultAnswers.returnTypeForMockWithCorrectGenerics(invocation, new RetrieveGenericsForDefaultAnswers.AnswerCallback() {
 
-        return RetrieveGenericsForDefaultAnswers.returnTypeForMockWithCorrectGenerics(
-                invocation,
-                new RetrieveGenericsForDefaultAnswers.AnswerCallback() {
-                    @Override
-                    public Object apply(Class<?> type) {
-                        if (type == null) {
-                            return null;
-                        }
-
-                        return Mockito.mock(
-                                type, new ThrowsSmartNullPointer(invocation, new LocationImpl()));
-                    }
-                });
+            @Override
+            @Nullable
+            public Object apply(@Nullable Class<?> type) {
+                if (type == null) {
+                    return null;
+                }
+                return Mockito.mock(type, new ThrowsSmartNullPointer(invocation, new LocationImpl()));
+            }
+        });
     }
 
     private static class ThrowsSmartNullPointer implements Answer {
@@ -75,10 +71,8 @@ public class ReturnsSmartNulls implements Answer<Object>, Serializable {
 
         public Object answer(InvocationOnMock currentInvocation) throws Throwable {
             if (isToStringMethod(currentInvocation.getMethod())) {
-                return "SmartNull returned by this unstubbed method call on a mock:\n"
-                        + unstubbedInvocation.toString();
+                return "SmartNull returned by this unstubbed method call on a mock:\n" + unstubbedInvocation.toString();
             }
-
             throw smartNullPointerException(unstubbedInvocation.toString(), location);
         }
     }

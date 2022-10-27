@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.configuration;
 
+import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
@@ -11,5 +12,7 @@ import java.lang.reflect.Field;
  * Simple annotation processor interface.
  */
 public interface FieldAnnotationProcessor<A extends Annotation> {
+
+    @Nullable
     Object process(A annotation, Field field);
 }

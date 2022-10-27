@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.util;
 
+import javax.annotation.Nullable;
 import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
 import org.mockito.exceptions.misusing.NotAMockException;
@@ -16,9 +17,7 @@ import org.mockito.mock.MockCreationSettings;
 import org.mockito.mock.MockName;
 import org.mockito.plugins.MockMaker;
 import org.mockito.plugins.MockMaker.TypeMockability;
-
 import java.util.function.Function;
-
 import static org.mockito.internal.handler.MockHandlerFactory.createMockHandler;
 
 @SuppressWarnings("unchecked")
@@ -26,7 +25,8 @@ public class MockUtil {
 
     private static final MockMaker mockMaker = Plugins.getMockMaker();
 
-    private MockUtil() {}
+    private MockUtil() {
+    }
 
     public static TypeMockability typeMockabilityOf(Class<?> type) {
         return mockMaker.isTypeMockable(type);
@@ -34,24 +34,17 @@ public class MockUtil {
 
     public static <T> T createMock(MockCreationSettings<T> settings) {
         MockHandler mockHandler = createMockHandler(settings);
-
         Object spiedInstance = settings.getSpiedInstance();
-
         T mock;
         if (spiedInstance != null) {
-            mock =
-                    mockMaker
-                            .createSpy(settings, mockHandler, (T) spiedInstance)
-                            .orElseGet(
-                                    () -> {
-                                        T instance = mockMaker.createMock(settings, mockHandler);
-                                        new LenientCopyTool().copyToMock(spiedInstance, instance);
-                                        return instance;
-                                    });
+            mock = mockMaker.createSpy(settings, mockHandler, (T) spiedInstance).orElseGet(() -> {
+                T instance = mockMaker.createMock(settings, mockHandler);
+                new LenientCopyTool().copyToMock(spiedInstance, instance);
+                return instance;
+            });
         } else {
             mock = mockMaker.createMock(settings, mockHandler);
         }
-
         return mock;
     }
 
@@ -59,7 +52,6 @@ public class MockUtil {
         MockHandler oldHandler = getMockHandler(mock);
         MockCreationSettings settings = oldHandler.getMockSettings();
         MockHandler newHandler = createMockHandler(settings);
-
         mockMaker.resetMock(mock, newHandler, settings);
     }
 
@@ -67,7 +59,6 @@ public class MockUtil {
         if (mock == null) {
             throw new NotAMockException("Argument should be a mock, but is null!");
         }
-
         if (isMock(mock)) {
             return mockMaker.getHandler(mock);
         } else {
@@ -80,8 +71,7 @@ public class MockUtil {
     }
 
     public static boolean isSpy(Object mock) {
-        return isMock(mock)
-                && getMockSettings(mock).getDefaultAnswer() == Mockito.CALLS_REAL_METHODS;
+        return isMock(mock) && getMockSettings(mock).getDefaultAnswer() == Mockito.CALLS_REAL_METHODS;
     }
 
     public static boolean isMock(Object mock) {
@@ -116,19 +106,13 @@ public class MockUtil {
         return getMockHandler(mock).getMockSettings();
     }
 
-    public static <T> MockMaker.StaticMockControl<T> createStaticMock(
-            Class<T> type, MockCreationSettings<T> settings) {
+    public static <T> MockMaker.StaticMockControl<T> createStaticMock(Class<T> type, MockCreationSettings<T> settings) {
         MockHandler<T> handler = createMockHandler(settings);
         return mockMaker.createStaticMock(type, settings, handler);
     }
 
-    public static <T> MockMaker.ConstructionMockControl<T> createConstructionMock(
-            Class<T> type,
-            Function<MockedConstruction.Context, MockCreationSettings<T>> settingsFactory,
-            MockedConstruction.MockInitializer<T> mockInitializer) {
-        Function<MockedConstruction.Context, MockHandler<T>> handlerFactory =
-                context -> createMockHandler(settingsFactory.apply(context));
-        return mockMaker.createConstructionMock(
-                type, settingsFactory, handlerFactory, mockInitializer);
+    public static <T> MockMaker.ConstructionMockControl<T> createConstructionMock(Class<T> type, Function<MockedConstruction.Context, MockCreationSettings<T>> settingsFactory, MockedConstruction.MockInitializer<T> mockInitializer) {
+        Function<MockedConstruction.Context, MockHandler<T>> handlerFactory = context -> createMockHandler(settingsFactory.apply(context));
+        return mockMaker.createConstructionMock(type, settingsFactory, handlerFactory, mockInitializer);
     }
 }

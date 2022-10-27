@@ -4,8 +4,8 @@
  */
 package org.mockito.runners;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
-
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -40,28 +40,25 @@ public class VerboseMockitoJUnitRunner extends Runner implements Filterable {
 
     @Override
     public void run(RunNotifier notifier) {
-
         // a listener that changes the failure's exception in a very hacky way...
-        RunListener listener =
-                new RunListener() {
+        RunListener listener = new RunListener() {
 
-                    WarningsCollector warningsCollector;
+            @Nullable
+            WarningsCollector warningsCollector;
 
-                    @Override
-                    public void testStarted(Description description) throws Exception {
-                        warningsCollector = new WarningsCollector();
-                    }
+            @Override
+            public void testStarted(Description description) throws Exception {
+                warningsCollector = new WarningsCollector();
+            }
 
-                    @Override
-                    @SuppressWarnings("deprecation")
-                    public void testFailure(final Failure failure) throws Exception {
-                        String warnings = warningsCollector.getWarnings();
-                        new JUnitFailureHacker().appendWarnings(failure, warnings);
-                    }
-                };
-
+            @Override
+            @SuppressWarnings("deprecation")
+            public void testFailure(final Failure failure) throws Exception {
+                String warnings = warningsCollector.getWarnings();
+                new JUnitFailureHacker().appendWarnings(failure, warnings);
+            }
+        };
         notifier.addFirstListener(listener);
-
         runner.run(notifier);
     }
 
