@@ -16,6 +16,7 @@ import org.mockito.internal.util.Primitives;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.mock.MockName;
 import org.mockito.stubbing.Answer;
+import javax.annotation.Nullable;
 
 /**
  * Default answer of every Mockito mock.
@@ -56,7 +57,7 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
     /* (non-Javadoc)
      * @see org.mockito.stubbing.Answer#answer(org.mockito.invocation.InvocationOnMock)
      */
-    public Object answer(InvocationOnMock invocation) {
+    @Nullable public Object answer(InvocationOnMock invocation) {
         if (isToStringMethod(invocation.getMethod())) {
             Object mock = invocation.getMock();
             MockName name = MockUtil.getMockName(mock);
@@ -80,7 +81,7 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
         return returnValueFor(returnType);
     }
 
-    Object returnValueFor(Class<?> type) {
+    @Nullable Object returnValueFor(Class<?> type) {
         if (Primitives.isPrimitiveOrWrapper(type)) {
             return Primitives.defaultValue(type);
             // new instances are used instead of Collections.emptyList(), etc.

@@ -11,6 +11,7 @@ import static org.mockito.internal.util.Primitives.defaultValue;
 import org.hamcrest.Matcher;
 import org.mockito.ArgumentMatcher;
 import org.mockito.internal.hamcrest.HamcrestArgumentMatcher;
+import javax.annotation.Nullable;
 
 /**
  * Allows matching arguments with hamcrest matchers.
@@ -56,7 +57,7 @@ public class MockitoHamcrest {
      * @return <code>null</code> or default value for primitive (0, false, etc.)
      * @since 2.1.0
      */
-    @SuppressWarnings("unchecked")
+    @Nullable @SuppressWarnings("unchecked")
     public static <T> T argThat(Matcher<T> matcher) {
         reportMatcher(matcher);
         return (T) defaultValue(genericTypeOfMatcher(matcher.getClass()));

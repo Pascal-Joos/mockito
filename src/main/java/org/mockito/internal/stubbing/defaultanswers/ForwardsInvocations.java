@@ -16,6 +16,7 @@ import org.mockito.invocation.Invocation;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.plugins.MemberAccessor;
 import org.mockito.stubbing.Answer;
+import javax.annotation.Nullable;
 
 /**
  * Internal answer to forward invocations on a real instance.
