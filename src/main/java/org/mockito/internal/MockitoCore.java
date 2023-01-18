@@ -40,6 +40,7 @@ import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingPro
 import static org.mockito.internal.util.MockUtil.*;
 import static org.mockito.internal.verification.VerificationModeFactory.noInteractions;
 import static org.mockito.internal.verification.VerificationModeFactory.noMoreInteractions;
+import javax.annotation.Nullable;
 
 @SuppressWarnings("unchecked")
 public class MockitoCore {
@@ -236,7 +237,7 @@ public class MockitoCore {
         return stubber(null);
     }
 
-    public Stubber stubber(Strictness strictness) {
+    public Stubber stubber(@Nullable Strictness strictness) {
         MockingProgress mockingProgress = mockingProgress();
         mockingProgress.stubbingStarted();
         mockingProgress.resetOngoingStubbing();

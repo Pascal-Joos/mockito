@@ -22,12 +22,13 @@ import org.mockito.internal.util.MockUtil;
 import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubber;
+import javax.annotation.Nullable;
 
 public class StubberImpl implements Stubber {
 
-    private final Strictness strictness;
+    @Nullable private final Strictness strictness;
 
-    public StubberImpl(Strictness strictness) {
+    public StubberImpl(@Nullable Strictness strictness) {
         this.strictness = strictness;
     }
 

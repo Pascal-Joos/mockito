@@ -12,13 +12,14 @@ import java.io.Serializable;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.ValidableAnswer;
+import javax.annotation.Nullable;
 
 public class Returns implements Answer<Object>, ValidableAnswer, Serializable {
 
     private static final long serialVersionUID = -6245608253574215396L;
     private final Object value;
 
-    public Returns(Object value) {
+    public Returns(@Nullable Object value) {
         this.value = value;
     }
 

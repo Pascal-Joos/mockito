@@ -12,11 +12,12 @@ import org.mockito.invocation.Invocation;
 import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
+import javax.annotation.Nullable;
 
 public class OngoingStubbingImpl<T> extends BaseStubbing<T> {
 
     private final InvocationContainerImpl invocationContainer;
-    private Strictness strictness;
+    @Nullable private Strictness strictness;
 
     public OngoingStubbingImpl(InvocationContainerImpl invocationContainer) {
         super(invocationContainer.invokedMock());

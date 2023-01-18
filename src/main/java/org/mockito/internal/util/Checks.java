@@ -3,6 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 package org.mockito.internal.util;
+import javax.annotation.Nullable;
 
 /**
  * Pre-made preconditions
@@ -13,7 +14,7 @@ public class Checks {
         return checkNotNull(value, checkedValue, null);
     }
 
-    public static <T> T checkNotNull(T value, String checkedValue, String additionalMessage) {
+    public static <T> T checkNotNull(T value, String checkedValue, @Nullable String additionalMessage) {
         if (value == null) {
             String message = checkedValue + " should not be null";
             if (additionalMessage != null) {

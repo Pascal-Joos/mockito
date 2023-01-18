@@ -3,6 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 package org.mockito.internal.configuration.injection.filter;
+import javax.annotation.Nullable;
 
 /**
  * Allow the ongoing injection of a mock candidate.
@@ -18,14 +19,14 @@ public interface OngoingInjector {
      *
      * @return the mock that was injected, <code>null</code> otherwise.
      */
-    Object thenInject();
+    @Nullable Object thenInject();
 
     /**
      * Injector that will do nothing, and will return <code>null</code> as no mocks will be injected
      */
     OngoingInjector nop =
             new OngoingInjector() {
-                public Object thenInject() {
+                @Nullable public Object thenInject() {
                     return null;
                 }
             };
