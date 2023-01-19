@@ -48,6 +48,7 @@ import static net.bytebuddy.implementation.bind.annotation.TargetMethodAnnotatio
 import static net.bytebuddy.matcher.ElementMatchers.*;
 import static org.mockito.internal.util.StringUtil.*;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTransformer {
 
@@ -78,7 +79,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
 
     @Nullable private volatile Throwable lastException;
 
-    public InlineBytecodeGenerator(
+    @NullUnmarked public InlineBytecodeGenerator(
             Instrumentation instrumentation,
             WeakConcurrentMap<Object, MockMethodInterceptor> mocks,
             DetachedThreadLocal<Map<Class<?>, MockMethodInterceptor>> mockedStatics,
@@ -270,7 +271,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
         }
     }
 
-    private void assureCanReadMockito(Set<Class<?>> types) {
+    @NullUnmarked private void assureCanReadMockito(Set<Class<?>> types) {
         if (redefineModule == null) {
             return;
         }

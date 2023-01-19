@@ -37,6 +37,7 @@ import org.mockito.invocation.Location;
 import org.mockito.listeners.InvocationListener;
 import org.mockito.mock.SerializableMode;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 /**
  * Reports verification and misusing errors.
@@ -474,7 +475,7 @@ public class Reporter {
         return new VerificationInOrderFailure(join("Verification in order failure:" + message));
     }
 
-    public static MockitoAssertionError noMoreInteractionsWanted(
+    @NullUnmarked public static MockitoAssertionError noMoreInteractionsWanted(
             @Nullable Invocation undesired, List<VerificationAwareInvocation> invocations) {
         ScenarioPrinter scenarioPrinter = new ScenarioPrinter();
         String scenario = scenarioPrinter.print(invocations);

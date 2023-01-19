@@ -9,6 +9,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 public abstract class MockMethodDispatcher {
 
@@ -37,12 +38,12 @@ public abstract class MockMethodDispatcher {
         DISPATCHERS.putIfAbsent(identifier, dispatcher);
     }
 
-    @SuppressWarnings("unused")
+    @NullUnmarked @SuppressWarnings("unused")
     public static boolean isConstructorMock(String identifier, Class<?> type) {
         return DISPATCHERS.get(identifier).isConstructorMock(type);
     }
 
-    @Nullable @SuppressWarnings("unused")
+    @NullUnmarked @Nullable @SuppressWarnings("unused")
     public static Object handleConstruction(
             String identifier,
             Class<?> type,

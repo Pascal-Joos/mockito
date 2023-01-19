@@ -40,6 +40,7 @@ import org.mockito.plugins.MemberAccessor;
 import static org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.*;
 import static org.mockito.internal.util.StringUtil.*;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 /**
  * Agent and subclass based mock maker.
@@ -293,7 +294,7 @@ public class InlineByteBuddyMockMaker
                         true);
     }
 
-    @Nullable @Override
+    @NullUnmarked @Nullable @Override
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
         return doCreateMock(settings, handler, false);
     }
@@ -473,7 +474,7 @@ public class InlineByteBuddyMockMaker
     @Override
     public TypeMockability isTypeMockable(final Class<?> type) {
         return new TypeMockability() {
-            @Override
+            @NullUnmarked @Override
             public boolean mockable() {
                 return INSTRUMENTATION.isModifiableClass(type) && !EXCLUDES.contains(type);
             }

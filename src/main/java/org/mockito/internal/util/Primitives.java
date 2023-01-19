@@ -7,6 +7,7 @@ package org.mockito.internal.util;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 @SuppressWarnings("unchecked")
 public class Primitives {
@@ -27,7 +28,7 @@ public class Primitives {
      * @param <T>   The type
      * @return The primitive type if relevant, otherwise <code>null</code>
      */
-    public static <T> Class<T> primitiveTypeOf(Class<T> clazz) {
+    @NullUnmarked public static <T> Class<T> primitiveTypeOf(Class<T> clazz) {
         if (clazz.isPrimitive()) {
             return clazz;
         }
