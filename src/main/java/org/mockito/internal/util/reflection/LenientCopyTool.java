@@ -9,6 +9,7 @@ import org.mockito.plugins.MemberAccessor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import javax.annotation.Nullable;
 
 public class LenientCopyTool {
 

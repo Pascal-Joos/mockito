@@ -28,6 +28,7 @@ import org.mockito.internal.matchers.Same;
 import org.mockito.internal.matchers.StartsWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.mockito.internal.util.Primitives;
+import javax.annotation.Nullable;
 
 /**
  * Allow flexible verification or stubbing. See also {@link AdditionalMatchers}.
@@ -142,7 +143,7 @@ public class ArgumentMatchers {
      * @see #anyBoolean()
      * @see #anyCollectionOf(Class)
      */
-    public static <T> T any() {
+    @Nullable public static <T> T any() {
         return anyObject();
     }
 
@@ -162,7 +163,7 @@ public class ArgumentMatchers {
      * @deprecated This will be removed in Mockito 4.0 This method is only used for generic
      * friendliness to avoid casting, this is not anymore needed in Java 8.
      */
-    @Deprecated
+    @Nullable @Deprecated
     public static <T> T anyObject() {
         reportMatcher(Any.ANY);
         return null;
@@ -205,7 +206,7 @@ public class ArgumentMatchers {
      * @see #isNull()
      * @see #isNull(Class)
      */
-    public static <T> T any(Class<T> type) {
+    @Nullable public static <T> T any(Class<T> type) {
         reportMatcher(new InstanceOf.VarArgAware(type, "<any " + type.getCanonicalName() + ">"));
         return defaultValue(type);
     }
@@ -220,7 +221,7 @@ public class ArgumentMatchers {
      * @return <code>null</code>.
      * @see #any(Class)
      */
-    public static <T> T isA(Class<T> type) {
+    @Nullable public static <T> T isA(Class<T> type) {
         reportMatcher(new InstanceOf(type));
         return defaultValue(type);
     }
@@ -256,7 +257,7 @@ public class ArgumentMatchers {
      * @see #any(Class)
      * @deprecated as of 2.1.0 use {@link #any()}
      */
-    @Deprecated
+    @Nullable @Deprecated
     public static <T> T anyVararg() {
         any();
         return null;
@@ -903,7 +904,7 @@ public class ArgumentMatchers {
      * @param value the given value.
      * @return <code>null</code>.
      */
-    public static <T> T eq(T value) {
+    @Nullable public static <T> T eq(T value) {
         reportMatcher(new Equals(value));
         if (value == null) return null;
         return (T) Primitives.defaultValue(value.getClass());
@@ -933,7 +934,7 @@ public class ArgumentMatchers {
      * @param excludeFields fields to exclude, if field does not exist it is ignored.
      * @return <code>null</code>.
      */
-    public static <T> T refEq(T value, String... excludeFields) {
+    @Nullable public static <T> T refEq(T value, String... excludeFields) {
         reportMatcher(new ReflectionEquals(value, excludeFields));
         return null;
     }
@@ -949,7 +950,7 @@ public class ArgumentMatchers {
      * @param value the given value.
      * @return <code>null</code>.
      */
-    public static <T> T same(T value) {
+    @Nullable public static <T> T same(T value) {
         reportMatcher(new Same(value));
         if (value == null) return null;
         return (T) Primitives.defaultValue(value.getClass());
@@ -967,7 +968,7 @@ public class ArgumentMatchers {
      * @see #isNotNull()
      * @see #isNotNull(Class)
      */
-    public static <T> T isNull() {
+    @Nullable public static <T> T isNull() {
         reportMatcher(Null.NULL);
         return null;
     }
@@ -991,7 +992,7 @@ public class ArgumentMatchers {
      * @deprecated With Java 8 this method will be removed in Mockito 4.0. This method is only used for generic
      * friendliness to avoid casting, this is not anymore needed in Java 8.
      */
-    @Deprecated
+    @Nullable @Deprecated
     public static <T> T isNull(Class<T> clazz) {
         return isNull();
     }
@@ -1009,7 +1010,7 @@ public class ArgumentMatchers {
      *
      * @return <code>null</code>.
      */
-    public static <T> T notNull() {
+    @Nullable public static <T> T notNull() {
         reportMatcher(NotNull.NOT_NULL);
         return null;
     }
@@ -1035,7 +1036,7 @@ public class ArgumentMatchers {
      * @deprecated With Java 8 this method will be removed in Mockito 4.0. This method is only used for generic
      * friendliness to avoid casting, this is not anymore needed in Java 8.
      */
-    @Deprecated
+    @Nullable @Deprecated
     public static <T> T notNull(Class<T> clazz) {
         return notNull();
     }
@@ -1056,7 +1057,7 @@ public class ArgumentMatchers {
      * @see #isNull()
      * @see #isNull(Class)
      */
-    public static <T> T isNotNull() {
+    @Nullable public static <T> T isNotNull() {
         return notNull();
     }
 
@@ -1077,7 +1078,7 @@ public class ArgumentMatchers {
      * @deprecated With Java 8 this method will be removed in Mockito 4.0. This method is only used for generic
      * friendliness to avoid casting, this is not anymore needed in Java 8.
      */
-    @Deprecated
+    @Nullable @Deprecated
     public static <T> T isNotNull(Class<T> clazz) {
         return notNull(clazz);
     }
@@ -1092,7 +1093,7 @@ public class ArgumentMatchers {
      * @param clazz Type to avoid casting
      * @return <code>null</code>.
      */
-    public static <T> T nullable(Class<T> clazz) {
+    @Nullable public static <T> T nullable(Class<T> clazz) {
         AdditionalMatchers.or(isNull(), isA(clazz));
         return (T) Primitives.defaultValue(clazz);
     }
@@ -1197,7 +1198,7 @@ public class ArgumentMatchers {
      * @param matcher decides whether argument matches
      * @return <code>null</code>.
      */
-    public static <T> T argThat(ArgumentMatcher<T> matcher) {
+    @Nullable public static <T> T argThat(ArgumentMatcher<T> matcher) {
         reportMatcher(matcher);
         return null;
     }

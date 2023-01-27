@@ -13,6 +13,7 @@ import java.lang.reflect.Modifier;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.ValidableAnswer;
+import javax.annotation.Nullable;
 
 /**
  * Optional Answer that adds partial mocking support
@@ -37,7 +38,7 @@ import org.mockito.stubbing.ValidableAnswer;
 public class CallsRealMethods implements Answer<Object>, ValidableAnswer, Serializable {
     private static final long serialVersionUID = 9057165148930624087L;
 
-    public Object answer(InvocationOnMock invocation) throws Throwable {
+    @Nullable public Object answer(InvocationOnMock invocation) throws Throwable {
         if (Modifier.isAbstract(invocation.getMethod().getModifiers())) {
             return RETURNS_DEFAULTS.answer(invocation);
         }

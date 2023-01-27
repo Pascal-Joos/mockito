@@ -9,6 +9,7 @@ import java.util.List;
 import org.mockito.internal.invocation.InvocationMatcher;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MatchableInvocation;
+import javax.annotation.Nullable;
 
 /**
  * Data needed to perform verification of interactions.

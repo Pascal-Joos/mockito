@@ -22,6 +22,7 @@ import org.mockito.mock.MockCreationSettings;
 import org.mockito.mock.MockName;
 import org.mockito.mock.SerializableMode;
 import org.mockito.plugins.MemberAccessor;
+import javax.annotation.Nullable;
 
 /**
  * This is responsible for serializing a mock, it is enabled if the mock is implementing {@link Serializable}.

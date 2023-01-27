@@ -12,6 +12,7 @@ import org.mockito.internal.stubbing.defaultanswers.ReturnsSmartNulls;
 import org.mockito.internal.stubbing.defaultanswers.TriesToReturnSelf;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import javax.annotation.Nullable;
 
 /**
  * Enumeration of pre-configured mock answers
@@ -94,7 +95,7 @@ public enum Answers implements Answer<Object> {
         return this;
     }
 
-    public Object answer(InvocationOnMock invocation) throws Throwable {
+    @Nullable public Object answer(InvocationOnMock invocation) throws Throwable {
         return implementation.answer(invocation);
     }
 }

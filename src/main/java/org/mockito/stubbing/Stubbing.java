@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.NotExtensible;
 import org.mockito.invocation.Invocation;
 import org.mockito.quality.Strictness;
+import javax.annotation.Nullable;
 
 /**
  * Stubbing declared on the mock object.
@@ -60,6 +61,6 @@ public interface Stubbing extends Answer {
      *
      * @since 2.20.0
      */
-    @Incubating
+    @Nullable @Incubating
     Strictness getStrictness();
 }
