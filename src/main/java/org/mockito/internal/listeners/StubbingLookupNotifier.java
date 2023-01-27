@@ -13,6 +13,7 @@ import org.mockito.listeners.StubbingLookupEvent;
 import org.mockito.listeners.StubbingLookupListener;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.stubbing.Stubbing;
+import javax.annotation.Nullable;
 
 public class StubbingLookupNotifier {
 

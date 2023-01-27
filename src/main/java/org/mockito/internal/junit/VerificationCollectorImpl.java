@@ -14,6 +14,7 @@ import org.mockito.internal.verification.api.VerificationData;
 import org.mockito.junit.VerificationCollector;
 import org.mockito.verification.VerificationMode;
 import org.mockito.verification.VerificationStrategy;
+import javax.annotation.Nullable;
 
 /**
  * Mockito implementation of VerificationCollector.
@@ -76,7 +77,7 @@ public class VerificationCollectorImpl implements VerificationCollector {
         this.numberOfFailures = 0;
     }
 
-    private void append(String message) {
+    private void append(@Nullable String message) {
         this.numberOfFailures++;
         this.builder
                 .append('\n')

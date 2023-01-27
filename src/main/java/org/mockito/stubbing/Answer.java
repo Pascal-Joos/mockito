@@ -5,6 +5,7 @@
 package org.mockito.stubbing;
 
 import org.mockito.invocation.InvocationOnMock;
+import javax.annotation.Nullable;
 
 /**
  * Generic interface to be used for configuring mock's answer.
@@ -36,5 +37,5 @@ public interface Answer<T> {
      *
      * @throws Throwable the throwable to be thrown
      */
-    T answer(InvocationOnMock invocation) throws Throwable;
+    @Nullable T answer(InvocationOnMock invocation) throws Throwable;
 }

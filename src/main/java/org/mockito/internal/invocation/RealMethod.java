@@ -10,6 +10,7 @@ import java.util.concurrent.Callable;
 import org.mockito.internal.exceptions.stacktrace.ConditionalStackTraceFilter;
 import org.mockito.invocation.InvocationFactory;
 import org.mockito.invocation.InvocationOnMock;
+import javax.annotation.Nullable;
 
 /**
  * Interface that wraps a 'real' method of the mock object.
@@ -69,5 +70,5 @@ public interface RealMethod extends Serializable {
 
     boolean isInvokable();
 
-    Object invoke() throws Throwable;
+    @Nullable Object invoke() throws Throwable;
 }

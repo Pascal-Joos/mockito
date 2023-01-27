@@ -12,12 +12,13 @@ import org.mockito.internal.util.MockUtil;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.ValidableAnswer;
+import javax.annotation.Nullable;
 
 public abstract class AbstractThrowsException implements Answer<Object>, ValidableAnswer {
 
     private final ConditionalStackTraceFilter filter = new ConditionalStackTraceFilter();
 
-    protected abstract Throwable getThrowable();
+    @Nullable protected abstract Throwable getThrowable();
 
     public Object answer(InvocationOnMock invocation) throws Throwable {
         Throwable throwable = getThrowable();
