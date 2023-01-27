@@ -5,6 +5,7 @@
 package org.mockito.listeners;
 
 import org.mockito.mock.MockCreationSettings;
+import javax.annotation.Nullable;
 
 /**
  * Notified when mock object is created.

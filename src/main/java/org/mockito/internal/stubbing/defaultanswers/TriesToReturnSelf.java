@@ -9,12 +9,13 @@ import java.io.Serializable;
 import org.mockito.internal.util.MockUtil;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import javax.annotation.Nullable;
 
 public class TriesToReturnSelf implements Answer<Object>, Serializable {
 
     private final ReturnsEmptyValues defaultReturn = new ReturnsEmptyValues();
 
-    public Object answer(InvocationOnMock invocation) throws Throwable {
+    @Nullable public Object answer(InvocationOnMock invocation) throws Throwable {
         Class<?> methodReturnType = invocation.getMethod().getReturnType();
         Object mock = invocation.getMock();
         Class<?> mockType = MockUtil.getMockHandler(mock).getMockSettings().getTypeToMock();

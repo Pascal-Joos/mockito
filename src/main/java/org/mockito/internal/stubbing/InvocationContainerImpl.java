@@ -24,6 +24,7 @@ import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubbing;
 import org.mockito.stubbing.ValidableAnswer;
+import javax.annotation.Nullable;
 
 @SuppressWarnings("unchecked")
 public class InvocationContainerImpl implements InvocationContainer, Serializable {
@@ -33,7 +34,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
             new LinkedList<StubbedInvocationMatcher>();
     private final DoAnswerStyleStubbing doAnswerStyleStubbing;
     private final RegisteredInvocations registeredInvocations;
-    private final Strictness mockStrictness;
+    @Nullable private final Strictness mockStrictness;
 
     private MatchableInvocation invocationForStubbing;
 
@@ -52,7 +53,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
         this.invocationForStubbing = invocationMatcher;
     }
 
-    public void addAnswer(Answer answer, Strictness stubbingStrictness) {
+    public void addAnswer(Answer answer, @Nullable Strictness stubbingStrictness) {
         registeredInvocations.removeLast();
         addAnswer(answer, false, stubbingStrictness);
     }
@@ -65,7 +66,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
      * Adds new stubbed answer and returns the invocation matcher the answer was added to.
      */
     public StubbedInvocationMatcher addAnswer(
-            Answer answer, boolean isConsecutive, Strictness stubbingStrictness) {
+            Answer answer, boolean isConsecutive, @Nullable Strictness stubbingStrictness) {
         Invocation invocation = invocationForStubbing.getInvocation();
         mockingProgress().stubbingCompleted();
         if (answer instanceof ValidableAnswer) {
@@ -86,7 +87,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
         }
     }
 
-    Object answerTo(Invocation invocation) throws Throwable {
+    @Nullable Object answerTo(Invocation invocation) throws Throwable {
         return findAnswerFor(invocation).answer(invocation);
     }
 
@@ -109,7 +110,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
     /**
      * Sets the answers declared with 'doAnswer' style.
      */
-    public void setAnswersForStubbing(List<Answer<?>> answers, Strictness strictness) {
+    public void setAnswersForStubbing(List<Answer<?>> answers, @Nullable Strictness strictness) {
         doAnswerStyleStubbing.setAnswers(answers, strictness);
     }
 

@@ -12,18 +12,19 @@ import org.mockito.mock.MockCreationSettings;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
 import org.mockito.verification.VerificationStrategy;
+import javax.annotation.Nullable;
 
 public interface MockingProgress {
 
     void reportOngoingStubbing(OngoingStubbing<?> ongoingStubbing);
 
-    OngoingStubbing<?> pullOngoingStubbing();
+    @Nullable OngoingStubbing<?> pullOngoingStubbing();
 
     Set<VerificationListener> verificationListeners();
 
     void verificationStarted(VerificationMode verificationMode);
 
-    VerificationMode pullVerificationMode();
+    @Nullable VerificationMode pullVerificationMode();
 
     void stubbingStarted();
 

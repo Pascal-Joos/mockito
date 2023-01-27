@@ -25,6 +25,7 @@ import org.mockito.internal.configuration.injection.filter.TypeBasedCandidateFil
 import org.mockito.internal.util.collections.ListUtil;
 import org.mockito.internal.util.reflection.FieldInitializationReport;
 import org.mockito.internal.util.reflection.FieldInitializer;
+import javax.annotation.Nullable;
 
 /**
  * Inject mocks using first setters then fields, if no setters available.

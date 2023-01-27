@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.ValidableAnswer;
+import javax.annotation.Nullable;
 
 /**
  * An answer that always throws the same throwable.
@@ -15,18 +16,18 @@ import org.mockito.stubbing.ValidableAnswer;
 public class ThrowsException extends AbstractThrowsException implements Serializable {
 
     private static final long serialVersionUID = 1128820328555183980L;
-    private final Throwable throwable;
+    @Nullable private final Throwable throwable;
 
     /**
      * Creates a new answer always throwing the given throwable. If it is null,
      * {@linkplain ValidableAnswer#validateFor(InvocationOnMock) answer validation}
      * will fail.
      */
-    public ThrowsException(Throwable throwable) {
+    public ThrowsException(@Nullable Throwable throwable) {
         this.throwable = throwable;
     }
 
-    @Override
+    @Nullable @Override
     protected Throwable getThrowable() {
         return throwable;
     }
