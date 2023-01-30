@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.annotation.Nullable;
 
 /**
  * <p>
@@ -29,7 +30,7 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
 
     public final ConcurrentMap<WeakKey<K>, V> target;
 
-    private final Thread thread;
+    @Nullable private final Thread thread;
 
     /**
      * @param cleanerThread {@code true} if a thread should be started that removes stale entries.
@@ -51,7 +52,7 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
      * @param key The key of the entry.
      * @return The value of the entry or the default value if it did not exist.
      */
-    @SuppressWarnings("CollectionIncompatibleType")
+    @Nullable @SuppressWarnings("CollectionIncompatibleType")
     public V get(K key) {
         if (key == null) throw new NullPointerException();
         V value = target.get(new LatentKey<K>(key));
@@ -111,14 +112,14 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
      * @param key The key for which to create a default value.
      * @return The default value for a key without value or {@code null} for not defining a default value.
      */
-    protected V defaultValue(K key) {
+    @Nullable protected V defaultValue(K key) {
         return null;
     }
 
     /**
      * @return The cleaner thread or {@code null} if no such thread was set.
      */
-    public Thread getCleanerThread() {
+    @Nullable public Thread getCleanerThread() {
         return thread;
     }
 
@@ -253,7 +254,7 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
             super(false);
         }
 
-        @Override
+        @Nullable @Override
         public V get(K key) {
             expungeStaleEntries();
             return super.get(key);
@@ -294,9 +295,9 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
 
         private final Iterator<Map.Entry<WeakKey<K>, V>> iterator;
 
-        private Map.Entry<WeakKey<K>, V> nextEntry;
+        @Nullable private Map.Entry<WeakKey<K>, V> nextEntry;
 
-        private K nextKey;
+        @Nullable private K nextKey;
 
         private EntryIterator(Iterator<Map.Entry<WeakKey<K>, V>> iterator) {
             this.iterator = iterator;
@@ -342,9 +343,9 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
 
         private final K key;
 
-        final Map.Entry<WeakKey<K>, V> entry;
+        @Nullable final Map.Entry<WeakKey<K>, V> entry;
 
-        private SimpleEntry(K key, Map.Entry<WeakKey<K>, V> entry) {
+        private SimpleEntry(K key, @Nullable Map.Entry<WeakKey<K>, V> entry) {
             this.key = key;
             this.entry = entry;
         }

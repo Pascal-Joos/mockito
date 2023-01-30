@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockitoLogger;
+import javax.annotation.Nullable;
 
 /**
  * Reports stubbing argument mismatches to the supplied logger
@@ -40,7 +41,7 @@ public class MismatchReportingTestListener implements MockitoTestListener {
         }
     }
 
-    public void onMockCreated(Object mock, MockCreationSettings settings) {
+    public void onMockCreated(@Nullable Object mock, MockCreationSettings settings) {
         this.mocks.add(mock);
     }
 }

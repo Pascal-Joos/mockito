@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.util.Checks;
+import javax.annotation.Nullable;
 
 /**
  * This class can retrieve generic meta-data that the compiler stores on classes
@@ -99,7 +100,7 @@ public abstract class GenericMetadataSupport {
         }
     }
 
-    protected Class<?> extractRawTypeOf(Type type) {
+    protected Class<?> extractRawTypeOf(@Nullable Type type) {
         if (type instanceof Class) {
             return (Class<?>) type;
         }
@@ -120,7 +121,7 @@ public abstract class GenericMetadataSupport {
         throw new MockitoException("Raw extraction not supported for : '" + type + "'");
     }
 
-    protected void registerTypeVariablesOn(Type classType) {
+    protected void registerTypeVariablesOn(@Nullable Type classType) {
         if (!(classType instanceof ParameterizedType)) {
             return;
         }
@@ -261,7 +262,7 @@ public abstract class GenericMetadataSupport {
         return actualTypeArguments;
     }
 
-    protected Type getActualTypeArgumentFor(TypeVariable<?> typeParameter) {
+    @Nullable protected Type getActualTypeArgumentFor(TypeVariable<?> typeParameter) {
         Type type = this.contextualActualTypeParameters.get(typeParameter);
         if (type instanceof TypeVariable) {
             TypeVariable<?> typeVariable = (TypeVariable<?>) type;
@@ -333,7 +334,7 @@ public abstract class GenericMetadataSupport {
      * @return The new {@link GenericMetadataSupport}.
      * @throws MockitoException Raised if type is not a {@link Class} or a {@link ParameterizedType}.
      */
-    public static GenericMetadataSupport inferFrom(Type type) {
+    public static GenericMetadataSupport inferFrom(@Nullable Type type) {
         Checks.checkNotNull(type, "type");
         if (type instanceof Class) {
             return new FromClassGenericMetadataSupport((Class<?>) type);
@@ -445,8 +446,8 @@ public abstract class GenericMetadataSupport {
     private static class TypeVariableReturnType extends GenericMetadataSupport {
         private final TypeVariable<?> typeVariable;
         private final TypeVariable<?>[] typeParameters;
-        private Class<?> rawType;
-        private List<Type> extraInterfaces;
+        @Nullable private Class<?> rawType;
+        @Nullable private List<Type> extraInterfaces;
 
         public TypeVariableReturnType(
                 GenericMetadataSupport source,
@@ -517,7 +518,7 @@ public abstract class GenericMetadataSupport {
             return rawExtraInterfaces.toArray(new Class[rawExtraInterfaces.size()]);
         }
 
-        private Type extractActualBoundedTypeOf(Type type) {
+        @Nullable private Type extractActualBoundedTypeOf(@Nullable Type type) {
             if (type instanceof TypeVariable) {
                 /*
                 If type is a TypeVariable, then it is needed to gather data elsewhere. Usually TypeVariables are declared

@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static org.mockito.internal.util.StringUtil.join;
+import javax.annotation.Nullable;
 
 /**
  * The facility to create mocks.
@@ -72,7 +73,7 @@ public interface MockMaker {
      * @return The mock instance.
      * @since 1.9.5
      */
-    <T> T createMock(MockCreationSettings<T> settings, MockHandler handler);
+    @Nullable <T> T createMock(MockCreationSettings<T> settings, MockHandler handler);
 
     /**
      * By implementing this method, a mock maker can optionally support the creation of spies where all fields
@@ -103,7 +104,7 @@ public interface MockMaker {
      *   This means the passed object is not really a Mockito mock.
      * @since 1.9.5
      */
-    MockHandler getHandler(Object mock);
+    @Nullable MockHandler getHandler(Object mock);
 
     /**
      * Replaces the existing handler on {@code mock} with {@code newHandler}.

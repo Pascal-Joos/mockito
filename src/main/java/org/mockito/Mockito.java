@@ -33,6 +33,7 @@ import org.mockito.stubbing.*;
 import org.mockito.verification.*;
 
 import java.util.function.Function;
+import javax.annotation.Nullable;
 
 /**
  * <p align="left"><img src="logo.png" srcset="logo@2x.png 2x" alt="Mockito logo"/></p>
@@ -1856,7 +1857,7 @@ public class Mockito extends ArgumentMatchers {
      * @param classToMock class or interface to mock
      * @return mock object
      */
-    @CheckReturnValue
+    @Nullable @CheckReturnValue
     public static <T> T mock(Class<T> classToMock) {
         return mock(classToMock, withSettings());
     }
@@ -1876,7 +1877,7 @@ public class Mockito extends ArgumentMatchers {
      * @param name of the mock
      * @return mock object
      */
-    @CheckReturnValue
+    @Nullable @CheckReturnValue
     public static <T> T mock(Class<T> classToMock, String name) {
         return mock(classToMock, withSettings().name(name).defaultAnswer(RETURNS_DEFAULTS));
     }
@@ -1917,7 +1918,7 @@ public class Mockito extends ArgumentMatchers {
      *
      * @return mock object
      */
-    @CheckReturnValue
+    @Nullable @CheckReturnValue
     public static <T> T mock(Class<T> classToMock, Answer defaultAnswer) {
         return mock(classToMock, withSettings().defaultAnswer(defaultAnswer));
     }
@@ -1945,7 +1946,7 @@ public class Mockito extends ArgumentMatchers {
      * @param mockSettings additional mock settings
      * @return mock object
      */
-    @CheckReturnValue
+    @Nullable @CheckReturnValue
     public static <T> T mock(Class<T> classToMock, MockSettings mockSettings) {
         return MOCKITO_CORE.mock(classToMock, mockSettings);
     }
@@ -2029,7 +2030,7 @@ public class Mockito extends ArgumentMatchers {
      *            to spy on
      * @return a spy of the real object
      */
-    @CheckReturnValue
+    @Nullable @CheckReturnValue
     public static <T> T spy(T object) {
         return MOCKITO_CORE.mock(
                 (Class<T>) object.getClass(),
@@ -2063,7 +2064,7 @@ public class Mockito extends ArgumentMatchers {
      * @return a spy of the provided class
      * @since 1.10.12
      */
-    @Incubating
+    @Nullable @Incubating
     @CheckReturnValue
     public static <T> T spy(Class<T> classToSpy) {
         return MOCKITO_CORE.mock(

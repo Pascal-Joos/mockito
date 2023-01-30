@@ -3,6 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 package org.mockito.creation.instance;
+import javax.annotation.Nullable;
 
 /**
  * Provides instances of classes.
@@ -17,5 +18,5 @@ public interface Instantiator {
      *
      * @since 2.15.4
      */
-    <T> T newInstance(Class<T> cls) throws InstantiationException;
+    <T> T newInstance(@Nullable Class<T> cls) throws InstantiationException;
 }

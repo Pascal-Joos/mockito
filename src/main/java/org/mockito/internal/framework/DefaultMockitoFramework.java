@@ -15,6 +15,7 @@ import org.mockito.listeners.MockitoListener;
 import org.mockito.plugins.InlineMockMaker;
 import org.mockito.plugins.MockMaker;
 import org.mockito.plugins.MockitoPlugins;
+import javax.annotation.Nullable;
 
 public class DefaultMockitoFramework implements MockitoFramework {
 
@@ -40,7 +41,7 @@ public class DefaultMockitoFramework implements MockitoFramework {
         return new DefaultInvocationFactory();
     }
 
-    private InlineMockMaker getInlineMockMaker() {
+    @Nullable private InlineMockMaker getInlineMockMaker() {
         MockMaker mockMaker = Plugins.getMockMaker();
         return (mockMaker instanceof InlineMockMaker) ? (InlineMockMaker) mockMaker : null;
     }

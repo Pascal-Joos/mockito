@@ -25,15 +25,16 @@ import org.mockito.mock.MockCreationSettings;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
 import org.mockito.verification.VerificationStrategy;
+import javax.annotation.Nullable;
 
 @SuppressWarnings("unchecked")
 public class MockingProgressImpl implements MockingProgress {
 
     private final ArgumentMatcherStorage argumentMatcherStorage = new ArgumentMatcherStorageImpl();
 
-    private OngoingStubbing<?> ongoingStubbing;
-    private Localized<VerificationMode> verificationMode;
-    private Location stubbingInProgress = null;
+    @Nullable private OngoingStubbing<?> ongoingStubbing;
+    @Nullable private Localized<VerificationMode> verificationMode;
+    @Nullable private Location stubbingInProgress = null;
     private VerificationStrategy verificationStrategy;
     private final Set<MockitoListener> listeners = new LinkedHashSet<MockitoListener>();
 
@@ -53,7 +54,7 @@ public class MockingProgressImpl implements MockingProgress {
         this.ongoingStubbing = ongoingStubbing;
     }
 
-    public OngoingStubbing<?> pullOngoingStubbing() {
+    @Nullable public OngoingStubbing<?> pullOngoingStubbing() {
         OngoingStubbing<?> temp = ongoingStubbing;
         ongoingStubbing = null;
         return temp;
@@ -86,7 +87,7 @@ public class MockingProgressImpl implements MockingProgress {
         ongoingStubbing = null;
     }
 
-    public VerificationMode pullVerificationMode() {
+    @Nullable public VerificationMode pullVerificationMode() {
         if (verificationMode == null) {
             return null;
         }
@@ -150,7 +151,7 @@ public class MockingProgressImpl implements MockingProgress {
         return argumentMatcherStorage;
     }
 
-    public void mockingStarted(Object mock, MockCreationSettings settings) {
+    public void mockingStarted(@Nullable Object mock, MockCreationSettings settings) {
         for (MockitoListener listener : listeners) {
             if (listener instanceof MockCreationListener) {
                 ((MockCreationListener) listener).onMockCreated(mock, settings);

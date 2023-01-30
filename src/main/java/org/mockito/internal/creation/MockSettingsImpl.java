@@ -34,6 +34,7 @@ import org.mockito.mock.MockCreationSettings;
 import org.mockito.mock.MockName;
 import org.mockito.mock.SerializableMode;
 import org.mockito.stubbing.Answer;
+import javax.annotation.Nullable;
 
 @SuppressWarnings("unchecked")
 public class MockSettingsImpl<T> extends CreationSettings<T>
@@ -41,8 +42,8 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
 
     private static final long serialVersionUID = 4475297236197939569L;
     private boolean useConstructor;
-    private Object outerClassInstance;
-    private Object[] constructorArgs;
+    @Nullable private Object outerClassInstance;
+    @Nullable private Object[] constructorArgs;
 
     @Override
     public MockSettings serializable() {
@@ -72,7 +73,7 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
         return this;
     }
 
-    @Override
+    @Nullable @Override
     public MockName getMockName() {
         return mockName;
     }
@@ -82,7 +83,7 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
         return extraInterfaces;
     }
 
-    @Override
+    @Nullable @Override
     public Object getSpiedInstance() {
         return spiedInstance;
     }
@@ -108,7 +109,7 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
         return this;
     }
 
-    @Override
+    @Nullable @Override
     public Answer<Object> getDefaultAnswer() {
         return defaultAnswer;
     }
@@ -147,12 +148,12 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
         return useConstructor;
     }
 
-    @Override
+    @Nullable @Override
     public Object getOuterClassInstance() {
         return outerClassInstance;
     }
 
-    @Override
+    @Nullable @Override
     public Object[] getConstructorArgs() {
         if (outerClassInstance == null) {
             return constructorArgs;
@@ -222,7 +223,7 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
         return !getInvocationListeners().isEmpty();
     }
 
-    @Override
+    @Nullable @Override
     public Class<T> getTypeToMock() {
         return typeToMock;
     }

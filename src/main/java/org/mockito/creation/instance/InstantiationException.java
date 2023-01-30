@@ -5,6 +5,7 @@
 package org.mockito.creation.instance;
 
 import org.mockito.exceptions.base.MockitoException;
+import javax.annotation.Nullable;
 
 /**
  * Exception generated when {@link Instantiator#newInstance(Class)} failed.
@@ -23,7 +24,7 @@ public class InstantiationException extends MockitoException {
     /**
      * @since 2.15.4
      */
-    public InstantiationException(String message, Throwable cause) {
+    public InstantiationException(@Nullable String message, @Nullable Throwable cause) {
         super(message, cause);
     }
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import org.mockito.internal.invocation.InvocationMatcher;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MatchableInvocation;
+import javax.annotation.Nullable;
 
 /**
  * Data needed to perform verification of interactions.
@@ -38,7 +39,7 @@ public interface VerificationData {
      *
      * @since 2.2.12
      */
-    MatchableInvocation getTarget();
+    @Nullable MatchableInvocation getTarget();
 
     /**
      * @deprecated - This internal method leaks internal class <code>InvocationMatcher</code>.
@@ -46,6 +47,6 @@ public interface VerificationData {
      *
      * Deprecated since 2.2.12
      */
-    @Deprecated
+    @Nullable @Deprecated
     InvocationMatcher getWanted();
 }

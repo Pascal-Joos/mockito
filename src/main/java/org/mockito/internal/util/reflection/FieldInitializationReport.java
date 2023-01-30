@@ -3,6 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 package org.mockito.internal.util.reflection;
+import javax.annotation.Nullable;
 
 /**
  * Report on field initialization
@@ -53,7 +54,7 @@ public class FieldInitializationReport {
      *
      * @return Class of the instance
      */
-    public Class<?> fieldClass() {
+    @Nullable public Class<?> fieldClass() {
         return fieldInstance != null ? fieldInstance.getClass() : null;
     }
 }

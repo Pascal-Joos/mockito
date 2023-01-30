@@ -11,6 +11,7 @@ import java.io.Serializable;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.ValidableAnswer;
+import javax.annotation.Nullable;
 
 public class DoesNothing implements Answer<Object>, ValidableAnswer, Serializable {
 
@@ -24,7 +25,7 @@ public class DoesNothing implements Answer<Object>, ValidableAnswer, Serializabl
         return SINGLETON;
     }
 
-    @Override
+    @Nullable @Override
     public Object answer(InvocationOnMock invocation) {
         return null;
     }

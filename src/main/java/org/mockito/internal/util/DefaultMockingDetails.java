@@ -14,6 +14,7 @@ import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.stubbing.Stubbing;
+import javax.annotation.Nullable;
 
 /**
  * Class to inspect any object, and identify whether a particular object is either a mock or a spy.  This is
@@ -63,7 +64,7 @@ public class DefaultMockingDetails implements MockingDetails {
         return new InvocationsPrinter().printInvocations(toInspect);
     }
 
-    @Override
+    @Nullable @Override
     public MockHandler getMockHandler() {
         return mockHandler();
     }
@@ -73,7 +74,7 @@ public class DefaultMockingDetails implements MockingDetails {
         return toInspect;
     }
 
-    private MockHandler<Object> mockHandler() {
+    @Nullable private MockHandler<Object> mockHandler() {
         assertGoodMock();
         return MockUtil.getMockHandler(toInspect);
     }

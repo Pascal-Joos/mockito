@@ -15,6 +15,7 @@ import org.mockito.listeners.StubbingLookupListener;
 import org.mockito.listeners.VerificationStartedListener;
 import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
+import javax.annotation.Nullable;
 
 /**
  * Informs about the mock settings. An immutable view of {@link org.mockito.MockSettings}.
@@ -25,7 +26,7 @@ public interface MockCreationSettings<T> {
     /**
      * Mocked type. An interface or class the mock should implement / extend.
      */
-    Class<T> getTypeToMock();
+    @Nullable Class<T> getTypeToMock();
 
     /**
      * the extra interfaces the mock object should implement.
@@ -35,17 +36,17 @@ public interface MockCreationSettings<T> {
     /**
      * the name of this mock, as printed on verification errors; see {@link org.mockito.MockSettings#name}.
      */
-    MockName getMockName();
+    @Nullable MockName getMockName();
 
     /**
      * the default answer for this mock, see {@link org.mockito.MockSettings#defaultAnswer}.
      */
-    Answer<?> getDefaultAnswer();
+    @Nullable Answer<?> getDefaultAnswer();
 
     /**
      * the spied instance - needed for spies.
      */
-    Object getSpiedInstance();
+    @Nullable Object getSpiedInstance();
 
     /**
      * if the mock is serializable, see {@link org.mockito.MockSettings#serializable}.
@@ -110,7 +111,7 @@ public interface MockCreationSettings<T> {
      *
      * @since 2.7.14
      */
-    @Incubating
+    @Nullable @Incubating
     Object[] getConstructorArgs();
 
     /**
@@ -119,7 +120,7 @@ public interface MockCreationSettings<T> {
      * @return the outer class instance used for creation of the mock object via the constructor.
      * @since 1.10.12
      */
-    @Incubating
+    @Nullable @Incubating
     Object getOuterClassInstance();
 
     /**

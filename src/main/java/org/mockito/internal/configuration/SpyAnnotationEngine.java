@@ -26,6 +26,7 @@ import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.internal.util.MockUtil;
 import org.mockito.plugins.AnnotationEngine;
 import org.mockito.plugins.MemberAccessor;
+import javax.annotation.Nullable;
 
 /**
  * Process fields annotated with &#64;Spy.
@@ -83,7 +84,7 @@ public class SpyAnnotationEngine
         return new NoAction();
     }
 
-    private static Object spyInstance(Field field, Object instance) {
+    @Nullable private static Object spyInstance(Field field, Object instance) {
         return Mockito.mock(
                 instance.getClass(),
                 withSettings()
@@ -92,7 +93,7 @@ public class SpyAnnotationEngine
                         .name(field.getName()));
     }
 
-    private static Object spyNewInstance(Object testInstance, Field field)
+    @Nullable private static Object spyNewInstance(Object testInstance, Field field)
             throws InstantiationException, IllegalAccessException, InvocationTargetException {
         MockSettings settings =
                 withSettings().defaultAnswer(CALLS_REAL_METHODS).name(field.getName());

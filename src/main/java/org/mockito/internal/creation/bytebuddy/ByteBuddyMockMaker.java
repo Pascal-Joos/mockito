@@ -11,6 +11,7 @@ import org.mockito.mock.MockCreationSettings;
 
 import java.util.Optional;
 import java.util.function.Function;
+import javax.annotation.Nullable;
 
 /**
  * ByteBuddy MockMaker.
@@ -24,7 +25,7 @@ import java.util.function.Function;
 public class ByteBuddyMockMaker implements ClassCreatingMockMaker {
     private ClassCreatingMockMaker defaultByteBuddyMockMaker = new SubclassByteBuddyMockMaker();
 
-    @Override
+    @Nullable @Override
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
         return defaultByteBuddyMockMaker.createMock(settings, handler);
     }
@@ -35,12 +36,12 @@ public class ByteBuddyMockMaker implements ClassCreatingMockMaker {
         return defaultByteBuddyMockMaker.createSpy(settings, handler, object);
     }
 
-    @Override
+    @Nullable @Override
     public <T> Class<? extends T> createMockType(MockCreationSettings<T> creationSettings) {
         return defaultByteBuddyMockMaker.createMockType(creationSettings);
     }
 
-    @Override
+    @Nullable @Override
     public MockHandler getHandler(Object mock) {
         return defaultByteBuddyMockMaker.getHandler(mock);
     }

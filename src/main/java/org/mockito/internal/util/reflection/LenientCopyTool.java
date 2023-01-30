@@ -9,12 +9,13 @@ import org.mockito.plugins.MemberAccessor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import javax.annotation.Nullable;
 
 public class LenientCopyTool {
 
     MemberAccessor accessor = Plugins.getMemberAccessor();
 
-    public <T> void copyToMock(T from, T mock) {
+    public <T> void copyToMock(T from, @Nullable T mock) {
         copy(from, mock, from.getClass());
     }
 
@@ -22,14 +23,14 @@ public class LenientCopyTool {
         copy(from, to, from.getClass());
     }
 
-    private <T> void copy(T from, T to, Class<?> fromClazz) {
+    private <T> void copy(T from, @Nullable T to, Class<?> fromClazz) {
         while (fromClazz != Object.class) {
             copyValues(from, to, fromClazz);
             fromClazz = fromClazz.getSuperclass();
         }
     }
 
-    private <T> void copyValues(T from, T mock, Class<?> classFrom) {
+    private <T> void copyValues(T from, @Nullable T mock, Class<?> classFrom) {
         Field[] fields = classFrom.getDeclaredFields();
 
         for (Field field : fields) {

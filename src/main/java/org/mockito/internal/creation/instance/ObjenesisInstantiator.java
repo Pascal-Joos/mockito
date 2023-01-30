@@ -7,6 +7,7 @@ package org.mockito.internal.creation.instance;
 import org.mockito.creation.instance.Instantiator;
 import org.mockito.internal.configuration.GlobalConfiguration;
 import org.objenesis.ObjenesisStd;
+import javax.annotation.Nullable;
 
 class ObjenesisInstantiator implements Instantiator {
 
@@ -17,7 +18,7 @@ class ObjenesisInstantiator implements Instantiator {
     private final ObjenesisStd objenesis =
             new ObjenesisStd(new GlobalConfiguration().enableClassCache());
 
-    public <T> T newInstance(Class<T> cls) {
+    public <T> T newInstance(@Nullable Class<T> cls) {
         return objenesis.newInstance(cls);
     }
 }

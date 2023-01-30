@@ -9,24 +9,25 @@ import java.util.List;
 import org.mockito.internal.verification.api.InOrderContext;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MatchableInvocation;
+import javax.annotation.Nullable;
 
 public class InvocationMarker {
 
     private InvocationMarker() {}
 
-    public static void markVerified(List<Invocation> invocations, MatchableInvocation wanted) {
+    public static void markVerified(List<Invocation> invocations, @Nullable MatchableInvocation wanted) {
         for (Invocation invocation : invocations) {
             markVerified(invocation, wanted);
         }
     }
 
-    public static void markVerified(Invocation invocation, MatchableInvocation wanted) {
+    public static void markVerified(Invocation invocation, @Nullable MatchableInvocation wanted) {
         invocation.markVerified();
         wanted.captureArgumentsFrom(invocation);
     }
 
     public static void markVerifiedInOrder(
-            List<Invocation> chunk, MatchableInvocation wanted, InOrderContext context) {
+            List<Invocation> chunk, @Nullable MatchableInvocation wanted, InOrderContext context) {
         markVerified(chunk, wanted);
 
         for (Invocation i : chunk) {

@@ -8,16 +8,17 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.mockito.mock.SerializableMode;
+import javax.annotation.Nullable;
 
 class MockFeatures<T> {
 
-    final Class<T> mockedType;
+    @Nullable final Class<T> mockedType;
     final Set<Class<?>> interfaces;
     final SerializableMode serializableMode;
     final boolean stripAnnotations;
 
     private MockFeatures(
-            Class<T> mockedType,
+            @Nullable Class<T> mockedType,
             Set<Class<?>> interfaces,
             SerializableMode serializableMode,
             boolean stripAnnotations) {
@@ -28,7 +29,7 @@ class MockFeatures<T> {
     }
 
     public static <T> MockFeatures<T> withMockFeatures(
-            Class<T> mockedType,
+            @Nullable Class<T> mockedType,
             Set<Class<?>> interfaces,
             SerializableMode serializableMode,
             boolean stripAnnotations) {

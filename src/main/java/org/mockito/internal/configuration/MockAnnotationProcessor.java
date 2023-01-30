@@ -17,18 +17,19 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.util.Supplier;
+import javax.annotation.Nullable;
 
 /**
  * Instantiates a mock on a field annotated by {@link Mock}
  */
 public class MockAnnotationProcessor implements FieldAnnotationProcessor<Mock> {
-    @Override
+    @Nullable @Override
     public Object process(Mock annotation, Field field) {
         return processAnnotationForMock(
                 annotation, field.getType(), field::getGenericType, field.getName());
     }
 
-    public static Object processAnnotationForMock(
+    @Nullable public static Object processAnnotationForMock(
             Mock annotation, Class<?> type, Supplier<Type> genericType, String name) {
         MockSettings mockSettings = Mockito.withSettings();
         if (annotation.extraInterfaces().length > 0) { // never null

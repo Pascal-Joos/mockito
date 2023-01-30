@@ -7,6 +7,7 @@ package org.mockito.internal.stubbing;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Stubbing;
+import javax.annotation.Nullable;
 
 /**
  * Helps determining the actual strictness given that it can be configured in multiple ways (at mock, at stubbing, in rule)
@@ -26,7 +27,7 @@ public class StrictnessSelector {
      * @return actual strictness, can be null.
      */
     public static Strictness determineStrictness(
-            Stubbing stubbing, MockCreationSettings mockSettings, Strictness testLevelStrictness) {
+            @Nullable Stubbing stubbing, MockCreationSettings mockSettings, Strictness testLevelStrictness) {
         if (stubbing != null && stubbing.getStrictness() != null) {
             return stubbing.getStrictness();
         }
