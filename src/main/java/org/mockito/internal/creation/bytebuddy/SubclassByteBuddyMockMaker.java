@@ -14,6 +14,7 @@ import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.internal.util.Platform;
 import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
+import org.mockito.NullUnmarked;
 
 /**
  * Subclass based mock maker.
@@ -38,7 +39,7 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
                 new TypeCachingBytecodeGenerator(new SubclassBytecodeGenerator(loader), false);
     }
 
-    @Override
+    @NullUnmarked @Override
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
         Class<? extends T> mockedProxyType = createMockType(settings);
 
@@ -143,7 +144,7 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
         return instance == null ? "null" : describeClass(instance.getClass());
     }
 
-    @Override
+    @NullUnmarked @Override
     public MockHandler getHandler(Object mock) {
         if (!(mock instanceof MockAccess)) {
             return null;

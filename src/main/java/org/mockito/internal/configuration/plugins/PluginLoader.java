@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import org.mockito.plugins.PluginSwitch;
+import org.mockito.NullUnmarked;
 
 class PluginLoader {
 
@@ -20,7 +21,7 @@ class PluginLoader {
         this.initializer = initializer;
     }
 
-    PluginLoader(PluginSwitch pluginSwitch) {
+    @NullUnmarked PluginLoader(PluginSwitch pluginSwitch) {
         this(
                 new DefaultMockitoPlugins(),
                 new PluginInitializer(pluginSwitch, null, new DefaultMockitoPlugins()));
@@ -43,7 +44,7 @@ class PluginLoader {
     /**
      * Scans the classpath for given pluginType. If not found, default class is used.
      */
-    @SuppressWarnings("unchecked")
+    @NullUnmarked @SuppressWarnings("unchecked")
     <T> T loadPlugin(final Class<T> pluginType) {
         return (T) loadPlugin(pluginType, null);
     }

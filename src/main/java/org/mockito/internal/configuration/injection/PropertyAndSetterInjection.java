@@ -25,6 +25,7 @@ import org.mockito.internal.configuration.injection.filter.TypeBasedCandidateFil
 import org.mockito.internal.util.collections.ListUtil;
 import org.mockito.internal.util.reflection.FieldInitializationReport;
 import org.mockito.internal.util.reflection.FieldInitializer;
+import org.mockito.NullUnmarked;
 
 /**
  * Inject mocks using first setters then fields, if no setters available.
@@ -94,7 +95,7 @@ public class PropertyAndSetterInjection extends MockInjectionStrategy {
         return injectionOccurred;
     }
 
-    private FieldInitializationReport initializeInjectMocksField(Field field, Object fieldOwner) {
+    @NullUnmarked private FieldInitializationReport initializeInjectMocksField(Field field, Object fieldOwner) {
         try {
             return new FieldInitializer(fieldOwner, field).initialize();
         } catch (MockitoException e) {

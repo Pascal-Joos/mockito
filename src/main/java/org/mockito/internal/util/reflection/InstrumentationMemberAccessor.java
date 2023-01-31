@@ -20,15 +20,16 @@ import java.util.*;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static org.mockito.internal.util.StringUtil.join;
+import org.mockito.NullUnmarked;
 
-class InstrumentationMemberAccessor implements MemberAccessor {
+@NullUnmarked class InstrumentationMemberAccessor implements MemberAccessor {
 
     private static final Map<Class<?>, Class<?>> WRAPPERS = new HashMap<>();
 
-    private static final Instrumentation INSTRUMENTATION;
-    private static final Dispatcher DISPATCHER;
+    @SuppressWarnings("NullAway.Init") private static final Instrumentation INSTRUMENTATION;
+    @SuppressWarnings("NullAway.Init") private static final Dispatcher DISPATCHER;
 
-    private static final Throwable INITIALIZATION_ERROR;
+    @SuppressWarnings("NullAway.Init") private static final Throwable INITIALIZATION_ERROR;
 
     static {
         WRAPPERS.put(boolean.class, Boolean.class);
@@ -135,7 +136,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
         }
     }
 
-    @Override
+    @NullUnmarked @Override
     public Object newInstance(Constructor<?> constructor, Object... arguments)
             throws InstantiationException, InvocationTargetException {
         if (Modifier.isAbstract(constructor.getDeclaringClass().getModifiers())) {
@@ -170,7 +171,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
         }
     }
 
-    @Override
+    @NullUnmarked @Override
     public Object invoke(Method method, Object target, Object... arguments)
             throws InvocationTargetException {
         assureArguments(
@@ -210,7 +211,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
         }
     }
 
-    @Override
+    @NullUnmarked @Override
     public Object get(Field field, Object target) {
         assureArguments(
                 field,
@@ -236,7 +237,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
         }
     }
 
-    @Override
+    @NullUnmarked @Override
     public void set(Field field, Object target, Object value) throws IllegalAccessException {
         assureArguments(
                 field,

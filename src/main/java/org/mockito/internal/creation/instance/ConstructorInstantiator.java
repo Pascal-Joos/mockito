@@ -17,6 +17,7 @@ import org.mockito.creation.instance.Instantiator;
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.internal.util.Primitives;
 import org.mockito.plugins.MemberAccessor;
+import org.mockito.NullUnmarked;
 
 public class ConstructorInstantiator implements Instantiator {
 
@@ -92,7 +93,7 @@ public class ConstructorInstantiator implements Instantiator {
         return Arrays.toString(constructorArgTypes);
     }
 
-    private InstantiationException noMatchingConstructor(Class<?> cls) {
+    @NullUnmarked private InstantiationException noMatchingConstructor(Class<?> cls) {
         String constructorString = constructorArgsString();
         String outerInstanceHint = "";
         if (hasOuterClassInstance) {
@@ -119,7 +120,7 @@ public class ConstructorInstantiator implements Instantiator {
         return constructorString;
     }
 
-    private InstantiationException multipleMatchingConstructors(
+    @NullUnmarked private InstantiationException multipleMatchingConstructors(
             Class<?> cls, List<Constructor<?>> constructors) {
         return new InstantiationException(
                 join(

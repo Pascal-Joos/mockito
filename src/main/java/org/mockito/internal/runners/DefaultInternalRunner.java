@@ -19,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.internal.junit.DefaultTestFinishedEvent;
 import org.mockito.internal.junit.MockitoTestListener;
 import org.mockito.internal.util.Supplier;
+import org.mockito.NullUnmarked;
 
 public class DefaultInternalRunner implements InternalRunner {
 
@@ -30,8 +31,8 @@ public class DefaultInternalRunner implements InternalRunner {
         runner =
                 new BlockJUnit4ClassRunner(testClass) {
 
-                    public Object target;
-                    private MockitoTestListener mockitoTestListener;
+                    @SuppressWarnings("NullAway.Init") public Object target;
+                    @SuppressWarnings("NullAway.Init") private MockitoTestListener mockitoTestListener;
 
                     protected Statement withBefores(
                             FrameworkMethod method, final Object target, Statement statement) {
@@ -64,14 +65,14 @@ public class DefaultInternalRunner implements InternalRunner {
                     public void run(final RunNotifier notifier) {
                         RunListener listener =
                                 new RunListener() {
-                                    Throwable failure;
+                                    @SuppressWarnings("NullAway.Init") Throwable failure;
 
                                     @Override
                                     public void testFailure(Failure failure) throws Exception {
                                         this.failure = failure.getException();
                                     }
 
-                                    @Override
+                                    @NullUnmarked @Override
                                     public void testFinished(Description description)
                                             throws Exception {
                                         try {

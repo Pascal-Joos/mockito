@@ -12,6 +12,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.mockito.NullUnmarked;
 
 // Class comes from Apache Commons Lang, added some tiny changes
 /**
@@ -112,7 +113,7 @@ class EqualsBuilder {
      * @param rhs  the other object
      * @return <code>true</code> if the two Objects have tested equals.
      */
-    public static boolean reflectionEquals(Object lhs, Object rhs) {
+    @NullUnmarked public static boolean reflectionEquals(Object lhs, Object rhs) {
         return reflectionEquals(lhs, rhs, false, null, null);
     }
 
@@ -135,7 +136,7 @@ class EqualsBuilder {
      * @param excludeFields  array of field names to exclude from testing
      * @return <code>true</code> if the two Objects have tested equals.
      */
-    public static boolean reflectionEquals(Object lhs, Object rhs, String[] excludeFields) {
+    @NullUnmarked public static boolean reflectionEquals(Object lhs, Object rhs, String[] excludeFields) {
         return reflectionEquals(lhs, rhs, false, null, excludeFields);
     }
 
@@ -159,7 +160,7 @@ class EqualsBuilder {
      * @param testTransients  whether to include transient fields
      * @return <code>true</code> if the two Objects have tested equals.
      */
-    public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients) {
+    @NullUnmarked public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients) {
         return reflectionEquals(lhs, rhs, testTransients, null, null);
     }
 
@@ -188,7 +189,7 @@ class EqualsBuilder {
      * @return <code>true</code> if the two Objects have tested equals.
      * @since 2.1.0
      */
-    public static boolean reflectionEquals(
+    @NullUnmarked public static boolean reflectionEquals(
             Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass) {
         return reflectionEquals(lhs, rhs, testTransients, reflectUpToClass, null);
     }

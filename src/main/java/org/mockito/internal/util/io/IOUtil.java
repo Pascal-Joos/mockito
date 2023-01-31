@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.mockito.exceptions.base.MockitoException;
+import org.mockito.NullUnmarked;
 
 /**
  * IO utils. A bit of reinventing the wheel but we don't want extra dependencies at this stage and we want to be java.
@@ -19,7 +20,7 @@ public class IOUtil {
     /**
      * Writes text to file
      */
-    public static void writeText(String text, File output) {
+    @NullUnmarked public static void writeText(String text, File output) {
         PrintWriter pw = null;
         try {
             pw = new PrintWriter(new FileWriter(output));

@@ -13,12 +13,13 @@ import org.mockito.internal.util.MockUtil;
 import org.mockito.internal.util.reflection.GenericMetadataSupport;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.mock.MockCreationSettings;
+import org.mockito.NullUnmarked;
 
 class RetrieveGenericsForDefaultAnswers {
 
     private static final MockitoCore MOCKITO_CORE = new MockitoCore();
 
-    static Object returnTypeForMockWithCorrectGenerics(
+    @NullUnmarked static Object returnTypeForMockWithCorrectGenerics(
             InvocationOnMock invocation, AnswerCallback answerCallback) {
         Class<?> type = invocation.getMethod().getReturnType();
 
@@ -112,7 +113,7 @@ class RetrieveGenericsForDefaultAnswers {
      * @param returnType the expected return type
      * @return the return type or null if the return type cannot be found
      */
-    private static Class<?> findTypeFromGenericInArguments(
+    @NullUnmarked private static Class<?> findTypeFromGenericInArguments(
             final InvocationOnMock invocation, final TypeVariable returnType) {
         final Type[] parameterTypes = invocation.getMethod().getGenericParameterTypes();
         for (int i = 0; i < parameterTypes.length; i++) {

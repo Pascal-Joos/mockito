@@ -16,6 +16,7 @@ import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.util.reflection.FieldInitializationReport;
 import org.mockito.internal.util.reflection.FieldInitializer;
 import org.mockito.internal.util.reflection.FieldInitializer.ConstructorArgumentResolver;
+import org.mockito.NullUnmarked;
 
 /**
  * Injection strategy based on constructor.
@@ -75,7 +76,7 @@ public class ConstructorInjection extends MockInjectionStrategy {
             return argumentInstances.toArray();
         }
 
-        private Object objectThatIsAssignableFrom(Class<?> argType) {
+        @NullUnmarked private Object objectThatIsAssignableFrom(Class<?> argType) {
             for (Object object : objects) {
                 if (argType.isAssignableFrom(object.getClass())) return object;
             }

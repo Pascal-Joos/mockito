@@ -3,13 +3,14 @@
  * This program is made available under the terms of the MIT License.
  */
 package org.mockito.internal.util;
+import org.mockito.NullUnmarked;
 
 /**
  * Pre-made preconditions
  */
 public class Checks {
 
-    public static <T> T checkNotNull(T value, String checkedValue) {
+    @NullUnmarked public static <T> T checkNotNull(T value, String checkedValue) {
         return checkNotNull(value, checkedValue, null);
     }
 

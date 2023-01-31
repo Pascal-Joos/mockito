@@ -20,7 +20,7 @@ import org.mockito.plugins.MemberAccessor;
 public class InstanceField {
     private final Field field;
     private final Object instance;
-    private FieldReader fieldReader;
+    @SuppressWarnings("NullAway.Init") private FieldReader fieldReader;
 
     /**
      * Create a new InstanceField.

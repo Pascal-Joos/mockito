@@ -8,13 +8,14 @@ import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import org.mockito.NullUnmarked;
 
 public abstract class MockMethodDispatcher {
 
     private static final ConcurrentMap<String, MockMethodDispatcher> DISPATCHERS =
             new ConcurrentHashMap<>();
 
-    public static MockMethodDispatcher get(String identifier, Object mock) {
+    @NullUnmarked public static MockMethodDispatcher get(String identifier, Object mock) {
         if (mock == DISPATCHERS) {
             // Avoid endless loop if ConcurrentHashMap was redefined to check for being a mock.
             return null;
@@ -23,7 +24,7 @@ public abstract class MockMethodDispatcher {
         }
     }
 
-    public static MockMethodDispatcher getStatic(String identifier, Class<?> type) {
+    @NullUnmarked public static MockMethodDispatcher getStatic(String identifier, Class<?> type) {
         if (MockMethodDispatcher.class.isAssignableFrom(type) || type == ConcurrentHashMap.class) {
             // Avoid endless loop for lookups of self.
             return null;
@@ -36,12 +37,12 @@ public abstract class MockMethodDispatcher {
         DISPATCHERS.putIfAbsent(identifier, dispatcher);
     }
 
-    @SuppressWarnings("unused")
+    @NullUnmarked @SuppressWarnings("unused")
     public static boolean isConstructorMock(String identifier, Class<?> type) {
         return DISPATCHERS.get(identifier).isConstructorMock(type);
     }
 
-    @SuppressWarnings("unused")
+    @NullUnmarked @SuppressWarnings("unused")
     public static Object handleConstruction(
             String identifier,
             Class<?> type,

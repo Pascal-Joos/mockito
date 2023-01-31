@@ -21,6 +21,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubbing;
+import org.mockito.NullUnmarked;
 
 /**
  * Returning deep stub implementation.
@@ -46,7 +47,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
 
     private static final long serialVersionUID = -7105341425736035847L;
 
-    public Object answer(InvocationOnMock invocation) throws Throwable {
+    @NullUnmarked public Object answer(InvocationOnMock invocation) throws Throwable {
         GenericMetadataSupport returnTypeGenericMetadata =
                 actualParameterizedType(invocation.getMock())
                         .resolveGenericReturnType(invocation.getMethod());
@@ -143,7 +144,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
         return new ReturnsDeepStubsSerializationFallback(returnTypeGenericMetadata);
     }
 
-    private StubbedInvocationMatcher recordDeepStubAnswer(
+    @NullUnmarked private StubbedInvocationMatcher recordDeepStubAnswer(
             final Object mock, InvocationContainerImpl container) {
         DeeplyStubbedAnswer answer = new DeeplyStubbedAnswer(mock);
         return container.addAnswer(answer, false, null);

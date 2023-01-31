@@ -3,6 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 package org.mockito.internal.util.concurrent;
+import org.mockito.NullUnmarked;
 
 /**
  * <p>
@@ -104,7 +105,7 @@ public class DetachedThreadLocal<T> implements Runnable {
      * @param thread The thread for which an initial value is created.
      * @return The initial value for any thread local. If no default is set, the default value is {@code null}.
      */
-    protected T initialValue(Thread thread) {
+    @NullUnmarked protected T initialValue(Thread thread) {
         return null;
     }
 

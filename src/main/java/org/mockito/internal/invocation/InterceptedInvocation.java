@@ -18,6 +18,7 @@ import org.mockito.internal.reporting.PrintSettings;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.Location;
 import org.mockito.invocation.StubInfo;
+import org.mockito.NullUnmarked;
 
 public class InterceptedInvocation implements Invocation, VerificationAwareInvocation {
 
@@ -34,7 +35,7 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
 
     private boolean verified;
     private boolean isIgnoredForVerification;
-    private StubInfo stubInfo;
+    @SuppressWarnings("NullAway.Init") private StubInfo stubInfo;
 
     public InterceptedInvocation(
             MockReference<Object> mockRef,
@@ -197,7 +198,7 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
                     return false;
                 }
 
-                public Object invoke() throws Throwable {
+                @NullUnmarked public Object invoke() throws Throwable {
                     return null;
                 }
             };

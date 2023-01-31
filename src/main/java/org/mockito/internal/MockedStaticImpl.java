@@ -26,6 +26,7 @@ import static org.mockito.internal.progress.ThreadSafeMockingProgress.*;
 import static org.mockito.internal.util.MockUtil.*;
 import static org.mockito.internal.util.StringUtil.*;
 import static org.mockito.internal.verification.VerificationModeFactory.*;
+import org.mockito.NullUnmarked;
 
 public final class MockedStaticImpl<T> implements MockedStatic<T> {
 
@@ -120,7 +121,7 @@ public final class MockedStaticImpl<T> implements MockedStatic<T> {
         getInvocationContainer(control.getType()).clearInvocations();
     }
 
-    @Override
+    @NullUnmarked @Override
     public void verifyNoMoreInteractions() {
         assertNotClosed();
 
@@ -130,7 +131,7 @@ public final class MockedStaticImpl<T> implements MockedStatic<T> {
         noMoreInteractions().verify(data);
     }
 
-    @Override
+    @NullUnmarked @Override
     public void verifyNoInteractions() {
         assertNotClosed();
 

@@ -11,11 +11,12 @@ import org.mockito.MockitoSession;
 import org.mockito.internal.session.MockitoSessionLoggerAdapter;
 import org.mockito.plugins.MockitoLogger;
 import org.mockito.quality.Strictness;
+import org.mockito.NullUnmarked;
 
 class JUnitSessionStore {
 
     private final MockitoLogger logger;
-    private MockitoSession session;
+    @SuppressWarnings("NullAway.Init") private MockitoSession session;
     protected Strictness strictness;
 
     JUnitSessionStore(MockitoLogger logger, Strictness strictness) {
@@ -49,7 +50,7 @@ class JUnitSessionStore {
                 }
             }
 
-            private Throwable evaluateSafely(Statement base) {
+            @NullUnmarked private Throwable evaluateSafely(Statement base) {
                 try {
                     base.evaluate();
                     return null;

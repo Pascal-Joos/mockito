@@ -10,6 +10,7 @@ import java.lang.reflect.Array;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.mockito.NullUnmarked;
 
 /**
  * It's likely this implementation will be used by default by every Mockito 4.0.0 mock.
@@ -62,7 +63,7 @@ public class ReturnsMoreEmptyValues implements Answer<Object>, Serializable {
         return returnValueFor(returnType);
     }
 
-    Object returnValueFor(Class<?> type) {
+    @NullUnmarked Object returnValueFor(Class<?> type) {
         if (type == String.class) {
             return "";
         } else if (type.isArray()) {

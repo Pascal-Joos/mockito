@@ -25,15 +25,16 @@ import org.mockito.mock.MockCreationSettings;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
 import org.mockito.verification.VerificationStrategy;
+import org.mockito.NullUnmarked;
 
 @SuppressWarnings("unchecked")
 public class MockingProgressImpl implements MockingProgress {
 
     private final ArgumentMatcherStorage argumentMatcherStorage = new ArgumentMatcherStorageImpl();
 
-    private OngoingStubbing<?> ongoingStubbing;
-    private Localized<VerificationMode> verificationMode;
-    private Location stubbingInProgress = null;
+    @SuppressWarnings("NullAway.Init") private OngoingStubbing<?> ongoingStubbing;
+    @SuppressWarnings("NullAway.Init") private Localized<VerificationMode> verificationMode;
+    @SuppressWarnings("NullAway") private Location stubbingInProgress = null;
     private VerificationStrategy verificationStrategy;
     private final Set<MockitoListener> listeners = new LinkedHashSet<MockitoListener>();
 
@@ -53,7 +54,7 @@ public class MockingProgressImpl implements MockingProgress {
         this.ongoingStubbing = ongoingStubbing;
     }
 
-    public OngoingStubbing<?> pullOngoingStubbing() {
+    @NullUnmarked public OngoingStubbing<?> pullOngoingStubbing() {
         OngoingStubbing<?> temp = ongoingStubbing;
         ongoingStubbing = null;
         return temp;
@@ -82,11 +83,11 @@ public class MockingProgressImpl implements MockingProgress {
     /* (non-Javadoc)
      * @see org.mockito.internal.progress.MockingProgress#resetOngoingStubbing()
      */
-    public void resetOngoingStubbing() {
+    @NullUnmarked public void resetOngoingStubbing() {
         ongoingStubbing = null;
     }
 
-    public VerificationMode pullVerificationMode() {
+    @NullUnmarked public VerificationMode pullVerificationMode() {
         if (verificationMode == null) {
             return null;
         }
@@ -101,7 +102,7 @@ public class MockingProgressImpl implements MockingProgress {
         stubbingInProgress = new LocationImpl();
     }
 
-    public void validateState() {
+    @NullUnmarked public void validateState() {
         validateMostStuff();
 
         // validate stubbing:
@@ -112,7 +113,7 @@ public class MockingProgressImpl implements MockingProgress {
         }
     }
 
-    private void validateMostStuff() {
+    @NullUnmarked private void validateMostStuff() {
         // State is cool when GlobalConfiguration is already loaded
         // this cannot really be tested functionally because I cannot dynamically mess up
         // org.mockito.configuration.MockitoConfiguration class
@@ -127,7 +128,7 @@ public class MockingProgressImpl implements MockingProgress {
         getArgumentMatcherStorage().validateState();
     }
 
-    public void stubbingCompleted() {
+    @NullUnmarked public void stubbingCompleted() {
         stubbingInProgress = null;
     }
 
@@ -140,7 +141,7 @@ public class MockingProgressImpl implements MockingProgress {
                 + stubbingInProgress;
     }
 
-    public void reset() {
+    @NullUnmarked public void reset() {
         stubbingInProgress = null;
         verificationMode = null;
         getArgumentMatcherStorage().reset();

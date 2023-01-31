@@ -21,6 +21,7 @@ import org.mockito.invocation.InvocationContainer;
 import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.verification.VerificationMode;
+import org.mockito.NullUnmarked;
 
 /**
  * Invocation handler set on mock objects.
@@ -44,7 +45,7 @@ public class MockHandlerImpl<T> implements MockHandler<T> {
         this.invocationContainer = new InvocationContainerImpl(mockSettings);
     }
 
-    public Object handle(Invocation invocation) throws Throwable {
+    @NullUnmarked public Object handle(Invocation invocation) throws Throwable {
         if (invocationContainer.hasAnswersForStubbing()) {
             // stubbing voids with doThrow() or doAnswer() style
             InvocationMatcher invocationMatcher =

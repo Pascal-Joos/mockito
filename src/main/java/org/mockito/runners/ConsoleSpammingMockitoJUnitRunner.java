@@ -45,7 +45,7 @@ public class ConsoleSpammingMockitoJUnitRunner extends Runner implements Filtera
     public void run(RunNotifier notifier) {
         RunListener listener =
                 new RunListener() {
-                    WarningsCollector warningsCollector;
+                    @SuppressWarnings("NullAway.Init") WarningsCollector warningsCollector;
 
                     @Override
                     public void testStarted(Description description) throws Exception {

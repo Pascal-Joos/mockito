@@ -7,10 +7,11 @@ package org.mockito.internal.configuration.plugins;
 import java.io.InputStream;
 
 import org.mockito.internal.util.io.IOUtil;
+import org.mockito.NullUnmarked;
 
 class PluginFileReader {
 
-    String readPluginClass(InputStream input) {
+    @NullUnmarked String readPluginClass(InputStream input) {
         for (String line : IOUtil.readLines(input)) {
             String stripped = stripCommentAndWhitespace(line);
             if (stripped.length() > 0) {

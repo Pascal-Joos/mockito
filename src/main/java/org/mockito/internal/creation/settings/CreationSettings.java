@@ -23,12 +23,12 @@ import org.mockito.stubbing.Answer;
 public class CreationSettings<T> implements MockCreationSettings<T>, Serializable {
     private static final long serialVersionUID = -6789800638070123629L;
 
-    protected Class<T> typeToMock;
+    @SuppressWarnings("NullAway.Init") protected Class<T> typeToMock;
     protected Set<Class<?>> extraInterfaces = new LinkedHashSet<Class<?>>();
-    protected String name;
-    protected Object spiedInstance;
-    protected Answer<Object> defaultAnswer;
-    protected MockName mockName;
+    @SuppressWarnings("NullAway.Init") protected String name;
+    @SuppressWarnings("NullAway.Init") protected Object spiedInstance;
+    @SuppressWarnings("NullAway.Init") protected Answer<Object> defaultAnswer;
+    @SuppressWarnings("NullAway.Init") protected MockName mockName;
     protected SerializableMode serializableMode = SerializableMode.NONE;
     protected List<InvocationListener> invocationListeners = new ArrayList<InvocationListener>();
 
@@ -44,8 +44,8 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
     protected boolean stubOnly;
     protected boolean stripAnnotations;
     private boolean useConstructor;
-    private Object outerClassInstance;
-    private Object[] constructorArgs;
+    @SuppressWarnings("NullAway.Init") private Object outerClassInstance;
+    @SuppressWarnings("NullAway.Init") private Object[] constructorArgs;
     protected boolean lenient;
 
     public CreationSettings() {}

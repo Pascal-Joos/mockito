@@ -3,6 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 package org.mockito.internal.configuration.injection.filter;
+import org.mockito.NullUnmarked;
 
 /**
  * Allow the ongoing injection of a mock candidate.
@@ -25,7 +26,7 @@ public interface OngoingInjector {
      */
     OngoingInjector nop =
             new OngoingInjector() {
-                public Object thenInject() {
+                @NullUnmarked public Object thenInject() {
                     return null;
                 }
             };

@@ -22,6 +22,7 @@ import org.mockito.internal.util.MockUtil;
 import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubber;
+import org.mockito.NullUnmarked;
 
 public class StubberImpl implements Stubber {
 
@@ -60,7 +61,7 @@ public class StubberImpl implements Stubber {
         return doReturnValues(toBeReturned).doReturnValues(nextToBeReturned);
     }
 
-    private StubberImpl doReturnValues(Object... toBeReturned) {
+    @NullUnmarked private StubberImpl doReturnValues(Object... toBeReturned) {
         if (toBeReturned == null) {
             answers.add(new Returns(null));
             return this;
@@ -71,7 +72,7 @@ public class StubberImpl implements Stubber {
         return this;
     }
 
-    @Override
+    @NullUnmarked @Override
     public Stubber doThrow(Throwable... toBeThrown) {
         if (toBeThrown == null) {
             answers.add(new ThrowsException(null));

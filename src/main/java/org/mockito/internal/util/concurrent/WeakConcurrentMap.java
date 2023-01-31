@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
+import org.mockito.NullUnmarked;
 
 /**
  * <p>
@@ -34,7 +35,7 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
     /**
      * @param cleanerThread {@code true} if a thread should be started that removes stale entries.
      */
-    public WeakConcurrentMap(boolean cleanerThread) {
+    @NullUnmarked public WeakConcurrentMap(boolean cleanerThread) {
         target = new ConcurrentHashMap<WeakKey<K>, V>();
         if (cleanerThread) {
             thread = new Thread(this);
@@ -111,7 +112,7 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
      * @param key The key for which to create a default value.
      * @return The default value for a key without value or {@code null} for not defining a default value.
      */
-    protected V defaultValue(K key) {
+    @NullUnmarked protected V defaultValue(K key) {
         return null;
     }
 
@@ -294,16 +295,16 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
 
         private final Iterator<Map.Entry<WeakKey<K>, V>> iterator;
 
-        private Map.Entry<WeakKey<K>, V> nextEntry;
+        @SuppressWarnings("NullAway.Init") private Map.Entry<WeakKey<K>, V> nextEntry;
 
-        private K nextKey;
+        @SuppressWarnings("NullAway.Init") private K nextKey;
 
-        private EntryIterator(Iterator<Map.Entry<WeakKey<K>, V>> iterator) {
+        @NullUnmarked private EntryIterator(Iterator<Map.Entry<WeakKey<K>, V>> iterator) {
             this.iterator = iterator;
             findNext();
         }
 
-        private void findNext() {
+        @NullUnmarked private void findNext() {
             while (iterator.hasNext()) {
                 nextEntry = iterator.next();
                 nextKey = nextEntry.getKey().get();

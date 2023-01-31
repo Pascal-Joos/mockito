@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.internal.util.MockUtil;
 import org.mockito.internal.util.reflection.FieldReader;
+import org.mockito.NullUnmarked;
 
 /**
  * Scan mocks, and prepare them if needed.
@@ -64,7 +65,7 @@ public class MockScanner {
         return mocks;
     }
 
-    private Object preparedMock(Object instance, Field field) {
+    @NullUnmarked private Object preparedMock(Object instance, Field field) {
         if (isAnnotatedByMockOrSpy(field)) {
             return instance;
         }
