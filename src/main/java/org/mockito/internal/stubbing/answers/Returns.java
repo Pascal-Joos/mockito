@@ -13,6 +13,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.ValidableAnswer;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 public class Returns implements Answer<Object>, ValidableAnswer, Serializable {
 
@@ -47,11 +48,11 @@ public class Returns implements Answer<Object>, ValidableAnswer, Serializable {
         }
     }
 
-    private String printReturnType() {
+    @NullUnmarked private String printReturnType() {
         return value.getClass().getSimpleName();
     }
 
-    private Class<?> returnType() {
+    @NullUnmarked private Class<?> returnType() {
         return value.getClass();
     }
 

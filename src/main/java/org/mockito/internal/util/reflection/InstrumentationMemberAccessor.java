@@ -21,6 +21,7 @@ import java.util.*;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static org.mockito.internal.util.StringUtil.join;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 class InstrumentationMemberAccessor implements MemberAccessor {
 
@@ -136,7 +137,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
         }
     }
 
-    @Override
+    @NullUnmarked @Override
     public Object newInstance(Constructor<?> constructor, Object... arguments)
             throws InstantiationException, InvocationTargetException {
         if (Modifier.isAbstract(constructor.getDeclaringClass().getModifiers())) {
@@ -171,7 +172,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
         }
     }
 
-    @Override
+    @NullUnmarked @Override
     public Object invoke(Method method, @Nullable Object target, Object... arguments)
             throws InvocationTargetException {
         assureArguments(
@@ -211,7 +212,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
         }
     }
 
-    @Override
+    @NullUnmarked @Override
     public Object get(Field field, Object target) {
         assureArguments(
                 field,
@@ -237,7 +238,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
         }
     }
 
-    @Override
+    @NullUnmarked @Override
     public void set(Field field, @Nullable Object target, @Nullable Object value) throws IllegalAccessException {
         assureArguments(
                 field,
@@ -290,7 +291,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
         }
     }
 
-    private void assureOpen(Object module, String packageName) throws Throwable {
+    @NullUnmarked private void assureOpen(Object module, String packageName) throws Throwable {
         if (!(Boolean) isOpen.invokeWithArguments(module, packageName, DISPATCHER.getModule())) {
             redefineModule
                     .bindTo(INSTRUMENTATION)
@@ -305,7 +306,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
         }
     }
 
-    private static void assureArguments(
+    @NullUnmarked private static void assureArguments(
             AccessibleObject target,
             @Nullable Object owner,
             @Nullable Class<?> type,

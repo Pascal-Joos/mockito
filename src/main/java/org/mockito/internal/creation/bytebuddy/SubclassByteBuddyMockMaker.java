@@ -15,6 +15,7 @@ import org.mockito.internal.util.Platform;
 import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 /**
  * Subclass based mock maker.
@@ -39,7 +40,7 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
                 new TypeCachingBytecodeGenerator(new SubclassBytecodeGenerator(loader), false);
     }
 
-    @Override
+    @NullUnmarked @Override
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
         Class<? extends T> mockedProxyType = createMockType(settings);
 
@@ -86,7 +87,7 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
         }
     }
 
-    private static <T> T ensureMockIsAssignableToMockedType(
+    @NullUnmarked private static <T> T ensureMockIsAssignableToMockedType(
             MockCreationSettings<T> settings, T mock) {
         // Force explicit cast to mocked type here, instead of
         // relying on the JVM to implicitly cast on the client call site.
@@ -95,7 +96,7 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
         return typeToMock.cast(mock);
     }
 
-    private <T> RuntimeException prettifyFailure(
+    @NullUnmarked private <T> RuntimeException prettifyFailure(
             MockCreationSettings<T> mockFeatures, Exception generationFailed) {
         if (mockFeatures.getTypeToMock().isArray()) {
             throw new MockitoException(

@@ -9,6 +9,7 @@ import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.stubbing.Stubber;
 import org.mockito.verification.VerificationMode;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 /**
  * Behavior Driven Development style of writing tests uses <b>//given //when //then</b> comments as fundamental parts of your test methods.
@@ -156,42 +157,42 @@ public class BDDMockito extends Mockito {
             this.mockitoOngoingStubbing = ongoingStubbing;
         }
 
-        public BDDMyOngoingStubbing<T> willAnswer(Answer<?> answer) {
+        @NullUnmarked public BDDMyOngoingStubbing<T> willAnswer(Answer<?> answer) {
             return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenAnswer(answer));
         }
 
-        public BDDMyOngoingStubbing<T> will(Answer<?> answer) {
+        @NullUnmarked public BDDMyOngoingStubbing<T> will(Answer<?> answer) {
             return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.then(answer));
         }
 
-        public BDDMyOngoingStubbing<T> willReturn(T value) {
+        @NullUnmarked public BDDMyOngoingStubbing<T> willReturn(T value) {
             return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenReturn(value));
         }
 
-        public BDDMyOngoingStubbing<T> willReturn(T value, T... values) {
+        @NullUnmarked public BDDMyOngoingStubbing<T> willReturn(T value, T... values) {
             return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenReturn(value, values));
         }
 
-        public BDDMyOngoingStubbing<T> willThrow(Throwable... throwables) {
+        @NullUnmarked public BDDMyOngoingStubbing<T> willThrow(Throwable... throwables) {
             return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenThrow(throwables));
         }
 
-        public BDDMyOngoingStubbing<T> willThrow(Class<? extends Throwable> throwableType) {
+        @NullUnmarked public BDDMyOngoingStubbing<T> willThrow(Class<? extends Throwable> throwableType) {
             return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenThrow(throwableType));
         }
 
-        public BDDMyOngoingStubbing<T> willThrow(
+        @NullUnmarked public BDDMyOngoingStubbing<T> willThrow(
                 Class<? extends Throwable> throwableType,
                 Class<? extends Throwable>... throwableTypes) {
             return new BDDOngoingStubbingImpl<T>(
                     mockitoOngoingStubbing.thenThrow(throwableType, throwableTypes));
         }
 
-        public BDDMyOngoingStubbing<T> willCallRealMethod() {
+        @NullUnmarked public BDDMyOngoingStubbing<T> willCallRealMethod() {
             return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenCallRealMethod());
         }
 
-        public <M> M getMock() {
+        @NullUnmarked public <M> M getMock() {
             return (M) mockitoOngoingStubbing.getMock();
         }
     }

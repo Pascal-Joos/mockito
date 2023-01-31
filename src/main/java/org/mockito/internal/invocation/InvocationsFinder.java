@@ -14,6 +14,7 @@ import org.mockito.invocation.Invocation;
 import org.mockito.invocation.Location;
 import org.mockito.invocation.MatchableInvocation;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 public class InvocationsFinder {
 
@@ -62,7 +63,7 @@ public class InvocationsFinder {
         }
     }
 
-    private static List<Invocation> getFirstMatchingChunk(
+    @NullUnmarked private static List<Invocation> getFirstMatchingChunk(
             @Nullable MatchableInvocation wanted, List<Invocation> unverified) {
         List<Invocation> firstChunk = new LinkedList<Invocation>();
         for (Invocation invocation : unverified) {
@@ -75,7 +76,7 @@ public class InvocationsFinder {
         return firstChunk;
     }
 
-    @Nullable public static Invocation findFirstMatchingUnverifiedInvocation(
+    @NullUnmarked @Nullable public static Invocation findFirstMatchingUnverifiedInvocation(
             List<Invocation> invocations, @Nullable MatchableInvocation wanted, InOrderContext context) {
         for (Invocation invocation : removeVerifiedInOrder(invocations, context)) {
             if (wanted.matches(invocation)) {
@@ -85,7 +86,7 @@ public class InvocationsFinder {
         return null;
     }
 
-    @Nullable public static Invocation findSimilarInvocation(
+    @NullUnmarked @Nullable public static Invocation findSimilarInvocation(
             List<Invocation> invocations, @Nullable MatchableInvocation wanted) {
         Invocation firstSimilar = null;
         for (Invocation invocation : invocations) {
@@ -166,7 +167,7 @@ public class InvocationsFinder {
             this.wanted = wanted;
         }
 
-        public boolean isOut(Invocation invocation) {
+        @NullUnmarked public boolean isOut(Invocation invocation) {
             return !wanted.matches(invocation);
         }
     }

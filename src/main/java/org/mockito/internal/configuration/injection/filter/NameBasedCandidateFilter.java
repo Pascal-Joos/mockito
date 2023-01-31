@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.mockito.NullUnmarked;
 
 public class NameBasedCandidateFilter implements MockCandidateFilter {
     private final MockCandidateFilter next;
@@ -40,7 +41,7 @@ public class NameBasedCandidateFilter implements MockCandidateFilter {
         return mocks.size() > 1;
     }
 
-    private List<Object> selectMatchingName(
+    @NullUnmarked private List<Object> selectMatchingName(
             Collection<Object> mocks, Field candidateFieldToBeInjected) {
         List<Object> mockNameMatches = new ArrayList<Object>();
         for (Object mock : mocks) {
@@ -60,7 +61,7 @@ public class NameBasedCandidateFilter implements MockCandidateFilter {
      * whenever we find a field that does match its name with the mock
      * name, we should take that field instead.
      */
-    private boolean anotherCandidateMatchesMockName(
+    @NullUnmarked private boolean anotherCandidateMatchesMockName(
             final Collection<Object> mocks,
             final Field candidateFieldToBeInjected,
             final List<Field> allRemainingCandidateFields) {

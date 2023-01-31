@@ -41,6 +41,7 @@ import static org.mockito.internal.util.MockUtil.*;
 import static org.mockito.internal.verification.VerificationModeFactory.noInteractions;
 import static org.mockito.internal.verification.VerificationModeFactory.noMoreInteractions;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 @SuppressWarnings("unchecked")
 public class MockitoCore {
@@ -115,7 +116,7 @@ public class MockitoCore {
         return stubbing;
     }
 
-    public <T> T verify(T mock, VerificationMode mode) {
+    @NullUnmarked public <T> T verify(T mock, VerificationMode mode) {
         if (mock == null) {
             throw nullPassedToVerify();
         }
@@ -211,7 +212,7 @@ public class MockitoCore {
         }
     }
 
-    private void assertNotStubOnlyMock(Object mock) {
+    @NullUnmarked private void assertNotStubOnlyMock(Object mock) {
         if (getMockHandler(mock).getMockSettings().isStubOnly()) {
             throw stubPassedToVerify(mock);
         }
@@ -253,7 +254,7 @@ public class MockitoCore {
      *
      * @return last invocation
      */
-    public Invocation getLastInvocation() {
+    @NullUnmarked public Invocation getLastInvocation() {
         OngoingStubbingImpl ongoingStubbing =
                 ((OngoingStubbingImpl) mockingProgress().pullOngoingStubbing());
         List<Invocation> allInvocations = ongoingStubbing.getRegisteredInvocations();

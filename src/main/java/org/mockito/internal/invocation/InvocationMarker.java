@@ -10,6 +10,7 @@ import org.mockito.internal.verification.api.InOrderContext;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MatchableInvocation;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 public class InvocationMarker {
 
@@ -21,7 +22,7 @@ public class InvocationMarker {
         }
     }
 
-    public static void markVerified(Invocation invocation, @Nullable MatchableInvocation wanted) {
+    @NullUnmarked public static void markVerified(Invocation invocation, @Nullable MatchableInvocation wanted) {
         invocation.markVerified();
         wanted.captureArgumentsFrom(invocation);
     }

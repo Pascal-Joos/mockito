@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 /**
  * <p>
@@ -355,12 +356,12 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
             return key;
         }
 
-        @Override
+        @NullUnmarked @Override
         public V getValue() {
             return entry.getValue();
         }
 
-        @Override
+        @NullUnmarked @Override
         public V setValue(V value) {
             if (value == null) throw new NullPointerException();
             return entry.setValue(value);

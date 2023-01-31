@@ -7,6 +7,7 @@ package org.mockito.internal.util;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 @SuppressWarnings("unchecked")
 public class Primitives {
@@ -44,7 +45,7 @@ public class Primitives {
         return PRIMITIVE_OR_WRAPPER_DEFAULT_VALUES.containsKey(type);
     }
 
-    public static boolean isAssignableFromWrapper(Class<?> valueClass, Class<?> referenceType) {
+    @NullUnmarked public static boolean isAssignableFromWrapper(Class<?> valueClass, Class<?> referenceType) {
         if (isPrimitiveOrWrapper(valueClass) && isPrimitiveOrWrapper(referenceType)) {
             return Primitives.primitiveTypeOf(valueClass)
                     .isAssignableFrom(Primitives.primitiveTypeOf(referenceType));

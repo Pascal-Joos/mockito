@@ -26,6 +26,7 @@ import org.mockito.internal.util.collections.ListUtil;
 import org.mockito.internal.util.reflection.FieldInitializationReport;
 import org.mockito.internal.util.reflection.FieldInitializer;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 /**
  * Inject mocks using first setters then fields, if no setters available.
@@ -75,7 +76,7 @@ public class PropertyAndSetterInjection extends MockInjectionStrategy {
                 }
             };
 
-    public boolean processInjection(
+    @NullUnmarked public boolean processInjection(
             Field injectMocksField, Object injectMocksFieldOwner, Set<Object> mockCandidates) {
         FieldInitializationReport report =
                 initializeInjectMocksField(injectMocksField, injectMocksFieldOwner);
@@ -144,7 +145,7 @@ public class PropertyAndSetterInjection extends MockInjectionStrategy {
         return injectionOccurred;
     }
 
-    private List<Field> orderedInstanceFieldsFrom(@Nullable Class<?> awaitingInjectionClazz) {
+    @NullUnmarked private List<Field> orderedInstanceFieldsFrom(@Nullable Class<?> awaitingInjectionClazz) {
         List<Field> declaredFields = Arrays.asList(awaitingInjectionClazz.getDeclaredFields());
         declaredFields = ListUtil.filter(declaredFields, notFinalOrStatic);
 

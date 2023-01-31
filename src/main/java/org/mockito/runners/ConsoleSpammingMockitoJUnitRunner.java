@@ -20,6 +20,7 @@ import org.mockito.internal.runners.InternalRunner;
 import org.mockito.internal.runners.RunnerFactory;
 import org.mockito.plugins.MockitoLogger;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 /**
  * @deprecated as of 2.1.0. Use the {@link org.mockito.junit.MockitoJUnitRunner} runner instead
@@ -53,7 +54,7 @@ public class ConsoleSpammingMockitoJUnitRunner extends Runner implements Filtera
                         warningsCollector = new WarningsCollector();
                     }
 
-                    @Override
+                    @NullUnmarked @Override
                     public void testFailure(Failure failure) throws Exception {
                         logger.log(warningsCollector.getWarnings());
                     }

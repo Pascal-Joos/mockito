@@ -22,12 +22,13 @@ import org.mockito.invocation.Invocation;
 import org.mockito.invocation.Location;
 import org.mockito.invocation.MatchableInvocation;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 public class MissingInvocationChecker {
 
     private MissingInvocationChecker() {}
 
-    public static void checkMissingInvocation(
+    @NullUnmarked public static void checkMissingInvocation(
             List<Invocation> invocations, @Nullable MatchableInvocation wanted) {
         List<Invocation> actualInvocations = findInvocations(invocations, wanted);
 

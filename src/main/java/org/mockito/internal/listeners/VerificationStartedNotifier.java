@@ -14,6 +14,7 @@ import org.mockito.internal.matchers.text.ValuePrinter;
 import org.mockito.listeners.VerificationStartedEvent;
 import org.mockito.listeners.VerificationStartedListener;
 import org.mockito.mock.MockCreationSettings;
+import org.mockito.NullUnmarked;
 
 public class VerificationStartedNotifier {
 
@@ -63,7 +64,7 @@ public class VerificationStartedNotifier {
         }
     }
 
-    static void assertCompatibleTypes(Object mock, MockCreationSettings originalSettings) {
+    @NullUnmarked static void assertCompatibleTypes(Object mock, MockCreationSettings originalSettings) {
         Class originalType = originalSettings.getTypeToMock();
         if (!originalType.isInstance(mock)) {
             throw Reporter.methodDoesNotAcceptParameter(

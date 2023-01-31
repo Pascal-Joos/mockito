@@ -23,6 +23,7 @@ import org.mockito.mock.MockName;
 import org.mockito.mock.SerializableMode;
 import org.mockito.plugins.MemberAccessor;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 /**
  * This is responsible for serializing a mock, it is enabled if the mock is implementing {@link Serializable}.
@@ -101,7 +102,7 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
      * @return A wrapper ({@link CrossClassLoaderSerializationProxy}) to be serialized by the calling ObjectOutputStream.
      * @throws java.io.ObjectStreamException
      */
-    public Object writeReplace(Object mockitoMock) throws ObjectStreamException {
+    @NullUnmarked public Object writeReplace(Object mockitoMock) throws ObjectStreamException {
         // reentrant lock for critical section. could it be improved ?
         mutex.lock();
         try {
@@ -194,7 +195,7 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
          * @return A deserialized instance of the Mockito mock.
          * @throws java.io.ObjectStreamException
          */
-        private Object readResolve() throws ObjectStreamException {
+        @NullUnmarked private Object readResolve() throws ObjectStreamException {
             try {
                 ByteArrayInputStream bis = new ByteArrayInputStream(serializedMock);
                 ObjectInputStream objectInputStream =
@@ -316,7 +317,7 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
          * @param proxyClass   The proxy class whose name will be applied.
          * @throws java.io.InvalidObjectException
          */
-        private void hackClassNameToMatchNewlyCreatedClass(
+        @NullUnmarked private void hackClassNameToMatchNewlyCreatedClass(
                 ObjectStreamClass descInstance, @Nullable Class<?> proxyClass) throws ObjectStreamException {
             try {
                 MemberAccessor accessor = Plugins.getMemberAccessor();

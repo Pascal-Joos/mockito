@@ -18,6 +18,7 @@ import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.internal.util.Primitives;
 import org.mockito.plugins.MemberAccessor;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 public class ConstructorInstantiator implements Instantiator {
 
@@ -39,7 +40,7 @@ public class ConstructorInstantiator implements Instantiator {
         return withParams(cls, constructorArgs);
     }
 
-    private <T> T withParams(@Nullable Class<T> cls, Object... params) {
+    @NullUnmarked private <T> T withParams(@Nullable Class<T> cls, Object... params) {
         List<Constructor<?>> matchingConstructors = new LinkedList<Constructor<?>>();
         try {
             for (Constructor<?> constructor : cls.getDeclaredConstructors()) {
@@ -70,7 +71,7 @@ public class ConstructorInstantiator implements Instantiator {
         return (T) accessor.newInstance(constructor, params);
     }
 
-    private InstantiationException paramsException(@Nullable Class<?> cls, Exception e) {
+    @NullUnmarked private InstantiationException paramsException(@Nullable Class<?> cls, Exception e) {
         return new InstantiationException(
                 join(
                         "Unable to create instance of '" + cls.getSimpleName() + "'.",

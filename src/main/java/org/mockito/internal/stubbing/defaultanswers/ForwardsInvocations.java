@@ -17,6 +17,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.plugins.MemberAccessor;
 import org.mockito.stubbing.Answer;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 /**
  * Internal answer to forward invocations on a real instance.
@@ -56,7 +57,7 @@ public class ForwardsInvocations implements Answer<Object>, Serializable {
         }
     }
 
-    private Method getDelegateMethod(Method mockMethod) throws NoSuchMethodException {
+    @NullUnmarked private Method getDelegateMethod(Method mockMethod) throws NoSuchMethodException {
         if (mockMethod.getDeclaringClass().isAssignableFrom(delegatedObject.getClass())) {
             // Compatible class. Return original method.
             return mockMethod;

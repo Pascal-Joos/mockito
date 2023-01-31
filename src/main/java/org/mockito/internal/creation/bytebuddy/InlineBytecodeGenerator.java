@@ -48,6 +48,7 @@ import static net.bytebuddy.implementation.bind.annotation.TargetMethodAnnotatio
 import static net.bytebuddy.matcher.ElementMatchers.*;
 import static org.mockito.internal.util.StringUtil.*;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTransformer {
 
@@ -78,7 +79,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
 
     @Nullable private volatile Throwable lastException;
 
-    public InlineBytecodeGenerator(
+    @NullUnmarked public InlineBytecodeGenerator(
             @Nullable Instrumentation instrumentation,
             WeakConcurrentMap<Object, MockMethodInterceptor> mocks,
             DetachedThreadLocal<Map<Class<?>, MockMethodInterceptor>> mockedStatics,
@@ -193,7 +194,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
         }
     }
 
-    @Nullable @Override
+    @NullUnmarked @Nullable @Override
     public <T> Class<? extends T> mockClass(MockFeatures<T> features) {
         boolean subclassingRequired =
                 !features.interfaces.isEmpty()
@@ -222,7 +223,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
         triggerRetransformation(Collections.singleton(type), false);
     }
 
-    private <T> void triggerRetransformation(Set<Class<?>> types, boolean flat) {
+    @NullUnmarked private <T> void triggerRetransformation(Set<Class<?>> types, boolean flat) {
         Set<Class<?>> targets = new HashSet<Class<?>>();
 
         for (Class<?> type : types) {
@@ -270,7 +271,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
         }
     }
 
-    private void assureCanReadMockito(Set<Class<?>> types) {
+    @NullUnmarked private void assureCanReadMockito(Set<Class<?>> types) {
         if (redefineModule == null) {
             return;
         }
@@ -312,7 +313,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
         }
     }
 
-    private <T> void checkSupportedCombination(
+    @NullUnmarked private <T> void checkSupportedCombination(
             boolean subclassingRequired, MockFeatures<T> features) {
         if (subclassingRequired
                 && !features.mockedType.isArray()

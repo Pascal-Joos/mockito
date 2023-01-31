@@ -25,6 +25,7 @@ import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubbing;
 import org.mockito.stubbing.ValidableAnswer;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 @SuppressWarnings("unchecked")
 public class InvocationContainerImpl implements InvocationContainer, Serializable {
@@ -65,7 +66,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
     /**
      * Adds new stubbed answer and returns the invocation matcher the answer was added to.
      */
-    public StubbedInvocationMatcher addAnswer(
+    @NullUnmarked public StubbedInvocationMatcher addAnswer(
             Answer answer, boolean isConsecutive, @Nullable Strictness stubbingStrictness) {
         Invocation invocation = invocationForStubbing.getInvocation();
         mockingProgress().stubbingCompleted();
@@ -87,7 +88,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
         }
     }
 
-    @Nullable Object answerTo(Invocation invocation) throws Throwable {
+    @NullUnmarked @Nullable Object answerTo(Invocation invocation) throws Throwable {
         return findAnswerFor(invocation).answer(invocation);
     }
 
@@ -163,7 +164,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
         return result;
     }
 
-    public Object invokedMock() {
+    @NullUnmarked public Object invokedMock() {
         return invocationForStubbing.getInvocation().getMock();
     }
 

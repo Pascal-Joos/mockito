@@ -41,6 +41,7 @@ import org.mockito.internal.creation.bytebuddy.ByteBuddyCrossClassLoaderSerializ
 import org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.DispatcherDefaultingToRealMethod;
 import org.mockito.mock.SerializableMode;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 class SubclassBytecodeGenerator implements BytecodeGenerator {
 
@@ -83,7 +84,7 @@ class SubclassBytecodeGenerator implements BytecodeGenerator {
         handler = ModuleHandler.make(byteBuddy, loader, random);
     }
 
-    @Override
+    @NullUnmarked @Override
     public <T> Class<? extends T> mockClass(MockFeatures<T> features) {
         ClassLoader classLoader =
                 new MultipleParentClassLoader.Builder()

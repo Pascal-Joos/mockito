@@ -25,6 +25,7 @@ import java.util.Set;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.util.Checks;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 /**
  * This class can retrieve generic meta-data that the compiler stores on classes
@@ -334,7 +335,7 @@ public abstract class GenericMetadataSupport {
      * @return The new {@link GenericMetadataSupport}.
      * @throws MockitoException Raised if type is not a {@link Class} or a {@link ParameterizedType}.
      */
-    public static GenericMetadataSupport inferFrom(@Nullable Type type) {
+    @NullUnmarked public static GenericMetadataSupport inferFrom(@Nullable Type type) {
         Checks.checkNotNull(type, "type");
         if (type instanceof Class) {
             return new FromClassGenericMetadataSupport((Class<?>) type);

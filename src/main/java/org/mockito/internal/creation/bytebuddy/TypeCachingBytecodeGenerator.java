@@ -11,6 +11,7 @@ import java.util.concurrent.Callable;
 import net.bytebuddy.TypeCache;
 import org.mockito.mock.SerializableMode;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 class TypeCachingBytecodeGenerator extends ReferenceQueue<ClassLoader>
         implements BytecodeGenerator {
@@ -28,7 +29,7 @@ class TypeCachingBytecodeGenerator extends ReferenceQueue<ClassLoader>
                         weak ? TypeCache.Sort.WEAK : TypeCache.Sort.SOFT);
     }
 
-    @SuppressWarnings("unchecked")
+    @NullUnmarked @SuppressWarnings("unchecked")
     @Override
     public <T> Class<T> mockClass(final MockFeatures<T> params) {
         try {

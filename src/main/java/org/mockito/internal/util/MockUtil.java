@@ -21,6 +21,7 @@ import java.util.function.Function;
 
 import static org.mockito.internal.handler.MockHandlerFactory.createMockHandler;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 @SuppressWarnings("unchecked")
 public class MockUtil {
@@ -56,7 +57,7 @@ public class MockUtil {
         return mock;
     }
 
-    public static <T> void resetMock(T mock) {
+    @NullUnmarked public static <T> void resetMock(T mock) {
         MockHandler oldHandler = getMockHandler(mock);
         MockCreationSettings settings = oldHandler.getMockSettings();
         MockHandler newHandler = createMockHandler(settings);
@@ -76,7 +77,7 @@ public class MockUtil {
         }
     }
 
-    public static InvocationContainerImpl getInvocationContainer(Object mock) {
+    @NullUnmarked public static InvocationContainerImpl getInvocationContainer(Object mock) {
         return (InvocationContainerImpl) getMockHandler(mock).getInvocationContainer();
     }
 
@@ -100,11 +101,11 @@ public class MockUtil {
         return mock != null && mockMaker.getHandler(mock) != null;
     }
 
-    @Nullable public static MockName getMockName(Object mock) {
+    @NullUnmarked @Nullable public static MockName getMockName(Object mock) {
         return getMockHandler(mock).getMockSettings().getMockName();
     }
 
-    public static void maybeRedefineMockName(Object mock, String newName) {
+    @NullUnmarked public static void maybeRedefineMockName(Object mock, String newName) {
         MockName mockName = getMockName(mock);
         // TODO SF hacky...
         MockCreationSettings mockSettings = getMockHandler(mock).getMockSettings();
@@ -113,7 +114,7 @@ public class MockUtil {
         }
     }
 
-    public static MockCreationSettings getMockSettings(Object mock) {
+    @NullUnmarked public static MockCreationSettings getMockSettings(Object mock) {
         return getMockHandler(mock).getMockSettings();
     }
 

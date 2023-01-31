@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.junit;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 public class DefaultTestFinishedEvent implements TestFinishedEvent {
     @Nullable private final Object testClassInstance;
@@ -22,7 +23,7 @@ public class DefaultTestFinishedEvent implements TestFinishedEvent {
         return testFailure;
     }
 
-    @Override
+    @NullUnmarked @Override
     public String getTestName() {
         return testClassInstance.getClass().getSimpleName() + "." + testMethodName;
     }

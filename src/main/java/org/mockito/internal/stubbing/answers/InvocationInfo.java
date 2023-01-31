@@ -13,6 +13,7 @@ import org.mockito.internal.util.Primitives;
 import org.mockito.internal.util.reflection.GenericMetadataSupport;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.mock.MockCreationSettings;
+import org.mockito.NullUnmarked;
 
 public class InvocationInfo implements AbstractAwareMethod {
 
@@ -49,7 +50,7 @@ public class InvocationInfo implements AbstractAwareMethod {
      * Returns {@code true} is the return type is {@link Void} or represents the pseudo-type to the keyword {@code void}.
      * E.g:  {@code void foo()} or {@code Void bar()}
      */
-    public boolean isVoid() {
+    @NullUnmarked public boolean isVoid() {
         final MockCreationSettings mockSettings =
                 MockUtil.getMockHandler(invocation.getMock()).getMockSettings();
         Class<?> returnType =

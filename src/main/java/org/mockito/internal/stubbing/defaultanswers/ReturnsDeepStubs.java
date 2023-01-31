@@ -22,6 +22,7 @@ import org.mockito.mock.MockCreationSettings;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubbing;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 /**
  * Returning deep stub implementation.
@@ -75,7 +76,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
         return deepStub(invocation, returnTypeGenericMetadata);
     }
 
-    @Nullable private Object deepStub(
+    @NullUnmarked @Nullable private Object deepStub(
             InvocationOnMock invocation, GenericMetadataSupport returnTypeGenericMetadata)
             throws Throwable {
         InvocationContainerImpl container = MockUtil.getInvocationContainer(invocation.getMock());
@@ -150,7 +151,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
         return container.addAnswer(answer, false, null);
     }
 
-    protected GenericMetadataSupport actualParameterizedType(Object mock) {
+    @NullUnmarked protected GenericMetadataSupport actualParameterizedType(Object mock) {
         CreationSettings mockSettings =
                 (CreationSettings) MockUtil.getMockHandler(mock).getMockSettings();
         return GenericMetadataSupport.inferFrom(mockSettings.getTypeToMock());

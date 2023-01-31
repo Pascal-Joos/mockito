@@ -37,6 +37,7 @@ import org.mockito.invocation.Location;
 import org.mockito.listeners.InvocationListener;
 import org.mockito.mock.SerializableMode;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 /**
  * Reports verification and misusing errors.
@@ -366,11 +367,11 @@ public class Reporter {
         return new WantedButNotInvoked(message + allInvocations);
     }
 
-    private static String createWantedButNotInvokedMessage(@Nullable DescribedInvocation wanted) {
+    @NullUnmarked private static String createWantedButNotInvokedMessage(@Nullable DescribedInvocation wanted) {
         return join("Wanted but not invoked:", wanted.toString(), new LocationImpl(), "");
     }
 
-    public static MockitoAssertionError wantedButNotInvokedInOrder(
+    @NullUnmarked public static MockitoAssertionError wantedButNotInvokedInOrder(
             @Nullable DescribedInvocation wanted, DescribedInvocation previous) {
         return new VerificationInOrderFailure(
                 join(
@@ -394,7 +395,7 @@ public class Reporter {
         return new TooManyActualInvocations(message);
     }
 
-    private static String createTooManyInvocationsMessage(
+    @NullUnmarked private static String createTooManyInvocationsMessage(
             int wantedCount,
             int actualCount,
             @Nullable DescribedInvocation wanted,
@@ -408,7 +409,7 @@ public class Reporter {
                 "");
     }
 
-    public static MockitoAssertionError neverWantedButInvoked(
+    @NullUnmarked public static MockitoAssertionError neverWantedButInvoked(
             @Nullable DescribedInvocation wanted, List<Location> invocations) {
         return new NeverWantedButInvoked(
                 join(
@@ -440,7 +441,7 @@ public class Reporter {
         return sb.toString();
     }
 
-    private static String createTooFewInvocationsMessage(
+    @NullUnmarked private static String createTooFewInvocationsMessage(
             org.mockito.internal.reporting.Discrepancy discrepancy,
             @Nullable DescribedInvocation wanted,
             List<Location> locations) {
@@ -474,7 +475,7 @@ public class Reporter {
         return new VerificationInOrderFailure(join("Verification in order failure:" + message));
     }
 
-    public static MockitoAssertionError noMoreInteractionsWanted(
+    @NullUnmarked public static MockitoAssertionError noMoreInteractionsWanted(
             @Nullable Invocation undesired, List<VerificationAwareInvocation> invocations) {
         ScenarioPrinter scenarioPrinter = new ScenarioPrinter();
         String scenario = scenarioPrinter.print(invocations);
@@ -965,7 +966,7 @@ public class Reporter {
                         ""));
     }
 
-    public static MockitoException delegatedMethodHasWrongReturnType(
+    @NullUnmarked public static MockitoException delegatedMethodHasWrongReturnType(
             Method mockMethod, Method delegateMethod, Object mock, @Nullable Object delegate) {
         return new MockitoException(
                 join(
@@ -981,7 +982,7 @@ public class Reporter {
                                 + ")"));
     }
 
-    public static MockitoException delegatedMethodDoesNotExistOnDelegate(
+    @NullUnmarked public static MockitoException delegatedMethodDoesNotExistOnDelegate(
             Method mockMethod, Object mock, @Nullable Object delegate) {
         return new MockitoException(
                 join(
