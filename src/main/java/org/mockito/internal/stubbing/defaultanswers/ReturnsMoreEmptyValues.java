@@ -10,6 +10,7 @@ import java.lang.reflect.Array;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import javax.annotation.Nullable;
 
 /**
  * It's likely this implementation will be used by default by every Mockito 4.0.0 mock.

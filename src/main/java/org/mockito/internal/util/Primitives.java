@@ -6,6 +6,7 @@ package org.mockito.internal.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 @SuppressWarnings("unchecked")
 public class Primitives {

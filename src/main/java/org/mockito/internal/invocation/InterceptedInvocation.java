@@ -18,6 +18,7 @@ import org.mockito.internal.reporting.PrintSettings;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.Location;
 import org.mockito.invocation.StubInfo;
+import javax.annotation.Nullable;
 
 public class InterceptedInvocation implements Invocation, VerificationAwareInvocation {
 
@@ -34,7 +35,7 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
 
     private boolean verified;
     private boolean isIgnoredForVerification;
-    private StubInfo stubInfo;
+    @Nullable private StubInfo stubInfo;
 
     public InterceptedInvocation(
             MockReference<Object> mockRef,
@@ -82,7 +83,7 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
         verified = true;
     }
 
-    @Override
+    @Nullable @Override
     public StubInfo stubInfo() {
         return stubInfo;
     }
@@ -133,7 +134,7 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
         return clazz.cast(arguments[index]);
     }
 
-    @Override
+    @Nullable @Override
     public Object callRealMethod() throws Throwable {
         if (!realMethod.isInvokable()) {
             throw cannotCallAbstractRealMethod();
@@ -197,7 +198,7 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
                     return false;
                 }
 
-                public Object invoke() throws Throwable {
+                @Nullable public Object invoke() throws Throwable {
                     return null;
                 }
             };

@@ -3,10 +3,11 @@
  * This program is made available under the terms of the MIT License.
  */
 package org.mockito.internal.junit;
+import javax.annotation.Nullable;
 
 public interface TestFinishedEvent {
 
-    Throwable getFailure();
+    @Nullable Throwable getFailure();
 
     String getTestName();
 }

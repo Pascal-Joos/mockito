@@ -9,6 +9,7 @@ import org.mockito.creation.instance.Instantiator;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.InstantiatorProvider;
 import org.mockito.plugins.InstantiatorProvider2;
+import javax.annotation.Nullable;
 
 /**
  * Adapts old, deprecated {@link InstantiatorProvider} onto a new public {@link InstantiatorProvider2} API.
@@ -21,7 +22,7 @@ public class InstantiatorProviderAdapter implements InstantiatorProvider2 {
     }
 
     @Override
-    public Instantiator getInstantiator(final MockCreationSettings<?> settings) {
+    public Instantiator getInstantiator(@Nullable final MockCreationSettings<?> settings) {
         return new Instantiator() {
             @Override
             public <T> T newInstance(Class<T> cls) throws InstantiationException {

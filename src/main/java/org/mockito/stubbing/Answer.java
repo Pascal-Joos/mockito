@@ -5,6 +5,7 @@
 package org.mockito.stubbing;
 
 import org.mockito.invocation.InvocationOnMock;
+import javax.annotation.Nullable;
 
 /**
  * Generic interface to be used for configuring mock's answer.

@@ -14,6 +14,7 @@ import org.mockito.internal.debugging.LocationImpl;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.invocation.Location;
 import org.mockito.stubbing.Answer;
+import javax.annotation.Nullable;
 
 /**
  * Optional Answer that can be used with
@@ -50,7 +51,7 @@ public class ReturnsSmartNulls implements Answer<Object>, Serializable {
         return RetrieveGenericsForDefaultAnswers.returnTypeForMockWithCorrectGenerics(
                 invocation,
                 new RetrieveGenericsForDefaultAnswers.AnswerCallback() {
-                    @Override
+                    @Nullable @Override
                     public Object apply(Class<?> type) {
                         if (type == null) {
                             return null;

@@ -10,6 +10,7 @@ import org.junit.runner.notification.Failure;
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.internal.exceptions.ExceptionIncludingMockitoWarnings;
 import org.mockito.plugins.MemberAccessor;
+import javax.annotation.Nullable;
 
 @Deprecated
 public class JUnitFailureHacker {
@@ -80,7 +81,7 @@ public class JUnitFailureHacker {
         return f;
     }
 
-    private static Field getField(Class<?> clazz, String field) {
+    @Nullable private static Field getField(Class<?> clazz, String field) {
         try {
             return clazz.getDeclaredField(field);
         } catch (NoSuchFieldException e) {
