@@ -9,6 +9,7 @@ import java.util.List;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MatchableInvocation;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 public class VerificationDataInOrderImpl implements VerificationDataInOrder {
 
@@ -31,7 +32,7 @@ public class VerificationDataInOrderImpl implements VerificationDataInOrder {
         return inOrder;
     }
 
-    @Nullable public MatchableInvocation getWanted() {
+    @NullUnmarked @Nullable public MatchableInvocation getWanted() {
         return wanted;
     }
 }

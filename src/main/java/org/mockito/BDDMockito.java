@@ -9,6 +9,7 @@ import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.stubbing.Stubber;
 import org.mockito.verification.VerificationMode;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 /**
  * Behavior Driven Development style of writing tests uses <b>//given //when //then</b> comments as fundamental parts of your test methods.
@@ -152,7 +153,7 @@ public class BDDMockito extends Mockito {
 
         private final OngoingStubbing<T> mockitoOngoingStubbing;
 
-        public BDDOngoingStubbingImpl(@Nullable OngoingStubbing<T> ongoingStubbing) {
+        @NullUnmarked public BDDOngoingStubbingImpl(@Nullable OngoingStubbing<T> ongoingStubbing) {
             this.mockitoOngoingStubbing = ongoingStubbing;
         }
 

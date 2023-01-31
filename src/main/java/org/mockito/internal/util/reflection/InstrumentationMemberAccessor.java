@@ -21,13 +21,14 @@ import java.util.*;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static org.mockito.internal.util.StringUtil.join;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
-class InstrumentationMemberAccessor implements MemberAccessor {
+@NullUnmarked class InstrumentationMemberAccessor implements MemberAccessor {
 
     private static final Map<Class<?>, Class<?>> WRAPPERS = new HashMap<>();
 
     @Nullable private static final Instrumentation INSTRUMENTATION;
-    private static final Dispatcher DISPATCHER;
+    @SuppressWarnings("NullAway.Init") private static final Dispatcher DISPATCHER;
 
     @Nullable private static final Throwable INITIALIZATION_ERROR;
 
@@ -305,7 +306,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
         }
     }
 
-    private static void assureArguments(
+    @NullUnmarked private static void assureArguments(
             AccessibleObject target,
             @Nullable Object owner,
             @Nullable Class<?> type,

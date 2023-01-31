@@ -24,12 +24,12 @@ import javax.annotation.Nullable;
 public class CreationSettings<T> implements MockCreationSettings<T>, Serializable {
     private static final long serialVersionUID = -6789800638070123629L;
 
-    protected Class<T> typeToMock;
+    @SuppressWarnings("NullAway.Init") protected Class<T> typeToMock;
     protected Set<Class<?>> extraInterfaces = new LinkedHashSet<Class<?>>();
     @Nullable protected String name;
     @Nullable protected Object spiedInstance;
-    protected Answer<Object> defaultAnswer;
-    protected MockName mockName;
+    @SuppressWarnings("NullAway.Init") protected Answer<Object> defaultAnswer;
+    @SuppressWarnings("NullAway.Init") protected MockName mockName;
     protected SerializableMode serializableMode = SerializableMode.NONE;
     protected List<InvocationListener> invocationListeners = new ArrayList<InvocationListener>();
 

@@ -21,6 +21,7 @@ import java.util.function.Function;
 
 import static org.mockito.internal.handler.MockHandlerFactory.createMockHandler;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 @SuppressWarnings("unchecked")
 public class MockUtil {
@@ -64,7 +65,7 @@ public class MockUtil {
         mockMaker.resetMock(mock, newHandler, settings);
     }
 
-    public static <T> MockHandler<T> getMockHandler(T mock) {
+    @NullUnmarked public static <T> MockHandler<T> getMockHandler(T mock) {
         if (mock == null) {
             throw new NotAMockException("Argument should be a mock, but is null!");
         }

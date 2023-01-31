@@ -15,13 +15,14 @@ import org.mockito.internal.verification.api.VerificationData;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MatchableInvocation;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 public class VerificationDataImpl implements VerificationData {
 
     private final InvocationMatcher wanted;
     private final InvocationContainerImpl invocations;
 
-    public VerificationDataImpl(InvocationContainerImpl invocations, @Nullable InvocationMatcher wanted) {
+    @NullUnmarked public VerificationDataImpl(InvocationContainerImpl invocations, @Nullable InvocationMatcher wanted) {
         this.invocations = invocations;
         this.wanted = wanted;
         this.assertWantedIsVerifiable();

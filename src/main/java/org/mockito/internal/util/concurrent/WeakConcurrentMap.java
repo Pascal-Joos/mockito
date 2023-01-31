@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 /**
  * <p>
@@ -345,7 +346,7 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
 
         final Map.Entry<WeakKey<K>, V> entry;
 
-        private SimpleEntry(K key, @Nullable Map.Entry<WeakKey<K>, V> entry) {
+        @NullUnmarked private SimpleEntry(K key, @Nullable Map.Entry<WeakKey<K>, V> entry) {
             this.key = key;
             this.entry = entry;
         }

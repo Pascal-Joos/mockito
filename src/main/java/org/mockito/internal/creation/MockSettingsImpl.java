@@ -35,6 +35,7 @@ import org.mockito.mock.MockName;
 import org.mockito.mock.SerializableMode;
 import org.mockito.stubbing.Answer;
 import javax.annotation.Nullable;
+import org.mockito.NullUnmarked;
 
 @SuppressWarnings("unchecked")
 public class MockSettingsImpl<T> extends CreationSettings<T>
@@ -153,7 +154,7 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
         return outerClassInstance;
     }
 
-    @Nullable @Override
+    @NullUnmarked @Nullable @Override
     public Object[] getConstructorArgs() {
         if (outerClassInstance == null) {
             return constructorArgs;
