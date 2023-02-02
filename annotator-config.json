@@ -1,5 +1,5 @@
 {
-  "BUILD_COMMAND": "cd /Users/nima/Developer/NullAwayFixer/Projects/mockito && ./gradlew :compileJava",
+  "BUILD_COMMAND": "cd /Users/anonymous/Developer/NullAwayFixer/Projects/mockito && ./gradlew :compileJava",
   "ANNOTATION": {
     "INITIALIZER": "org.mockito.Initializer",
     "NULLABLE": "javax.annotation.Nullable",
