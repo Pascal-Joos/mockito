@@ -40,21 +40,21 @@ public class VerboseMockInvocationLogger implements InvocationListener {
 
     private void printReturnedValueOrThrowable(MethodInvocationReport methodInvocationReport) {
         if (methodInvocationReport.threwException()) {
-            String message =
-                    methodInvocationReport.getThrowable().getMessage() == null
-                            ? ""
-                            : " with message " + methodInvocationReport.getThrowable().getMessage();
+            String message = methodInvocationReport.getThrowable() == null ? "" :
+                methodInvocationReport.getThrowable().getMessage() == null
+                    ? ""
+                    : " with message " + methodInvocationReport.getThrowable().getMessage();
             printlnIndented(
-                    "has thrown: " + methodInvocationReport.getThrowable().getClass() + message);
+                "has thrown: " + (methodInvocationReport.getThrowable() == null ? "" : methodInvocationReport.getThrowable().getClass()) + message);
         } else {
             String type =
-                    (methodInvocationReport.getReturnedValue() == null)
-                            ? ""
-                            : " ("
-                                    + methodInvocationReport.getReturnedValue().getClass().getName()
-                                    + ")";
+                (methodInvocationReport.getReturnedValue() == null)
+                    ? ""
+                    : " ("
+                    + methodInvocationReport.getReturnedValue().getClass().getName()
+                    + ")";
             printlnIndented(
-                    "has returned: \"" + methodInvocationReport.getReturnedValue() + "\"" + type);
+                "has returned: \"" + methodInvocationReport.getReturnedValue() + "\"" + type);
         }
     }
 
