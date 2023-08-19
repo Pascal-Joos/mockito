@@ -6,7 +6,7 @@ package org.mockito.internal.util.reflection;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import org.mockito.NullUnmarked;
+
 
 /**
  * Attempts to extract generic type of given target base class or target interface
@@ -59,7 +59,7 @@ public class GenericTypeExtractor {
      * Finds generic interface implementation based on the source class and the target interface.
      * Returns null if not found. Recurses the interface hierarchy.
      */
-    @NullUnmarked private static Type findGenericInterface(Class<?> sourceClass, Class<?> targetBaseInterface) {
+     private static Type findGenericInterface(Class<?> sourceClass, Class<?> targetBaseInterface) {
         for (int i = 0; i < sourceClass.getInterfaces().length; i++) {
             Class<?> inter = sourceClass.getInterfaces()[i];
             if (inter == targetBaseInterface) {

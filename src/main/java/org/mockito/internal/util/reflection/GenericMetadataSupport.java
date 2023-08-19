@@ -24,7 +24,7 @@ import java.util.Set;
 
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.util.Checks;
-import org.mockito.NullUnmarked;
+
 
 /**
  * This class can retrieve generic meta-data that the compiler stores on classes
@@ -100,7 +100,7 @@ public abstract class GenericMetadataSupport {
         }
     }
 
-    @NullUnmarked protected Class<?> extractRawTypeOf(Type type) {
+     protected Class<?> extractRawTypeOf(Type type) {
         if (type instanceof Class) {
             return (Class<?>) type;
         }
@@ -262,7 +262,7 @@ public abstract class GenericMetadataSupport {
         return actualTypeArguments;
     }
 
-    @NullUnmarked protected Type getActualTypeArgumentFor(TypeVariable<?> typeParameter) {
+     protected Type getActualTypeArgumentFor(TypeVariable<?> typeParameter) {
         Type type = this.contextualActualTypeParameters.get(typeParameter);
         if (type instanceof TypeVariable) {
             TypeVariable<?> typeVariable = (TypeVariable<?>) type;
@@ -446,10 +446,10 @@ public abstract class GenericMetadataSupport {
     private static class TypeVariableReturnType extends GenericMetadataSupport {
         private final TypeVariable<?> typeVariable;
         private final TypeVariable<?>[] typeParameters;
-        @SuppressWarnings("NullAway.Init") private Class<?> rawType;
-        @SuppressWarnings("NullAway.Init") private List<Type> extraInterfaces;
+         private Class<?> rawType;
+         private List<Type> extraInterfaces;
 
-        @NullUnmarked public TypeVariableReturnType(
+         public TypeVariableReturnType(
                 GenericMetadataSupport source,
                 TypeVariable<?>[] typeParameters,
                 TypeVariable<?> typeVariable) {
@@ -518,7 +518,7 @@ public abstract class GenericMetadataSupport {
             return rawExtraInterfaces.toArray(new Class[rawExtraInterfaces.size()]);
         }
 
-        @NullUnmarked private Type extractActualBoundedTypeOf(Type type) {
+         private Type extractActualBoundedTypeOf(Type type) {
             if (type instanceof TypeVariable) {
                 /*
                 If type is a TypeVariable, then it is needed to gather data elsewhere. Usually TypeVariables are declared

@@ -10,7 +10,7 @@ import org.mockito.internal.verification.api.VerificationData;
 import org.mockito.listeners.VerificationListener;
 import org.mockito.verification.VerificationEvent;
 import org.mockito.verification.VerificationMode;
-import org.mockito.NullUnmarked;
+
 
 public class MockAwareVerificationMode implements VerificationMode {
 
@@ -25,7 +25,7 @@ public class MockAwareVerificationMode implements VerificationMode {
         this.listeners = listeners;
     }
 
-    @NullUnmarked public void verify(VerificationData data) {
+     public void verify(VerificationData data) {
         try {
             mode.verify(data);
             notifyListeners(new VerificationEventImpl(mock, mode, data, null));

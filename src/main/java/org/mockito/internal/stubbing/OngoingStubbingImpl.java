@@ -16,7 +16,7 @@ import org.mockito.stubbing.OngoingStubbing;
 public class OngoingStubbingImpl<T> extends BaseStubbing<T> {
 
     private final InvocationContainerImpl invocationContainer;
-    @SuppressWarnings("NullAway.Init") private Strictness strictness;
+     private Strictness strictness;
 
     public OngoingStubbingImpl(InvocationContainerImpl invocationContainer) {
         super(invocationContainer.invokedMock());

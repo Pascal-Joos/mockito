@@ -10,7 +10,7 @@ import java.util.Enumeration;
 
 import org.mockito.internal.util.collections.Iterables;
 import org.mockito.plugins.PluginSwitch;
-import org.mockito.NullUnmarked;
+
 
 class PluginInitializer {
 
@@ -28,7 +28,7 @@ class PluginInitializer {
      * Equivalent to {@link java.util.ServiceLoader#load} but without requiring
      * Java 6 / Android 2.3 (Gingerbread).
      */
-    @NullUnmarked public <T> T loadImpl(Class<T> service) {
+     public <T> T loadImpl(Class<T> service) {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         if (loader == null) {
             loader = ClassLoader.getSystemClassLoader();

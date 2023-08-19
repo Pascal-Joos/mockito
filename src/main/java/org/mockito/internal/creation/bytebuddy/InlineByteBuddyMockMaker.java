@@ -39,7 +39,7 @@ import org.mockito.plugins.MemberAccessor;
 
 import static org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.*;
 import static org.mockito.internal.util.StringUtil.*;
-import org.mockito.NullUnmarked;
+
 
 /**
  * Agent and subclass based mock maker.
@@ -99,13 +99,13 @@ import org.mockito.NullUnmarked;
  * (also known as HotSwap). All major VM distributions such as HotSpot (OpenJDK), J9 (IBM/Websphere) or Zing (Azul)
  * support this feature.
  */
-@NullUnmarked @Incubating
+ @Incubating
 public class InlineByteBuddyMockMaker
         implements ClassCreatingMockMaker, InlineMockMaker, Instantiator {
 
-    @SuppressWarnings("NullAway.Init") private static final Instrumentation INSTRUMENTATION;
+     private static final Instrumentation INSTRUMENTATION;
 
-    @SuppressWarnings("NullAway.Init") private static final Throwable INITIALIZATION_ERROR;
+     private static final Throwable INITIALIZATION_ERROR;
 
     static {
         Instrumentation instrumentation;
@@ -203,7 +203,7 @@ public class InlineByteBuddyMockMaker
 
     private final ThreadLocal<Object> currentSpied = new ThreadLocal<>();
 
-    @NullUnmarked public InlineByteBuddyMockMaker() {
+     public InlineByteBuddyMockMaker() {
         if (INITIALIZATION_ERROR != null) {
             String detail;
             if (System.getProperty("java.specification.vendor", "")
@@ -312,7 +312,7 @@ public class InlineByteBuddyMockMaker
         }
     }
 
-    @NullUnmarked private <T> T doCreateMock(
+     private <T> T doCreateMock(
             MockCreationSettings<T> settings,
             MockHandler handler,
             boolean nullOnNonInlineConstruction) {
@@ -412,7 +412,7 @@ public class InlineByteBuddyMockMaker
                 generationFailed);
     }
 
-    @NullUnmarked @Override
+     @Override
     public MockHandler getHandler(Object mock) {
         MockMethodInterceptor interceptor;
         if (mock instanceof Class<?>) {
@@ -584,7 +584,7 @@ public class InlineByteBuddyMockMaker
         }
     }
 
-    @NullUnmarked private Object makeStandardArgument(Class<?> type) {
+     private Object makeStandardArgument(Class<?> type) {
         if (type == boolean.class) {
             return false;
         } else if (type == byte.class) {

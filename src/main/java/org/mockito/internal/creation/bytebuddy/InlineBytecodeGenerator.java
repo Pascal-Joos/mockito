@@ -47,7 +47,7 @@ import static net.bytebuddy.implementation.MethodDelegation.*;
 import static net.bytebuddy.implementation.bind.annotation.TargetMethodAnnotationDrivenBinder.ParameterBinder.ForFixedValue.OfConstant.*;
 import static net.bytebuddy.matcher.ElementMatchers.*;
 import static org.mockito.internal.util.StringUtil.*;
-import org.mockito.NullUnmarked;
+
 
 public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTransformer {
 
@@ -76,9 +76,9 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
 
     private final Method getModule, canRead, redefineModule;
 
-    @SuppressWarnings("NullAway.Init") private volatile Throwable lastException;
+     private volatile Throwable lastException;
 
-    @NullUnmarked public InlineBytecodeGenerator(
+     public InlineBytecodeGenerator(
             Instrumentation instrumentation,
             WeakConcurrentMap<Object, MockMethodInterceptor> mocks,
             DetachedThreadLocal<Map<Class<?>, MockMethodInterceptor>> mockedStatics,
@@ -222,7 +222,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
         triggerRetransformation(Collections.singleton(type), false);
     }
 
-    @NullUnmarked private <T> void triggerRetransformation(Set<Class<?>> types, boolean flat) {
+     private <T> void triggerRetransformation(Set<Class<?>> types, boolean flat) {
         Set<Class<?>> targets = new HashSet<Class<?>>();
 
         for (Class<?> type : types) {
@@ -334,7 +334,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
         }
     }
 
-    @NullUnmarked @Override
+     @Override
     public byte[] transform(
             ClassLoader loader,
             String className,

@@ -3,7 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 package org.mockito.internal.util.reflection;
-import org.mockito.NullUnmarked;
+
 
 /**
  * Report on field initialization
@@ -54,7 +54,7 @@ public class FieldInitializationReport {
      *
      * @return Class of the instance
      */
-    @NullUnmarked public Class<?> fieldClass() {
+     public Class<?> fieldClass() {
         return fieldInstance != null ? fieldInstance.getClass() : null;
     }
 }

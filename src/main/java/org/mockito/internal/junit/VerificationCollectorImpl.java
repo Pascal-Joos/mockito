@@ -14,7 +14,7 @@ import org.mockito.internal.verification.api.VerificationData;
 import org.mockito.junit.VerificationCollector;
 import org.mockito.verification.VerificationMode;
 import org.mockito.verification.VerificationStrategy;
-import org.mockito.NullUnmarked;
+
 
 /**
  * Mockito implementation of VerificationCollector.
@@ -95,7 +95,7 @@ public class VerificationCollectorImpl implements VerificationCollector {
             this.delegate = delegate;
         }
 
-        @NullUnmarked public void verify(VerificationData data) {
+         public void verify(VerificationData data) {
             try {
                 this.delegate.verify(data);
             } catch (AssertionError error) {

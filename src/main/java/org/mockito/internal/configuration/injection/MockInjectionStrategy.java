@@ -24,7 +24,7 @@ public abstract class MockInjectionStrategy {
         };
     }
 
-    @SuppressWarnings("NullAway.Init") private MockInjectionStrategy nextStrategy;
+     private MockInjectionStrategy nextStrategy;
 
     /**
      * Enqueue next injection strategy.

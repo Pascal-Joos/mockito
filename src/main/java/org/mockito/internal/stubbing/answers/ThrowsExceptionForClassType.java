@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import org.mockito.creation.instance.Instantiator;
 import org.mockito.internal.configuration.plugins.Plugins;
-import org.mockito.NullUnmarked;
+
 
 public class ThrowsExceptionForClassType extends AbstractThrowsException implements Serializable {
 
@@ -18,7 +18,7 @@ public class ThrowsExceptionForClassType extends AbstractThrowsException impleme
         this.throwableClass = throwableClass;
     }
 
-    @NullUnmarked @Override
+     @Override
     protected Throwable getThrowable() {
         Instantiator instantiator = Plugins.getInstantiatorProvider().getInstantiator(null);
         return instantiator.newInstance(throwableClass);

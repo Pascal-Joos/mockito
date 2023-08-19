@@ -21,7 +21,7 @@ import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.plugins.AnnotationEngine;
 import org.mockito.plugins.MemberAccessor;
-import org.mockito.NullUnmarked;
+
 
 /**
  * Initializes fields annotated with &#64;{@link org.mockito.Mock} or &#64;{@link org.mockito.Captor}.
@@ -53,7 +53,7 @@ public class IndependentAnnotationEngine
                     annotationProcessorMap.get(annotation.annotationType());
         }
         return new FieldAnnotationProcessor<A>() {
-            @NullUnmarked public Object process(A annotation, Field field) {
+             public Object process(A annotation, Field field) {
                 return null;
             }
         };

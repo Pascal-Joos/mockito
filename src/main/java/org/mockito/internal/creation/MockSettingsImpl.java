@@ -41,8 +41,8 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
 
     private static final long serialVersionUID = 4475297236197939569L;
     private boolean useConstructor;
-    @SuppressWarnings("NullAway.Init") private Object outerClassInstance;
-    @SuppressWarnings("NullAway.Init") private Object[] constructorArgs;
+     private Object outerClassInstance;
+     private Object[] constructorArgs;
 
     @Override
     public MockSettings serializable() {

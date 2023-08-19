@@ -9,17 +9,17 @@ import java.util.Collections;
 import java.util.List;
 
 import org.mockito.invocation.Invocation;
-import org.mockito.NullUnmarked;
+
 
 public class SingleRegisteredInvocation implements RegisteredInvocations, Serializable {
 
-    @SuppressWarnings("NullAway.Init") private Invocation invocation;
+     private Invocation invocation;
 
     public void add(Invocation invocation) {
         this.invocation = invocation;
     }
 
-    @NullUnmarked public void removeLast() {
+     public void removeLast() {
         invocation = null;
     }
 
@@ -27,7 +27,7 @@ public class SingleRegisteredInvocation implements RegisteredInvocations, Serial
         return Collections.emptyList();
     }
 
-    @NullUnmarked public void clear() {
+     public void clear() {
         invocation = null;
     }
 

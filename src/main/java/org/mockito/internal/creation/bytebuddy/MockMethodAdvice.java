@@ -52,7 +52,7 @@ import org.mockito.internal.util.concurrent.WeakConcurrentMap;
 import org.mockito.plugins.MemberAccessor;
 
 import static net.bytebuddy.matcher.ElementMatchers.*;
-import org.mockito.NullUnmarked;
+
 
 public class MockMethodAdvice extends MockMethodDispatcher {
 
@@ -82,7 +82,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
         this.isMockConstruction = isMockConstruction;
     }
 
-    @NullUnmarked @SuppressWarnings("unused")
+     @SuppressWarnings("unused")
     @Advice.OnMethodEnter(skipOn = Advice.OnNonDefaultValue.class)
     private static Callable<?> enter(
             @Identifier String identifier,
@@ -132,7 +132,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
         }
     }
 
-    @NullUnmarked @Override
+     @Override
     public Callable<?> handle(Object instance, Method origin, Object[] arguments) throws Throwable {
         MockMethodInterceptor interceptor = interceptors.get(instance);
         if (interceptor == null) {
@@ -153,7 +153,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
                         new LocationImpl(new Throwable(), true)));
     }
 
-    @NullUnmarked @Override
+     @Override
     public Callable<?> handleStatic(Class<?> type, Method origin, Object[] arguments)
             throws Throwable {
         Map<Class<?>, MockMethodInterceptor> interceptors = mockedStatics.get();
@@ -316,7 +316,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
             return true;
         }
 
-        @NullUnmarked @Override
+         @Override
         public Object invoke() throws Throwable {
             selfCallInfo.set(type);
             return tryInvoke(origin, null, arguments);
@@ -711,7 +711,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
 
     static class ForStatic {
 
-        @NullUnmarked @SuppressWarnings("unused")
+         @SuppressWarnings("unused")
         @Advice.OnMethodEnter(skipOn = Advice.OnNonDefaultValue.class)
         private static Callable<?> enter(
                 @Identifier String identifier,

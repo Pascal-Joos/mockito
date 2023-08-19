@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
-import org.mockito.NullUnmarked;
+
 
 /**
  * Holds answers declared using 'doAnswer' stubbing style.
@@ -18,7 +18,7 @@ import org.mockito.NullUnmarked;
 class DoAnswerStyleStubbing implements Serializable {
 
     private final List<Answer<?>> answers = new ArrayList<Answer<?>>();
-    @SuppressWarnings("NullAway.Init") private Strictness stubbingStrictness;
+     private Strictness stubbingStrictness;
 
     void setAnswers(List<Answer<?>> answers, Strictness stubbingStrictness) {
         this.stubbingStrictness = stubbingStrictness;
@@ -29,7 +29,7 @@ class DoAnswerStyleStubbing implements Serializable {
         return answers.isEmpty();
     }
 
-    @NullUnmarked void clear() {
+     void clear() {
         answers.clear();
         stubbingStrictness = null;
     }

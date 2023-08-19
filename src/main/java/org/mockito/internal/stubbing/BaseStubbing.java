@@ -13,7 +13,7 @@ import org.mockito.internal.stubbing.answers.ThrowsException;
 import org.mockito.internal.stubbing.answers.ThrowsExceptionForClassType;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
-import org.mockito.NullUnmarked;
+
 
 public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
 
@@ -35,7 +35,7 @@ public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
         return thenAnswer(new Returns(value));
     }
 
-    @NullUnmarked @Override
+     @Override
     public OngoingStubbing<T> thenReturn(T value, T... values) {
         OngoingStubbing<T> stubbing = thenReturn(value);
         if (values == null) {
@@ -54,7 +54,7 @@ public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
         return thenAnswer(new ThrowsException(throwable));
     }
 
-    @NullUnmarked @Override
+     @Override
     public OngoingStubbing<T> thenThrow(Throwable... throwables) {
         if (throwables == null) {
             return thenThrow((Throwable) null);
@@ -79,7 +79,7 @@ public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
         return thenAnswer(new ThrowsExceptionForClassType(throwableType));
     }
 
-    @NullUnmarked @Override
+     @Override
     public OngoingStubbing<T> thenThrow(
             Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... nextToBeThrown) {
         if (nextToBeThrown == null) {

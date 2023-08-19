@@ -17,7 +17,7 @@ import org.mockito.quality.Strictness;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.mockito.NullUnmarked;
+
 
 public class DefaultMockitoSession implements MockitoSession {
 
@@ -61,7 +61,7 @@ public class DefaultMockitoSession implements MockitoSession {
         listener.setStrictness(strictness);
     }
 
-    @NullUnmarked @Override
+     @Override
     public void finishMocking() {
         finishMocking(null);
     }

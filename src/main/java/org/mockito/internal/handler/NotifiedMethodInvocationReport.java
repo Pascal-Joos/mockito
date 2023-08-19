@@ -9,7 +9,7 @@ import static org.mockito.internal.matchers.Equality.areEqual;
 import org.mockito.invocation.DescribedInvocation;
 import org.mockito.invocation.Invocation;
 import org.mockito.listeners.MethodInvocationReport;
-import org.mockito.NullUnmarked;
+
 
 /**
  * Report on a method call
@@ -26,7 +26,7 @@ public class NotifiedMethodInvocationReport implements MethodInvocationReport {
      * @param invocation Information on the method call
      * @param returnedValue The value returned by the method invocation
      */
-    @NullUnmarked public NotifiedMethodInvocationReport(Invocation invocation, Object returnedValue) {
+     public NotifiedMethodInvocationReport(Invocation invocation, Object returnedValue) {
         this.invocation = invocation;
         this.returnedValue = returnedValue;
         this.throwable = null;
@@ -39,7 +39,7 @@ public class NotifiedMethodInvocationReport implements MethodInvocationReport {
      * @param invocation Information on the method call
      * @param throwable Tha throwable raised by the method invocation
      */
-    @NullUnmarked public NotifiedMethodInvocationReport(Invocation invocation, Throwable throwable) {
+     public NotifiedMethodInvocationReport(Invocation invocation, Throwable throwable) {
         this.invocation = invocation;
         this.returnedValue = null;
         this.throwable = throwable;
@@ -61,7 +61,7 @@ public class NotifiedMethodInvocationReport implements MethodInvocationReport {
         return throwable != null;
     }
 
-    @NullUnmarked public String getLocationOfStubbing() {
+     public String getLocationOfStubbing() {
         return (invocation.stubInfo() == null)
                 ? null
                 : invocation.stubInfo().stubbedAt().toString();

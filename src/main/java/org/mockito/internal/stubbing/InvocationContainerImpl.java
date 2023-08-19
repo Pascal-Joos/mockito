@@ -24,7 +24,7 @@ import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubbing;
 import org.mockito.stubbing.ValidableAnswer;
-import org.mockito.NullUnmarked;
+
 
 @SuppressWarnings("unchecked")
 public class InvocationContainerImpl implements InvocationContainer, Serializable {
@@ -36,9 +36,9 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
     private final RegisteredInvocations registeredInvocations;
     private final Strictness mockStrictness;
 
-    @SuppressWarnings("NullAway.Init") private MatchableInvocation invocationForStubbing;
+     private MatchableInvocation invocationForStubbing;
 
-    @NullUnmarked public InvocationContainerImpl(MockCreationSettings mockSettings) {
+     public InvocationContainerImpl(MockCreationSettings mockSettings) {
         this.registeredInvocations = createRegisteredInvocations(mockSettings);
         this.mockStrictness = mockSettings.isLenient() ? Strictness.LENIENT : null;
         this.doAnswerStyleStubbing = new DoAnswerStyleStubbing();
@@ -58,7 +58,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
         addAnswer(answer, false, stubbingStrictness);
     }
 
-    @NullUnmarked public void addConsecutiveAnswer(Answer answer) {
+     public void addConsecutiveAnswer(Answer answer) {
         addAnswer(answer, true, null);
     }
 
@@ -91,7 +91,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
         return findAnswerFor(invocation).answer(invocation);
     }
 
-    @NullUnmarked public StubbedInvocationMatcher findAnswerFor(Invocation invocation) {
+     public StubbedInvocationMatcher findAnswerFor(Invocation invocation) {
         synchronized (stubbed) {
             for (StubbedInvocationMatcher s : stubbed) {
                 if (s.matches(invocation)) {

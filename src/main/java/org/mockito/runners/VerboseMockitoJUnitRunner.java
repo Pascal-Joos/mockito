@@ -45,7 +45,7 @@ public class VerboseMockitoJUnitRunner extends Runner implements Filterable {
         RunListener listener =
                 new RunListener() {
 
-                    @SuppressWarnings("NullAway.Init") WarningsCollector warningsCollector;
+                     WarningsCollector warningsCollector;
 
                     @Override
                     public void testStarted(Description description) throws Exception {

@@ -20,9 +20,9 @@ import org.mockito.session.MockitoSessionLogger;
 public class DefaultMockitoSessionBuilder implements MockitoSessionBuilder {
 
     private List<Object> testClassInstances = new ArrayList<Object>();
-    @SuppressWarnings("NullAway.Init") private String name;
-    @SuppressWarnings("NullAway.Init") private Strictness strictness;
-    @SuppressWarnings("NullAway.Init") private MockitoSessionLogger logger;
+     private String name;
+     private Strictness strictness;
+     private MockitoSessionLogger logger;
 
     @Override
     public MockitoSessionBuilder initMocks(Object testClassInstance) {

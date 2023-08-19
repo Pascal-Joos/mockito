@@ -40,7 +40,7 @@ import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.creation.bytebuddy.ByteBuddyCrossClassLoaderSerializationSupport.CrossClassLoaderSerializableMock;
 import org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.DispatcherDefaultingToRealMethod;
 import org.mockito.mock.SerializableMode;
-import org.mockito.NullUnmarked;
+
 
 class SubclassBytecodeGenerator implements BytecodeGenerator {
 
@@ -62,7 +62,7 @@ class SubclassBytecodeGenerator implements BytecodeGenerator {
         this(new SubclassInjectionLoader());
     }
 
-    @NullUnmarked public SubclassBytecodeGenerator(SubclassLoader loader) {
+     public SubclassBytecodeGenerator(SubclassLoader loader) {
         this(loader, null, any());
     }
 

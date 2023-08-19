@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.mockito.internal.creation.instance.InstantiatorProvider2Adapter;
 import org.mockito.plugins.*;
-import org.mockito.NullUnmarked;
+
 
 class DefaultMockitoPlugins implements MockitoPlugins {
 
@@ -43,7 +43,7 @@ class DefaultMockitoPlugins implements MockitoPlugins {
                 MODULE_ALIAS, "org.mockito.internal.util.reflection.ModuleMemberAccessor");
     }
 
-    @NullUnmarked @Override
+     @Override
     public <T> T getDefaultPlugin(Class<T> pluginType) {
         if (pluginType == InstantiatorProvider.class) {
             // the implementation class is not configured via map so that we can reduce duplication
@@ -59,7 +59,7 @@ class DefaultMockitoPlugins implements MockitoPlugins {
         }
     }
 
-    @NullUnmarked String getDefaultPluginClass(String classOrAlias) {
+     String getDefaultPluginClass(String classOrAlias) {
         return DEFAULT_PLUGINS.get(classOrAlias);
     }
 
@@ -91,7 +91,7 @@ class DefaultMockitoPlugins implements MockitoPlugins {
         }
     }
 
-    @NullUnmarked @Override
+     @Override
     public MockMaker getInlineMockMaker() {
         return create(MockMaker.class, DEFAULT_PLUGINS.get(INLINE_ALIAS));
     }

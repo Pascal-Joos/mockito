@@ -28,7 +28,7 @@ import org.mockito.internal.matchers.Same;
 import org.mockito.internal.matchers.StartsWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.mockito.internal.util.Primitives;
-import org.mockito.NullUnmarked;
+
 
 /**
  * Allow flexible verification or stubbing. See also {@link AdditionalMatchers}.
@@ -163,7 +163,7 @@ public class ArgumentMatchers {
      * @deprecated This will be removed in Mockito 4.0 This method is only used for generic
      * friendliness to avoid casting, this is not anymore needed in Java 8.
      */
-    @NullUnmarked @Deprecated
+     @Deprecated
     public static <T> T anyObject() {
         reportMatcher(Any.ANY);
         return null;
@@ -257,7 +257,7 @@ public class ArgumentMatchers {
      * @see #any(Class)
      * @deprecated as of 2.1.0 use {@link #any()}
      */
-    @NullUnmarked @Deprecated
+     @Deprecated
     public static <T> T anyVararg() {
         any();
         return null;
@@ -904,7 +904,7 @@ public class ArgumentMatchers {
      * @param value the given value.
      * @return <code>null</code>.
      */
-    @NullUnmarked public static <T> T eq(T value) {
+     public static <T> T eq(T value) {
         reportMatcher(new Equals(value));
         if (value == null) return null;
         return (T) Primitives.defaultValue(value.getClass());
@@ -934,7 +934,7 @@ public class ArgumentMatchers {
      * @param excludeFields fields to exclude, if field does not exist it is ignored.
      * @return <code>null</code>.
      */
-    @NullUnmarked public static <T> T refEq(T value, String... excludeFields) {
+     public static <T> T refEq(T value, String... excludeFields) {
         reportMatcher(new ReflectionEquals(value, excludeFields));
         return null;
     }
@@ -950,7 +950,7 @@ public class ArgumentMatchers {
      * @param value the given value.
      * @return <code>null</code>.
      */
-    @NullUnmarked public static <T> T same(T value) {
+     public static <T> T same(T value) {
         reportMatcher(new Same(value));
         if (value == null) return null;
         return (T) Primitives.defaultValue(value.getClass());
@@ -968,7 +968,7 @@ public class ArgumentMatchers {
      * @see #isNotNull()
      * @see #isNotNull(Class)
      */
-    @NullUnmarked public static <T> T isNull() {
+     public static <T> T isNull() {
         reportMatcher(Null.NULL);
         return null;
     }
@@ -1010,7 +1010,7 @@ public class ArgumentMatchers {
      *
      * @return <code>null</code>.
      */
-    @NullUnmarked public static <T> T notNull() {
+     public static <T> T notNull() {
         reportMatcher(NotNull.NOT_NULL);
         return null;
     }
@@ -1198,7 +1198,7 @@ public class ArgumentMatchers {
      * @param matcher decides whether argument matches
      * @return <code>null</code>.
      */
-    @NullUnmarked public static <T> T argThat(ArgumentMatcher<T> matcher) {
+     public static <T> T argThat(ArgumentMatcher<T> matcher) {
         reportMatcher(matcher);
         return null;
     }

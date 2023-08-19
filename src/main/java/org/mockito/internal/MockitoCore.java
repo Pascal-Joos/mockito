@@ -40,7 +40,7 @@ import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingPro
 import static org.mockito.internal.util.MockUtil.*;
 import static org.mockito.internal.verification.VerificationModeFactory.noInteractions;
 import static org.mockito.internal.verification.VerificationModeFactory.noMoreInteractions;
-import org.mockito.NullUnmarked;
+
 
 @SuppressWarnings("unchecked")
 public class MockitoCore {
@@ -161,7 +161,7 @@ public class MockitoCore {
         }
     }
 
-    @NullUnmarked public void verifyNoMoreInteractions(Object... mocks) {
+     public void verifyNoMoreInteractions(Object... mocks) {
         assertMocksNotEmpty(mocks);
         mockingProgress().validateState();
         for (Object mock : mocks) {
@@ -179,7 +179,7 @@ public class MockitoCore {
         }
     }
 
-    @NullUnmarked public void verifyNoInteractions(Object... mocks) {
+     public void verifyNoInteractions(Object... mocks) {
         assertMocksNotEmpty(mocks);
         mockingProgress().validateState();
         for (Object mock : mocks) {
@@ -197,7 +197,7 @@ public class MockitoCore {
         }
     }
 
-    @NullUnmarked public void verifyNoMoreInteractionsInOrder(List<Object> mocks, InOrderContext inOrderContext) {
+     public void verifyNoMoreInteractionsInOrder(List<Object> mocks, InOrderContext inOrderContext) {
         mockingProgress().validateState();
         VerificationDataInOrder data =
                 new VerificationDataInOrderImpl(
@@ -233,7 +233,7 @@ public class MockitoCore {
         return new InOrderImpl(Arrays.asList(mocks));
     }
 
-    @NullUnmarked public Stubber stubber() {
+     public Stubber stubber() {
         return stubber(null);
     }
 

@@ -16,7 +16,7 @@ import org.mockito.internal.util.Primitives;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.mock.MockName;
 import org.mockito.stubbing.Answer;
-import org.mockito.NullUnmarked;
+
 
 /**
  * Default answer of every Mockito mock.
@@ -81,7 +81,7 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
         return returnValueFor(returnType);
     }
 
-    @NullUnmarked Object returnValueFor(Class<?> type) {
+     Object returnValueFor(Class<?> type) {
         if (Primitives.isPrimitiveOrWrapper(type)) {
             return Primitives.defaultValue(type);
             // new instances are used instead of Collections.emptyList(), etc.

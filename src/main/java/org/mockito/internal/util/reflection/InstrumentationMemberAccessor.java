@@ -20,16 +20,16 @@ import java.util.*;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static org.mockito.internal.util.StringUtil.join;
-import org.mockito.NullUnmarked;
 
-@NullUnmarked class InstrumentationMemberAccessor implements MemberAccessor {
+
+ class InstrumentationMemberAccessor implements MemberAccessor {
 
     private static final Map<Class<?>, Class<?>> WRAPPERS = new HashMap<>();
 
-    @SuppressWarnings("NullAway.Init") private static final Instrumentation INSTRUMENTATION;
-    @SuppressWarnings("NullAway.Init") private static final Dispatcher DISPATCHER;
+     private static final Instrumentation INSTRUMENTATION;
+     private static final Dispatcher DISPATCHER;
 
-    @SuppressWarnings("NullAway.Init") private static final Throwable INITIALIZATION_ERROR;
+     private static final Throwable INITIALIZATION_ERROR;
 
     static {
         WRAPPERS.put(boolean.class, Boolean.class);
@@ -136,7 +136,7 @@ import org.mockito.NullUnmarked;
         }
     }
 
-    @NullUnmarked @Override
+     @Override
     public Object newInstance(Constructor<?> constructor, Object... arguments)
             throws InstantiationException, InvocationTargetException {
         if (Modifier.isAbstract(constructor.getDeclaringClass().getModifiers())) {
@@ -171,7 +171,7 @@ import org.mockito.NullUnmarked;
         }
     }
 
-    @NullUnmarked @Override
+     @Override
     public Object invoke(Method method, Object target, Object... arguments)
             throws InvocationTargetException {
         assureArguments(
@@ -211,7 +211,7 @@ import org.mockito.NullUnmarked;
         }
     }
 
-    @NullUnmarked @Override
+     @Override
     public Object get(Field field, Object target) {
         assureArguments(
                 field,
@@ -237,7 +237,7 @@ import org.mockito.NullUnmarked;
         }
     }
 
-    @NullUnmarked @Override
+     @Override
     public void set(Field field, Object target, Object value) throws IllegalAccessException {
         assureArguments(
                 field,

@@ -15,7 +15,7 @@ import org.mockito.listeners.MockitoListener;
 import org.mockito.plugins.InlineMockMaker;
 import org.mockito.plugins.MockMaker;
 import org.mockito.plugins.MockitoPlugins;
-import org.mockito.NullUnmarked;
+
 
 public class DefaultMockitoFramework implements MockitoFramework {
 
@@ -41,7 +41,7 @@ public class DefaultMockitoFramework implements MockitoFramework {
         return new DefaultInvocationFactory();
     }
 
-    @NullUnmarked private InlineMockMaker getInlineMockMaker() {
+     private InlineMockMaker getInlineMockMaker() {
         MockMaker mockMaker = Plugins.getMockMaker();
         return (mockMaker instanceof InlineMockMaker) ? (InlineMockMaker) mockMaker : null;
     }

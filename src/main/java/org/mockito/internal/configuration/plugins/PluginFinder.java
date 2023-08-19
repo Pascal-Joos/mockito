@@ -10,7 +10,7 @@ import java.net.URL;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.util.io.IOUtil;
 import org.mockito.plugins.PluginSwitch;
-import org.mockito.NullUnmarked;
+
 
 class PluginFinder {
 
@@ -20,7 +20,7 @@ class PluginFinder {
         this.pluginSwitch = pluginSwitch;
     }
 
-    @NullUnmarked String findPluginClass(Iterable<URL> resources) {
+     String findPluginClass(Iterable<URL> resources) {
         for (URL resource : resources) {
             InputStream s = null;
             try {

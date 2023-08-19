@@ -36,7 +36,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.invocation.Location;
 import org.mockito.listeners.InvocationListener;
 import org.mockito.mock.SerializableMode;
-import org.mockito.NullUnmarked;
+
 
 /**
  * Reports verification and misusing errors.
@@ -827,7 +827,7 @@ public class Reporter {
                 details);
     }
 
-    @NullUnmarked private static String exceptionCauseMessageIfAvailable(Exception details) {
+     private static String exceptionCauseMessageIfAvailable(Exception details) {
         if (details.getCause() == null) {
             return details.getMessage();
         }
@@ -1041,7 +1041,7 @@ public class Reporter {
                         "Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class."));
     }
 
-    @NullUnmarked public static void unncessaryStubbingException(List<Invocation> unused) {
+     public static void unncessaryStubbingException(List<Invocation> unused) {
         throw formatUnncessaryStubbingException(null, unused);
     }
 

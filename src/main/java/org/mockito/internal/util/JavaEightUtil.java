@@ -16,12 +16,12 @@ import org.mockito.creation.instance.InstantiationException;
 public final class JavaEightUtil {
 
     // No need for volatile, these optionals are already safe singletons.
-    @SuppressWarnings("NullAway.Init") private static Object emptyOptional;
-    @SuppressWarnings("NullAway.Init") private static Object emptyOptionalDouble;
-    @SuppressWarnings("NullAway.Init") private static Object emptyOptionalInt;
-    @SuppressWarnings("NullAway.Init") private static Object emptyOptionalLong;
-    @SuppressWarnings("NullAway.Init") private static Object emptyDuration;
-    @SuppressWarnings("NullAway.Init") private static Object emptyPeriod;
+     private static Object emptyOptional;
+     private static Object emptyOptionalDouble;
+     private static Object emptyOptionalInt;
+     private static Object emptyOptionalLong;
+     private static Object emptyDuration;
+     private static Object emptyPeriod;
 
     private JavaEightUtil() {
         // utility class
