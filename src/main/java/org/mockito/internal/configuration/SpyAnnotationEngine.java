@@ -26,6 +26,7 @@ import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.internal.util.MockUtil;
 import org.mockito.plugins.AnnotationEngine;
 import org.mockito.plugins.MemberAccessor;
+import javax.annotation.Nullable;
 
 /**
  * Process fields annotated with &#64;Spy.

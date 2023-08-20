@@ -7,6 +7,7 @@ package org.mockito.internal.configuration;
 import org.mockito.configuration.IMockitoConfiguration;
 import org.mockito.exceptions.misusing.MockitoConfigurationException;
 import org.mockito.plugins.MockMaker;
+import javax.annotation.Nullable;
 
 
 /**
@@ -53,7 +54,7 @@ public class ClassPathLoader {
     /**
      * @return configuration loaded from classpath or null
      */
-     @SuppressWarnings({"unchecked"})
+     @Nullable @SuppressWarnings({"unchecked"})
     public IMockitoConfiguration loadConfiguration() {
         // Trying to get config from classpath
         Class<?> configClass;

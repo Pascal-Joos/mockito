@@ -18,6 +18,7 @@ import org.mockito.internal.debugging.WarningsCollector;
 import org.mockito.internal.junit.util.JUnitFailureHacker;
 import org.mockito.internal.runners.InternalRunner;
 import org.mockito.internal.runners.RunnerFactory;
+import javax.annotation.Nullable;
 
 /**
  * @deprecated as of 2.1.0. Use the {@link org.mockito.junit.MockitoJUnitRunner} runner instead
@@ -45,7 +46,7 @@ public class VerboseMockitoJUnitRunner extends Runner implements Filterable {
         RunListener listener =
                 new RunListener() {
 
-                     WarningsCollector warningsCollector;
+                     @Nullable WarningsCollector warningsCollector;
 
                     @Override
                     public void testStarted(Description description) throws Exception {

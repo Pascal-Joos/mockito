@@ -21,6 +21,7 @@ import org.mockito.internal.verification.api.InOrderContext;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.Location;
 import org.mockito.invocation.MatchableInvocation;
+import javax.annotation.Nullable;
 
 public class MissingInvocationChecker {
 

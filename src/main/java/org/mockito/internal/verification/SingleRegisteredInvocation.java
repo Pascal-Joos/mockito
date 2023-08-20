@@ -9,11 +9,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.mockito.invocation.Invocation;
+import javax.annotation.Nullable;
 
 
 public class SingleRegisteredInvocation implements RegisteredInvocations, Serializable {
 
-     private Invocation invocation;
+     @Nullable private Invocation invocation;
 
     public void add(Invocation invocation) {
         this.invocation = invocation;

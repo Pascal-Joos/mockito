@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.mockito.creation.instance.InstantiationException;
+import javax.annotation.Nullable;
 
 /**
  * Helper class to work with features that were introduced in Java versions after 1.5.
@@ -16,12 +17,12 @@ import org.mockito.creation.instance.InstantiationException;
 public final class JavaEightUtil {
 
     // No need for volatile, these optionals are already safe singletons.
-     private static Object emptyOptional;
-     private static Object emptyOptionalDouble;
-     private static Object emptyOptionalInt;
-     private static Object emptyOptionalLong;
-     private static Object emptyDuration;
-     private static Object emptyPeriod;
+     @Nullable private static Object emptyOptional;
+     @Nullable private static Object emptyOptionalDouble;
+     @Nullable private static Object emptyOptionalInt;
+     @Nullable private static Object emptyOptionalLong;
+     @Nullable private static Object emptyDuration;
+     @Nullable private static Object emptyPeriod;
 
     private JavaEightUtil() {
         // utility class

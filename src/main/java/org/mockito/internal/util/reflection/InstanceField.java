@@ -11,6 +11,7 @@ import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.internal.util.Checks;
 import org.mockito.plugins.MemberAccessor;
+import javax.annotation.Nullable;
 
 /**
  * Represents an accessible instance field.
@@ -20,7 +21,7 @@ import org.mockito.plugins.MemberAccessor;
 public class InstanceField {
     private final Field field;
     private final Object instance;
-     private FieldReader fieldReader;
+     @Nullable private FieldReader fieldReader;
 
     /**
      * Create a new InstanceField.

@@ -19,14 +19,15 @@ import org.mockito.mock.MockCreationSettings;
 import org.mockito.mock.MockName;
 import org.mockito.mock.SerializableMode;
 import org.mockito.stubbing.Answer;
+import javax.annotation.Nullable;
 
 public class CreationSettings<T> implements MockCreationSettings<T>, Serializable {
     private static final long serialVersionUID = -6789800638070123629L;
 
      protected Class<T> typeToMock;
     protected Set<Class<?>> extraInterfaces = new LinkedHashSet<Class<?>>();
-     protected String name;
-     protected Object spiedInstance;
+     @Nullable protected String name;
+     @Nullable protected Object spiedInstance;
      protected Answer<Object> defaultAnswer;
      protected MockName mockName;
     protected SerializableMode serializableMode = SerializableMode.NONE;
@@ -44,8 +45,8 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
     protected boolean stubOnly;
     protected boolean stripAnnotations;
     private boolean useConstructor;
-     private Object outerClassInstance;
-     private Object[] constructorArgs;
+     @Nullable private Object outerClassInstance;
+     @Nullable private Object[] constructorArgs;
     protected boolean lenient;
 
     public CreationSettings() {}
@@ -91,11 +92,11 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
         return this;
     }
 
-    public String getName() {
+    @Nullable public String getName() {
         return name;
     }
 
-    @Override
+    @Nullable @Override
     public Object getSpiedInstance() {
         return spiedInstance;
     }
@@ -153,12 +154,12 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
         return stripAnnotations;
     }
 
-    @Override
+    @Nullable @Override
     public Object[] getConstructorArgs() {
         return constructorArgs;
     }
 
-    @Override
+    @Nullable @Override
     public Object getOuterClassInstance() {
         return outerClassInstance;
     }

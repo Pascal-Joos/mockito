@@ -16,13 +16,14 @@ import org.mockito.plugins.MockitoLogger;
 import org.mockito.quality.Strictness;
 import org.mockito.session.MockitoSessionBuilder;
 import org.mockito.session.MockitoSessionLogger;
+import javax.annotation.Nullable;
 
 public class DefaultMockitoSessionBuilder implements MockitoSessionBuilder {
 
     private List<Object> testClassInstances = new ArrayList<Object>();
-     private String name;
-     private Strictness strictness;
-     private MockitoSessionLogger logger;
+     @Nullable private String name;
+     @Nullable private Strictness strictness;
+     @Nullable private MockitoSessionLogger logger;
 
     @Override
     public MockitoSessionBuilder initMocks(Object testClassInstance) {

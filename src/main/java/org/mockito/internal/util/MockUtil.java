@@ -20,6 +20,7 @@ import org.mockito.plugins.MockMaker.TypeMockability;
 import java.util.function.Function;
 
 import static org.mockito.internal.handler.MockHandlerFactory.createMockHandler;
+import javax.annotation.Nullable;
 
 @SuppressWarnings("unchecked")
 public class MockUtil {
