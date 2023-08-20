@@ -19,6 +19,7 @@ import org.mockito.internal.debugging.WarningsCollector;
 import org.mockito.internal.runners.InternalRunner;
 import org.mockito.internal.runners.RunnerFactory;
 import org.mockito.plugins.MockitoLogger;
+import javax.annotation.Nullable;
 
 /**
  * @deprecated as of 2.1.0. Use the {@link org.mockito.junit.MockitoJUnitRunner} runner instead
@@ -45,7 +46,7 @@ public class ConsoleSpammingMockitoJUnitRunner extends Runner implements Filtera
     public void run(RunNotifier notifier) {
         RunListener listener =
                 new RunListener() {
-                     WarningsCollector warningsCollector;
+                     @Nullable WarningsCollector warningsCollector;
 
                     @Override
                     public void testStarted(Description description) throws Exception {

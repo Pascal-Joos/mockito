@@ -22,6 +22,7 @@ import org.mockito.mock.MockCreationSettings;
 import org.mockito.mock.MockName;
 import org.mockito.mock.SerializableMode;
 import org.mockito.plugins.MemberAccessor;
+import javax.annotation.Nullable;
 
 /**
  * This is responsible for serializing a mock, it is enabled if the mock is implementing {@link Serializable}.
@@ -158,7 +159,7 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
 
         private static final long serialVersionUID = -7600267929109286514L;
         private final byte[] serializedMock;
-        private final Class<?> typeToMock;
+        @Nullable private final Class<?> typeToMock;
         private final Set<Class<?>> extraInterfaces;
 
         /**
@@ -242,11 +243,11 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
      * </p>
      */
     public static class MockitoMockObjectInputStream extends ObjectInputStream {
-        private final Class<?> typeToMock;
+        @Nullable private final Class<?> typeToMock;
         private final Set<Class<?>> extraInterfaces;
 
         public MockitoMockObjectInputStream(
-                InputStream in, Class<?> typeToMock, Set<Class<?>> extraInterfaces)
+                InputStream in, @Nullable Class<?> typeToMock, Set<Class<?>> extraInterfaces)
                 throws IOException {
             super(in);
             this.typeToMock = typeToMock;
@@ -266,7 +267,7 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
          * @throws java.io.IOException
          * @throws ClassNotFoundException
          */
-        @Override
+        @Nullable @Override
         protected Class<?> resolveClass(ObjectStreamClass desc)
                 throws IOException, ClassNotFoundException {
             if (notMarkedAsAMockitoMock(readObject())) {
@@ -316,7 +317,7 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
          * @throws java.io.InvalidObjectException
          */
         private void hackClassNameToMatchNewlyCreatedClass(
-                ObjectStreamClass descInstance, Class<?> proxyClass) throws ObjectStreamException {
+                ObjectStreamClass descInstance, @Nullable Class<?> proxyClass) throws ObjectStreamException {
             try {
                 MemberAccessor accessor = Plugins.getMemberAccessor();
                 Field classNameField = descInstance.getClass().getDeclaredField("name");

@@ -25,6 +25,7 @@ import org.mockito.internal.configuration.injection.filter.TypeBasedCandidateFil
 import org.mockito.internal.util.collections.ListUtil;
 import org.mockito.internal.util.reflection.FieldInitializationReport;
 import org.mockito.internal.util.reflection.FieldInitializer;
+import javax.annotation.Nullable;
 
 
 /**
@@ -108,7 +109,7 @@ public class PropertyAndSetterInjection extends MockInjectionStrategy {
     }
 
     private boolean injectMockCandidates(
-            Class<?> awaitingInjectionClazz, Object injectee, Set<Object> mocks) {
+            @Nullable Class<?> awaitingInjectionClazz, Object injectee, Set<Object> mocks) {
         boolean injectionOccurred;
         List<Field> orderedCandidateInjecteeFields =
                 orderedInstanceFieldsFrom(awaitingInjectionClazz);
@@ -144,7 +145,7 @@ public class PropertyAndSetterInjection extends MockInjectionStrategy {
         return injectionOccurred;
     }
 
-    private List<Field> orderedInstanceFieldsFrom(Class<?> awaitingInjectionClazz) {
+    private List<Field> orderedInstanceFieldsFrom(@Nullable Class<?> awaitingInjectionClazz) {
         List<Field> declaredFields = Arrays.asList(awaitingInjectionClazz.getDeclaredFields());
         declaredFields = ListUtil.filter(declaredFields, notFinalOrStatic);
 

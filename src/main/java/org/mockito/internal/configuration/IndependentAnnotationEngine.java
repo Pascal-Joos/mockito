@@ -21,6 +21,7 @@ import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.plugins.AnnotationEngine;
 import org.mockito.plugins.MemberAccessor;
+import javax.annotation.Nullable;
 
 
 /**
@@ -43,7 +44,7 @@ public class IndependentAnnotationEngine
         registerAnnotationProcessor(Captor.class, new CaptorAnnotationProcessor());
     }
 
-    private Object createMockFor(Annotation annotation, Field field) {
+    @Nullable private Object createMockFor(Annotation annotation, Field field) {
         return forAnnotation(annotation).process(annotation, field);
     }
 
@@ -53,7 +54,7 @@ public class IndependentAnnotationEngine
                     annotationProcessorMap.get(annotation.annotationType());
         }
         return new FieldAnnotationProcessor<A>() {
-             public Object process(A annotation, Field field) {
+             @Nullable public Object process(A annotation, Field field) {
                 return null;
             }
         };

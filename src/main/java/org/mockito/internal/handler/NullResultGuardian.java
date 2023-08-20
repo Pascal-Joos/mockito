@@ -10,6 +10,7 @@ import org.mockito.invocation.Invocation;
 import org.mockito.invocation.InvocationContainer;
 import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
+import javax.annotation.Nullable;
 
 /**
  * Protects the results from delegate MockHandler. Makes sure the results are valid.
@@ -24,7 +25,7 @@ class NullResultGuardian<T> implements MockHandler<T> {
         this.delegate = delegate;
     }
 
-    @Override
+    @Nullable @Override
     public Object handle(Invocation invocation) throws Throwable {
         Object result = delegate.handle(invocation);
         Class<?> returnType = invocation.getMethod().getReturnType();

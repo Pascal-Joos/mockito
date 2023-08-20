@@ -11,6 +11,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import javax.annotation.Nullable;
 
 public class ModuleMemberAccessor implements MemberAccessor {
 
@@ -31,7 +32,7 @@ public class ModuleMemberAccessor implements MemberAccessor {
     }
 
     @Override
-    public Object invoke(Method method, Object target, Object... arguments)
+    public Object invoke(Method method, @Nullable Object target, Object... arguments)
             throws InvocationTargetException, IllegalAccessException {
         return delegate.invoke(method, target, arguments);
     }
@@ -42,7 +43,7 @@ public class ModuleMemberAccessor implements MemberAccessor {
     }
 
     @Override
-    public void set(Field field, Object target, Object value) throws IllegalAccessException {
+    public void set(Field field, @Nullable Object target, @Nullable Object value) throws IllegalAccessException {
         delegate.set(field, target, value);
     }
 }

@@ -20,6 +20,7 @@ import org.mockito.plugins.MockMaker.TypeMockability;
 import java.util.function.Function;
 
 import static org.mockito.internal.handler.MockHandlerFactory.createMockHandler;
+import javax.annotation.Nullable;
 
 @SuppressWarnings("unchecked")
 public class MockUtil {
@@ -32,7 +33,7 @@ public class MockUtil {
         return mockMaker.isTypeMockable(type);
     }
 
-    public static <T> T createMock(MockCreationSettings<T> settings) {
+    @Nullable public static <T> T createMock(MockCreationSettings<T> settings) {
         MockHandler mockHandler = createMockHandler(settings);
 
         Object spiedInstance = settings.getSpiedInstance();
@@ -63,7 +64,7 @@ public class MockUtil {
         mockMaker.resetMock(mock, newHandler, settings);
     }
 
-    public static <T> MockHandler<T> getMockHandler(T mock) {
+    @Nullable public static <T> MockHandler<T> getMockHandler(T mock) {
         if (mock == null) {
             throw new NotAMockException("Argument should be a mock, but is null!");
         }
@@ -99,7 +100,7 @@ public class MockUtil {
         return mock != null && mockMaker.getHandler(mock) != null;
     }
 
-    public static MockName getMockName(Object mock) {
+    @Nullable public static MockName getMockName(Object mock) {
         return getMockHandler(mock).getMockSettings().getMockName();
     }
 

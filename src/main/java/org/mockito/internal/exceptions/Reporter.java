@@ -36,6 +36,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.invocation.Location;
 import org.mockito.listeners.InvocationListener;
 import org.mockito.mock.SerializableMode;
+import javax.annotation.Nullable;
 
 
 /**
@@ -341,12 +342,12 @@ public class Reporter {
                 messageBuilder.toString(), wanted, actualBuilder.toString());
     }
 
-    public static MockitoAssertionError wantedButNotInvoked(DescribedInvocation wanted) {
+    public static MockitoAssertionError wantedButNotInvoked(@Nullable DescribedInvocation wanted) {
         return new WantedButNotInvoked(createWantedButNotInvokedMessage(wanted));
     }
 
     public static MockitoAssertionError wantedButNotInvoked(
-            DescribedInvocation wanted, List<? extends DescribedInvocation> invocations) {
+            @Nullable DescribedInvocation wanted, List<? extends DescribedInvocation> invocations) {
         String allInvocations;
         if (invocations.isEmpty()) {
             allInvocations = "Actually, there were zero interactions with this mock.\n";
@@ -366,12 +367,12 @@ public class Reporter {
         return new WantedButNotInvoked(message + allInvocations);
     }
 
-    private static String createWantedButNotInvokedMessage(DescribedInvocation wanted) {
+    private static String createWantedButNotInvokedMessage(@Nullable DescribedInvocation wanted) {
         return join("Wanted but not invoked:", wanted.toString(), new LocationImpl(), "");
     }
 
     public static MockitoAssertionError wantedButNotInvokedInOrder(
-            DescribedInvocation wanted, DescribedInvocation previous) {
+            @Nullable DescribedInvocation wanted, DescribedInvocation previous) {
         return new VerificationInOrderFailure(
                 join(
                         "Verification in order failure",
@@ -387,7 +388,7 @@ public class Reporter {
     public static MockitoAssertionError tooManyActualInvocations(
             int wantedCount,
             int actualCount,
-            DescribedInvocation wanted,
+            @Nullable DescribedInvocation wanted,
             List<Location> locations) {
         String message =
                 createTooManyInvocationsMessage(wantedCount, actualCount, wanted, locations);
@@ -397,7 +398,7 @@ public class Reporter {
     private static String createTooManyInvocationsMessage(
             int wantedCount,
             int actualCount,
-            DescribedInvocation wanted,
+            @Nullable DescribedInvocation wanted,
             List<Location> invocations) {
         return join(
                 wanted.toString(),
@@ -409,7 +410,7 @@ public class Reporter {
     }
 
     public static MockitoAssertionError neverWantedButInvoked(
-            DescribedInvocation wanted, List<Location> invocations) {
+            @Nullable DescribedInvocation wanted, List<Location> invocations) {
         return new NeverWantedButInvoked(
                 join(
                         wanted.toString(),
@@ -422,7 +423,7 @@ public class Reporter {
     public static MockitoAssertionError tooManyActualInvocationsInOrder(
             int wantedCount,
             int actualCount,
-            DescribedInvocation wanted,
+            @Nullable DescribedInvocation wanted,
             List<Location> invocations) {
         String message =
                 createTooManyInvocationsMessage(wantedCount, actualCount, wanted, invocations);
@@ -442,7 +443,7 @@ public class Reporter {
 
     private static String createTooFewInvocationsMessage(
             org.mockito.internal.reporting.Discrepancy discrepancy,
-            DescribedInvocation wanted,
+            @Nullable DescribedInvocation wanted,
             List<Location> locations) {
         return join(
                 wanted.toString(),
@@ -458,7 +459,7 @@ public class Reporter {
 
     public static MockitoAssertionError tooFewActualInvocations(
             org.mockito.internal.reporting.Discrepancy discrepancy,
-            DescribedInvocation wanted,
+            @Nullable DescribedInvocation wanted,
             List<Location> allLocations) {
         String message = createTooFewInvocationsMessage(discrepancy, wanted, allLocations);
 
@@ -467,7 +468,7 @@ public class Reporter {
 
     public static MockitoAssertionError tooFewActualInvocationsInOrder(
             org.mockito.internal.reporting.Discrepancy discrepancy,
-            DescribedInvocation wanted,
+            @Nullable DescribedInvocation wanted,
             List<Location> locations) {
         String message = createTooFewInvocationsMessage(discrepancy, wanted, locations);
 
@@ -475,7 +476,7 @@ public class Reporter {
     }
 
     public static MockitoAssertionError noMoreInteractionsWanted(
-            Invocation undesired, List<VerificationAwareInvocation> invocations) {
+            @Nullable Invocation undesired, List<VerificationAwareInvocation> invocations) {
         ScenarioPrinter scenarioPrinter = new ScenarioPrinter();
         String scenario = scenarioPrinter.print(invocations);
 
@@ -747,7 +748,7 @@ public class Reporter {
     }
 
     public static MockitoException cannotInitializeForInjectMocksAnnotation(
-            String fieldName, String causeMessage) {
+            String fieldName, @Nullable String causeMessage) {
         return new MockitoException(
                 join(
                         "Cannot instantiate @InjectMocks field named '"
@@ -827,7 +828,7 @@ public class Reporter {
                 details);
     }
 
-     private static String exceptionCauseMessageIfAvailable(Exception details) {
+     @Nullable private static String exceptionCauseMessageIfAvailable(Exception details) {
         if (details.getCause() == null) {
             return details.getMessage();
         }
@@ -966,7 +967,7 @@ public class Reporter {
     }
 
     public static MockitoException delegatedMethodHasWrongReturnType(
-            Method mockMethod, Method delegateMethod, Object mock, Object delegate) {
+            Method mockMethod, Method delegateMethod, Object mock, @Nullable Object delegate) {
         return new MockitoException(
                 join(
                         "Methods called on delegated instance must have compatible return types with the mock.",
@@ -982,7 +983,7 @@ public class Reporter {
     }
 
     public static MockitoException delegatedMethodDoesNotExistOnDelegate(
-            Method mockMethod, Object mock, Object delegate) {
+            Method mockMethod, Object mock, @Nullable Object delegate) {
         return new MockitoException(
                 join(
                         "Methods called on mock must exist in delegated instance.",
@@ -1020,7 +1021,7 @@ public class Reporter {
     }
 
     public static UnnecessaryStubbingException formatUnncessaryStubbingException(
-            Class<?> testClass, Collection<Invocation> unnecessaryStubbings) {
+            @Nullable Class<?> testClass, Collection<Invocation> unnecessaryStubbings) {
         StringBuilder stubbings = new StringBuilder();
         int count = 1;
         for (Invocation u : unnecessaryStubbings) {

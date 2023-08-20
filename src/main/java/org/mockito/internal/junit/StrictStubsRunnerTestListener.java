@@ -6,6 +6,7 @@ package org.mockito.internal.junit;
 
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.quality.Strictness;
+import javax.annotation.Nullable;
 
 /**
  * Fails early when mismatched arguments used for stubbing
@@ -19,7 +20,7 @@ public class StrictStubsRunnerTestListener implements MockitoTestListener {
     public void testFinished(TestFinishedEvent event) {}
 
     @Override
-    public void onMockCreated(Object mock, MockCreationSettings settings) {
+    public void onMockCreated(@Nullable Object mock, MockCreationSettings settings) {
         // It is not ideal that we modify the state of MockCreationSettings object
         // MockCreationSettings is intended to be an immutable view of the creation settings
         // However, we our previous listeners work this way and it hasn't backfired.

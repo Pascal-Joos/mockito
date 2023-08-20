@@ -5,6 +5,7 @@
 package org.mockito.listeners;
 
 import org.mockito.invocation.DescribedInvocation;
+import javax.annotation.Nullable;
 
 /**
  * Represent a method call on a mock.
@@ -24,12 +25,12 @@ public interface MethodInvocationReport {
     /**
      * @return The resulting value of the method invocation, may be <code>null</code>
      */
-    Object getReturnedValue();
+    @Nullable Object getReturnedValue();
 
     /**
      * @return The throwable raised by the method invocation, maybe <code>null</code>
      */
-    Throwable getThrowable();
+    @Nullable Throwable getThrowable();
 
     /**
      * @return <code>true</code> if an exception was raised, <code>false</code> otherwise
@@ -39,5 +40,5 @@ public interface MethodInvocationReport {
     /**
      * @return Location of the stub invocation
      */
-    String getLocationOfStubbing();
+    @Nullable String getLocationOfStubbing();
 }

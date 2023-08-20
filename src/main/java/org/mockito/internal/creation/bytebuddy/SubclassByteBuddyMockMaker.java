@@ -14,6 +14,7 @@ import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.internal.util.Platform;
 import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
+import javax.annotation.Nullable;
 
 
 /**
@@ -72,7 +73,7 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
         }
     }
 
-    @Override
+    @Nullable @Override
     public <T> Class<? extends T> createMockType(MockCreationSettings<T> settings) {
         try {
             return cachingMockBytecodeGenerator.mockClass(
@@ -130,7 +131,7 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
                 generationFailed);
     }
 
-    private static String describeClass(Class<?> type) {
+    private static String describeClass(@Nullable Class<?> type) {
         return type == null
                 ? "null"
                 : "'"
@@ -140,11 +141,11 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
                         + "'";
     }
 
-    private static String describeClass(Object instance) {
+    private static String describeClass(@Nullable Object instance) {
         return instance == null ? "null" : describeClass(instance.getClass());
     }
 
-     @Override
+     @Nullable @Override
     public MockHandler getHandler(Object mock) {
         if (!(mock instanceof MockAccess)) {
             return null;

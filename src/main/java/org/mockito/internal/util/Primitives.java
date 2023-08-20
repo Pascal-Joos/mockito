@@ -6,6 +6,7 @@ package org.mockito.internal.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 
 @SuppressWarnings("unchecked")
@@ -27,7 +28,7 @@ public class Primitives {
      * @param <T>   The type
      * @return The primitive type if relevant, otherwise <code>null</code>
      */
-     public static <T> Class<T> primitiveTypeOf(Class<T> clazz) {
+     @Nullable public static <T> Class<T> primitiveTypeOf(Class<T> clazz) {
         if (clazz.isPrimitive()) {
             return clazz;
         }
@@ -59,7 +60,7 @@ public class Primitives {
      * @return The boxed default values as defined in Java Language Specification,
      *         <code>null</code> if the type is neither a primitive nor a wrapper
      */
-     public static <T> T defaultValue(Class<T> primitiveOrWrapperType) {
+     @Nullable public static <T> T defaultValue(Class<T> primitiveOrWrapperType) {
         return (T) PRIMITIVE_OR_WRAPPER_DEFAULT_VALUES.get(primitiveOrWrapperType);
     }
 

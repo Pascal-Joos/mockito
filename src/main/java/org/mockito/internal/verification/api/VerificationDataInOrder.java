@@ -8,12 +8,13 @@ import java.util.List;
 
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MatchableInvocation;
+import javax.annotation.Nullable;
 
 public interface VerificationDataInOrder {
 
     List<Invocation> getAllInvocations();
 
-    MatchableInvocation getWanted();
+    @Nullable MatchableInvocation getWanted();
 
     InOrderContext getOrderingContext();
 }

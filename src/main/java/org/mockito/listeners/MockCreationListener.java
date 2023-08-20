@@ -5,6 +5,7 @@
 package org.mockito.listeners;
 
 import org.mockito.mock.MockCreationSettings;
+import javax.annotation.Nullable;
 
 /**
  * Notified when mock object is created.
@@ -18,7 +19,7 @@ public interface MockCreationListener extends MockitoListener {
      * @param mock created mock object
      * @param settings the settings used for creation
      */
-    void onMockCreated(Object mock, MockCreationSettings settings);
+    void onMockCreated(@Nullable Object mock, MockCreationSettings settings);
 
     /**
      * Static mock object was just created.

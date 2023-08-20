@@ -10,6 +10,7 @@ import java.util.concurrent.Callable;
 
 import net.bytebuddy.TypeCache;
 import org.mockito.mock.SerializableMode;
+import javax.annotation.Nullable;
 
 class TypeCachingBytecodeGenerator extends ReferenceQueue<ClassLoader>
         implements BytecodeGenerator {
@@ -41,7 +42,7 @@ class TypeCachingBytecodeGenerator extends ReferenceQueue<ClassLoader>
                                     params.serializableMode,
                                     params.stripAnnotations),
                             new Callable<Class<?>>() {
-                                @Override
+                                @Nullable @Override
                                 public Class<?> call() throws Exception {
                                     return bytecodeGenerator.mockClass(params);
                                 }

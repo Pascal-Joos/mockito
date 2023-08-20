@@ -11,6 +11,7 @@ import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.quality.MockitoHint;
 import org.mockito.stubbing.Stubbing;
+import javax.annotation.Nullable;
 
 /**
  * Provides mocking information.
@@ -119,7 +120,7 @@ public interface MockingDetails {
      * @return mock handler instance of this mock
      * @since 2.10.0
      */
-    @Incubating
+    @Nullable @Incubating
     MockHandler getMockHandler();
 
     /**

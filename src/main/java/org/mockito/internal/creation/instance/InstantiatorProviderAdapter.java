@@ -9,6 +9,7 @@ import org.mockito.creation.instance.Instantiator;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.InstantiatorProvider;
 import org.mockito.plugins.InstantiatorProvider2;
+import javax.annotation.Nullable;
 
 
 /**
@@ -22,10 +23,10 @@ public class InstantiatorProviderAdapter implements InstantiatorProvider2 {
     }
 
     @Override
-    public Instantiator getInstantiator(final MockCreationSettings<?> settings) {
+    public Instantiator getInstantiator(@Nullable final MockCreationSettings<?> settings) {
         return new Instantiator() {
              @Override
-            public <T> T newInstance(Class<T> cls) throws InstantiationException {
+            public <T> T newInstance(@Nullable Class<T> cls) throws InstantiationException {
                 try {
                     return provider.getInstantiator(settings).newInstance(cls);
                 } catch (org.mockito.internal.creation.instance.InstantiationException e) {

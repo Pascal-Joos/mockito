@@ -40,6 +40,7 @@ import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingPro
 import static org.mockito.internal.util.MockUtil.*;
 import static org.mockito.internal.verification.VerificationModeFactory.noInteractions;
 import static org.mockito.internal.verification.VerificationModeFactory.noMoreInteractions;
+import javax.annotation.Nullable;
 
 
 @SuppressWarnings("unchecked")
@@ -49,7 +50,7 @@ public class MockitoCore {
         return typeMockabilityOf(typeToMock).mockable();
     }
 
-    public <T> T mock(Class<T> typeToMock, MockSettings settings) {
+    @Nullable public <T> T mock(Class<T> typeToMock, MockSettings settings) {
         if (!MockSettingsImpl.class.isInstance(settings)) {
             throw new IllegalArgumentException(
                     "Unexpected implementation of '"
@@ -237,7 +238,7 @@ public class MockitoCore {
         return stubber(null);
     }
 
-    public Stubber stubber(Strictness strictness) {
+    public Stubber stubber(@Nullable Strictness strictness) {
         MockingProgress mockingProgress = mockingProgress();
         mockingProgress.stubbingStarted();
         mockingProgress.resetOngoingStubbing();

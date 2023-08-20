@@ -24,13 +24,14 @@ import org.mockito.internal.verification.api.InOrderContext;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.Location;
 import org.mockito.invocation.MatchableInvocation;
+import javax.annotation.Nullable;
 
 public class NumberOfInvocationsChecker {
 
     private NumberOfInvocationsChecker() {}
 
     public static void checkNumberOfInvocations(
-            List<Invocation> invocations, MatchableInvocation wanted, int wantedCount) {
+            List<Invocation> invocations, @Nullable MatchableInvocation wanted, int wantedCount) {
         List<Invocation> actualInvocations = findInvocations(invocations, wanted);
 
         int actualCount = actualInvocations.size();
@@ -52,7 +53,7 @@ public class NumberOfInvocationsChecker {
 
     public static void checkNumberOfInvocations(
             List<Invocation> invocations,
-            MatchableInvocation wanted,
+            @Nullable MatchableInvocation wanted,
             int wantedCount,
             InOrderContext context) {
         List<Invocation> chunk = findMatchingChunk(invocations, wanted, wantedCount, context);
@@ -74,7 +75,7 @@ public class NumberOfInvocationsChecker {
 
     public static void checkNumberOfInvocationsNonGreedy(
             List<Invocation> invocations,
-            MatchableInvocation wanted,
+            @Nullable MatchableInvocation wanted,
             int wantedCount,
             InOrderContext context) {
         int actualCount = 0;

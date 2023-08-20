@@ -15,6 +15,7 @@ import org.mockito.internal.exceptions.Reporter;
 import org.mockito.invocation.Invocation;
 import org.mockito.listeners.MockCreationListener;
 import org.mockito.mock.MockCreationSettings;
+import javax.annotation.Nullable;
 
 /**
  * Reports unnecessary stubbings
@@ -40,7 +41,7 @@ public class UnnecessaryStubbingsReporter implements MockCreationListener {
     }
 
     @Override
-    public void onMockCreated(Object mock, MockCreationSettings settings) {
+    public void onMockCreated(@Nullable Object mock, MockCreationSettings settings) {
         mocks.add(mock);
     }
 }

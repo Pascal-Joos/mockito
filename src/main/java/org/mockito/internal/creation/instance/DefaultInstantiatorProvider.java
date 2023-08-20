@@ -7,12 +7,13 @@ package org.mockito.internal.creation.instance;
 import org.mockito.creation.instance.Instantiator;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.InstantiatorProvider2;
+import javax.annotation.Nullable;
 
 public class DefaultInstantiatorProvider implements InstantiatorProvider2 {
 
     private static final Instantiator INSTANCE = new ObjenesisInstantiator();
 
-    public Instantiator getInstantiator(MockCreationSettings<?> settings) {
+    public Instantiator getInstantiator(@Nullable MockCreationSettings<?> settings) {
         if (settings != null && settings.getConstructorArgs() != null) {
             return new ConstructorInstantiator(
                     settings.getOuterClassInstance() != null, settings.getConstructorArgs());

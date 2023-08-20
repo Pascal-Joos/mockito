@@ -13,6 +13,7 @@ import org.mockito.internal.listeners.AutoCleanableListener;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockitoLogger;
 import org.mockito.quality.Strictness;
+import javax.annotation.Nullable;
 
 /**
  * Universal test listener that behaves accordingly to current setting of strictness.
@@ -90,7 +91,7 @@ public class UniversalTestListener implements MockitoTestListener, AutoCleanable
     }
 
     @Override
-    public void onMockCreated(Object mock, MockCreationSettings settings) {
+    public void onMockCreated(@Nullable Object mock, MockCreationSettings settings) {
         this.mocks.put(mock, settings);
 
         // It is not ideal that we modify the state of MockCreationSettings object

@@ -21,6 +21,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubbing;
+import javax.annotation.Nullable;
 
 
 /**
@@ -47,7 +48,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
 
     private static final long serialVersionUID = -7105341425736035847L;
 
-     public Object answer(InvocationOnMock invocation) throws Throwable {
+     @Nullable public Object answer(InvocationOnMock invocation) throws Throwable {
         GenericMetadataSupport returnTypeGenericMetadata =
                 actualParameterizedType(invocation.getMock())
                         .resolveGenericReturnType(invocation.getMethod());
@@ -75,7 +76,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
         return deepStub(invocation, returnTypeGenericMetadata);
     }
 
-    private Object deepStub(
+    @Nullable private Object deepStub(
             InvocationOnMock invocation, GenericMetadataSupport returnTypeGenericMetadata)
             throws Throwable {
         InvocationContainerImpl container = MockUtil.getInvocationContainer(invocation.getMock());
@@ -112,7 +113,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
      * @param parentMock                The parent of the current deep stub mock.
      * @return The mock
      */
-    private Object newDeepStubMock(
+    @Nullable private Object newDeepStubMock(
             GenericMetadataSupport returnTypeGenericMetadata, Object parentMock) {
         MockCreationSettings parentMockSettings = MockUtil.getMockSettings(parentMock);
         return mockitoCore()
@@ -145,7 +146,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
     }
 
      private StubbedInvocationMatcher recordDeepStubAnswer(
-            final Object mock, InvocationContainerImpl container) {
+            @Nullable final Object mock, InvocationContainerImpl container) {
         DeeplyStubbedAnswer answer = new DeeplyStubbedAnswer(mock);
         return container.addAnswer(answer, false, null);
     }
@@ -185,15 +186,15 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
     }
 
     private static class DeeplyStubbedAnswer implements Answer<Object>, Serializable {
-        @SuppressWarnings(
+        @Nullable @SuppressWarnings(
                 "serial") // serialization will fail with a nice message if mock not serializable
         private final Object mock;
 
-        DeeplyStubbedAnswer(Object mock) {
+        DeeplyStubbedAnswer(@Nullable Object mock) {
             this.mock = mock;
         }
 
-        public Object answer(InvocationOnMock invocation) throws Throwable {
+        @Nullable public Object answer(InvocationOnMock invocation) throws Throwable {
             return mock;
         }
     }

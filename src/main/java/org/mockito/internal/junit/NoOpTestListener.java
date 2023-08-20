@@ -5,10 +5,11 @@
 package org.mockito.internal.junit;
 
 import org.mockito.mock.MockCreationSettings;
+import javax.annotation.Nullable;
 
 public class NoOpTestListener implements MockitoTestListener {
 
     public void testFinished(TestFinishedEvent event) {}
 
-    public void onMockCreated(Object mock, MockCreationSettings settings) {}
+    public void onMockCreated(@Nullable Object mock, MockCreationSettings settings) {}
 }
