@@ -13,6 +13,7 @@ import org.mockito.internal.stubbing.answers.ThrowsException;
 import org.mockito.internal.stubbing.answers.ThrowsExceptionForClassType;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
+import javax.annotation.Nullable;
 
 
 public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
@@ -31,7 +32,7 @@ public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
     }
 
     @Override
-    public OngoingStubbing<T> thenReturn(T value) {
+    public OngoingStubbing<T> thenReturn(@Nullable T value) {
         return thenAnswer(new Returns(value));
     }
 
@@ -50,11 +51,11 @@ public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
         return stubbing;
     }
 
-    private OngoingStubbing<T> thenThrow(Throwable throwable) {
+    private OngoingStubbing<T> thenThrow(@Nullable Throwable throwable) {
         return thenAnswer(new ThrowsException(throwable));
     }
 
-     @Override
+     @Nullable @Override
     public OngoingStubbing<T> thenThrow(Throwable... throwables) {
         if (throwables == null) {
             return thenThrow((Throwable) null);
@@ -71,7 +72,7 @@ public abstract class BaseStubbing<T> implements OngoingStubbing<T> {
     }
 
     @Override
-    public OngoingStubbing<T> thenThrow(Class<? extends Throwable> throwableType) {
+    public OngoingStubbing<T> thenThrow(@Nullable Class<? extends Throwable> throwableType) {
         if (throwableType == null) {
             mockingProgress().reset();
             throw notAnException();

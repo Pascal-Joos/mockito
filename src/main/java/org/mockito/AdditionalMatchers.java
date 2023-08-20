@@ -14,6 +14,7 @@ import org.mockito.internal.matchers.GreaterOrEqual;
 import org.mockito.internal.matchers.GreaterThan;
 import org.mockito.internal.matchers.LessOrEqual;
 import org.mockito.internal.matchers.LessThan;
+import javax.annotation.Nullable;
 
 
 /**
@@ -50,7 +51,7 @@ public class AdditionalMatchers {
      *            the given value.
      * @return <code>null</code>.
      */
-     public static <T extends Comparable<T>> T geq(T value) {
+     @Nullable public static <T extends Comparable<T>> T geq(T value) {
         reportMatcher(new GreaterOrEqual<T>(value));
         return null;
     }
@@ -148,7 +149,7 @@ public class AdditionalMatchers {
      *            the given value.
      * @return <code>null</code>.
      */
-     public static <T extends Comparable<T>> T leq(T value) {
+     @Nullable public static <T extends Comparable<T>> T leq(T value) {
         reportMatcher(new LessOrEqual<T>(value));
         return null;
     }
@@ -246,7 +247,7 @@ public class AdditionalMatchers {
      *            the given value.
      * @return <code>null</code>.
      */
-     public static <T extends Comparable<T>> T gt(T value) {
+     @Nullable public static <T extends Comparable<T>> T gt(T value) {
         reportMatcher(new GreaterThan<T>(value));
         return null;
     }
@@ -344,7 +345,7 @@ public class AdditionalMatchers {
      *            the given value.
      * @return <code>null</code>.
      */
-     public static <T extends Comparable<T>> T lt(T value) {
+     @Nullable public static <T extends Comparable<T>> T lt(T value) {
         reportMatcher(new LessThan<T>(value));
         return null;
     }
@@ -443,7 +444,7 @@ public class AdditionalMatchers {
      *            the given value.
      * @return <code>null</code>.
      */
-     public static <T extends Comparable<T>> T cmpEq(T value) {
+     @Nullable public static <T extends Comparable<T>> T cmpEq(T value) {
         reportMatcher(new CompareEqual<T>(value));
         return null;
     }
@@ -456,7 +457,7 @@ public class AdditionalMatchers {
      *            the regular expression.
      * @return <code>null</code>.
      */
-     public static String find(String regex) {
+     @Nullable public static String find(String regex) {
         reportMatcher(new Find(regex));
         return null;
     }
@@ -473,7 +474,7 @@ public class AdditionalMatchers {
      *            the given array.
      * @return <code>null</code>.
      */
-     public static <T> T[] aryEq(T[] value) {
+     @Nullable public static <T> T[] aryEq(T[] value) {
         reportMatcher(new ArrayEquals(value));
         return null;
     }
@@ -488,7 +489,7 @@ public class AdditionalMatchers {
      *            the given array.
      * @return <code>null</code>.
      */
-     public static short[] aryEq(short[] value) {
+     @Nullable public static short[] aryEq(short[] value) {
         reportMatcher(new ArrayEquals(value));
         return null;
     }
@@ -503,7 +504,7 @@ public class AdditionalMatchers {
      *            the given array.
      * @return <code>null</code>.
      */
-     public static long[] aryEq(long[] value) {
+     @Nullable public static long[] aryEq(long[] value) {
         reportMatcher(new ArrayEquals(value));
         return null;
     }
@@ -518,7 +519,7 @@ public class AdditionalMatchers {
      *            the given array.
      * @return <code>null</code>.
      */
-     public static int[] aryEq(int[] value) {
+     @Nullable public static int[] aryEq(int[] value) {
         reportMatcher(new ArrayEquals(value));
         return null;
     }
@@ -533,7 +534,7 @@ public class AdditionalMatchers {
      *            the given array.
      * @return <code>null</code>.
      */
-     public static float[] aryEq(float[] value) {
+     @Nullable public static float[] aryEq(float[] value) {
         reportMatcher(new ArrayEquals(value));
         return null;
     }
@@ -548,7 +549,7 @@ public class AdditionalMatchers {
      *            the given array.
      * @return <code>null</code>.
      */
-     public static double[] aryEq(double[] value) {
+     @Nullable public static double[] aryEq(double[] value) {
         reportMatcher(new ArrayEquals(value));
         return null;
     }
@@ -563,7 +564,7 @@ public class AdditionalMatchers {
      *            the given array.
      * @return <code>null</code>.
      */
-     public static char[] aryEq(char[] value) {
+     @Nullable public static char[] aryEq(char[] value) {
         reportMatcher(new ArrayEquals(value));
         return null;
     }
@@ -578,7 +579,7 @@ public class AdditionalMatchers {
      *            the given array.
      * @return <code>null</code>.
      */
-     public static byte[] aryEq(byte[] value) {
+     @Nullable public static byte[] aryEq(byte[] value) {
         reportMatcher(new ArrayEquals(value));
         return null;
     }
@@ -593,7 +594,7 @@ public class AdditionalMatchers {
      *            the given array.
      * @return <code>null</code>.
      */
-     public static boolean[] aryEq(boolean[] value) {
+     @Nullable public static boolean[] aryEq(boolean[] value) {
         reportMatcher(new ArrayEquals(value));
         return null;
     }
@@ -739,7 +740,7 @@ public class AdditionalMatchers {
      *            placeholder for the second argument matcher.
      * @return <code>null</code>.
      */
-     public static <T> T and(T first, T second) {
+     @Nullable public static <T> T and(T first, T second) {
         mockingProgress().getArgumentMatcherStorage().reportAnd();
         return null;
     }
@@ -773,7 +774,7 @@ public class AdditionalMatchers {
      *            placeholder for the second argument matcher.
      * @return <code>null</code>.
      */
-     public static <T> T or(T first, T second) {
+     @Nullable public static <T> T or(T first, T second) {
         mockingProgress().getArgumentMatcherStorage().reportOr();
         return null;
     }
@@ -901,7 +902,7 @@ public class AdditionalMatchers {
      *            placeholder for the argument matcher.
      * @return <code>null</code>.
      */
-     public static <T> T not(T first) {
+     @Nullable public static <T> T not(T first) {
         mockingProgress().getArgumentMatcherStorage().reportNot();
         return null;
     }

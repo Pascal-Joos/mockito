@@ -9,6 +9,7 @@ import static org.mockito.internal.matchers.Equality.areEqual;
 import org.mockito.invocation.DescribedInvocation;
 import org.mockito.invocation.Invocation;
 import org.mockito.listeners.MethodInvocationReport;
+import javax.annotation.Nullable;
 
 
 /**
@@ -61,7 +62,7 @@ public class NotifiedMethodInvocationReport implements MethodInvocationReport {
         return throwable != null;
     }
 
-     public String getLocationOfStubbing() {
+     @Nullable public String getLocationOfStubbing() {
         return (invocation.stubInfo() == null)
                 ? null
                 : invocation.stubInfo().stubbedAt().toString();

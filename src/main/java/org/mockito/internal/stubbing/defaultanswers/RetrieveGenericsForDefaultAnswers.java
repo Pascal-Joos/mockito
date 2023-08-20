@@ -13,13 +13,14 @@ import org.mockito.internal.util.MockUtil;
 import org.mockito.internal.util.reflection.GenericMetadataSupport;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.mock.MockCreationSettings;
+import javax.annotation.Nullable;
 
 
 class RetrieveGenericsForDefaultAnswers {
 
     private static final MockitoCore MOCKITO_CORE = new MockitoCore();
 
-     static Object returnTypeForMockWithCorrectGenerics(
+     @Nullable static Object returnTypeForMockWithCorrectGenerics(
             InvocationOnMock invocation, AnswerCallback answerCallback) {
         Class<?> type = invocation.getMethod().getReturnType();
 
@@ -89,7 +90,7 @@ class RetrieveGenericsForDefaultAnswers {
      * @param returnType the expected return type
      * @return the type or null if not found
      */
-    private static Class<?> findTypeFromGeneric(
+    @Nullable private static Class<?> findTypeFromGeneric(
             final InvocationOnMock invocation, final TypeVariable returnType) {
         // Class level
         final MockCreationSettings mockSettings =
@@ -113,7 +114,7 @@ class RetrieveGenericsForDefaultAnswers {
      * @param returnType the expected return type
      * @return the return type or null if the return type cannot be found
      */
-     private static Class<?> findTypeFromGenericInArguments(
+     @Nullable private static Class<?> findTypeFromGenericInArguments(
             final InvocationOnMock invocation, final TypeVariable returnType) {
         final Type[] parameterTypes = invocation.getMethod().getGenericParameterTypes();
         for (int i = 0; i < parameterTypes.length; i++) {
@@ -138,6 +139,6 @@ class RetrieveGenericsForDefaultAnswers {
     }
 
     interface AnswerCallback {
-        Object apply(Class<?> type);
+        @Nullable Object apply(Class<?> type);
     }
 }

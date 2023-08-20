@@ -7,6 +7,7 @@ package org.mockito.internal.creation.instance;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.InstantiatorProvider;
 import org.mockito.plugins.InstantiatorProvider2;
+import javax.annotation.Nullable;
 
 
 /**
@@ -20,7 +21,7 @@ public class InstantiatorProvider2Adapter implements InstantiatorProvider {
     }
 
     @Override
-    public Instantiator getInstantiator(final MockCreationSettings<?> settings) {
+    public Instantiator getInstantiator(@Nullable final MockCreationSettings<?> settings) {
         return new Instantiator() {
              @Override
             public <T> T newInstance(Class<T> cls) throws InstantiationException {

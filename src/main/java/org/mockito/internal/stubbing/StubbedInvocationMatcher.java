@@ -15,17 +15,18 @@ import org.mockito.invocation.MatchableInvocation;
 import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubbing;
+import javax.annotation.Nullable;
 
 @SuppressWarnings("unchecked")
 public class StubbedInvocationMatcher extends InvocationMatcher implements Serializable, Stubbing {
 
     private static final long serialVersionUID = 4919105134123672727L;
     private final Queue<Answer> answers = new ConcurrentLinkedQueue<Answer>();
-    private final Strictness strictness;
-     private DescribedInvocation usedAt;
+    @Nullable private final Strictness strictness;
+     @Nullable private DescribedInvocation usedAt;
 
     public StubbedInvocationMatcher(
-            Answer answer, MatchableInvocation invocation, Strictness strictness) {
+            Answer answer, MatchableInvocation invocation, @Nullable Strictness strictness) {
         super(invocation.getInvocation(), invocation.getMatchers());
         this.strictness = strictness;
         this.answers.add(answer);
@@ -57,7 +58,7 @@ public class StubbedInvocationMatcher extends InvocationMatcher implements Seria
         return super.toString() + " stubbed with: " + answers;
     }
 
-    @Override
+    @Nullable @Override
     public Strictness getStrictness() {
         return strictness;
     }

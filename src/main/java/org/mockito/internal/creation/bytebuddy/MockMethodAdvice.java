@@ -52,6 +52,7 @@ import org.mockito.internal.util.concurrent.WeakConcurrentMap;
 import org.mockito.plugins.MemberAccessor;
 
 import static net.bytebuddy.matcher.ElementMatchers.*;
+import javax.annotation.Nullable;
 
 
 public class MockMethodAdvice extends MockMethodDispatcher {
@@ -82,7 +83,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
         this.isMockConstruction = isMockConstruction;
     }
 
-     @SuppressWarnings("unused")
+     @Nullable @SuppressWarnings("unused")
     @Advice.OnMethodEnter(skipOn = Advice.OnNonDefaultValue.class)
     private static Callable<?> enter(
             @Identifier String identifier,
@@ -132,7 +133,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
         }
     }
 
-     @Override
+     @Nullable @Override
     public Callable<?> handle(Object instance, Method origin, Object[] arguments) throws Throwable {
         MockMethodInterceptor interceptor = interceptors.get(instance);
         if (interceptor == null) {
@@ -153,7 +154,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
                         new LocationImpl(new Throwable(), true)));
     }
 
-     @Override
+     @Nullable @Override
     public Callable<?> handleStatic(Class<?> type, Method origin, Object[] arguments)
             throws Throwable {
         Map<Class<?>, MockMethodInterceptor> interceptors = mockedStatics.get();
@@ -171,7 +172,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
                                 new LocationImpl(new Throwable(), true)));
     }
 
-    @Override
+    @Nullable @Override
     public Object handleConstruction(
             Class<?> type, Object object, Object[] arguments, String[] parameterTypeNames) {
         return onConstruction.apply(type, object, arguments, parameterTypeNames);
@@ -323,7 +324,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
         }
     }
 
-    private static Object tryInvoke(Method origin, Object instance, Object[] arguments)
+    private static Object tryInvoke(Method origin, @Nullable Object instance, Object[] arguments)
             throws Throwable {
         MemberAccessor accessor = Plugins.getMemberAccessor();
         try {
@@ -711,7 +712,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
 
     static class ForStatic {
 
-         @SuppressWarnings("unused")
+         @Nullable @SuppressWarnings("unused")
         @Advice.OnMethodEnter(skipOn = Advice.OnNonDefaultValue.class)
         private static Callable<?> enter(
                 @Identifier String identifier,

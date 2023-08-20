@@ -19,6 +19,7 @@ import org.mockito.mock.MockCreationSettings;
 import org.mockito.mock.MockName;
 import org.mockito.mock.SerializableMode;
 import org.mockito.stubbing.Answer;
+import javax.annotation.Nullable;
 
 public class CreationSettings<T> implements MockCreationSettings<T>, Serializable {
     private static final long serialVersionUID = -6789800638070123629L;

@@ -12,6 +12,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.Nullable;
 
 
 // Class comes from Apache Commons Lang, added some tiny changes
@@ -224,8 +225,8 @@ class EqualsBuilder {
             Object lhs,
             Object rhs,
             boolean testTransients,
-            Class<?> reflectUpToClass,
-            String[] excludeFields) {
+            @Nullable Class<?> reflectUpToClass,
+            @Nullable String[] excludeFields) {
         if (lhs == rhs) {
             return true;
         }
@@ -286,7 +287,7 @@ class EqualsBuilder {
             Class<?> clazz,
             EqualsBuilder builder,
             boolean useTransients,
-            String[] excludeFields) {
+            @Nullable String[] excludeFields) {
         Field[] fields = clazz.getDeclaredFields();
         List<String> excludedFieldList =
                 excludeFields != null

@@ -6,6 +6,7 @@ package org.mockito.verification;
 
 import org.mockito.Incubating;
 import org.mockito.internal.verification.api.VerificationData;
+import javax.annotation.Nullable;
 
 /**
  * Contains all information about a verification that has happened.
@@ -33,5 +34,5 @@ public interface VerificationEvent {
      *
      * @return null or the error.
      */
-    Throwable getVerificationError();
+    @Nullable Throwable getVerificationError();
 }

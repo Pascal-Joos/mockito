@@ -13,6 +13,7 @@ import org.mockito.internal.verification.api.InOrderContext;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.Location;
 import org.mockito.invocation.MatchableInvocation;
+import javax.annotation.Nullable;
 
 
 public class InvocationsFinder {
@@ -75,7 +76,7 @@ public class InvocationsFinder {
         return firstChunk;
     }
 
-     public static Invocation findFirstMatchingUnverifiedInvocation(
+     @Nullable public static Invocation findFirstMatchingUnverifiedInvocation(
             List<Invocation> invocations, MatchableInvocation wanted, InOrderContext context) {
         for (Invocation invocation : removeVerifiedInOrder(invocations, context)) {
             if (wanted.matches(invocation)) {
@@ -85,7 +86,7 @@ public class InvocationsFinder {
         return null;
     }
 
-     public static Invocation findSimilarInvocation(
+     @Nullable public static Invocation findSimilarInvocation(
             List<Invocation> invocations, MatchableInvocation wanted) {
         Invocation firstSimilar = null;
         for (Invocation invocation : invocations) {
@@ -103,11 +104,11 @@ public class InvocationsFinder {
         return firstSimilar;
     }
 
-     public static Invocation findFirstUnverified(List<Invocation> invocations) {
+     @Nullable public static Invocation findFirstUnverified(List<Invocation> invocations) {
         return findFirstUnverified(invocations, null);
     }
 
-     static Invocation findFirstUnverified(List<Invocation> invocations, Object mock) {
+     @Nullable static Invocation findFirstUnverified(List<Invocation> invocations, @Nullable Object mock) {
         for (Invocation i : invocations) {
             boolean mockIsValid = mock == null || mock == i.getMock();
             if (!i.isVerified() && mockIsValid) {
@@ -117,7 +118,7 @@ public class InvocationsFinder {
         return null;
     }
 
-     public static Location getLastLocation(List<Invocation> invocations) {
+     @Nullable public static Location getLastLocation(List<Invocation> invocations) {
         if (invocations.isEmpty()) {
             return null;
         } else {
@@ -126,7 +127,7 @@ public class InvocationsFinder {
         }
     }
 
-     public static Invocation findPreviousVerifiedInOrder(
+     @Nullable public static Invocation findPreviousVerifiedInOrder(
             List<Invocation> invocations, InOrderContext context) {
         LinkedList<Invocation> verifiedOnly =
                 ListUtil.filter(invocations, new RemoveUnverifiedInOrder(context));
@@ -197,7 +198,7 @@ public class InvocationsFinder {
      * @param context
      * @param orderedInvocations
      */
-     public static Invocation findFirstUnverifiedInOrder(
+     @Nullable public static Invocation findFirstUnverifiedInOrder(
             InOrderContext context, List<Invocation> orderedInvocations) {
         Invocation candidate = null;
         for (Invocation i : orderedInvocations) {

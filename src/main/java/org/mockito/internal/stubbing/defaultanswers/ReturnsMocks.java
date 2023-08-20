@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.internal.creation.MockSettingsImpl;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import javax.annotation.Nullable;
 
 
 public class ReturnsMocks implements Answer<Object>, Serializable {
@@ -28,7 +29,7 @@ public class ReturnsMocks implements Answer<Object>, Serializable {
         return RetrieveGenericsForDefaultAnswers.returnTypeForMockWithCorrectGenerics(
                 invocation,
                 new RetrieveGenericsForDefaultAnswers.AnswerCallback() {
-                     @Override
+                     @Nullable @Override
                     public Object apply(Class<?> type) {
                         if (type == null) {
                             return null;

@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import javax.annotation.Nullable;
 
 
 public abstract class MockMethodDispatcher {
@@ -15,7 +16,7 @@ public abstract class MockMethodDispatcher {
     private static final ConcurrentMap<String, MockMethodDispatcher> DISPATCHERS =
             new ConcurrentHashMap<>();
 
-     public static MockMethodDispatcher get(String identifier, Object mock) {
+     @Nullable public static MockMethodDispatcher get(String identifier, Object mock) {
         if (mock == DISPATCHERS) {
             // Avoid endless loop if ConcurrentHashMap was redefined to check for being a mock.
             return null;
@@ -24,7 +25,7 @@ public abstract class MockMethodDispatcher {
         }
     }
 
-     public static MockMethodDispatcher getStatic(String identifier, Class<?> type) {
+     @Nullable public static MockMethodDispatcher getStatic(String identifier, Class<?> type) {
         if (MockMethodDispatcher.class.isAssignableFrom(type) || type == ConcurrentHashMap.class) {
             // Avoid endless loop for lookups of self.
             return null;
@@ -42,7 +43,7 @@ public abstract class MockMethodDispatcher {
         return DISPATCHERS.get(identifier).isConstructorMock(type);
     }
 
-     @SuppressWarnings("unused")
+     @Nullable @SuppressWarnings("unused")
     public static Object handleConstruction(
             String identifier,
             Class<?> type,
@@ -54,13 +55,13 @@ public abstract class MockMethodDispatcher {
                 .handleConstruction(type, object, arguments, parameterTypeNames);
     }
 
-    public abstract Callable<?> handle(Object instance, Method origin, Object[] arguments)
+    @Nullable public abstract Callable<?> handle(Object instance, Method origin, Object[] arguments)
             throws Throwable;
 
-    public abstract Callable<?> handleStatic(Class<?> type, Method origin, Object[] arguments)
+    @Nullable public abstract Callable<?> handleStatic(Class<?> type, Method origin, Object[] arguments)
             throws Throwable;
 
-    public abstract Object handleConstruction(
+    @Nullable public abstract Object handleConstruction(
             Class<?> type, Object object, Object[] arguments, String[] parameterTypeNames);
 
     public abstract boolean isMock(Object instance);
