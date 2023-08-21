@@ -40,6 +40,8 @@ import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingPro
 import static org.mockito.internal.util.MockUtil.*;
 import static org.mockito.internal.verification.VerificationModeFactory.noInteractions;
 import static org.mockito.internal.verification.VerificationModeFactory.noMoreInteractions;
+import javax.annotation.Nullable;
+import org.jspecify.annotations.NullUnmarked;
 
 
 @SuppressWarnings("unchecked")
@@ -237,7 +239,7 @@ public class MockitoCore {
         return stubber(null);
     }
 
-    public Stubber stubber(Strictness strictness) {
+    public Stubber stubber(@Nullable Strictness strictness) {
         MockingProgress mockingProgress = mockingProgress();
         mockingProgress.stubbingStarted();
         mockingProgress.resetOngoingStubbing();
@@ -253,7 +255,7 @@ public class MockitoCore {
      *
      * @return last invocation
      */
-    public Invocation getLastInvocation() {
+    @NullUnmarked public Invocation getLastInvocation() {
         OngoingStubbingImpl ongoingStubbing =
                 ((OngoingStubbingImpl) mockingProgress().pullOngoingStubbing());
         List<Invocation> allInvocations = ongoingStubbing.getRegisteredInvocations();

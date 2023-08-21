@@ -14,6 +14,8 @@ import org.mockito.internal.verification.api.VerificationData;
 import org.mockito.junit.VerificationCollector;
 import org.mockito.verification.VerificationMode;
 import org.mockito.verification.VerificationStrategy;
+import javax.annotation.Nullable;
+import org.jspecify.annotations.NullUnmarked;
 
 
 /**
@@ -77,7 +79,7 @@ public class VerificationCollectorImpl implements VerificationCollector {
         this.numberOfFailures = 0;
     }
 
-    private void append(String message) {
+    @NullUnmarked private void append(@Nullable String message) {
         this.numberOfFailures++;
         this.builder
                 .append('\n')

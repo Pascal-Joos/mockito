@@ -6,6 +6,7 @@ package org.mockito.internal.util.concurrent;
 
 import java.util.Iterator;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /**
  * <p>
@@ -99,7 +100,7 @@ public class WeakConcurrentSet<V> implements Runnable, Iterable<V> {
     /**
      * @return The cleaner thread or {@code null} if no such thread was set.
      */
-    public Thread getCleanerThread() {
+    @Nullable public Thread getCleanerThread() {
         return target.getCleanerThread();
     }
 

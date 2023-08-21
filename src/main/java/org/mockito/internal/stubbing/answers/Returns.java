@@ -12,17 +12,19 @@ import java.io.Serializable;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.ValidableAnswer;
+import javax.annotation.Nullable;
+import org.jspecify.annotations.NullUnmarked;
 
 public class Returns implements Answer<Object>, ValidableAnswer, Serializable {
 
     private static final long serialVersionUID = -6245608253574215396L;
-    private final Object value;
+    @Nullable private final Object value;
 
-    public Returns(Object value) {
+    public Returns(@Nullable Object value) {
         this.value = value;
     }
 
-    public Object answer(InvocationOnMock invocation) throws Throwable {
+    @Nullable public Object answer(InvocationOnMock invocation) throws Throwable {
         return value;
     }
 
@@ -46,11 +48,11 @@ public class Returns implements Answer<Object>, ValidableAnswer, Serializable {
         }
     }
 
-    private String printReturnType() {
+    @NullUnmarked private String printReturnType() {
         return value.getClass().getSimpleName();
     }
 
-    private Class<?> returnType() {
+    @NullUnmarked private Class<?> returnType() {
         return value.getClass();
     }
 

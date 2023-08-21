@@ -39,6 +39,8 @@ import org.mockito.plugins.MemberAccessor;
 
 import static org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.*;
 import static org.mockito.internal.util.StringUtil.*;
+import javax.annotation.Nullable;
+import org.jspecify.annotations.NullUnmarked;
 
 
 /**
@@ -103,9 +105,9 @@ import static org.mockito.internal.util.StringUtil.*;
 public class InlineByteBuddyMockMaker
         implements ClassCreatingMockMaker, InlineMockMaker, Instantiator {
 
-     private static final Instrumentation INSTRUMENTATION;
+     @Nullable private static final Instrumentation INSTRUMENTATION;
 
-     private static final Throwable INITIALIZATION_ERROR;
+     @Nullable private static final Throwable INITIALIZATION_ERROR;
 
     static {
         Instrumentation instrumentation;
@@ -203,7 +205,7 @@ public class InlineByteBuddyMockMaker
 
     private final ThreadLocal<Object> currentSpied = new ThreadLocal<>();
 
-     public InlineByteBuddyMockMaker() {
+     @NullUnmarked public InlineByteBuddyMockMaker() {
         if (INITIALIZATION_ERROR != null) {
             String detail;
             if (System.getProperty("java.specification.vendor", "")
@@ -293,7 +295,7 @@ public class InlineByteBuddyMockMaker
                         true);
     }
 
-    @Override
+    @NullUnmarked @Nullable @Override
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
         return doCreateMock(settings, handler, false);
     }
@@ -312,7 +314,7 @@ public class InlineByteBuddyMockMaker
         }
     }
 
-     private <T> T doCreateMock(
+     @Nullable private <T> T doCreateMock(
             MockCreationSettings<T> settings,
             MockHandler handler,
             boolean nullOnNonInlineConstruction) {
@@ -412,7 +414,7 @@ public class InlineByteBuddyMockMaker
                 generationFailed);
     }
 
-     @Override
+     @Nullable @Override
     public MockHandler getHandler(Object mock) {
         MockMethodInterceptor interceptor;
         if (mock instanceof Class<?>) {
@@ -473,7 +475,7 @@ public class InlineByteBuddyMockMaker
     @Override
     public TypeMockability isTypeMockable(final Class<?> type) {
         return new TypeMockability() {
-            @Override
+            @NullUnmarked @Override
             public boolean mockable() {
                 return INSTRUMENTATION.isModifiableClass(type) && !EXCLUDES.contains(type);
             }
@@ -584,7 +586,7 @@ public class InlineByteBuddyMockMaker
         }
     }
 
-     private Object makeStandardArgument(Class<?> type) {
+     @Nullable private Object makeStandardArgument(Class<?> type) {
         if (type == boolean.class) {
             return false;
         } else if (type == byte.class) {

@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.mockito.mock.SerializableMode;
+import javax.annotation.Nullable;
 
 class MockFeatures<T> {
 

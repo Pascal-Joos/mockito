@@ -9,6 +9,7 @@ import java.io.PrintStream;
 import org.mockito.invocation.DescribedInvocation;
 import org.mockito.listeners.InvocationListener;
 import org.mockito.listeners.MethodInvocationReport;
+import org.jspecify.annotations.NullUnmarked;
 
 /**
  * Logs all invocations to standard output.
@@ -38,7 +39,7 @@ public class VerboseMockInvocationLogger implements InvocationListener {
         printFooter();
     }
 
-    private void printReturnedValueOrThrowable(MethodInvocationReport methodInvocationReport) {
+    @NullUnmarked private void printReturnedValueOrThrowable(MethodInvocationReport methodInvocationReport) {
         if (methodInvocationReport.threwException()) {
             String message =
                     methodInvocationReport.getThrowable().getMessage() == null

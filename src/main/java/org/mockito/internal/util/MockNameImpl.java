@@ -7,6 +7,7 @@ package org.mockito.internal.util;
 import java.io.Serializable;
 
 import org.mockito.mock.MockName;
+import javax.annotation.Nullable;
 
 public class MockNameImpl implements MockName, Serializable {
 
@@ -15,7 +16,7 @@ public class MockNameImpl implements MockName, Serializable {
     private boolean defaultName;
 
     @SuppressWarnings("unchecked")
-    public MockNameImpl(String mockName, Class<?> type, boolean mockedStatic) {
+    public MockNameImpl(@Nullable String mockName, Class<?> type, boolean mockedStatic) {
         if (mockName == null) {
             this.mockName = mockedStatic ? toClassName(type) : toInstanceName(type);
             this.defaultName = true;

@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import org.mockito.mock.SerializableMode;
 import org.mockito.plugins.MockMaker.TypeMockability;
+import javax.annotation.Nullable;
 
 @SuppressWarnings("unchecked")
 public class MockCreationValidator {
@@ -38,7 +39,7 @@ public class MockCreationValidator {
         }
     }
 
-    public void validateMockedType(Class<?> classToMock, Object spiedInstance) {
+    public void validateMockedType(Class<?> classToMock, @Nullable Object spiedInstance) {
         if (classToMock == null || spiedInstance == null) {
             return;
         }

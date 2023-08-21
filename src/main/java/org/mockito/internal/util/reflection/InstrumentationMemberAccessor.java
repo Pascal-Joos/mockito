@@ -20,16 +20,18 @@ import java.util.*;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static org.mockito.internal.util.StringUtil.join;
+import javax.annotation.Nullable;
+import org.jspecify.annotations.NullUnmarked;
 
 
- class InstrumentationMemberAccessor implements MemberAccessor {
+ @NullUnmarked class InstrumentationMemberAccessor implements MemberAccessor {
 
     private static final Map<Class<?>, Class<?>> WRAPPERS = new HashMap<>();
 
-     private static final Instrumentation INSTRUMENTATION;
-     private static final Dispatcher DISPATCHER;
+     @Nullable private static final Instrumentation INSTRUMENTATION;
+     @SuppressWarnings("NullAway.Init") private static final Dispatcher DISPATCHER;
 
-     private static final Throwable INITIALIZATION_ERROR;
+     @Nullable private static final Throwable INITIALIZATION_ERROR;
 
     static {
         WRAPPERS.put(boolean.class, Boolean.class);
@@ -172,7 +174,7 @@ import static org.mockito.internal.util.StringUtil.join;
     }
 
      @Override
-    public Object invoke(Method method, Object target, Object... arguments)
+    public Object invoke(Method method, @Nullable Object target, Object... arguments)
             throws InvocationTargetException {
         assureArguments(
                 method,
@@ -305,10 +307,10 @@ import static org.mockito.internal.util.StringUtil.join;
         }
     }
 
-    private static void assureArguments(
+    @NullUnmarked private static void assureArguments(
             AccessibleObject target,
-            Object owner,
-            Class<?> type,
+            @Nullable Object owner,
+            @Nullable Class<?> type,
             Object[] values,
             Class<?>[] types) {
         if (owner != null) {

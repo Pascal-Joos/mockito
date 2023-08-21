@@ -5,6 +5,7 @@
 package org.mockito.internal.creation.instance;
 
 import org.mockito.exceptions.base.MockitoException;
+import javax.annotation.Nullable;
 
 /**
  * @deprecated since 2.15.4 because this internal class was leaking from the public API.
@@ -16,7 +17,7 @@ import org.mockito.exceptions.base.MockitoException;
 @Deprecated
 public class InstantiationException extends MockitoException {
 
-    public InstantiationException(String message, Throwable cause) {
+    public InstantiationException(@Nullable String message, Throwable cause) {
         super(message, cause);
     }
 }

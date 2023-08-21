@@ -32,6 +32,7 @@ import org.mockito.stubbing.*;
 import org.mockito.verification.*;
 
 import java.util.function.Function;
+import javax.annotation.Nullable;
 
 /**
  * <p align="left"><img src="logo.png" srcset="logo@2x.png 2x" alt="Mockito logo"/></p>

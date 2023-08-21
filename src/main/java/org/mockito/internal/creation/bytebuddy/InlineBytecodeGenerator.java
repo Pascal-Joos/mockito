@@ -47,6 +47,8 @@ import static net.bytebuddy.implementation.MethodDelegation.*;
 import static net.bytebuddy.implementation.bind.annotation.TargetMethodAnnotationDrivenBinder.ParameterBinder.ForFixedValue.OfConstant.*;
 import static net.bytebuddy.matcher.ElementMatchers.*;
 import static org.mockito.internal.util.StringUtil.*;
+import javax.annotation.Nullable;
+import org.jspecify.annotations.NullUnmarked;
 
 
 public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTransformer {
@@ -74,9 +76,9 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
     private final BytecodeGenerator subclassEngine;
     private final AsmVisitorWrapper mockTransformer;
 
-    private final Method getModule, canRead, redefineModule;
+    @Nullable private final Method getModule, canRead, redefineModule;
 
-     private volatile Throwable lastException;
+     @Nullable private volatile Throwable lastException;
 
      public InlineBytecodeGenerator(
             Instrumentation instrumentation,
@@ -270,7 +272,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
         }
     }
 
-    private void assureCanReadMockito(Set<Class<?>> types) {
+    @NullUnmarked private void assureCanReadMockito(Set<Class<?>> types) {
         if (redefineModule == null) {
             return;
         }
@@ -334,7 +336,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
         }
     }
 
-     @Override
+     @Nullable @Override
     public byte[] transform(
             ClassLoader loader,
             String className,

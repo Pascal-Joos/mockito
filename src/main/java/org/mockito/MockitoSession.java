@@ -13,6 +13,7 @@ import org.mockito.listeners.MockitoListener;
 import org.mockito.quality.MockitoHint;
 import org.mockito.quality.Strictness;
 import org.mockito.session.MockitoSessionBuilder;
+import javax.annotation.Nullable;
 
 /**
  * {@code MockitoSession} is an optional, highly recommended feature
@@ -142,5 +143,5 @@ public interface MockitoSession {
      * @since 2.15.0
      */
     @Incubating
-    void finishMocking(Throwable failure);
+    void finishMocking(@Nullable Throwable failure);
 }
