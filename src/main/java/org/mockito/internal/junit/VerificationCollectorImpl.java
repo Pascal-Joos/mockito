@@ -84,7 +84,7 @@ public class VerificationCollectorImpl implements VerificationCollector {
                 .append('\n')
                 .append(this.numberOfFailures)
                 .append(". ")
-                .append(message.trim())
+                .append(message == null ? "" : message.trim())
                 .append('\n');
     }
 
