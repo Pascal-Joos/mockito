@@ -31,3 +31,7 @@ cat > "$abs_path/scanner.xml" <<EOF
     <annotatedPackages />
 </scanner>
 EOF
+
+
+project_root="$(pwd)"
+echo -e "$abs_path/nullaway.xml\t$abs_path/scanner.xml" >> "$project_root/paths.tsv"
