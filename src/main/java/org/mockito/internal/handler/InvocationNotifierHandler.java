@@ -7,6 +7,7 @@ package org.mockito.internal.handler;
 import static org.mockito.internal.exceptions.Reporter.invocationListenerThrewException;
 
 import java.util.List;
+import javax.annotation.Nullable;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.InvocationContainer;
 import org.mockito.invocation.MockHandler;
@@ -27,6 +28,7 @@ class InvocationNotifierHandler<T> implements MockHandler<T> {
     this.invocationListeners = settings.getInvocationListeners();
   }
 
+  @Nullable
   public Object handle(Invocation invocation) throws Throwable {
     try {
       Object returnedValue = mockHandler.handle(invocation);
@@ -38,7 +40,7 @@ class InvocationNotifierHandler<T> implements MockHandler<T> {
     }
   }
 
-  private void notifyMethodCall(Invocation invocation, Object returnValue) {
+  private void notifyMethodCall(Invocation invocation, @Nullable Object returnValue) {
     for (InvocationListener listener : invocationListeners) {
       try {
         listener.reportInvocation(new NotifiedMethodInvocationReport(invocation, returnValue));

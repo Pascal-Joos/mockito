@@ -7,6 +7,7 @@ package org.mockito.internal.stubbing;
 import static org.mockito.internal.exceptions.Reporter.incorrectUseOfApi;
 
 import java.util.List;
+import javax.annotation.Nullable;
 import org.mockito.invocation.Invocation;
 import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
@@ -15,7 +16,7 @@ import org.mockito.stubbing.OngoingStubbing;
 public class OngoingStubbingImpl<T> extends BaseStubbing<T> {
 
   private final InvocationContainerImpl invocationContainer;
-  private Strictness strictness;
+  @Nullable private Strictness strictness;
 
   public OngoingStubbingImpl(InvocationContainerImpl invocationContainer) {
     super(invocationContainer.invokedMock());

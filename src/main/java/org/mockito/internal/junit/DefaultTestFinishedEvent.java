@@ -4,18 +4,21 @@
  */
 package org.mockito.internal.junit;
 
+import javax.annotation.Nullable;
+
 public class DefaultTestFinishedEvent implements TestFinishedEvent {
-  private final Object testClassInstance;
+  @Nullable private final Object testClassInstance;
   private final String testMethodName;
-  private final Throwable testFailure;
+  @Nullable private final Throwable testFailure;
 
   public DefaultTestFinishedEvent(
-      Object testClassInstance, String testMethodName, Throwable testFailure) {
+      @Nullable Object testClassInstance, String testMethodName, @Nullable Throwable testFailure) {
     this.testClassInstance = testClassInstance;
     this.testMethodName = testMethodName;
     this.testFailure = testFailure;
   }
 
+  @Nullable
   @Override
   public Throwable getFailure() {
     return testFailure;

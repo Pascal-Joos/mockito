@@ -7,6 +7,7 @@ package org.mockito.internal.stubbing.answers;
 import static org.mockito.internal.exceptions.Reporter.onlyVoidMethodsCanBeSetToDoNothing;
 
 import java.io.Serializable;
+import javax.annotation.Nullable;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.ValidableAnswer;
@@ -23,6 +24,7 @@ public class DoesNothing implements Answer<Object>, ValidableAnswer, Serializabl
     return SINGLETON;
   }
 
+  @Nullable
   @Override
   public Object answer(InvocationOnMock invocation) {
     return null;

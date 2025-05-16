@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nullable;
 import org.mockito.MockSettings;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.creation.settings.CreationSettings;
@@ -39,8 +40,8 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
 
   private static final long serialVersionUID = 4475297236197939569L;
   private boolean useConstructor;
-  private Object outerClassInstance;
-  private Object[] constructorArgs;
+  @Nullable private Object outerClassInstance;
+  @Nullable private Object[] constructorArgs;
 
   @Override
   public MockSettings serializable() {
@@ -80,6 +81,7 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
     return extraInterfaces;
   }
 
+  @Nullable
   @Override
   public Object getSpiedInstance() {
     return spiedInstance;
@@ -145,11 +147,13 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
     return useConstructor;
   }
 
+  @Nullable
   @Override
   public Object getOuterClassInstance() {
     return outerClassInstance;
   }
 
+  @Nullable
   @Override
   public Object[] getConstructorArgs() {
     if (outerClassInstance == null) {

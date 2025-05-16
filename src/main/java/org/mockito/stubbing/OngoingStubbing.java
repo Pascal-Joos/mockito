@@ -4,6 +4,7 @@
  */
 package org.mockito.stubbing;
 
+import javax.annotation.Nullable;
 import org.mockito.Mockito;
 import org.mockito.NotExtensible;
 
@@ -47,7 +48,7 @@ public interface OngoingStubbing<T> {
    * @param value return value
    * @return object that allows stubbing consecutive calls
    */
-  OngoingStubbing<T> thenReturn(T value);
+  OngoingStubbing<T> thenReturn(@Nullable T value);
 
   /**
    * Sets consecutive return values to be returned when the method is called. E.g:
@@ -90,6 +91,7 @@ public interface OngoingStubbing<T> {
    * @param throwables to be thrown on method invocation
    * @return object that allows stubbing consecutive calls
    */
+  @Nullable
   OngoingStubbing<T> thenThrow(Throwable... throwables);
 
   /**

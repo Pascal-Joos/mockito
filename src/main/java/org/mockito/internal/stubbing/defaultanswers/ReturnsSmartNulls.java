@@ -8,6 +8,7 @@ import static org.mockito.internal.exceptions.Reporter.smartNullPointerException
 import static org.mockito.internal.util.ObjectMethodsGuru.isToStringMethod;
 
 import java.io.Serializable;
+import javax.annotation.Nullable;
 import org.mockito.Mockito;
 import org.mockito.internal.debugging.LocationImpl;
 import org.mockito.invocation.InvocationOnMock;
@@ -35,6 +36,7 @@ public class ReturnsSmartNulls implements Answer<Object>, Serializable {
 
   private final Answer<Object> delegate = new ReturnsMoreEmptyValues();
 
+  @Nullable
   @Override
   public Object answer(final InvocationOnMock invocation) throws Throwable {
     Object defaultReturnValue = delegate.answer(invocation);
@@ -46,8 +48,9 @@ public class ReturnsSmartNulls implements Answer<Object>, Serializable {
     return RetrieveGenericsForDefaultAnswers.returnTypeForMockWithCorrectGenerics(
         invocation,
         new RetrieveGenericsForDefaultAnswers.AnswerCallback() {
+          @Nullable
           @Override
-          public Object apply(Class<?> type) {
+          public Object apply(@Nullable Class<?> type) {
             if (type == null) {
               return null;
             }

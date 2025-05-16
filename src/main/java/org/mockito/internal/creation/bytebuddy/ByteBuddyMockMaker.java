@@ -6,6 +6,7 @@ package org.mockito.internal.creation.bytebuddy;
 
 import java.util.Optional;
 import java.util.function.Function;
+import javax.annotation.Nullable;
 import org.mockito.Incubating;
 import org.mockito.MockedConstruction;
 import org.mockito.invocation.MockHandler;
@@ -39,6 +40,7 @@ public class ByteBuddyMockMaker implements ClassCreatingMockMaker {
     return defaultByteBuddyMockMaker.createMockType(creationSettings);
   }
 
+  @Nullable
   @Override
   public MockHandler getHandler(Object mock) {
     return defaultByteBuddyMockMaker.getHandler(mock);

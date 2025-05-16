@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import javax.annotation.Nullable;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.util.Checks;
 
@@ -94,7 +95,7 @@ public abstract class GenericMetadataSupport {
     }
   }
 
-  protected Class<?> extractRawTypeOf(Type type) {
+  protected Class<?> extractRawTypeOf(@Nullable Type type) {
     if (type instanceof Class) {
       return (Class<?>) type;
     }
@@ -115,7 +116,7 @@ public abstract class GenericMetadataSupport {
     throw new MockitoException("Raw extraction not supported for : '" + type + "'");
   }
 
-  protected void registerTypeVariablesOn(Type classType) {
+  protected void registerTypeVariablesOn(@Nullable Type classType) {
     if (!(classType instanceof ParameterizedType)) {
       return;
     }
@@ -259,6 +260,7 @@ public abstract class GenericMetadataSupport {
     return actualTypeArguments;
   }
 
+  @Nullable
   protected Type getActualTypeArgumentFor(TypeVariable<?> typeParameter) {
     Type type = this.contextualActualTypeParameters.get(typeParameter);
     if (type instanceof TypeVariable) {
@@ -439,8 +441,8 @@ public abstract class GenericMetadataSupport {
   private static class TypeVariableReturnType extends GenericMetadataSupport {
     private final TypeVariable<?> typeVariable;
     private final TypeVariable<?>[] typeParameters;
-    private Class<?> rawType;
-    private List<Type> extraInterfaces;
+    @Nullable private Class<?> rawType;
+    @Nullable private List<Type> extraInterfaces;
 
     public TypeVariableReturnType(
         GenericMetadataSupport source,
@@ -511,7 +513,8 @@ public abstract class GenericMetadataSupport {
       return rawExtraInterfaces.toArray(new Class[rawExtraInterfaces.size()]);
     }
 
-    private Type extractActualBoundedTypeOf(Type type) {
+    @Nullable
+    private Type extractActualBoundedTypeOf(@Nullable Type type) {
       if (type instanceof TypeVariable) {
         /*
         If type is a TypeVariable, then it is needed to gather data elsewhere. Usually TypeVariables are declared

@@ -4,6 +4,7 @@
  */
 package org.mockito;
 
+import javax.annotation.Nullable;
 import org.mockito.internal.stubbing.answers.CallsRealMethods;
 import org.mockito.internal.stubbing.defaultanswers.GloballyConfiguredAnswer;
 import org.mockito.internal.stubbing.defaultanswers.ReturnsDeepStubs;
@@ -103,6 +104,7 @@ public enum Answers implements Answer<Object> {
     return this;
   }
 
+  @Nullable
   public Object answer(InvocationOnMock invocation) throws Throwable {
     return implementation.answer(invocation);
   }

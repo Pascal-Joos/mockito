@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
+import javax.annotation.Nullable;
 import net.bytebuddy.agent.ByteBuddyAgent;
 import org.mockito.Incubating;
 import org.mockito.MockedConstruction;
@@ -120,9 +121,9 @@ import org.mockito.plugins.MemberAccessor;
 public class InlineByteBuddyMockMaker
     implements ClassCreatingMockMaker, InlineMockMaker, Instantiator {
 
-  private static final Instrumentation INSTRUMENTATION;
+  @Nullable private static final Instrumentation INSTRUMENTATION;
 
-  private static final Throwable INITIALIZATION_ERROR;
+  @Nullable private static final Throwable INITIALIZATION_ERROR;
 
   static {
     Instrumentation instrumentation;
@@ -295,6 +296,7 @@ public class InlineByteBuddyMockMaker
             true);
   }
 
+  @Nullable
   @Override
   public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
     return doCreateMock(settings, handler, false);
@@ -314,6 +316,7 @@ public class InlineByteBuddyMockMaker
     }
   }
 
+  @Nullable
   private <T> T doCreateMock(
       MockCreationSettings<T> settings, MockHandler handler, boolean nullOnNonInlineConstruction) {
     Class<? extends T> type = createMockType(settings);
@@ -410,6 +413,7 @@ public class InlineByteBuddyMockMaker
         generationFailed);
   }
 
+  @Nullable
   @Override
   public MockHandler getHandler(Object mock) {
     MockMethodInterceptor interceptor;
@@ -579,6 +583,7 @@ public class InlineByteBuddyMockMaker
     }
   }
 
+  @Nullable
   private Object makeStandardArgument(Class<?> type) {
     if (type == boolean.class) {
       return false;

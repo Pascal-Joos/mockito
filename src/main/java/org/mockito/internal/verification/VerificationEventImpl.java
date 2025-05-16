@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.verification;
 
+import javax.annotation.Nullable;
 import org.mockito.internal.verification.api.VerificationData;
 import org.mockito.verification.VerificationEvent;
 import org.mockito.verification.VerificationMode;
@@ -12,10 +13,10 @@ public class VerificationEventImpl implements VerificationEvent {
   private final Object mock;
   private final VerificationMode mode;
   private final VerificationData data;
-  private final Throwable cause;
+  @Nullable private final Throwable cause;
 
   public VerificationEventImpl(
-      Object mock, VerificationMode mode, VerificationData data, Throwable cause) {
+      Object mock, VerificationMode mode, VerificationData data, @Nullable Throwable cause) {
     this.mock = mock;
     this.mode = mode;
     this.data = data;
@@ -34,6 +35,7 @@ public class VerificationEventImpl implements VerificationEvent {
     return data;
   }
 
+  @Nullable
   public Throwable getVerificationError() {
     return cause;
   }

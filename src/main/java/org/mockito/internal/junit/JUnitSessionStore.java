@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.junit;
 
+import javax.annotation.Nullable;
 import org.junit.runners.model.Statement;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -15,7 +16,7 @@ import org.mockito.quality.Strictness;
 class JUnitSessionStore {
 
   private final MockitoLogger logger;
-  private MockitoSession session;
+  @Nullable private MockitoSession session;
   protected Strictness strictness;
 
   JUnitSessionStore(MockitoLogger logger, Strictness strictness) {
@@ -49,6 +50,7 @@ class JUnitSessionStore {
         }
       }
 
+      @Nullable
       private Throwable evaluateSafely(Statement base) {
         try {
           base.evaluate();

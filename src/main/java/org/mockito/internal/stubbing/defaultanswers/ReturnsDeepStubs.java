@@ -8,6 +8,7 @@ import static org.mockito.Mockito.withSettings;
 
 import java.io.IOException;
 import java.io.Serializable;
+import javax.annotation.Nullable;
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
 import org.mockito.internal.MockitoCore;
@@ -44,6 +45,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
 
   private static final long serialVersionUID = -7105341425736035847L;
 
+  @Nullable
   public Object answer(InvocationOnMock invocation) throws Throwable {
     GenericMetadataSupport returnTypeGenericMetadata =
         actualParameterizedType(invocation.getMock())
@@ -72,6 +74,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
     return deepStub(invocation, returnTypeGenericMetadata);
   }
 
+  @Nullable
   private Object deepStub(
       InvocationOnMock invocation, GenericMetadataSupport returnTypeGenericMetadata)
       throws Throwable {

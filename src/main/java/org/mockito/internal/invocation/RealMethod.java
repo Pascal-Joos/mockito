@@ -6,6 +6,7 @@ package org.mockito.internal.invocation;
 
 import java.io.Serializable;
 import java.util.concurrent.Callable;
+import javax.annotation.Nullable;
 import org.mockito.internal.exceptions.stacktrace.ConditionalStackTraceFilter;
 import org.mockito.invocation.InvocationFactory;
 import org.mockito.invocation.InvocationOnMock;
@@ -68,5 +69,6 @@ public interface RealMethod extends Serializable {
 
   boolean isInvokable();
 
+  @Nullable
   Object invoke() throws Throwable;
 }

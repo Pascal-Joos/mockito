@@ -10,6 +10,7 @@ import static org.mockito.internal.invocation.ArgumentsProcessor.argumentsToMatc
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.mockito.ArgumentMatcher;
 import org.mockito.internal.exceptions.VerificationAwareInvocation;
 import org.mockito.internal.invocation.mockref.MockReference;
@@ -33,7 +34,7 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
 
   private boolean verified;
   private boolean isIgnoredForVerification;
-  private StubInfo stubInfo;
+  @Nullable private StubInfo stubInfo;
 
   public InterceptedInvocation(
       MockReference<Object> mockRef,
@@ -81,6 +82,7 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
     verified = true;
   }
 
+  @Nullable
   @Override
   public StubInfo stubInfo() {
     return stubInfo;
@@ -132,6 +134,7 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
     return clazz.cast(arguments[index]);
   }
 
+  @Nullable
   @Override
   public Object callRealMethod() throws Throwable {
     if (!realMethod.isInvokable()) {
@@ -196,6 +199,7 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
           return false;
         }
 
+        @Nullable
         public Object invoke() throws Throwable {
           return null;
         }

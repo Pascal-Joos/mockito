@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.runners;
 
+import javax.annotation.Nullable;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.NoTestsRemainException;
@@ -30,8 +31,8 @@ public class DefaultInternalRunner implements InternalRunner {
     runner =
         new BlockJUnit4ClassRunner(testClass) {
 
-          public Object target;
-          private MockitoTestListener mockitoTestListener;
+          @Nullable public Object target;
+          @Nullable private MockitoTestListener mockitoTestListener;
 
           protected Statement withBefores(
               FrameworkMethod method, final Object target, Statement statement) {
@@ -64,7 +65,7 @@ public class DefaultInternalRunner implements InternalRunner {
           public void run(final RunNotifier notifier) {
             RunListener listener =
                 new RunListener() {
-                  Throwable failure;
+                  @Nullable Throwable failure;
 
                   @Override
                   public void testFailure(Failure failure) throws Exception {

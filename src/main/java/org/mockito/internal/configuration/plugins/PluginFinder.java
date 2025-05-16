@@ -6,6 +6,7 @@ package org.mockito.internal.configuration.plugins;
 
 import java.io.InputStream;
 import java.net.URL;
+import javax.annotation.Nullable;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.util.io.IOUtil;
 import org.mockito.plugins.PluginSwitch;
@@ -18,6 +19,7 @@ class PluginFinder {
     this.pluginSwitch = pluginSwitch;
   }
 
+  @Nullable
   String findPluginClass(Iterable<URL> resources) {
     for (URL resource : resources) {
       InputStream s = null;

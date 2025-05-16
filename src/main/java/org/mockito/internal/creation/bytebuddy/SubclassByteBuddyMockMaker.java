@@ -7,6 +7,7 @@ package org.mockito.internal.creation.bytebuddy;
 import static org.mockito.internal.util.StringUtil.join;
 
 import java.lang.reflect.Modifier;
+import javax.annotation.Nullable;
 import org.mockito.creation.instance.Instantiator;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.configuration.plugins.Plugins;
@@ -138,10 +139,11 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
             + "'";
   }
 
-  private static String describeClass(Object instance) {
+  private static String describeClass(@Nullable Object instance) {
     return instance == null ? "null" : describeClass(instance.getClass());
   }
 
+  @Nullable
   @Override
   public MockHandler getHandler(Object mock) {
     if (!(mock instanceof MockAccess)) {

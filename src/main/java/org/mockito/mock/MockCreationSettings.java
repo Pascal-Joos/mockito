@@ -6,6 +6,7 @@ package org.mockito.mock;
 
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nullable;
 import org.mockito.Incubating;
 import org.mockito.MockSettings;
 import org.mockito.NotExtensible;
@@ -35,6 +36,7 @@ public interface MockCreationSettings<T> {
   Answer<?> getDefaultAnswer();
 
   /** the spied instance - needed for spies. */
+  @Nullable
   Object getSpiedInstance();
 
   /** if the mock is serializable, see {@link org.mockito.MockSettings#serializable}. */
@@ -96,6 +98,7 @@ public interface MockCreationSettings<T> {
    *     #getOuterClassInstance()} is available, it is prepended to the passed arguments.
    * @since 2.7.14
    */
+  @Nullable
   @Incubating
   Object[] getConstructorArgs();
 
@@ -105,6 +108,7 @@ public interface MockCreationSettings<T> {
    * @return the outer class instance used for creation of the mock object via the constructor.
    * @since 1.10.12
    */
+  @Nullable
   @Incubating
   Object getOuterClassInstance();
 

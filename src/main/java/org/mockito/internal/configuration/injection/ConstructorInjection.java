@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nullable;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.util.reflection.FieldInitializationReport;
 import org.mockito.internal.util.reflection.FieldInitializer;
@@ -69,6 +70,7 @@ public class ConstructorInjection extends MockInjectionStrategy {
       return argumentInstances.toArray();
     }
 
+    @Nullable
     private Object objectThatIsAssignableFrom(Class<?> argType) {
       for (Object object : objects) {
         if (argType.isAssignableFrom(object.getClass())) return object;

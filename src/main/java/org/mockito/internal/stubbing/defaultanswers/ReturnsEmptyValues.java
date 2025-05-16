@@ -9,6 +9,7 @@ import static org.mockito.internal.util.ObjectMethodsGuru.isToStringMethod;
 
 import java.io.Serializable;
 import java.util.*;
+import javax.annotation.Nullable;
 import org.mockito.internal.util.JavaEightUtil;
 import org.mockito.internal.util.MockUtil;
 import org.mockito.internal.util.Primitives;
@@ -44,6 +45,7 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
   /* (non-Javadoc)
    * @see org.mockito.stubbing.Answer#answer(org.mockito.invocation.InvocationOnMock)
    */
+  @Nullable
   public Object answer(InvocationOnMock invocation) {
     if (isToStringMethod(invocation.getMethod())) {
       Object mock = invocation.getMock();
@@ -68,6 +70,7 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
     return returnValueFor(returnType);
   }
 
+  @Nullable
   Object returnValueFor(Class<?> type) {
     if (Primitives.isPrimitiveOrWrapper(type)) {
       return Primitives.defaultValue(type);

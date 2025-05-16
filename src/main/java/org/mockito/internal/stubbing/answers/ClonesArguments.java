@@ -5,6 +5,7 @@
 package org.mockito.internal.stubbing.answers;
 
 import java.lang.reflect.Array;
+import javax.annotation.Nullable;
 import org.mockito.creation.instance.Instantiator;
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.internal.stubbing.defaultanswers.ReturnsEmptyValues;
@@ -15,6 +16,7 @@ import org.mockito.stubbing.Answer;
 // TODO this needs documentation and further analysis - what if someone changes the answer?
 // we might think about implementing it straight on MockSettings
 public class ClonesArguments implements Answer<Object> {
+  @Nullable
   public Object answer(InvocationOnMock invocation) throws Throwable {
     Object[] arguments = invocation.getArguments();
     for (int i = 0; i < arguments.length; i++) {

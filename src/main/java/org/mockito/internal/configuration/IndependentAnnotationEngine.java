@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -42,6 +43,7 @@ public class IndependentAnnotationEngine
     registerAnnotationProcessor(Captor.class, new CaptorAnnotationProcessor());
   }
 
+  @Nullable
   private Object createMockFor(Annotation annotation, Field field) {
     return forAnnotation(annotation).process(annotation, field);
   }
@@ -51,6 +53,7 @@ public class IndependentAnnotationEngine
       return (FieldAnnotationProcessor<A>) annotationProcessorMap.get(annotation.annotationType());
     }
     return new FieldAnnotationProcessor<A>() {
+      @Nullable
       public Object process(A annotation, Field field) {
         return null;
       }

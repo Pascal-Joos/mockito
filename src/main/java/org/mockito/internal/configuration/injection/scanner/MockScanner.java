@@ -8,6 +8,7 @@ import static org.mockito.internal.util.collections.Sets.newMockSafeHashSet;
 
 import java.lang.reflect.Field;
 import java.util.Set;
+import javax.annotation.Nullable;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.internal.util.MockUtil;
@@ -60,6 +61,7 @@ public class MockScanner {
     return mocks;
   }
 
+  @Nullable
   private Object preparedMock(Object instance, Field field) {
     if (isAnnotatedByMockOrSpy(field)) {
       return instance;

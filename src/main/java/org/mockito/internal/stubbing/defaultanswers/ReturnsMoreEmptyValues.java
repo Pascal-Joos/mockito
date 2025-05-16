@@ -6,6 +6,7 @@ package org.mockito.internal.stubbing.defaultanswers;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import javax.annotation.Nullable;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -38,6 +39,7 @@ public class ReturnsMoreEmptyValues implements Answer<Object>, Serializable {
   /* (non-Javadoc)
    * @see org.mockito.stubbing.Answer#answer(org.mockito.invocation.InvocationOnMock)
    */
+  @Nullable
   public Object answer(InvocationOnMock invocation) throws Throwable {
     Object ret = delegate.answer(invocation);
     if (ret != null) {
@@ -48,6 +50,7 @@ public class ReturnsMoreEmptyValues implements Answer<Object>, Serializable {
     return returnValueFor(returnType);
   }
 
+  @Nullable
   Object returnValueFor(Class<?> type) {
     if (type == String.class) {
       return "";

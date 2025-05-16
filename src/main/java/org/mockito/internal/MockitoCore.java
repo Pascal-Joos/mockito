@@ -13,6 +13,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.noMoreIn
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import javax.annotation.Nullable;
 import org.mockito.*;
 import org.mockito.exceptions.misusing.NotAMockException;
 import org.mockito.internal.creation.MockSettingsImpl;
@@ -233,7 +234,7 @@ public class MockitoCore {
     return stubber(null);
   }
 
-  public Stubber stubber(Strictness strictness) {
+  public Stubber stubber(@Nullable Strictness strictness) {
     MockingProgress mockingProgress = mockingProgress();
     mockingProgress.stubbingStarted();
     mockingProgress.resetOngoingStubbing();

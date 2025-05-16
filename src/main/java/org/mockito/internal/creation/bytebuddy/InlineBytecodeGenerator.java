@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import javax.annotation.Nullable;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.ClassFileVersion;
 import net.bytebuddy.asm.Advice;
@@ -72,9 +73,9 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
   private final BytecodeGenerator subclassEngine;
   private final AsmVisitorWrapper mockTransformer;
 
-  private final Method getModule, canRead, redefineModule;
+  @Nullable private final Method getModule, canRead, redefineModule;
 
-  private volatile Throwable lastException;
+  @Nullable private volatile Throwable lastException;
 
   public InlineBytecodeGenerator(
       Instrumentation instrumentation,
@@ -328,6 +329,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
     }
   }
 
+  @Nullable
   @Override
   public byte[] transform(
       ClassLoader loader,

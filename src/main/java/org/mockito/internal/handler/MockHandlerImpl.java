@@ -7,6 +7,7 @@ package org.mockito.internal.handler;
 import static org.mockito.internal.listeners.StubbingLookupNotifier.notifyStubbedAnswerLookup;
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
 
+import javax.annotation.Nullable;
 import org.mockito.internal.creation.settings.CreationSettings;
 import org.mockito.internal.invocation.InvocationMatcher;
 import org.mockito.internal.invocation.MatchersBinder;
@@ -44,6 +45,7 @@ public class MockHandlerImpl<T> implements MockHandler<T> {
     this.invocationContainer = new InvocationContainerImpl(mockSettings);
   }
 
+  @Nullable
   public Object handle(Invocation invocation) throws Throwable {
     if (invocationContainer.hasAnswersForStubbing()) {
       // stubbing voids with doThrow() or doAnswer() style

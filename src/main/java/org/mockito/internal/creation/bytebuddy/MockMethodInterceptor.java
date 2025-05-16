@@ -10,6 +10,7 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
+import javax.annotation.Nullable;
 import net.bytebuddy.implementation.bind.annotation.AllArguments;
 import net.bytebuddy.implementation.bind.annotation.Argument;
 import net.bytebuddy.implementation.bind.annotation.BindingPriority;
@@ -41,11 +42,13 @@ public class MockMethodInterceptor implements Serializable {
     serializationSupport = new ByteBuddyCrossClassLoaderSerializationSupport();
   }
 
+  @Nullable
   Object doIntercept(Object mock, Method invokedMethod, Object[] arguments, RealMethod realMethod)
       throws Throwable {
     return doIntercept(mock, invokedMethod, arguments, realMethod, new LocationImpl());
   }
 
+  @Nullable
   Object doIntercept(
       Object mock,
       Method invokedMethod,
@@ -91,6 +94,7 @@ public class MockMethodInterceptor implements Serializable {
 
   public static class DispatcherDefaultingToRealMethod {
 
+    @Nullable
     @SuppressWarnings("unused")
     @RuntimeType
     @BindingPriority(BindingPriority.DEFAULT * 2)
@@ -108,6 +112,7 @@ public class MockMethodInterceptor implements Serializable {
           mock, invokedMethod, arguments, new RealMethod.FromCallable(superCall));
     }
 
+    @Nullable
     @SuppressWarnings("unused")
     @RuntimeType
     public static Object interceptAbstract(

@@ -8,6 +8,7 @@ import static org.mockito.internal.exceptions.Reporter.cannotStubVoidMethodWithA
 import static org.mockito.internal.exceptions.Reporter.wrongTypeOfReturnValue;
 
 import java.io.Serializable;
+import javax.annotation.Nullable;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.ValidableAnswer;
@@ -15,12 +16,13 @@ import org.mockito.stubbing.ValidableAnswer;
 public class Returns implements Answer<Object>, ValidableAnswer, Serializable {
 
   private static final long serialVersionUID = -6245608253574215396L;
-  private final Object value;
+  @Nullable private final Object value;
 
-  public Returns(Object value) {
+  public Returns(@Nullable Object value) {
     this.value = value;
   }
 
+  @Nullable
   public Object answer(InvocationOnMock invocation) throws Throwable {
     return value;
   }

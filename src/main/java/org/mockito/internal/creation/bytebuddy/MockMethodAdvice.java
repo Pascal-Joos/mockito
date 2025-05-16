@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import javax.annotation.Nullable;
 import net.bytebuddy.ClassFileVersion;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.asm.AsmVisitorWrapper;
@@ -80,6 +81,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
     this.isMockConstruction = isMockConstruction;
   }
 
+  @Nullable
   @SuppressWarnings("unused")
   @Advice.OnMethodEnter(skipOn = Advice.OnNonDefaultValue.class)
   private static Callable<?> enter(
@@ -128,6 +130,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
     }
   }
 
+  @Nullable
   @Override
   public Callable<?> handle(Object instance, Method origin, Object[] arguments) throws Throwable {
     MockMethodInterceptor interceptor = interceptors.get(instance);
@@ -145,6 +148,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
             instance, origin, arguments, realMethod, new LocationImpl(new Throwable(), true)));
   }
 
+  @Nullable
   @Override
   public Callable<?> handleStatic(Class<?> type, Method origin, Object[] arguments)
       throws Throwable {
@@ -163,6 +167,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
                 new LocationImpl(new Throwable(), true)));
   }
 
+  @Nullable
   @Override
   public Object handleConstruction(
       Class<?> type, Object object, Object[] arguments, String[] parameterTypeNames) {
@@ -313,7 +318,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
     }
   }
 
-  private static Object tryInvoke(Method origin, Object instance, Object[] arguments)
+  private static Object tryInvoke(Method origin, @Nullable Object instance, Object[] arguments)
       throws Throwable {
     MemberAccessor accessor = Plugins.getMemberAccessor();
     try {
@@ -330,12 +335,13 @@ public class MockMethodAdvice extends MockMethodDispatcher {
 
   private static class ReturnValueWrapper implements Callable<Object> {
 
-    private final Object returned;
+    @Nullable private final Object returned;
 
-    private ReturnValueWrapper(Object returned) {
+    private ReturnValueWrapper(@Nullable Object returned) {
       this.returned = returned;
     }
 
+    @Nullable
     @Override
     public Object call() {
       return returned;
@@ -661,6 +667,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
 
   static class ForStatic {
 
+    @Nullable
     @SuppressWarnings("unused")
     @Advice.OnMethodEnter(skipOn = Advice.OnNonDefaultValue.class)
     private static Callable<?> enter(

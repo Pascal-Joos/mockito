@@ -9,6 +9,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.plugins.MemberAccessor;
 
@@ -204,8 +205,8 @@ class EqualsBuilder {
       Object lhs,
       Object rhs,
       boolean testTransients,
-      Class<?> reflectUpToClass,
-      String[] excludeFields) {
+      @Nullable Class<?> reflectUpToClass,
+      @Nullable String[] excludeFields) {
     if (lhs == rhs) {
       return true;
     }
@@ -264,7 +265,7 @@ class EqualsBuilder {
       Class<?> clazz,
       EqualsBuilder builder,
       boolean useTransients,
-      String[] excludeFields) {
+      @Nullable String[] excludeFields) {
     Field[] fields = clazz.getDeclaredFields();
     List<String> excludedFieldList =
         excludeFields != null ? Arrays.asList(excludeFields) : Collections.<String>emptyList();

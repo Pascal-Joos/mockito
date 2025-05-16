@@ -5,6 +5,7 @@
 package org.mockito.runners;
 
 import java.lang.reflect.InvocationTargetException;
+import javax.annotation.Nullable;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -43,7 +44,7 @@ public class ConsoleSpammingMockitoJUnitRunner extends Runner implements Filtera
   public void run(RunNotifier notifier) {
     RunListener listener =
         new RunListener() {
-          WarningsCollector warningsCollector;
+          @Nullable WarningsCollector warningsCollector;
 
           @Override
           public void testStarted(Description description) throws Exception {

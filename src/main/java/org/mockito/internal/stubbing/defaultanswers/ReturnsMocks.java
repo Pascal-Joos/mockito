@@ -5,6 +5,7 @@
 package org.mockito.internal.stubbing.defaultanswers;
 
 import java.io.Serializable;
+import javax.annotation.Nullable;
 import org.mockito.Mockito;
 import org.mockito.internal.creation.MockSettingsImpl;
 import org.mockito.invocation.InvocationOnMock;
@@ -15,6 +16,7 @@ public class ReturnsMocks implements Answer<Object>, Serializable {
   private static final long serialVersionUID = -6755257986994634579L;
   private final Answer<Object> delegate = new ReturnsMoreEmptyValues();
 
+  @Nullable
   @Override
   public Object answer(final InvocationOnMock invocation) throws Throwable {
     Object defaultReturnValue = delegate.answer(invocation);
@@ -26,8 +28,9 @@ public class ReturnsMocks implements Answer<Object>, Serializable {
     return RetrieveGenericsForDefaultAnswers.returnTypeForMockWithCorrectGenerics(
         invocation,
         new RetrieveGenericsForDefaultAnswers.AnswerCallback() {
+          @Nullable
           @Override
-          public Object apply(Class<?> type) {
+          public Object apply(@Nullable Class<?> type) {
             if (type == null) {
               return null;
             }

@@ -4,6 +4,7 @@
  */
 package org.mockito.stubbing;
 
+import javax.annotation.Nullable;
 import org.mockito.invocation.InvocationOnMock;
 
 /**
@@ -34,5 +35,6 @@ public interface Answer<T> {
    * @return the value to be returned
    * @throws Throwable the throwable to be thrown
    */
+  @Nullable
   T answer(InvocationOnMock invocation) throws Throwable;
 }

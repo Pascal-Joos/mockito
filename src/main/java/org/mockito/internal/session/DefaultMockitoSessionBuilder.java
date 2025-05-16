@@ -8,6 +8,7 @@ import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.mockito.MockitoSession;
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.internal.framework.DefaultMockitoSession;
@@ -19,9 +20,9 @@ import org.mockito.session.MockitoSessionLogger;
 public class DefaultMockitoSessionBuilder implements MockitoSessionBuilder {
 
   private List<Object> testClassInstances = new ArrayList<Object>();
-  private String name;
-  private Strictness strictness;
-  private MockitoSessionLogger logger;
+  @Nullable private String name;
+  @Nullable private Strictness strictness;
+  @Nullable private MockitoSessionLogger logger;
 
   @Override
   public MockitoSessionBuilder initMocks(Object testClassInstance) {

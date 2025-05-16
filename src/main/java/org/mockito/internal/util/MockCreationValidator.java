@@ -11,6 +11,7 @@ import static org.mockito.internal.exceptions.Reporter.mockedTypeIsInconsistentW
 import static org.mockito.internal.exceptions.Reporter.usingConstructorWithFancySerializable;
 
 import java.util.Collection;
+import javax.annotation.Nullable;
 import org.mockito.mock.SerializableMode;
 import org.mockito.plugins.MockMaker.TypeMockability;
 
@@ -36,7 +37,7 @@ public class MockCreationValidator {
     }
   }
 
-  public void validateMockedType(Class<?> classToMock, Object spiedInstance) {
+  public void validateMockedType(Class<?> classToMock, @Nullable Object spiedInstance) {
     if (classToMock == null || spiedInstance == null) {
       return;
     }

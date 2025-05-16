@@ -13,6 +13,7 @@ import static org.mockito.internal.util.MockUtil.isMock;
 
 import java.util.LinkedList;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.mockito.internal.stubbing.answers.CallsRealMethods;
 import org.mockito.internal.stubbing.answers.Returns;
 import org.mockito.internal.stubbing.answers.ThrowsException;
@@ -24,9 +25,9 @@ import org.mockito.stubbing.Stubber;
 
 public class StubberImpl implements Stubber {
 
-  private final Strictness strictness;
+  @Nullable private final Strictness strictness;
 
-  public StubberImpl(Strictness strictness) {
+  public StubberImpl(@Nullable Strictness strictness) {
     this.strictness = strictness;
   }
 

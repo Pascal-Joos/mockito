@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
+import javax.annotation.Nullable;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.modifier.SynchronizationState;
@@ -47,7 +48,7 @@ class SubclassBytecodeGenerator implements BytecodeGenerator {
   private final ModuleHandler handler;
   private final ByteBuddy byteBuddy;
   private final Random random;
-  private final Implementation readReplace;
+  @Nullable private final Implementation readReplace;
   private final ElementMatcher<? super MethodDescription> matcher;
 
   private final Implementation dispatcher = to(DispatcherDefaultingToRealMethod.class);
@@ -70,7 +71,7 @@ class SubclassBytecodeGenerator implements BytecodeGenerator {
 
   protected SubclassBytecodeGenerator(
       SubclassLoader loader,
-      Implementation readReplace,
+      @Nullable Implementation readReplace,
       ElementMatcher<? super MethodDescription> matcher) {
     this.loader = loader;
     this.readReplace = readReplace;

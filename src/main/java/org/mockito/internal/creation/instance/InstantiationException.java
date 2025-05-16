@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.creation.instance;
 
+import javax.annotation.Nullable;
 import org.mockito.exceptions.base.MockitoException;
 
 /**
@@ -16,7 +17,7 @@ import org.mockito.exceptions.base.MockitoException;
 @Deprecated
 public class InstantiationException extends MockitoException {
 
-  public InstantiationException(String message, Throwable cause) {
+  public InstantiationException(@Nullable String message, @Nullable Throwable cause) {
     super(message, cause);
   }
 }

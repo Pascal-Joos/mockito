@@ -8,6 +8,7 @@ import static org.mockito.internal.hamcrest.MatcherGenericTypeExtractor.genericT
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
 import static org.mockito.internal.util.Primitives.defaultValue;
 
+import javax.annotation.Nullable;
 import org.hamcrest.Matcher;
 import org.mockito.ArgumentMatcher;
 import org.mockito.internal.hamcrest.HamcrestArgumentMatcher;
@@ -57,6 +58,7 @@ public class MockitoHamcrest {
    * @return <code>null</code> or default value for primitive (0, false, etc.)
    * @since 2.1.0
    */
+  @Nullable
   @SuppressWarnings("unchecked")
   public static <T> T argThat(Matcher<T> matcher) {
     reportMatcher(matcher);

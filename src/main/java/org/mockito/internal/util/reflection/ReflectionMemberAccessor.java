@@ -6,6 +6,7 @@ package org.mockito.internal.util.reflection;
 
 import java.lang.reflect.*;
 import java.util.Arrays;
+import javax.annotation.Nullable;
 import org.mockito.plugins.MemberAccessor;
 
 public class ReflectionMemberAccessor implements MemberAccessor {
@@ -30,7 +31,7 @@ public class ReflectionMemberAccessor implements MemberAccessor {
   }
 
   @Override
-  public Object invoke(Method method, Object target, Object... arguments)
+  public Object invoke(Method method, @Nullable Object target, Object... arguments)
       throws InvocationTargetException, IllegalAccessException {
     silentSetAccessible(method, true);
     try {

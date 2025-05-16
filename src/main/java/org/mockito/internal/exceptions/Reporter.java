@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.exceptions.misusing.*;
@@ -462,7 +463,7 @@ public class Reporter {
   }
 
   public static MockitoAssertionError noMoreInteractionsWanted(
-      Invocation undesired, List<VerificationAwareInvocation> invocations) {
+      @Nullable Invocation undesired, List<VerificationAwareInvocation> invocations) {
     ScenarioPrinter scenarioPrinter = new ScenarioPrinter();
     String scenario = scenarioPrinter.print(invocations);
 
@@ -728,7 +729,7 @@ public class Reporter {
   }
 
   public static MockitoException cannotInitializeForInjectMocksAnnotation(
-      String fieldName, String causeMessage) {
+      String fieldName, @Nullable String causeMessage) {
     return new MockitoException(
         join(
             "Cannot instantiate @InjectMocks field named '"
@@ -756,7 +757,8 @@ public class Reporter {
             ""));
   }
 
-  public static MockitoException fieldInitialisationThrewException(Field field, Throwable details) {
+  public static MockitoException fieldInitialisationThrewException(
+      Field field, @Nullable Throwable details) {
     return new InjectMocksException(
         join(
             "Cannot instantiate @InjectMocks field named '"
@@ -806,6 +808,7 @@ public class Reporter {
         details);
   }
 
+  @Nullable
   private static String exceptionCauseMessageIfAvailable(Exception details) {
     if (details.getCause() == null) {
       return details.getMessage();
@@ -990,7 +993,7 @@ public class Reporter {
   }
 
   public static UnnecessaryStubbingException formatUnncessaryStubbingException(
-      Class<?> testClass, Collection<Invocation> unnecessaryStubbings) {
+      @Nullable Class<?> testClass, Collection<Invocation> unnecessaryStubbings) {
     StringBuilder stubbings = new StringBuilder();
     int count = 1;
     for (Invocation u : unnecessaryStubbings) {

@@ -13,6 +13,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.*;
 import java.util.*;
+import javax.annotation.Nullable;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.agent.ByteBuddyAgent;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
@@ -24,10 +25,10 @@ class InstrumentationMemberAccessor implements MemberAccessor {
 
   private static final Map<Class<?>, Class<?>> WRAPPERS = new HashMap<>();
 
-  private static final Instrumentation INSTRUMENTATION;
+  @Nullable private static final Instrumentation INSTRUMENTATION;
   private static final Dispatcher DISPATCHER;
 
-  private static final Throwable INITIALIZATION_ERROR;
+  @Nullable private static final Throwable INITIALIZATION_ERROR;
 
   static {
     WRAPPERS.put(boolean.class, Boolean.class);
@@ -152,7 +153,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
   }
 
   @Override
-  public Object invoke(Method method, Object target, Object... arguments)
+  public Object invoke(Method method, @Nullable Object target, Object... arguments)
       throws InvocationTargetException {
     assureArguments(
         method,

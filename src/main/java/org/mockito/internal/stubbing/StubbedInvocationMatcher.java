@@ -7,6 +7,7 @@ package org.mockito.internal.stubbing;
 import java.io.Serializable;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.annotation.Nullable;
 import org.mockito.internal.invocation.InvocationMatcher;
 import org.mockito.invocation.DescribedInvocation;
 import org.mockito.invocation.InvocationOnMock;
@@ -20,16 +21,17 @@ public class StubbedInvocationMatcher extends InvocationMatcher implements Seria
 
   private static final long serialVersionUID = 4919105134123672727L;
   private final Queue<Answer> answers = new ConcurrentLinkedQueue<Answer>();
-  private final Strictness strictness;
-  private DescribedInvocation usedAt;
+  @Nullable private final Strictness strictness;
+  @Nullable private DescribedInvocation usedAt;
 
   public StubbedInvocationMatcher(
-      Answer answer, MatchableInvocation invocation, Strictness strictness) {
+      Answer answer, MatchableInvocation invocation, @Nullable Strictness strictness) {
     super(invocation.getInvocation(), invocation.getMatchers());
     this.strictness = strictness;
     this.answers.add(answer);
   }
 
+  @Nullable
   public Object answer(InvocationOnMock invocation) throws Throwable {
     // see ThreadsShareGenerouslyStubbedMockTest
     Answer a;
@@ -56,6 +58,7 @@ public class StubbedInvocationMatcher extends InvocationMatcher implements Seria
     return super.toString() + " stubbed with: " + answers;
   }
 
+  @Nullable
   @Override
   public Strictness getStrictness() {
     return strictness;

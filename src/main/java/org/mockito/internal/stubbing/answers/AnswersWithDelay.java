@@ -6,6 +6,7 @@ package org.mockito.internal.stubbing.answers;
 
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.Nullable;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.ValidableAnswer;
@@ -30,6 +31,7 @@ public class AnswersWithDelay implements Answer<Object>, ValidableAnswer, Serial
     this.answer = answer;
   }
 
+  @Nullable
   @Override
   public Object answer(final InvocationOnMock invocation) throws Throwable {
     TimeUnit.MILLISECONDS.sleep(sleepyTime);

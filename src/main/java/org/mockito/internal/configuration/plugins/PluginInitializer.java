@@ -7,16 +7,18 @@ package org.mockito.internal.configuration.plugins;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
+import javax.annotation.Nullable;
 import org.mockito.internal.util.collections.Iterables;
 import org.mockito.plugins.PluginSwitch;
 
 class PluginInitializer {
 
   private final PluginSwitch pluginSwitch;
-  private final String alias;
+  @Nullable private final String alias;
   private final DefaultMockitoPlugins plugins;
 
-  PluginInitializer(PluginSwitch pluginSwitch, String alias, DefaultMockitoPlugins plugins) {
+  PluginInitializer(
+      PluginSwitch pluginSwitch, @Nullable String alias, DefaultMockitoPlugins plugins) {
     this.pluginSwitch = pluginSwitch;
     this.alias = alias;
     this.plugins = plugins;
@@ -26,6 +28,7 @@ class PluginInitializer {
    * Equivalent to {@link java.util.ServiceLoader#load} but without requiring Java 6 / Android 2.3
    * (Gingerbread).
    */
+  @Nullable
   public <T> T loadImpl(Class<T> service) {
     ClassLoader loader = Thread.currentThread().getContextClassLoader();
     if (loader == null) {

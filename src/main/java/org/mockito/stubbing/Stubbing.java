@@ -4,6 +4,7 @@
  */
 package org.mockito.stubbing;
 
+import javax.annotation.Nullable;
 import org.mockito.Incubating;
 import org.mockito.MockingDetails;
 import org.mockito.Mockito;
@@ -62,6 +63,7 @@ public interface Stubbing extends Answer {
    *
    * @since 2.20.0
    */
+  @Nullable
   @Incubating
   Strictness getStrictness();
 }

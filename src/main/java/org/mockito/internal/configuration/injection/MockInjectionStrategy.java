@@ -6,6 +6,7 @@ package org.mockito.internal.configuration.injection;
 
 import java.lang.reflect.Field;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /** Injector strategy contract */
 public abstract class MockInjectionStrategy {
@@ -20,7 +21,7 @@ public abstract class MockInjectionStrategy {
     };
   }
 
-  private MockInjectionStrategy nextStrategy;
+  @Nullable private MockInjectionStrategy nextStrategy;
 
   /**
    * Enqueue next injection strategy.

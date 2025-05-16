@@ -9,6 +9,7 @@ import static org.mockito.internal.util.StringUtil.join;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import javax.annotation.Nullable;
 import org.mockito.Incubating;
 import org.mockito.MockedConstruction;
 import org.mockito.exceptions.base.MockitoException;
@@ -101,6 +102,7 @@ public interface MockMaker {
    *     provided object. This means the passed object is not really a Mockito mock.
    * @since 1.9.5
    */
+  @Nullable
   MockHandler getHandler(Object mock);
 
   /**

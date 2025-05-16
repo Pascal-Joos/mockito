@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import javax.annotation.Nullable;
 import org.mockito.Incubating;
 
 /**
@@ -20,7 +21,7 @@ public interface MemberAccessor {
   Object newInstance(Constructor<?> constructor, Object... arguments)
       throws InstantiationException, InvocationTargetException, IllegalAccessException;
 
-  Object invoke(Method method, Object target, Object... arguments)
+  Object invoke(Method method, @Nullable Object target, Object... arguments)
       throws InvocationTargetException, IllegalAccessException;
 
   Object get(Field field, Object target) throws IllegalAccessException;

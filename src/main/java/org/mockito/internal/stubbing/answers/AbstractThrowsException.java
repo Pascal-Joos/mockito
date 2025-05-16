@@ -7,6 +7,7 @@ package org.mockito.internal.stubbing.answers;
 import static org.mockito.internal.exceptions.Reporter.cannotStubWithNullThrowable;
 import static org.mockito.internal.exceptions.Reporter.checkedExceptionInvalid;
 
+import javax.annotation.Nullable;
 import org.mockito.internal.exceptions.stacktrace.ConditionalStackTraceFilter;
 import org.mockito.internal.util.MockUtil;
 import org.mockito.invocation.InvocationOnMock;
@@ -17,6 +18,7 @@ public abstract class AbstractThrowsException implements Answer<Object>, Validab
 
   private final ConditionalStackTraceFilter filter = new ConditionalStackTraceFilter();
 
+  @Nullable
   protected abstract Throwable getThrowable();
 
   public Object answer(InvocationOnMock invocation) throws Throwable {
