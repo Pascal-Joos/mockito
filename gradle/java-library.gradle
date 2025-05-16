@@ -15,8 +15,8 @@ generatePomFileForJavaLibraryPublication.doLast {
 
 bintrayUpload.enabled = true
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.17
+targetCompatibility = 1.17
 
 test {
     include "**/*Test.class"
