@@ -329,7 +329,7 @@ public abstract class GenericMetadataSupport {
    * @return The new {@link GenericMetadataSupport}.
    * @throws MockitoException Raised if type is not a {@link Class} or a {@link ParameterizedType}.
    */
-  public static GenericMetadataSupport inferFrom(Type type) {
+  public static GenericMetadataSupport inferFrom(@Nullable Type type) {
     Checks.checkNotNull(type, "type");
     if (type instanceof Class) {
       return new FromClassGenericMetadataSupport((Class<?>) type);
