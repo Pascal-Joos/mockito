@@ -6,6 +6,7 @@ package org.mockito.internal.listeners;
 
 import java.util.Collection;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.mockito.internal.creation.settings.CreationSettings;
 import org.mockito.invocation.Invocation;
 import org.mockito.listeners.StubbingLookupEvent;
@@ -17,7 +18,7 @@ public class StubbingLookupNotifier {
 
   public static void notifyStubbedAnswerLookup(
       Invocation invocation,
-      Stubbing stubbingFound,
+      @Nullable Stubbing stubbingFound,
       Collection<Stubbing> allStubbings,
       CreationSettings creationSettings) {
     List<StubbingLookupListener> listeners = creationSettings.getStubbingLookupListeners();
