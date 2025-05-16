@@ -27,3 +27,5 @@ classes
 
 # Used to check reproducibility of Mockito jars
 checksums/
+
+annotator-out/
