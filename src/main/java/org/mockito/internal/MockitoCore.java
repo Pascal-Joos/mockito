@@ -252,10 +252,7 @@ public class MockitoCore {
    */
   public Invocation getLastInvocation() {
     OngoingStubbingImpl ongoingStubbing =
-        (OngoingStubbingImpl) mockingProgress().pullOngoingStubbing();
-    if (ongoingStubbing == null) {
-      throw new NullPointerException("OngoingStubbingImpl is null");
-    }
+        ((OngoingStubbingImpl) mockingProgress().pullOngoingStubbing());
     List<Invocation> allInvocations = ongoingStubbing.getRegisteredInvocations();
     return allInvocations.get(allInvocations.size() - 1);
   }
