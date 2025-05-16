@@ -8,5 +8,5 @@ import org.mockito.invocation.DescribedInvocation;
 
 public interface VerificationAwareInvocation extends DescribedInvocation {
 
-    boolean isVerified();
+  boolean isVerified();
 }

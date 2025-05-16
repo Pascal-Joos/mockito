@@ -5,18 +5,17 @@
 package org.mockito.internal.verification;
 
 import java.util.List;
-
 import org.mockito.invocation.Invocation;
 
 public interface RegisteredInvocations {
 
-    void add(Invocation invocation);
+  void add(Invocation invocation);
 
-    void removeLast();
+  void removeLast();
 
-    List<Invocation> getAll();
+  List<Invocation> getAll();
 
-    void clear();
+  void clear();
 
-    boolean isEmpty();
+  boolean isEmpty();
 }

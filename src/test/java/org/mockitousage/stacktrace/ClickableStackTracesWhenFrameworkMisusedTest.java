@@ -19,62 +19,60 @@ import org.mockitoutil.TestBase;
 
 public class ClickableStackTracesWhenFrameworkMisusedTest extends TestBase {
 
-    @Mock private IMethods mock;
+  @Mock private IMethods mock;
 
-    @After
-    public void resetState() {
-        super.resetState();
+  @After
+  public void resetState() {
+    super.resetState();
+  }
+
+  private void misplacedArgumentMatcherHere() {
+    anyString();
+  }
+
+  @Test
+  public void shouldPointOutMisplacedMatcher() {
+    misplacedArgumentMatcherHere();
+    try {
+      verify(mock).simpleMethod();
+      fail();
+    } catch (InvalidUseOfMatchersException e) {
+      assertThat(e)
+          .hasMessageContaining("-> at ")
+          .hasMessageContaining("misplacedArgumentMatcherHere(");
     }
+  }
 
-    private void misplacedArgumentMatcherHere() {
-        anyString();
+  @SuppressWarnings({"MockitoUsage", "CheckReturnValue"})
+  private void unfinishedStubbingHere() {
+    when(mock.simpleMethod());
+  }
+
+  @Test
+  public void shouldPointOutUnfinishedStubbing() {
+    unfinishedStubbingHere();
+
+    try {
+      verify(mock).simpleMethod();
+      fail();
+    } catch (UnfinishedStubbingException e) {
+      assertThat(e).hasMessageContaining("-> at ").hasMessageContaining("unfinishedStubbingHere(");
     }
+  }
 
-    @Test
-    public void shouldPointOutMisplacedMatcher() {
-        misplacedArgumentMatcherHere();
-        try {
-            verify(mock).simpleMethod();
-            fail();
-        } catch (InvalidUseOfMatchersException e) {
-            assertThat(e)
-                    .hasMessageContaining("-> at ")
-                    .hasMessageContaining("misplacedArgumentMatcherHere(");
-        }
+  @Test
+  public void shouldShowWhereIsUnfinishedVerification() throws Exception {
+    unfinishedVerificationHere();
+    try {
+      mock(IMethods.class);
+      fail();
+    } catch (UnfinishedVerificationException e) {
+      assertThat(e).hasMessageContaining("unfinishedVerificationHere(");
     }
+  }
 
-    @SuppressWarnings({"MockitoUsage", "CheckReturnValue"})
-    private void unfinishedStubbingHere() {
-        when(mock.simpleMethod());
-    }
-
-    @Test
-    public void shouldPointOutUnfinishedStubbing() {
-        unfinishedStubbingHere();
-
-        try {
-            verify(mock).simpleMethod();
-            fail();
-        } catch (UnfinishedStubbingException e) {
-            assertThat(e)
-                    .hasMessageContaining("-> at ")
-                    .hasMessageContaining("unfinishedStubbingHere(");
-        }
-    }
-
-    @Test
-    public void shouldShowWhereIsUnfinishedVerification() throws Exception {
-        unfinishedVerificationHere();
-        try {
-            mock(IMethods.class);
-            fail();
-        } catch (UnfinishedVerificationException e) {
-            assertThat(e).hasMessageContaining("unfinishedVerificationHere(");
-        }
-    }
-
-    @SuppressWarnings({"MockitoUsage", "CheckReturnValue"})
-    private void unfinishedVerificationHere() {
-        verify(mock);
-    }
+  @SuppressWarnings({"MockitoUsage", "CheckReturnValue"})
+  private void unfinishedVerificationHere() {
+    verify(mock);
+  }
 }

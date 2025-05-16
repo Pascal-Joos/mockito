@@ -10,7 +10,6 @@ import static org.mockito.Mockito.verify;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -21,87 +20,87 @@ import org.mockitoutil.TestBase;
 @SuppressWarnings("unchecked")
 public class CaptorAnnotationBasicTest extends TestBase {
 
-    public class Person {
-        private final String name;
-        private final String surname;
+  public class Person {
+    private final String name;
+    private final String surname;
 
-        public Person(String name, String surname) {
-            this.name = name;
-            this.surname = surname;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getSurname() {
-            return surname;
-        }
+    public Person(String name, String surname) {
+      this.name = name;
+      this.surname = surname;
     }
 
-    public interface PeopleRepository {
-        void save(Person capture);
+    public String getName() {
+      return name;
     }
 
-    @Mock PeopleRepository peopleRepository;
-
-    private void createPerson(String name, String surname) {
-        peopleRepository.save(new Person(name, surname));
+    public String getSurname() {
+      return surname;
     }
+  }
 
-    @Test
-    public void shouldUseCaptorInOrdinaryWay() {
-        // when
-        createPerson("Wes", "Williams");
+  public interface PeopleRepository {
+    void save(Person capture);
+  }
 
-        // then
-        ArgumentCaptor<Person> captor = ArgumentCaptor.forClass(Person.class);
-        verify(peopleRepository).save(captor.capture());
-        assertEquals("Wes", captor.getValue().getName());
-        assertEquals("Williams", captor.getValue().getSurname());
-    }
+  @Mock PeopleRepository peopleRepository;
 
-    @Captor ArgumentCaptor<Person> captor;
+  private void createPerson(String name, String surname) {
+    peopleRepository.save(new Person(name, surname));
+  }
 
-    @Test
-    public void shouldUseAnnotatedCaptor() {
-        // when
-        createPerson("Wes", "Williams");
+  @Test
+  public void shouldUseCaptorInOrdinaryWay() {
+    // when
+    createPerson("Wes", "Williams");
 
-        // then
-        verify(peopleRepository).save(captor.capture());
-        assertEquals("Wes", captor.getValue().getName());
-        assertEquals("Williams", captor.getValue().getSurname());
-    }
+    // then
+    ArgumentCaptor<Person> captor = ArgumentCaptor.forClass(Person.class);
+    verify(peopleRepository).save(captor.capture());
+    assertEquals("Wes", captor.getValue().getName());
+    assertEquals("Williams", captor.getValue().getSurname());
+  }
 
-    @SuppressWarnings("rawtypes")
-    @Captor
-    ArgumentCaptor genericLessCaptor;
+  @Captor ArgumentCaptor<Person> captor;
 
-    @Test
-    public void shouldUseGenericlessAnnotatedCaptor() {
-        // when
-        createPerson("Wes", "Williams");
+  @Test
+  public void shouldUseAnnotatedCaptor() {
+    // when
+    createPerson("Wes", "Williams");
 
-        // then
-        verify(peopleRepository).save((Person) genericLessCaptor.capture());
-        assertEquals("Wes", ((Person) genericLessCaptor.getValue()).getName());
-        assertEquals("Williams", ((Person) genericLessCaptor.getValue()).getSurname());
-    }
+    // then
+    verify(peopleRepository).save(captor.capture());
+    assertEquals("Wes", captor.getValue().getName());
+    assertEquals("Williams", captor.getValue().getSurname());
+  }
 
-    @Captor ArgumentCaptor<List<String>> genericListCaptor;
-    @Mock IMethods mock;
+  @SuppressWarnings("rawtypes")
+  @Captor
+  ArgumentCaptor genericLessCaptor;
 
-    @Test
-    public void shouldCaptureGenericList() {
-        // given
-        List<String> list = new LinkedList<String>();
-        mock.listArgMethod(list);
+  @Test
+  public void shouldUseGenericlessAnnotatedCaptor() {
+    // when
+    createPerson("Wes", "Williams");
 
-        // when
-        verify(mock).listArgMethod(genericListCaptor.capture());
+    // then
+    verify(peopleRepository).save((Person) genericLessCaptor.capture());
+    assertEquals("Wes", ((Person) genericLessCaptor.getValue()).getName());
+    assertEquals("Williams", ((Person) genericLessCaptor.getValue()).getSurname());
+  }
 
-        // then
-        assertSame(list, genericListCaptor.getValue());
-    }
+  @Captor ArgumentCaptor<List<String>> genericListCaptor;
+  @Mock IMethods mock;
+
+  @Test
+  public void shouldCaptureGenericList() {
+    // given
+    List<String> list = new LinkedList<String>();
+    mock.listArgMethod(list);
+
+    // when
+    verify(mock).listArgMethod(genericListCaptor.capture());
+
+    // then
+    assertSame(list, genericListCaptor.getValue());
+  }
 }

@@ -14,34 +14,34 @@ import org.mockito.mock.MockCreationSettings;
 /**
  * Protects the results from delegate MockHandler. Makes sure the results are valid.
  *
- * by Szczepan Faber, created at: 5/22/12
+ * <p>by Szczepan Faber, created at: 5/22/12
  */
 class NullResultGuardian<T> implements MockHandler<T> {
 
-    private final MockHandler<T> delegate;
+  private final MockHandler<T> delegate;
 
-    public NullResultGuardian(MockHandler<T> delegate) {
-        this.delegate = delegate;
-    }
+  public NullResultGuardian(MockHandler<T> delegate) {
+    this.delegate = delegate;
+  }
 
-    @Override
-    public Object handle(Invocation invocation) throws Throwable {
-        Object result = delegate.handle(invocation);
-        Class<?> returnType = invocation.getMethod().getReturnType();
-        if (result == null && returnType.isPrimitive()) {
-            // primitive values cannot be null
-            return defaultValue(returnType);
-        }
-        return result;
+  @Override
+  public Object handle(Invocation invocation) throws Throwable {
+    Object result = delegate.handle(invocation);
+    Class<?> returnType = invocation.getMethod().getReturnType();
+    if (result == null && returnType.isPrimitive()) {
+      // primitive values cannot be null
+      return defaultValue(returnType);
     }
+    return result;
+  }
 
-    @Override
-    public MockCreationSettings<T> getMockSettings() {
-        return delegate.getMockSettings();
-    }
+  @Override
+  public MockCreationSettings<T> getMockSettings() {
+    return delegate.getMockSettings();
+  }
 
-    @Override
-    public InvocationContainer getInvocationContainer() {
-        return delegate.getInvocationContainer();
-    }
+  @Override
+  public InvocationContainer getInvocationContainer() {
+    return delegate.getInvocationContainer();
+  }
 }

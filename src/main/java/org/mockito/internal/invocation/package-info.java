@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Invocation machinery and related classes.
- */
+/** Invocation machinery and related classes. */
 package org.mockito.internal.invocation;

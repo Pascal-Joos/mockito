@@ -5,20 +5,19 @@
 package org.mockito.internal.invocation;
 
 import java.io.Serializable;
-
 import org.mockito.invocation.DescribedInvocation;
 import org.mockito.invocation.Location;
 import org.mockito.invocation.StubInfo;
 
 public class StubInfoImpl implements StubInfo, Serializable {
-    private static final long serialVersionUID = 2125827349332068867L;
-    private final DescribedInvocation stubbedAt;
+  private static final long serialVersionUID = 2125827349332068867L;
+  private final DescribedInvocation stubbedAt;
 
-    public StubInfoImpl(DescribedInvocation stubbedAt) {
-        this.stubbedAt = stubbedAt;
-    }
+  public StubInfoImpl(DescribedInvocation stubbedAt) {
+    this.stubbedAt = stubbedAt;
+  }
 
-    public Location stubbedAt() {
-        return stubbedAt.getLocation();
-    }
+  public Location stubbedAt() {
+    return stubbedAt.getLocation();
+  }
 }

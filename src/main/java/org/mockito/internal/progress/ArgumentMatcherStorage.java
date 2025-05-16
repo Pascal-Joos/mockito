@@ -5,24 +5,23 @@
 package org.mockito.internal.progress;
 
 import java.util.List;
-
 import org.mockito.ArgumentMatcher;
 import org.mockito.internal.matchers.LocalizedMatcher;
 
 @SuppressWarnings("unchecked")
 public interface ArgumentMatcherStorage {
 
-    void reportMatcher(ArgumentMatcher<?> matcher);
+  void reportMatcher(ArgumentMatcher<?> matcher);
 
-    List<LocalizedMatcher> pullLocalizedMatchers();
+  List<LocalizedMatcher> pullLocalizedMatchers();
 
-    void reportAnd();
+  void reportAnd();
 
-    void reportNot();
+  void reportNot();
 
-    void reportOr();
+  void reportOr();
 
-    void validateState();
+  void validateState();
 
-    void reset();
+  void reset();
 }

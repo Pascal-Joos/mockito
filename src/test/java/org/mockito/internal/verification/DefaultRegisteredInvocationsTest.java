@@ -15,22 +15,22 @@ import org.mockitoutil.TestBase;
 
 public class DefaultRegisteredInvocationsTest extends TestBase {
 
-    private DefaultRegisteredInvocations invocations;
+  private DefaultRegisteredInvocations invocations;
 
-    @Before
-    public void setup() {
-        invocations = new DefaultRegisteredInvocations();
-    }
+  @Before
+  public void setup() {
+    invocations = new DefaultRegisteredInvocations();
+  }
 
-    @Test
-    public void should_not_return_to_string_method() throws Exception {
-        Invocation toString = new InvocationBuilder().method("toString").toInvocation();
-        Invocation simpleMethod = new InvocationBuilder().simpleMethod().toInvocation();
+  @Test
+  public void should_not_return_to_string_method() throws Exception {
+    Invocation toString = new InvocationBuilder().method("toString").toInvocation();
+    Invocation simpleMethod = new InvocationBuilder().simpleMethod().toInvocation();
 
-        invocations.add(toString);
-        invocations.add(simpleMethod);
+    invocations.add(toString);
+    invocations.add(simpleMethod);
 
-        assertTrue(invocations.getAll().contains(simpleMethod));
-        assertFalse(invocations.getAll().contains(toString));
-    }
+    assertTrue(invocations.getAll().contains(simpleMethod));
+    assertFalse(invocations.getAll().contains(toString));
+  }
 }

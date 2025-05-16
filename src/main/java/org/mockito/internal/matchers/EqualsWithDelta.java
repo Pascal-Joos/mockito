@@ -5,33 +5,32 @@
 package org.mockito.internal.matchers;
 
 import java.io.Serializable;
-
 import org.mockito.ArgumentMatcher;
 
 public class EqualsWithDelta implements ArgumentMatcher<Number>, Serializable {
 
-    private final Number wanted;
-    private final Number delta;
+  private final Number wanted;
+  private final Number delta;
 
-    public EqualsWithDelta(Number value, Number delta) {
-        this.wanted = value;
-        this.delta = delta;
+  public EqualsWithDelta(Number value, Number delta) {
+    this.wanted = value;
+    this.delta = delta;
+  }
+
+  public boolean matches(Number actual) {
+    if (wanted == null ^ actual == null) {
+      return false;
     }
 
-    public boolean matches(Number actual) {
-        if (wanted == null ^ actual == null) {
-            return false;
-        }
-
-        if (wanted == actual) {
-            return true;
-        }
-
-        return wanted.doubleValue() - delta.doubleValue() <= actual.doubleValue()
-                && actual.doubleValue() <= wanted.doubleValue() + delta.doubleValue();
+    if (wanted == actual) {
+      return true;
     }
 
-    public String toString() {
-        return "eq(" + wanted + ", " + delta + ")";
-    }
+    return wanted.doubleValue() - delta.doubleValue() <= actual.doubleValue()
+        && actual.doubleValue() <= wanted.doubleValue() + delta.doubleValue();
+  }
+
+  public String toString() {
+    return "eq(" + wanted + ", " + delta + ")";
+  }
 }

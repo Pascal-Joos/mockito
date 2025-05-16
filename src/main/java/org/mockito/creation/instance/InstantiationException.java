@@ -13,17 +13,17 @@ import org.mockito.exceptions.base.MockitoException;
  */
 public class InstantiationException extends MockitoException {
 
-    /**
-     * @since 3.5.0
-     */
-    public InstantiationException(String message) {
-        super(message);
-    }
+  /**
+   * @since 3.5.0
+   */
+  public InstantiationException(String message) {
+    super(message);
+  }
 
-    /**
-     * @since 2.15.4
-     */
-    public InstantiationException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  /**
+   * @since 2.15.4
+   */
+  public InstantiationException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

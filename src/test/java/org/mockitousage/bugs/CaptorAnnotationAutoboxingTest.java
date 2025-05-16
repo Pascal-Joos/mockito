@@ -17,29 +17,29 @@ import org.mockitoutil.TestBase;
 // see issue 188
 public class CaptorAnnotationAutoboxingTest extends TestBase {
 
-    interface Fun {
-        void doFun(double prmitive);
+  interface Fun {
+    void doFun(double prmitive);
 
-        void moreFun(int howMuch);
-    }
+    void moreFun(int howMuch);
+  }
 
-    @Mock Fun fun;
-    @Captor ArgumentCaptor<Double> captor;
+  @Mock Fun fun;
+  @Captor ArgumentCaptor<Double> captor;
 
-    @Test
-    public void shouldAutoboxSafely() {
-        // given
-        fun.doFun(1.0);
+  @Test
+  public void shouldAutoboxSafely() {
+    // given
+    fun.doFun(1.0);
 
-        // then
-        verify(fun).doFun(captor.capture());
-        assertEquals(Double.valueOf(1.0), captor.getValue());
-    }
+    // then
+    verify(fun).doFun(captor.capture());
+    assertEquals(Double.valueOf(1.0), captor.getValue());
+  }
 
-    @Captor ArgumentCaptor<Integer> intCaptor;
+  @Captor ArgumentCaptor<Integer> intCaptor;
 
-    @Test
-    public void shouldAutoboxAllPrimitives() {
-        verify(fun, never()).moreFun(intCaptor.capture());
-    }
+  @Test
+  public void shouldAutoboxAllPrimitives() {
+    verify(fun, never()).moreFun(intCaptor.capture());
+  }
 }

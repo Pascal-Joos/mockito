@@ -12,15 +12,15 @@ import org.mockitoutil.TestBase;
 
 public class MockWeakReferenceTest extends TestBase {
 
-    @Test
-    public void descriptive_exception_when_mock_was_collected() {
-        try {
-            // when
-            new MockWeakReference(null).get();
-            // then
-            fail();
-        } catch (Exception e) {
-            Assertions.assertThat(e).hasMessageContaining("The mock object was garbage collected");
-        }
+  @Test
+  public void descriptive_exception_when_mock_was_collected() {
+    try {
+      // when
+      new MockWeakReference(null).get();
+      // then
+      fail();
+    } catch (Exception e) {
+      Assertions.assertThat(e).hasMessageContaining("The mock object was garbage collected");
     }
+  }
 }

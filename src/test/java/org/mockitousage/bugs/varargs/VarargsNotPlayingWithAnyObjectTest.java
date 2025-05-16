@@ -20,35 +20,35 @@ import org.mockitoutil.TestBase;
 // see issue 62
 public class VarargsNotPlayingWithAnyObjectTest extends TestBase {
 
-    interface VarargMethod {
-        Object run(String... args);
-    }
+  interface VarargMethod {
+    Object run(String... args);
+  }
 
-    @Mock VarargMethod mock;
+  @Mock VarargMethod mock;
 
-    @Test
-    public void shouldMatchAnyVararg() {
-        mock.run("a", "b");
+  @Test
+  public void shouldMatchAnyVararg() {
+    mock.run("a", "b");
 
-        verify(mock).run(anyString(), anyString());
-        verify(mock).run((String) anyObject(), (String) anyObject());
+    verify(mock).run(anyString(), anyString());
+    verify(mock).run((String) anyObject(), (String) anyObject());
 
-        verify(mock).run((String[]) anyVararg());
+    verify(mock).run((String[]) anyVararg());
 
-        verify(mock, never()).run();
-        verify(mock, never()).run(anyString(), eq("f"));
-    }
+    verify(mock, never()).run();
+    verify(mock, never()).run(anyString(), eq("f"));
+  }
 
-    @Test
-    public void shouldAllowUsingAnyObjectForVarArgs() {
-        mock.run("a", "b");
-        verify(mock).run((String[]) anyObject());
-    }
+  @Test
+  public void shouldAllowUsingAnyObjectForVarArgs() {
+    mock.run("a", "b");
+    verify(mock).run((String[]) anyObject());
+  }
 
-    @Test
-    public void shouldStubUsingAnyVarargs() {
-        when(mock.run((String[]) anyVararg())).thenReturn("foo");
+  @Test
+  public void shouldStubUsingAnyVarargs() {
+    when(mock.run((String[]) anyVararg())).thenReturn("foo");
 
-        assertEquals("foo", mock.run("a", "b"));
-    }
+    assertEquals("foo", mock.run("a", "b"));
+  }
 }

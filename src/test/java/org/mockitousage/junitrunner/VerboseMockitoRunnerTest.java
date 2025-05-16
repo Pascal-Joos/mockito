@@ -25,66 +25,66 @@ import org.mockitoutil.TestBase;
 // TODO
 public class VerboseMockitoRunnerTest extends TestBase {
 
-    @Mock private IMethods mock;
+  @Mock private IMethods mock;
 
-    public static class NoWarnings {
-
-        @Test
-        @Ignore
-        public void test() {
-            IMethods mock = mock(IMethods.class);
-            mock.simpleMethod(1);
-            mock.otherMethod();
-
-            verify(mock).simpleMethod(1);
-            throw new RuntimeException("boo");
-        }
-    }
-
-    public static class ContainsWarnings extends TestCase {
-
-        public ContainsWarnings() {
-            super("test");
-        }
-
-        public void testIgnored() {}
-
-        public void _test() {
-            IMethods mock = mock(IMethods.class);
-
-            // some stubbing
-            when(mock.simpleMethod(1)).thenReturn("foo");
-            when(mock.otherMethod()).thenReturn("foo");
-            when(mock.booleanObjectReturningMethod()).thenReturn(false);
-
-            // stub called with different args:
-            String ret = mock.simpleMethod(2);
-
-            // assertion fails due to stub called with different args
-            assertEquals("foo", ret);
-        }
-    }
-
-    public void cleanStackTraces() {
-        makeStackTracesClean();
-    }
+  public static class NoWarnings {
 
     @Test
     @Ignore
-    public void shouldContainWarnings() throws Exception {
-        // when
-        Result result = new JUnitCore().run(new ContainsWarnings());
-        // then
-        assertEquals(1, result.getFailures().size());
-        Throwable exception = result.getFailures().get(0).getException();
-        assertTrue(exception instanceof ExceptionIncludingMockitoWarnings);
+    public void test() {
+      IMethods mock = mock(IMethods.class);
+      mock.simpleMethod(1);
+      mock.otherMethod();
+
+      verify(mock).simpleMethod(1);
+      throw new RuntimeException("boo");
+    }
+  }
+
+  public static class ContainsWarnings extends TestCase {
+
+    public ContainsWarnings() {
+      super("test");
     }
 
-    @Test
-    @Ignore
-    public void shouldNotContainWarnings() throws Exception {
-        Result result = new JUnitCore().run(NoWarnings.class);
-        assertEquals(1, result.getFailures().size());
-        assertEquals("boo", result.getFailures().get(0).getException().getMessage());
+    public void testIgnored() {}
+
+    public void _test() {
+      IMethods mock = mock(IMethods.class);
+
+      // some stubbing
+      when(mock.simpleMethod(1)).thenReturn("foo");
+      when(mock.otherMethod()).thenReturn("foo");
+      when(mock.booleanObjectReturningMethod()).thenReturn(false);
+
+      // stub called with different args:
+      String ret = mock.simpleMethod(2);
+
+      // assertion fails due to stub called with different args
+      assertEquals("foo", ret);
     }
+  }
+
+  public void cleanStackTraces() {
+    makeStackTracesClean();
+  }
+
+  @Test
+  @Ignore
+  public void shouldContainWarnings() throws Exception {
+    // when
+    Result result = new JUnitCore().run(new ContainsWarnings());
+    // then
+    assertEquals(1, result.getFailures().size());
+    Throwable exception = result.getFailures().get(0).getException();
+    assertTrue(exception instanceof ExceptionIncludingMockitoWarnings);
+  }
+
+  @Test
+  @Ignore
+  public void shouldNotContainWarnings() throws Exception {
+    Result result = new JUnitCore().run(NoWarnings.class);
+    assertEquals(1, result.getFailures().size());
+    assertEquals("boo", result.getFailures().get(0).getException().getMessage());
+  }
 }

@@ -8,7 +8,7 @@ import org.mockito.invocation.Invocation;
 
 public interface InOrderContext {
 
-    boolean isVerified(Invocation invocation);
+  boolean isVerified(Invocation invocation);
 
-    void markVerified(Invocation i);
+  void markVerified(Invocation i);
 }

@@ -1,4 +1,3 @@
 package org.mockito;
 
-public @interface NullUnmarked {
-}
+public @interface NullUnmarked {}

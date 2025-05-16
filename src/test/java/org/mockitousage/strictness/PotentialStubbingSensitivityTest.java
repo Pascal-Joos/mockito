@@ -20,43 +20,43 @@ import org.mockitousage.IMethods;
 
 public class PotentialStubbingSensitivityTest {
 
-    @Rule public MockitoRule mockito = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
-    @Mock IMethods mock;
+  @Rule public MockitoRule mockito = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
+  @Mock IMethods mock;
 
-    @Before
-    public void setup() {
-        when(mock.simpleMethod("1")).thenReturn("1");
-    }
+  @Before
+  public void setup() {
+    when(mock.simpleMethod("1")).thenReturn("1");
+  }
 
-    @Test
-    public void allows_stubbing_with_different_arg_in_test_code() {
-        // although we are calling 'simpleMethod' with different argument
-        // Mockito understands that this is stubbing in the test code and does not trigger
-        // PotentialStubbingProblem
-        when(mock.simpleMethod("2")).thenReturn("2");
+  @Test
+  public void allows_stubbing_with_different_arg_in_test_code() {
+    // although we are calling 'simpleMethod' with different argument
+    // Mockito understands that this is stubbing in the test code and does not trigger
+    // PotentialStubbingProblem
+    when(mock.simpleMethod("2")).thenReturn("2");
 
-        // methods in anonymous inner classes are ok, too
-        new Runnable() {
-            public void run() {
-                when(mock.simpleMethod("3")).thenReturn("3");
-            }
-        }.run();
+    // methods in anonymous inner classes are ok, too
+    new Runnable() {
+      public void run() {
+        when(mock.simpleMethod("3")).thenReturn("3");
+      }
+    }.run();
 
-        // avoiding unnecessary stubbing failures:
-        mock.simpleMethod("1");
-        mock.simpleMethod("2");
-        mock.simpleMethod("3");
-    }
+    // avoiding unnecessary stubbing failures:
+    mock.simpleMethod("1");
+    mock.simpleMethod("2");
+    mock.simpleMethod("3");
+  }
 
-    @Test
-    public void reports_potential_stubbing_problem_in_production_code() {
-        // when
-        Assertions.assertThatThrownBy(
-                        new ThrowableAssert.ThrowingCallable() {
-                            public void call() throws Throwable {
-                                ProductionCode.simpleMethod(mock, "2");
-                            }
-                        })
-                .isInstanceOf(PotentialStubbingProblem.class);
-    }
+  @Test
+  public void reports_potential_stubbing_problem_in_production_code() {
+    // when
+    Assertions.assertThatThrownBy(
+            new ThrowableAssert.ThrowingCallable() {
+              public void call() throws Throwable {
+                ProductionCode.simpleMethod(mock, "2");
+              }
+            })
+        .isInstanceOf(PotentialStubbingProblem.class);
+  }
 }

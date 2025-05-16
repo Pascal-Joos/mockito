@@ -22,50 +22,50 @@ import org.mockitoutil.TestBase;
 @RunWith(MockitoJUnitRunner.class)
 public class PointingStackTraceToActualInvocationTest extends TestBase {
 
-    @Mock private IMethods mock;
-    @Mock private IMethods mockTwo;
+  @Mock private IMethods mock;
+  @Mock private IMethods mockTwo;
 
-    @Before
-    public void setup() {
-        first();
-        second();
-        third();
-        fourth();
-    }
+  @Before
+  public void setup() {
+    first();
+    second();
+    third();
+    fourth();
+  }
 
-    private void first() {
-        mock.simpleMethod(1);
-    }
+  private void first() {
+    mock.simpleMethod(1);
+  }
 
-    private void second() {
-        mockTwo.simpleMethod(2);
-    }
+  private void second() {
+    mockTwo.simpleMethod(2);
+  }
 
-    private void third() {
-        mock.simpleMethod(3);
-    }
+  private void third() {
+    mock.simpleMethod(3);
+  }
 
-    private void fourth() {
-        mockTwo.simpleMethod(4);
-    }
+  private void fourth() {
+    mockTwo.simpleMethod(4);
+  }
 
-    @Test
-    public void shouldPointToTooManyInvocationsChunkOnError() {
-        try {
-            verify(mock, times(0)).simpleMethod(1);
-            fail();
-        } catch (NeverWantedButInvoked e) {
-            assertThat(e).hasMessageContaining("first(");
-        }
+  @Test
+  public void shouldPointToTooManyInvocationsChunkOnError() {
+    try {
+      verify(mock, times(0)).simpleMethod(1);
+      fail();
+    } catch (NeverWantedButInvoked e) {
+      assertThat(e).hasMessageContaining("first(");
     }
+  }
 
-    @Test
-    public void shouldNotPointStackTracesToRunnersCode() {
-        try {
-            verify(mock, times(0)).simpleMethod(1);
-            fail();
-        } catch (NeverWantedButInvoked e) {
-            assertThat(e.getMessage()).doesNotContain(".runners.");
-        }
+  @Test
+  public void shouldNotPointStackTracesToRunnersCode() {
+    try {
+      verify(mock, times(0)).simpleMethod(1);
+      fail();
+    } catch (NeverWantedButInvoked e) {
+      assertThat(e.getMessage()).doesNotContain(".runners.");
     }
+  }
 }

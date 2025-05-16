@@ -15,7 +15,6 @@ import static org.mockito.Mockito.validateMockitoUsage;
 import static org.mockito.Mockito.verify;
 
 import java.util.Observer;
-
 import org.junit.After;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -26,75 +25,73 @@ import org.mockitoutil.TestBase;
 
 public class DetectingMisusedMatchersTest extends TestBase {
 
-    class WithFinal {
-        final Object finalMethod(Object object) {
-            return null;
-        }
+  class WithFinal {
+    final Object finalMethod(Object object) {
+      return null;
     }
+  }
 
-    @Mock private WithFinal withFinal;
+  @Mock private WithFinal withFinal;
 
-    @After
-    public void resetState() {
-        super.resetState();
+  @After
+  public void resetState() {
+    super.resetState();
+  }
+
+  private void misplaced_anyObject_argument_matcher() {
+    anyObject();
+  }
+
+  private void misplaced_anyInt_argument_matcher() {
+    anyInt();
+  }
+
+  private void misplaced_anyBoolean_argument_matcher() {
+    anyBoolean();
+  }
+
+  @Test
+  public void should_fail_fast_when_argument_matchers_are_abused() {
+    misplaced_anyObject_argument_matcher();
+    try {
+      mock(IMethods.class);
+      fail();
+    } catch (InvalidUseOfMatchersException e) {
+      assertThat(e).hasMessageContaining("Misplaced or misused argument matcher");
     }
+  }
 
-    private void misplaced_anyObject_argument_matcher() {
-        anyObject();
+  @Test
+  public void should_report_argument_locations_when_argument_matchers_misused() {
+    try {
+      Observer observer = mock(Observer.class);
+
+      misplaced_anyInt_argument_matcher();
+      misplaced_anyObject_argument_matcher();
+      misplaced_anyBoolean_argument_matcher();
+
+      observer.update(null, null);
+
+      validateMockitoUsage();
+      fail();
+    } catch (InvalidUseOfMatchersException e) {
+      assertThat(e)
+          .hasMessageContaining("DetectingMisusedMatchersTest.misplaced_anyInt_argument_matcher")
+          .hasMessageContaining("DetectingMisusedMatchersTest.misplaced_anyObject_argument_matcher")
+          .hasMessageContaining(
+              "DetectingMisusedMatchersTest.misplaced_anyBoolean_argument_matcher");
     }
+  }
 
-    private void misplaced_anyInt_argument_matcher() {
-        anyInt();
+  @SuppressWarnings({"MockitoUsage", "CheckReturnValue"})
+  @Test
+  public void shouldSayUnfinishedVerificationButNotInvalidUseOfMatchers() {
+    assumeTrue("Does not apply for inline mocks", withFinal.getClass() != WithFinal.class);
+    verify(withFinal).finalMethod(anyObject());
+    try {
+      verify(withFinal);
+      fail();
+    } catch (UnfinishedVerificationException e) {
     }
-
-    private void misplaced_anyBoolean_argument_matcher() {
-        anyBoolean();
-    }
-
-    @Test
-    public void should_fail_fast_when_argument_matchers_are_abused() {
-        misplaced_anyObject_argument_matcher();
-        try {
-            mock(IMethods.class);
-            fail();
-        } catch (InvalidUseOfMatchersException e) {
-            assertThat(e).hasMessageContaining("Misplaced or misused argument matcher");
-        }
-    }
-
-    @Test
-    public void should_report_argument_locations_when_argument_matchers_misused() {
-        try {
-            Observer observer = mock(Observer.class);
-
-            misplaced_anyInt_argument_matcher();
-            misplaced_anyObject_argument_matcher();
-            misplaced_anyBoolean_argument_matcher();
-
-            observer.update(null, null);
-
-            validateMockitoUsage();
-            fail();
-        } catch (InvalidUseOfMatchersException e) {
-            assertThat(e)
-                    .hasMessageContaining(
-                            "DetectingMisusedMatchersTest.misplaced_anyInt_argument_matcher")
-                    .hasMessageContaining(
-                            "DetectingMisusedMatchersTest.misplaced_anyObject_argument_matcher")
-                    .hasMessageContaining(
-                            "DetectingMisusedMatchersTest.misplaced_anyBoolean_argument_matcher");
-        }
-    }
-
-    @SuppressWarnings({"MockitoUsage", "CheckReturnValue"})
-    @Test
-    public void shouldSayUnfinishedVerificationButNotInvalidUseOfMatchers() {
-        assumeTrue("Does not apply for inline mocks", withFinal.getClass() != WithFinal.class);
-        verify(withFinal).finalMethod(anyObject());
-        try {
-            verify(withFinal);
-            fail();
-        } catch (UnfinishedVerificationException e) {
-        }
-    }
+  }
 }

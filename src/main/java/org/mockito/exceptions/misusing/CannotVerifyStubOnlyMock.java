@@ -8,7 +8,7 @@ import org.mockito.exceptions.base.MockitoException;
 
 public class CannotVerifyStubOnlyMock extends MockitoException {
 
-    public CannotVerifyStubOnlyMock(String message) {
-        super(message);
-    }
+  public CannotVerifyStubOnlyMock(String message) {
+    super(message);
+  }
 }

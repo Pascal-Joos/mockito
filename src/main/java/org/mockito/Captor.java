@@ -10,6 +10,7 @@ import java.lang.annotation.*;
  * Allows shorthand {@link org.mockito.ArgumentCaptor} creation on fields.
  *
  * <p>Example:
+ *
  * <pre class="code"><code class="java">
  * public class Test{
  *
@@ -35,8 +36,8 @@ import java.lang.annotation.*;
  * }
  * </code></pre>
  *
- * <p>
- * One of the advantages of using &#64;Captor annotation is that you can avoid warnings related capturing complex generic types.
+ * <p>One of the advantages of using &#64;Captor annotation is that you can avoid warnings related
+ * capturing complex generic types.
  *
  * @see ArgumentCaptor
  * @since 1.8.3

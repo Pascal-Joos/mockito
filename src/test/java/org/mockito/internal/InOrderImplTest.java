@@ -5,7 +5,6 @@
 package org.mockito.internal;
 
 import static java.util.Collections.singletonList;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -19,19 +18,19 @@ import org.mockitoutil.TestBase;
 @SuppressWarnings("unchecked")
 public class InOrderImplTest extends TestBase {
 
-    @Mock IMethods mock;
+  @Mock IMethods mock;
 
-    @Test
-    public void shouldMarkVerifiedInOrder() throws Exception {
-        // given
-        InOrderImpl impl = new InOrderImpl(singletonList(mock));
-        Invocation i = new InvocationBuilder().toInvocation();
-        assertFalse(impl.isVerified(i));
+  @Test
+  public void shouldMarkVerifiedInOrder() throws Exception {
+    // given
+    InOrderImpl impl = new InOrderImpl(singletonList(mock));
+    Invocation i = new InvocationBuilder().toInvocation();
+    assertFalse(impl.isVerified(i));
 
-        // when
-        impl.markVerified(i);
+    // when
+    impl.markVerified(i);
 
-        // then
-        assertTrue(impl.isVerified(i));
-    }
+    // then
+    assertTrue(impl.isVerified(i));
+  }
 }

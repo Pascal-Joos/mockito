@@ -8,7 +8,7 @@ import org.mockito.configuration.MockitoConfiguration;
 
 public class ConfigurationAccess {
 
-    public static MockitoConfiguration getConfig() {
-        return (MockitoConfiguration) new GlobalConfiguration().getIt();
-    }
+  public static MockitoConfiguration getConfig() {
+    return (MockitoConfiguration) new GlobalConfiguration().getIt();
+  }
 }

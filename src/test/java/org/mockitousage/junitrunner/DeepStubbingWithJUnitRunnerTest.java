@@ -13,32 +13,32 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class DeepStubbingWithJUnitRunnerTest {
 
-    private final SomeClass someClass = new SomeClass();
+  private final SomeClass someClass = new SomeClass();
 
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private Root root;
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private Root root;
 
-    @Test
-    public void deep_stubs_dont_trigger_unnecessary_stubbing_exception() {
-        // when
-        someClass.someMethod(root);
+  @Test
+  public void deep_stubs_dont_trigger_unnecessary_stubbing_exception() {
+    // when
+    someClass.someMethod(root);
 
-        // then unnecessary stubbing exception is not thrown
+    // then unnecessary stubbing exception is not thrown
+  }
+
+  public static class SomeClass {
+    void someMethod(Root root) {
+      root.getFoo().getBar();
     }
+  }
 
-    public static class SomeClass {
-        void someMethod(Root root) {
-            root.getFoo().getBar();
-        }
-    }
+  interface Root {
+    Foo getFoo();
+  }
 
-    interface Root {
-        Foo getFoo();
-    }
+  interface Foo {
+    Bar getBar();
+  }
 
-    interface Foo {
-        Bar getBar();
-    }
-
-    interface Bar {}
+  interface Bar {}
 }

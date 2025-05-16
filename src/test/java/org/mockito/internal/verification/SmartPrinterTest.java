@@ -16,67 +16,65 @@ import org.mockitoutil.TestBase;
 
 public class SmartPrinterTest extends TestBase {
 
-    private InvocationMatcher multi;
-    private InvocationMatcher shortie;
-    @Mock private IMethods mock;
+  private InvocationMatcher multi;
+  private InvocationMatcher shortie;
+  @Mock private IMethods mock;
 
-    @Before
-    public void setup() throws Exception {
-        mock.varargs(
-                "first very long argument",
-                "second very long argument",
-                "another very long argument");
-        multi = new InvocationMatcher(getLastInvocation());
+  @Before
+  public void setup() throws Exception {
+    mock.varargs(
+        "first very long argument", "second very long argument", "another very long argument");
+    multi = new InvocationMatcher(getLastInvocation());
 
-        mock.varargs("short arg");
-        shortie = new InvocationMatcher(getLastInvocation());
+    mock.varargs("short arg");
+    shortie = new InvocationMatcher(getLastInvocation());
+  }
+
+  @Test
+  public void shouldPrintBothInMultilinesWhenFirstIsMulti() {
+    // when
+    SmartPrinter printer = new SmartPrinter(multi, shortie.getInvocation());
+
+    // then
+    assertThat(printer.getWanted()).contains("\n");
+    for (String actual : printer.getActuals()) {
+      assertThat(actual).contains("\n");
     }
+  }
 
-    @Test
-    public void shouldPrintBothInMultilinesWhenFirstIsMulti() {
-        // when
-        SmartPrinter printer = new SmartPrinter(multi, shortie.getInvocation());
+  @Test
+  public void shouldPrintBothInMultilinesWhenSecondIsMulti() {
+    // when
+    SmartPrinter printer = new SmartPrinter(shortie, multi.getInvocation());
 
-        // then
-        assertThat(printer.getWanted()).contains("\n");
-        for (String actual : printer.getActuals()) {
-            assertThat(actual).contains("\n");
-        }
+    // then
+    assertThat(printer.getWanted()).contains("\n");
+    for (String actual : printer.getActuals()) {
+      assertThat(actual).contains("\n");
     }
+  }
 
-    @Test
-    public void shouldPrintBothInMultilinesWhenSecondIsMulti() {
-        // when
-        SmartPrinter printer = new SmartPrinter(shortie, multi.getInvocation());
+  @Test
+  public void shouldPrintBothInMultilinesWhenBothAreMulti() {
+    // when
+    SmartPrinter printer = new SmartPrinter(multi, multi.getInvocation());
 
-        // then
-        assertThat(printer.getWanted()).contains("\n");
-        for (String actual : printer.getActuals()) {
-            assertThat(actual).contains("\n");
-        }
+    // then
+    assertThat(printer.getWanted()).contains("\n");
+    for (String actual : printer.getActuals()) {
+      assertThat(actual).contains("\n");
     }
+  }
 
-    @Test
-    public void shouldPrintBothInMultilinesWhenBothAreMulti() {
-        // when
-        SmartPrinter printer = new SmartPrinter(multi, multi.getInvocation());
+  @Test
+  public void shouldPrintBothInSingleLineWhenBothAreShort() {
+    // when
+    SmartPrinter printer = new SmartPrinter(shortie, shortie.getInvocation());
 
-        // then
-        assertThat(printer.getWanted()).contains("\n");
-        for (String actual : printer.getActuals()) {
-            assertThat(actual).contains("\n");
-        }
+    // then
+    assertThat(printer.getWanted()).doesNotContain("\n");
+    for (String actual : printer.getActuals()) {
+      assertThat(actual).doesNotContain("\n");
     }
-
-    @Test
-    public void shouldPrintBothInSingleLineWhenBothAreShort() {
-        // when
-        SmartPrinter printer = new SmartPrinter(shortie, shortie.getInvocation());
-
-        // then
-        assertThat(printer.getWanted()).doesNotContain("\n");
-        for (String actual : printer.getActuals()) {
-            assertThat(actual).doesNotContain("\n");
-        }
-    }
+  }
 }

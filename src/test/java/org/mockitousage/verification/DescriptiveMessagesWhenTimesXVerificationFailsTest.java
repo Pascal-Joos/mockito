@@ -9,7 +9,6 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.times;
 
 import java.util.LinkedList;
-
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -20,42 +19,42 @@ import org.mockitoutil.TestBase;
 @SuppressWarnings("unchecked")
 public class DescriptiveMessagesWhenTimesXVerificationFailsTest extends TestBase {
 
-    @Mock private LinkedList mock;
+  @Mock private LinkedList mock;
 
-    @Test
-    public void shouldVerifyActualNumberOfInvocationsSmallerThanWanted() throws Exception {
-        mock.clear();
-        mock.clear();
-        mock.clear();
+  @Test
+  public void shouldVerifyActualNumberOfInvocationsSmallerThanWanted() throws Exception {
+    mock.clear();
+    mock.clear();
+    mock.clear();
 
-        Mockito.verify(mock, times(3)).clear();
-        try {
-            Mockito.verify(mock, times(100)).clear();
-            fail();
-        } catch (TooFewActualInvocations e) {
-            assertThat(e)
-                    .hasMessageContaining("mock.clear();")
-                    .hasMessageContaining("Wanted 100 times")
-                    .hasMessageContaining("was 3");
-        }
+    Mockito.verify(mock, times(3)).clear();
+    try {
+      Mockito.verify(mock, times(100)).clear();
+      fail();
+    } catch (TooFewActualInvocations e) {
+      assertThat(e)
+          .hasMessageContaining("mock.clear();")
+          .hasMessageContaining("Wanted 100 times")
+          .hasMessageContaining("was 3");
     }
+  }
 
-    @Test
-    public void shouldVerifyActualNumberOfInvocationsLargerThanWanted() throws Exception {
-        mock.clear();
-        mock.clear();
-        mock.clear();
-        mock.clear();
+  @Test
+  public void shouldVerifyActualNumberOfInvocationsLargerThanWanted() throws Exception {
+    mock.clear();
+    mock.clear();
+    mock.clear();
+    mock.clear();
 
-        Mockito.verify(mock, times(4)).clear();
-        try {
-            Mockito.verify(mock, times(1)).clear();
-            fail();
-        } catch (TooManyActualInvocations e) {
-            assertThat(e)
-                    .hasMessageContaining("mock.clear();")
-                    .hasMessageContaining("Wanted 1 time")
-                    .hasMessageContaining("was 4");
-        }
+    Mockito.verify(mock, times(4)).clear();
+    try {
+      Mockito.verify(mock, times(1)).clear();
+      fail();
+    } catch (TooManyActualInvocations e) {
+      assertThat(e)
+          .hasMessageContaining("mock.clear();")
+          .hasMessageContaining("Wanted 1 time")
+          .hasMessageContaining("was 4");
     }
+  }
 }

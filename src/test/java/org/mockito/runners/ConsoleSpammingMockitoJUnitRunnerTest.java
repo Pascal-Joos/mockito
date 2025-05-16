@@ -19,62 +19,62 @@ import org.mockitoutil.TestBase;
 
 public class ConsoleSpammingMockitoJUnitRunnerTest extends TestBase {
 
-    private ConsoleSpammingMockitoJUnitRunner runner;
+  private ConsoleSpammingMockitoJUnitRunner runner;
 
-    private MockitoLoggerStub loggerStub;
+  private MockitoLoggerStub loggerStub;
 
-    private RunNotifier notifier;
+  private RunNotifier notifier;
 
-    @Before
-    public void setup() throws InitializationError {
-        loggerStub = new MockitoLoggerStub();
-        notifier = new RunNotifier();
+  @Before
+  public void setup() throws InitializationError {
+    loggerStub = new MockitoLoggerStub();
+    notifier = new RunNotifier();
+  }
+
+  // TODO add sensible tests
+
+  @Test
+  public void shouldDelegateToGetDescription() throws Exception {
+    // given
+    final Description expectedDescription = Description.createSuiteDescription(this.getClass());
+    runner =
+        new ConsoleSpammingMockitoJUnitRunner(
+            loggerStub,
+            new InternalRunnerStub() {
+              public Description getDescription() {
+                return expectedDescription;
+              }
+            });
+
+    // when
+    Description description = runner.getDescription();
+
+    // then
+    assertEquals(expectedDescription, description);
+  }
+
+  public class MockitoLoggerStub extends ConsoleMockitoLogger {
+
+    StringBuilder loggedInfo = new StringBuilder();
+
+    public void log(Object what) {
+      super.log(what);
+      loggedInfo.append(what);
     }
 
-    // TODO add sensible tests
+    public String getLoggedInfo() {
+      return loggedInfo.toString();
+    }
+  }
 
-    @Test
-    public void shouldDelegateToGetDescription() throws Exception {
-        // given
-        final Description expectedDescription = Description.createSuiteDescription(this.getClass());
-        runner =
-                new ConsoleSpammingMockitoJUnitRunner(
-                        loggerStub,
-                        new InternalRunnerStub() {
-                            public Description getDescription() {
-                                return expectedDescription;
-                            }
-                        });
+  static class InternalRunnerStub implements InternalRunner {
 
-        // when
-        Description description = runner.getDescription();
-
-        // then
-        assertEquals(expectedDescription, description);
+    public Description getDescription() {
+      return null;
     }
 
-    public class MockitoLoggerStub extends ConsoleMockitoLogger {
+    public void run(RunNotifier notifier) {}
 
-        StringBuilder loggedInfo = new StringBuilder();
-
-        public void log(Object what) {
-            super.log(what);
-            loggedInfo.append(what);
-        }
-
-        public String getLoggedInfo() {
-            return loggedInfo.toString();
-        }
-    }
-
-    static class InternalRunnerStub implements InternalRunner {
-
-        public Description getDescription() {
-            return null;
-        }
-
-        public void run(RunNotifier notifier) {}
-
-        public void filter(Filter filter) throws NoTestsRemainException {}
-    }
+    public void filter(Filter filter) throws NoTestsRemainException {}
+  }
 }

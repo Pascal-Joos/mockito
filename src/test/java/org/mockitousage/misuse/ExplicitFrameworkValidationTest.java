@@ -20,37 +20,37 @@ import org.mockitoutil.TestBase;
 
 public class ExplicitFrameworkValidationTest extends TestBase {
 
-    @Mock IMethods mock;
+  @Mock IMethods mock;
 
-    @SuppressWarnings({"MockitoUsage", "CheckReturnValue"})
-    @Test
-    public void shouldValidateExplicitly() {
-        verify(mock);
-        try {
-            Mockito.validateMockitoUsage();
-            fail();
-        } catch (UnfinishedVerificationException e) {
-        }
+  @SuppressWarnings({"MockitoUsage", "CheckReturnValue"})
+  @Test
+  public void shouldValidateExplicitly() {
+    verify(mock);
+    try {
+      Mockito.validateMockitoUsage();
+      fail();
+    } catch (UnfinishedVerificationException e) {
     }
+  }
 
-    @SuppressWarnings({"MockitoUsage", "CheckReturnValue"})
-    @Test
-    public void shouldDetectUnfinishedStubbing() {
-        when(mock.simpleMethod());
-        try {
-            Mockito.validateMockitoUsage();
-            fail();
-        } catch (UnfinishedStubbingException e) {
-        }
+  @SuppressWarnings({"MockitoUsage", "CheckReturnValue"})
+  @Test
+  public void shouldDetectUnfinishedStubbing() {
+    when(mock.simpleMethod());
+    try {
+      Mockito.validateMockitoUsage();
+      fail();
+    } catch (UnfinishedStubbingException e) {
     }
+  }
 
-    @Test
-    public void shouldDetectMisplacedArgumentMatcher() {
-        anyObject();
-        try {
-            Mockito.validateMockitoUsage();
-            fail();
-        } catch (InvalidUseOfMatchersException e) {
-        }
+  @Test
+  public void shouldDetectMisplacedArgumentMatcher() {
+    anyObject();
+    try {
+      Mockito.validateMockitoUsage();
+      fail();
+    } catch (InvalidUseOfMatchersException e) {
     }
+  }
 }

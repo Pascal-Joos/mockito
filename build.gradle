@@ -12,8 +12,6 @@ buildscript {
 
         //Using buildscript.classpath so that we can resolve shipkit from maven local, during local testing
         classpath 'org.shipkit:shipkit:2.3.5'
-
-        classpath 'com.google.googlejavaformat:google-java-format:1.8'
     }
 }
 
@@ -23,6 +21,14 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.28.0'
     id 'biz.aQute.bnd.builder' version '5.1.0'
     id "net.ltgt.errorprone" version "3.0.1"
+    id 'com.diffplug.spotless' version '6.25.0'
+}
+
+spotless {
+    java {
+        googleJavaFormat('1.17.0') // or latest compatible with Java 17
+        target 'src/**/*.java'
+    }
 }
 
 description = 'Mockito mock objects library core API and implementation'
@@ -77,8 +83,8 @@ allprojects { proj ->
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 configurations {

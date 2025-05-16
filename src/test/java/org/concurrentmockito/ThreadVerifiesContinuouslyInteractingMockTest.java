@@ -15,39 +15,39 @@ import org.mockitoutil.TestBase;
 // this test exposes the problem most of the time
 public class ThreadVerifiesContinuouslyInteractingMockTest extends TestBase {
 
-    @Mock private IMethods mock;
+  @Mock private IMethods mock;
 
-    @Test
-    public void shouldAllowVerifyingInThreads() throws Exception {
-        for (int i = 0; i < 100; i++) {
-            performTest();
-        }
+  @Test
+  public void shouldAllowVerifyingInThreads() throws Exception {
+    for (int i = 0; i < 100; i++) {
+      performTest();
+    }
+  }
+
+  private void performTest() throws InterruptedException {
+    mock.simpleMethod();
+    final Thread[] listeners = new Thread[2];
+    for (int i = 0; i < listeners.length; i++) {
+      final int x = i;
+      listeners[i] =
+          new Thread() {
+            @Override
+            public void run() {
+              try {
+                Thread.sleep(x * 10);
+              } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+              }
+              mock.simpleMethod();
+            }
+          };
+      listeners[i].start();
     }
 
-    private void performTest() throws InterruptedException {
-        mock.simpleMethod();
-        final Thread[] listeners = new Thread[2];
-        for (int i = 0; i < listeners.length; i++) {
-            final int x = i;
-            listeners[i] =
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            try {
-                                Thread.sleep(x * 10);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                            mock.simpleMethod();
-                        }
-                    };
-            listeners[i].start();
-        }
+    verify(mock, atLeastOnce()).simpleMethod();
 
-        verify(mock, atLeastOnce()).simpleMethod();
-
-        for (Thread listener : listeners) {
-            listener.join();
-        }
+    for (Thread listener : listeners) {
+      listener.join();
     }
+  }
 }

@@ -16,33 +16,33 @@ import org.mockitoutil.TestBase;
 
 public class DetectingFinalMethodsTest extends TestBase {
 
-    class WithFinal {
-        final int foo() {
-            return 0;
-        }
+  class WithFinal {
+    final int foo() {
+      return 0;
     }
+  }
 
-    @Mock private WithFinal withFinal;
+  @Mock private WithFinal withFinal;
 
-    @Test
-    public void shouldFailWithUnfinishedVerification() {
-        assumeTrue("Does not apply for inline mocks", withFinal.getClass() != WithFinal.class);
-        verify(withFinal).foo();
-        try {
-            verify(withFinal).foo();
-            fail();
-        } catch (UnfinishedVerificationException e) {
-        }
+  @Test
+  public void shouldFailWithUnfinishedVerification() {
+    assumeTrue("Does not apply for inline mocks", withFinal.getClass() != WithFinal.class);
+    verify(withFinal).foo();
+    try {
+      verify(withFinal).foo();
+      fail();
+    } catch (UnfinishedVerificationException e) {
     }
+  }
 
-    @Test
-    public void shouldFailWithUnfinishedStubbing() {
-        assumeTrue("Does not apply for inline mocks", withFinal.getClass() != WithFinal.class);
-        withFinal = mock(WithFinal.class);
-        try {
-            when(withFinal.foo()).thenReturn(null);
-            fail();
-        } catch (MissingMethodInvocationException e) {
-        }
+  @Test
+  public void shouldFailWithUnfinishedStubbing() {
+    assumeTrue("Does not apply for inline mocks", withFinal.getClass() != WithFinal.class);
+    withFinal = mock(WithFinal.class);
+    try {
+      when(withFinal.foo()).thenReturn(null);
+      fail();
+    } catch (MissingMethodInvocationException e) {
     }
+  }
 }

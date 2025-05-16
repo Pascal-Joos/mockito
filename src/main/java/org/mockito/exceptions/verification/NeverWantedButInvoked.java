@@ -8,9 +8,9 @@ import org.mockito.exceptions.base.MockitoAssertionError;
 
 public class NeverWantedButInvoked extends MockitoAssertionError {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public NeverWantedButInvoked(String message) {
-        super(message);
-    }
+  public NeverWantedButInvoked(String message) {
+    super(message);
+  }
 }

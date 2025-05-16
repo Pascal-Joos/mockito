@@ -10,41 +10,41 @@ import java.util.List;
 
 public class TraceBuilder {
 
-    private String[] methods = {};
-    private String[] classes = {};
+  private String[] methods = {};
+  private String[] classes = {};
 
-    public Throwable toThrowable() {
-        RuntimeException exception = new RuntimeException();
-        exception.setStackTrace(toTraceArray());
-        return exception;
+  public Throwable toThrowable() {
+    RuntimeException exception = new RuntimeException();
+    exception.setStackTrace(toTraceArray());
+    return exception;
+  }
+
+  private List<StackTraceElement> toTraceList() {
+    assert methods.length == 0 || classes.length == 0;
+
+    List<StackTraceElement> trace = new LinkedList<StackTraceElement>();
+    for (String method : methods) {
+      trace.add(new StackTraceElement("SomeClass", method, "SomeClass.java", 50));
+    }
+    for (String clazz : classes) {
+      trace.add(new StackTraceElement(clazz, "someMethod", clazz + ".java", 50));
     }
 
-    private List<StackTraceElement> toTraceList() {
-        assert methods.length == 0 || classes.length == 0;
+    Collections.reverse(trace);
+    return trace;
+  }
 
-        List<StackTraceElement> trace = new LinkedList<StackTraceElement>();
-        for (String method : methods) {
-            trace.add(new StackTraceElement("SomeClass", method, "SomeClass.java", 50));
-        }
-        for (String clazz : classes) {
-            trace.add(new StackTraceElement(clazz, "someMethod", clazz + ".java", 50));
-        }
+  public StackTraceElement[] toTraceArray() {
+    return toTraceList().toArray(new StackTraceElement[0]);
+  }
 
-        Collections.reverse(trace);
-        return trace;
-    }
+  public TraceBuilder classes(String... classes) {
+    this.classes = classes;
+    return this;
+  }
 
-    public StackTraceElement[] toTraceArray() {
-        return toTraceList().toArray(new StackTraceElement[0]);
-    }
-
-    public TraceBuilder classes(String... classes) {
-        this.classes = classes;
-        return this;
-    }
-
-    public TraceBuilder methods(String... methods) {
-        this.methods = methods;
-        return this;
-    }
+  public TraceBuilder methods(String... methods) {
+    this.methods = methods;
+    return this;
+  }
 }

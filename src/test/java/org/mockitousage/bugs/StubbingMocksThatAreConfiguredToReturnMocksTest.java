@@ -13,15 +13,15 @@ import org.mockitoutil.TestBase;
 // issue 151
 public class StubbingMocksThatAreConfiguredToReturnMocksTest extends TestBase {
 
-    @Test
-    public void shouldAllowStubbingMocksConfiguredWithRETURNS_MOCKS() {
-        IMethods mock = mock(IMethods.class, RETURNS_MOCKS);
-        when(mock.objectReturningMethodNoArgs()).thenReturn(null);
-    }
+  @Test
+  public void shouldAllowStubbingMocksConfiguredWithRETURNS_MOCKS() {
+    IMethods mock = mock(IMethods.class, RETURNS_MOCKS);
+    when(mock.objectReturningMethodNoArgs()).thenReturn(null);
+  }
 
-    @Test
-    public void shouldAllowStubbingMocksConfiguredWithRETURNS_MOCKSWithDoApi() {
-        IMethods mock = mock(IMethods.class, RETURNS_MOCKS);
-        doReturn(null).when(mock).objectReturningMethodNoArgs();
-    }
+  @Test
+  public void shouldAllowStubbingMocksConfiguredWithRETURNS_MOCKSWithDoApi() {
+    IMethods mock = mock(IMethods.class, RETURNS_MOCKS);
+    doReturn(null).when(mock).objectReturningMethodNoArgs();
+  }
 }

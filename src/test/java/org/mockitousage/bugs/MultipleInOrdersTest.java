@@ -9,30 +9,29 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
 import java.util.List;
-
 import org.junit.Test;
 import org.mockito.InOrder;
 
 @SuppressWarnings("unchecked")
 public class MultipleInOrdersTest {
 
-    @Test
-    public void inOrderTest() {
-        List<String> list = mock(List.class);
+  @Test
+  public void inOrderTest() {
+    List<String> list = mock(List.class);
 
-        list.add("a");
-        list.add("x");
-        list.add("b");
-        list.add("y");
+    list.add("a");
+    list.add("x");
+    list.add("b");
+    list.add("y");
 
-        InOrder inOrder = inOrder(list);
-        InOrder inAnotherOrder = inOrder(list);
-        assertNotSame(inOrder, inAnotherOrder);
+    InOrder inOrder = inOrder(list);
+    InOrder inAnotherOrder = inOrder(list);
+    assertNotSame(inOrder, inAnotherOrder);
 
-        inOrder.verify(list).add("a");
-        inOrder.verify(list).add("b");
+    inOrder.verify(list).add("a");
+    inOrder.verify(list).add("b");
 
-        inAnotherOrder.verify(list).add("x");
-        inAnotherOrder.verify(list).add("y");
-    }
+    inAnotherOrder.verify(list).add("x");
+    inAnotherOrder.verify(list).add("y");
+  }
 }

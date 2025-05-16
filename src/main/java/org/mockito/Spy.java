@@ -10,14 +10,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-
 import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Allows shorthand wrapping of field instances in an spy object.
  *
- * <p>
- * Example:
+ * <p>Example:
  *
  * <pre class="code"><code class="java">
  * public class Test{
@@ -37,34 +35,34 @@ import org.mockito.junit.MockitoJUnitRunner;
  *    ...
  * }
  * </code></pre>
- * <p>
- * Same as doing:
+ *
+ * <p>Same as doing:
  *
  * <pre class="code"><code class="java">
  * Foo spyOnFoo = Mockito.spy(new Foo("argument"));
  * Bar spyOnBar = Mockito.spy(new Bar());
  * </code></pre>
  *
- * <p>
- * <strong>A field annotated with &#064;Spy can be initialized explicitly at declaration point.
- * Alternatively, if you don't provide the instance Mockito will try to find zero argument constructor (even private)
- * and create an instance for you.
- * <u>But Mockito cannot instantiate inner classes, local classes, abstract classes and interfaces.</u></strong>
+ * <p><strong>A field annotated with &#064;Spy can be initialized explicitly at declaration point.
+ * Alternatively, if you don't provide the instance Mockito will try to find zero argument
+ * constructor (even private) and create an instance for you. <u>But Mockito cannot instantiate
+ * inner classes, local classes, abstract classes and interfaces.</u></strong>
  *
- * For example this class can be instantiated by Mockito :
+ * <p>For example this class can be instantiated by Mockito :
+ *
  * <pre class="code"><code class="java">public class Bar {
  *    private Bar() {}
  *    public Bar(String publicConstructorWithOneArg) {}
  * }</code></pre>
- * </p>
  *
  * <h4>Important gotcha on spying real objects!</h4>
- * <ol>
- * <li>Sometimes it's impossible or impractical to use {@link Mockito#when(Object)} for stubbing spies.
- * Therefore for spies it is recommended to always use <code>doReturn</code>|<code>Answer</code>|<code>Throw()</code>|<code>CallRealMethod</code>
- * family of methods for stubbing. Example:
  *
- * <pre class="code"><code class="java">
+ * <ol>
+ *   <li>Sometimes it's impossible or impractical to use {@link Mockito#when(Object)} for stubbing
+ *       spies. Therefore for spies it is recommended to always use <code>doReturn</code>|<code>
+ *       Answer</code>|<code>Throw()</code>|<code>CallRealMethod</code> family of methods for
+ *       stubbing. Example:
+ *       <pre class="code"><code class="java">
  *   List list = new LinkedList();
  *   List spy = spy(list);
  *
@@ -74,32 +72,25 @@ import org.mockito.junit.MockitoJUnitRunner;
  *   //You have to use doReturn() for stubbing
  *   doReturn("foo").when(spy).get(0);
  * </code></pre>
- * </li>
- *
- * <li>Mockito <b>*does not*</b> delegate calls to the passed real instance, instead it actually creates a copy of it.
- * So if you keep the real instance and interact with it, don't expect the spied to be aware of those interaction
- * and their effect on real instance state.
- * The corollary is that when an <b>*unstubbed*</b> method is called <b>*on the spy*</b> but <b>*not on the real instance*</b>,
- * you won't see any effects on the real instance.</li>
- *
- * <li>Watch out for final methods.
- * Mockito doesn't mock final methods so the bottom line is: when you spy on real objects + you try to stub a final method = trouble.
- * Also you won't be able to verify those method as well.
- * </li>
+ *   <li>Mockito <b>*does not*</b> delegate calls to the passed real instance, instead it actually
+ *       creates a copy of it. So if you keep the real instance and interact with it, don't expect
+ *       the spied to be aware of those interaction and their effect on real instance state. The
+ *       corollary is that when an <b>*unstubbed*</b> method is called <b>*on the spy*</b> but
+ *       <b>*not on the real instance*</b>, you won't see any effects on the real instance.
+ *   <li>Watch out for final methods. Mockito doesn't mock final methods so the bottom line is: when
+ *       you spy on real objects + you try to stub a final method = trouble. Also you won't be able
+ *       to verify those method as well.
  * </ol>
  *
- * <p>
- * <strong>One last warning :</strong> if you call <code>MockitoAnnotations.openMocks(this)</code> in a
- * super class <strong>constructor</strong> then this will not work. It is because fields
- * in subclass are only instantiated after super class constructor has returned.
- * It's better to use &#64;Before.
- * <strong>Instead</strong> you can also put openMocks() in your JUnit runner (&#064;RunWith) or use the built-in
- * {@link MockitoJUnitRunner}. Also, make sure to release any mocks after disposing your test class with a
- * corresponding hook.
- * </p>
+ * <p><strong>One last warning :</strong> if you call <code>MockitoAnnotations.openMocks(this)
+ * </code> in a super class <strong>constructor</strong> then this will not work. It is because
+ * fields in subclass are only instantiated after super class constructor has returned. It's better
+ * to use &#64;Before. <strong>Instead</strong> you can also put openMocks() in your JUnit runner
+ * (&#064;RunWith) or use the built-in {@link MockitoJUnitRunner}. Also, make sure to release any
+ * mocks after disposing your test class with a corresponding hook.
  *
- * <p>Note that the spy won't have any annotations of the spied type, because CGLIB won't rewrite them.
- * It may troublesome for code that rely on the spy to have these annotations.</p>
+ * <p>Note that the spy won't have any annotations of the spied type, because CGLIB won't rewrite
+ * them. It may troublesome for code that rely on the spy to have these annotations.
  *
  * @see Mockito#spy(Object)
  * @see Mock

@@ -22,27 +22,27 @@ import org.mockitoutil.TestBase;
 
 public class MockitoPluginsTest extends TestBase {
 
-    private final MockitoPlugins plugins = Mockito.framework().getPlugins();
+  private final MockitoPlugins plugins = Mockito.framework().getPlugins();
 
-    @Test
-    public void provides_built_in_plugins() {
-        assertNotNull(plugins.getInlineMockMaker());
-        assertNotNull(plugins.getDefaultPlugin(MockMaker.class));
-        assertNotNull(plugins.getDefaultPlugin(StackTraceCleanerProvider.class));
-        assertNotNull(plugins.getDefaultPlugin(PluginSwitch.class));
-        assertNotNull(plugins.getDefaultPlugin(InstantiatorProvider.class));
-        assertNotNull(plugins.getDefaultPlugin(InstantiatorProvider2.class));
-        assertNotNull(plugins.getDefaultPlugin(AnnotationEngine.class));
-        assertNotNull(plugins.getDefaultPlugin(MockitoLogger.class));
-    }
+  @Test
+  public void provides_built_in_plugins() {
+    assertNotNull(plugins.getInlineMockMaker());
+    assertNotNull(plugins.getDefaultPlugin(MockMaker.class));
+    assertNotNull(plugins.getDefaultPlugin(StackTraceCleanerProvider.class));
+    assertNotNull(plugins.getDefaultPlugin(PluginSwitch.class));
+    assertNotNull(plugins.getDefaultPlugin(InstantiatorProvider.class));
+    assertNotNull(plugins.getDefaultPlugin(InstantiatorProvider2.class));
+    assertNotNull(plugins.getDefaultPlugin(AnnotationEngine.class));
+    assertNotNull(plugins.getDefaultPlugin(MockitoLogger.class));
+  }
 
-    @SuppressWarnings("deprecation")
-    @Test
-    public void instantiator_provider_backwards_compatibility() {
-        InstantiatorProvider provider = plugins.getDefaultPlugin(InstantiatorProvider.class);
-        Instantiator instantiator =
-                provider.getInstantiator(withSettings().build(MockitoPluginsTest.class));
+  @SuppressWarnings("deprecation")
+  @Test
+  public void instantiator_provider_backwards_compatibility() {
+    InstantiatorProvider provider = plugins.getDefaultPlugin(InstantiatorProvider.class);
+    Instantiator instantiator =
+        provider.getInstantiator(withSettings().build(MockitoPluginsTest.class));
 
-        assertNotNull(instantiator.newInstance(MockitoPluginsTest.class));
-    }
+    assertNotNull(instantiator.newInstance(MockitoPluginsTest.class));
+  }
 }

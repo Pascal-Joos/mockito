@@ -11,26 +11,27 @@ import org.mockito.plugins.InstantiatorProvider;
 import org.mockito.plugins.InstantiatorProvider2;
 
 /**
- * Adapts old, deprecated {@link InstantiatorProvider} onto a new public {@link InstantiatorProvider2} API.
+ * Adapts old, deprecated {@link InstantiatorProvider} onto a new public {@link
+ * InstantiatorProvider2} API.
  */
 public class InstantiatorProviderAdapter implements InstantiatorProvider2 {
-    private final InstantiatorProvider provider;
+  private final InstantiatorProvider provider;
 
-    public InstantiatorProviderAdapter(InstantiatorProvider provider) {
-        this.provider = provider;
-    }
+  public InstantiatorProviderAdapter(InstantiatorProvider provider) {
+    this.provider = provider;
+  }
 
-    @Override
-    public Instantiator getInstantiator(final MockCreationSettings<?> settings) {
-        return new Instantiator() {
-            @Override
-            public <T> T newInstance(Class<T> cls) throws InstantiationException {
-                try {
-                    return provider.getInstantiator(settings).newInstance(cls);
-                } catch (org.mockito.internal.creation.instance.InstantiationException e) {
-                    throw new InstantiationException(e.getMessage(), e.getCause());
-                }
-            }
-        };
-    }
+  @Override
+  public Instantiator getInstantiator(final MockCreationSettings<?> settings) {
+    return new Instantiator() {
+      @Override
+      public <T> T newInstance(Class<T> cls) throws InstantiationException {
+        try {
+          return provider.getInstantiator(settings).newInstance(cls);
+        } catch (org.mockito.internal.creation.instance.InstantiationException e) {
+          throw new InstantiationException(e.getMessage(), e.getCause());
+        }
+      }
+    };
+  }
 }

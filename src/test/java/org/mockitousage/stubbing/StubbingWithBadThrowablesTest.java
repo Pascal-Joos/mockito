@@ -7,7 +7,6 @@ package org.mockitousage.stubbing;
 import static org.mockito.Mockito.doThrow;
 
 import java.util.List;
-
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.Test;
@@ -19,22 +18,21 @@ import org.mockitoutil.TestBase;
 @SuppressWarnings({"serial", "unchecked", "rawtypes"})
 public class StubbingWithBadThrowablesTest extends TestBase {
 
-    @Mock List mock;
+  @Mock List mock;
 
-    @Test
-    public void handles_bad_exception() {
-        Assertions.assertThatThrownBy(
-                        new ThrowableAssert.ThrowingCallable() {
-                            public void call() {
-                                doThrow(UninstantiableException.class).when(mock).clear();
-                            }
-                        })
-                .isInstanceOf(
-                        InstantiationError.class); // because the exception cannot be instantiated
+  @Test
+  public void handles_bad_exception() {
+    Assertions.assertThatThrownBy(
+            new ThrowableAssert.ThrowingCallable() {
+              public void call() {
+                doThrow(UninstantiableException.class).when(mock).clear();
+              }
+            })
+        .isInstanceOf(InstantiationError.class); // because the exception cannot be instantiated
 
-        // ensure that the state is cleaned
-        Mockito.validateMockitoUsage();
-    }
+    // ensure that the state is cleaned
+    Mockito.validateMockitoUsage();
+  }
 
-    abstract static class UninstantiableException extends RuntimeException {}
+  abstract static class UninstantiableException extends RuntimeException {}
 }

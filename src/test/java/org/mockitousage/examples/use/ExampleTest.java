@@ -7,7 +7,6 @@ package org.mockitousage.examples.use;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -18,78 +17,77 @@ import org.mockito.junit.MockitoRule;
 
 public class ExampleTest {
 
-    @Rule public MockitoRule rule = MockitoJUnit.rule();
+  @Rule public MockitoRule rule = MockitoJUnit.rule();
 
-    @Mock private ArticleCalculator mockCalculator;
-    @Mock private ArticleDatabase mockDatabase;
+  @Mock private ArticleCalculator mockCalculator;
+  @Mock private ArticleDatabase mockDatabase;
 
-    @InjectMocks private ArticleManager articleManager;
+  @InjectMocks private ArticleManager articleManager;
 
-    @Test
-    public void managerCountsArticlesAndSavesThemInTheDatabase() {
-        when(mockCalculator.countArticles("Guardian")).thenReturn(12);
-        when(mockCalculator.countArticlesInPolish(anyString())).thenReturn(5);
+  @Test
+  public void managerCountsArticlesAndSavesThemInTheDatabase() {
+    when(mockCalculator.countArticles("Guardian")).thenReturn(12);
+    when(mockCalculator.countArticlesInPolish(anyString())).thenReturn(5);
 
-        articleManager.updateArticleCounters("Guardian");
+    articleManager.updateArticleCounters("Guardian");
 
-        verify(mockDatabase).updateNumberOfArticles("Guardian", 12);
-        verify(mockDatabase).updateNumberOfPolishArticles("Guardian", 5);
-        verify(mockDatabase).updateNumberOfEnglishArticles("Guardian", 7);
-    }
+    verify(mockDatabase).updateNumberOfArticles("Guardian", 12);
+    verify(mockDatabase).updateNumberOfPolishArticles("Guardian", 5);
+    verify(mockDatabase).updateNumberOfEnglishArticles("Guardian", 7);
+  }
 
-    @Test
-    public void managerCountsArticlesUsingCalculator() {
-        articleManager.updateArticleCounters("Guardian");
+  @Test
+  public void managerCountsArticlesUsingCalculator() {
+    articleManager.updateArticleCounters("Guardian");
 
-        verify(mockCalculator).countArticles("Guardian");
-        verify(mockCalculator).countArticlesInPolish("Guardian");
-    }
+    verify(mockCalculator).countArticles("Guardian");
+    verify(mockCalculator).countArticlesInPolish("Guardian");
+  }
 
-    @Test
-    public void managerSavesArticlesInTheDatabase() {
-        articleManager.updateArticleCounters("Guardian");
+  @Test
+  public void managerSavesArticlesInTheDatabase() {
+    articleManager.updateArticleCounters("Guardian");
 
-        verify(mockDatabase).updateNumberOfArticles("Guardian", 0);
-        verify(mockDatabase).updateNumberOfPolishArticles("Guardian", 0);
-        verify(mockDatabase).updateNumberOfEnglishArticles("Guardian", 0);
-    }
+    verify(mockDatabase).updateNumberOfArticles("Guardian", 0);
+    verify(mockDatabase).updateNumberOfPolishArticles("Guardian", 0);
+    verify(mockDatabase).updateNumberOfEnglishArticles("Guardian", 0);
+  }
 
-    @Test
-    public void managerUpdatesNumberOfRelatedArticles() {
-        Article articleOne = new Article();
-        Article articleTwo = new Article();
-        Article articleThree = new Article();
+  @Test
+  public void managerUpdatesNumberOfRelatedArticles() {
+    Article articleOne = new Article();
+    Article articleTwo = new Article();
+    Article articleThree = new Article();
 
-        when(mockCalculator.countNumberOfRelatedArticles(articleOne)).thenReturn(1);
-        when(mockCalculator.countNumberOfRelatedArticles(articleTwo)).thenReturn(12);
-        when(mockCalculator.countNumberOfRelatedArticles(articleThree)).thenReturn(0);
+    when(mockCalculator.countNumberOfRelatedArticles(articleOne)).thenReturn(1);
+    when(mockCalculator.countNumberOfRelatedArticles(articleTwo)).thenReturn(12);
+    when(mockCalculator.countNumberOfRelatedArticles(articleThree)).thenReturn(0);
 
-        when(mockDatabase.getArticlesFor("Guardian"))
-                .thenReturn(Arrays.asList(articleOne, articleTwo, articleThree));
+    when(mockDatabase.getArticlesFor("Guardian"))
+        .thenReturn(Arrays.asList(articleOne, articleTwo, articleThree));
 
-        articleManager.updateRelatedArticlesCounters("Guardian");
+    articleManager.updateRelatedArticlesCounters("Guardian");
 
-        verify(mockDatabase).save(articleOne);
-        verify(mockDatabase).save(articleTwo);
-        verify(mockDatabase).save(articleThree);
-    }
+    verify(mockDatabase).save(articleOne);
+    verify(mockDatabase).save(articleTwo);
+    verify(mockDatabase).save(articleThree);
+  }
 
-    @Test
-    public void shouldPersistRecalculatedArticle() {
-        Article articleOne = new Article();
-        Article articleTwo = new Article();
+  @Test
+  public void shouldPersistRecalculatedArticle() {
+    Article articleOne = new Article();
+    Article articleTwo = new Article();
 
-        when(mockCalculator.countNumberOfRelatedArticles(articleOne)).thenReturn(1);
-        when(mockCalculator.countNumberOfRelatedArticles(articleTwo)).thenReturn(12);
+    when(mockCalculator.countNumberOfRelatedArticles(articleOne)).thenReturn(1);
+    when(mockCalculator.countNumberOfRelatedArticles(articleTwo)).thenReturn(12);
 
-        when(mockDatabase.getArticlesFor("Guardian"))
-                .thenReturn(Arrays.asList(articleOne, articleTwo));
+    when(mockDatabase.getArticlesFor("Guardian")).thenReturn(Arrays.asList(articleOne, articleTwo));
 
-        articleManager.updateRelatedArticlesCounters("Guardian");
+    articleManager.updateRelatedArticlesCounters("Guardian");
 
-        InOrder inOrder = inOrder(mockDatabase, mockCalculator);
+    InOrder inOrder = inOrder(mockDatabase, mockCalculator);
 
-        inOrder.verify(mockCalculator).countNumberOfRelatedArticles((Article) anyObject());
-        inOrder.verify(mockDatabase, atLeastOnce()).save((Article) anyObject());
-    }
+    inOrder.verify(mockCalculator).countNumberOfRelatedArticles((Article) anyObject());
+    inOrder.verify(mockDatabase, atLeastOnce()).save((Article) anyObject());
+  }
 }

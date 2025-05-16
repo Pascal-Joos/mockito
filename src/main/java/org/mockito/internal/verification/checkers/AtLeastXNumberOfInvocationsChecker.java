@@ -13,7 +13,6 @@ import static org.mockito.internal.invocation.InvocationsFinder.findInvocations;
 import static org.mockito.internal.invocation.InvocationsFinder.getAllLocations;
 
 import java.util.List;
-
 import org.mockito.internal.verification.api.InOrderContext;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.Location;
@@ -21,36 +20,35 @@ import org.mockito.invocation.MatchableInvocation;
 
 public class AtLeastXNumberOfInvocationsChecker {
 
-    public static void checkAtLeastNumberOfInvocations(
-            List<Invocation> invocations, MatchableInvocation wanted, int wantedCount) {
-        List<Invocation> actualInvocations = findInvocations(invocations, wanted);
+  public static void checkAtLeastNumberOfInvocations(
+      List<Invocation> invocations, MatchableInvocation wanted, int wantedCount) {
+    List<Invocation> actualInvocations = findInvocations(invocations, wanted);
 
-        int actualCount = actualInvocations.size();
-        if (wantedCount > actualCount) {
-            List<Location> allLocations = getAllLocations(actualInvocations);
-            throw tooFewActualInvocations(
-                    new AtLeastDiscrepancy(wantedCount, actualCount), wanted, allLocations);
-        }
-
-        markVerified(actualInvocations, wanted);
+    int actualCount = actualInvocations.size();
+    if (wantedCount > actualCount) {
+      List<Location> allLocations = getAllLocations(actualInvocations);
+      throw tooFewActualInvocations(
+          new AtLeastDiscrepancy(wantedCount, actualCount), wanted, allLocations);
     }
 
-    public static void checkAtLeastNumberOfInvocations(
-            List<Invocation> invocations,
-            MatchableInvocation wanted,
-            int wantedCount,
-            InOrderContext orderingContext) {
-        List<Invocation> chunk =
-                findAllMatchingUnverifiedChunks(invocations, wanted, orderingContext);
+    markVerified(actualInvocations, wanted);
+  }
 
-        int actualCount = chunk.size();
+  public static void checkAtLeastNumberOfInvocations(
+      List<Invocation> invocations,
+      MatchableInvocation wanted,
+      int wantedCount,
+      InOrderContext orderingContext) {
+    List<Invocation> chunk = findAllMatchingUnverifiedChunks(invocations, wanted, orderingContext);
 
-        if (wantedCount > actualCount) {
-            List<Location> allLocations = getAllLocations(chunk);
-            throw tooFewActualInvocationsInOrder(
-                    new AtLeastDiscrepancy(wantedCount, actualCount), wanted, allLocations);
-        }
+    int actualCount = chunk.size();
 
-        markVerifiedInOrder(chunk, wanted, orderingContext);
+    if (wantedCount > actualCount) {
+      List<Location> allLocations = getAllLocations(chunk);
+      throw tooFewActualInvocationsInOrder(
+          new AtLeastDiscrepancy(wantedCount, actualCount), wanted, allLocations);
     }
+
+    markVerifiedInOrder(chunk, wanted, orderingContext);
+  }
 }

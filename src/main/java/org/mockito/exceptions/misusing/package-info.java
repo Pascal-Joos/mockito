@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Exceptions thrown when Mockito is misused.
- */
+/** Exceptions thrown when Mockito is misused. */
 package org.mockito.exceptions.misusing;

@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Stack trace filtering / cleaning internal APIs.
- */
+/** Stack trace filtering / cleaning internal APIs. */
 package org.mockito.internal.exceptions.stacktrace;

@@ -16,52 +16,52 @@ import org.mockitoutil.TestBase;
 
 public class NPEWithCertainMatchersTest extends TestBase {
 
-    @Mock IMethods mock;
+  @Mock IMethods mock;
 
-    @After
-    public void clearState() {
-        this.resetState();
-    }
+  @After
+  public void clearState() {
+    this.resetState();
+  }
 
-    @Test
-    public void shouldNotThrowNPEWhenIntegerPassed() {
-        mock.intArgumentMethod(100);
+  @Test
+  public void shouldNotThrowNPEWhenIntegerPassed() {
+    mock.intArgumentMethod(100);
 
-        verify(mock).intArgumentMethod(isA(Integer.class));
-    }
+    verify(mock).intArgumentMethod(isA(Integer.class));
+  }
 
-    @Test
-    public void shouldNotThrowNPEWhenIntPassed() {
-        mock.intArgumentMethod(100);
+  @Test
+  public void shouldNotThrowNPEWhenIntPassed() {
+    mock.intArgumentMethod(100);
 
-        verify(mock).intArgumentMethod(isA(Integer.class));
-    }
+    verify(mock).intArgumentMethod(isA(Integer.class));
+  }
 
-    @Test
-    public void shouldNotThrowNPEWhenIntegerPassedToEq() {
-        mock.intArgumentMethod(100);
+  @Test
+  public void shouldNotThrowNPEWhenIntegerPassedToEq() {
+    mock.intArgumentMethod(100);
 
-        verify(mock).intArgumentMethod(eq(new Integer(100)));
-    }
+    verify(mock).intArgumentMethod(eq(new Integer(100)));
+  }
 
-    @Test
-    public void shouldNotThrowNPEWhenIntegerPassedToSame() {
-        mock.intArgumentMethod(100);
+  @Test
+  public void shouldNotThrowNPEWhenIntegerPassedToSame() {
+    mock.intArgumentMethod(100);
 
-        verify(mock, never()).intArgumentMethod(same(new Integer(100)));
-    }
+    verify(mock, never()).intArgumentMethod(same(new Integer(100)));
+  }
 
-    @Test(expected = AssertionError.class)
-    public void shouldNotThrowNPEWhenNullPassedToEq() {
-        mock.objectArgMethod("not null");
+  @Test(expected = AssertionError.class)
+  public void shouldNotThrowNPEWhenNullPassedToEq() {
+    mock.objectArgMethod("not null");
 
-        verify(mock).objectArgMethod(eq(null));
-    }
+    verify(mock).objectArgMethod(eq(null));
+  }
 
-    @Test(expected = AssertionError.class)
-    public void shouldNotThrowNPEWhenNullPassedToSame() {
-        mock.objectArgMethod("not null");
+  @Test(expected = AssertionError.class)
+  public void shouldNotThrowNPEWhenNullPassedToSame() {
+    mock.objectArgMethod("not null");
 
-        verify(mock).objectArgMethod(same(null));
-    }
+    verify(mock).objectArgMethod(same(null));
+  }
 }

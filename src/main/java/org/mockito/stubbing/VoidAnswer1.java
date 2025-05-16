@@ -7,11 +7,12 @@ package org.mockito.stubbing;
 import org.mockito.Incubating;
 
 /**
- * Generic interface to be used for configuring mock's answer for a single argument invocation that returns nothing.
+ * Generic interface to be used for configuring mock's answer for a single argument invocation that
+ * returns nothing.
  *
- * Answer specifies an action that is executed when you interact with the mock.
- * <p>
- * Example of stubbing a mock with this custom answer:
+ * <p>Answer specifies an action that is executed when you interact with the mock.
+ *
+ * <p>Example of stubbing a mock with this custom answer:
  *
  * <pre class="code"><code class="java">
  * import static org.mockito.AdditionalAnswers.answerVoid;
@@ -32,10 +33,9 @@ import org.mockito.Incubating;
  */
 @Incubating
 public interface VoidAnswer1<A0> {
-    /**
-     * @param argument0 the single argument.
-     *
-     * @throws Throwable the throwable to be thrown
-     */
-    void answer(A0 argument0) throws Throwable;
+  /**
+   * @param argument0 the single argument.
+   * @throws Throwable the throwable to be thrown
+   */
+  void answer(A0 argument0) throws Throwable;
 }

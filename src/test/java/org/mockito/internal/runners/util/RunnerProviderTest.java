@@ -13,14 +13,14 @@ import org.mockitoutil.TestBase;
 
 public class RunnerProviderTest extends TestBase {
 
-    @Test
-    public void shouldCreateRunnerInstance() throws Throwable {
-        // given
-        RunnerProvider provider = new RunnerProvider();
-        // when
-        InternalRunner runner =
-                provider.newInstance(DefaultInternalRunner.class.getName(), this.getClass(), null);
-        // then
-        assertNotNull(runner);
-    }
+  @Test
+  public void shouldCreateRunnerInstance() throws Throwable {
+    // given
+    RunnerProvider provider = new RunnerProvider();
+    // when
+    InternalRunner runner =
+        provider.newInstance(DefaultInternalRunner.class.getName(), this.getClass(), null);
+    // then
+    assertNotNull(runner);
+  }
 }

@@ -18,149 +18,149 @@ import org.mockitoutil.TestBase;
 
 public class VerificationInOrderMixedWithOrdiraryVerificationTest extends TestBase {
 
-    private IMethods mockOne;
-    private IMethods mockTwo;
-    private IMethods mockThree;
-    private InOrder inOrder;
+  private IMethods mockOne;
+  private IMethods mockTwo;
+  private IMethods mockThree;
+  private InOrder inOrder;
 
-    @Before
-    public void setUp() {
-        mockOne = mock(IMethods.class);
-        mockTwo = mock(IMethods.class);
-        mockThree = mock(IMethods.class);
+  @Before
+  public void setUp() {
+    mockOne = mock(IMethods.class);
+    mockTwo = mock(IMethods.class);
+    mockThree = mock(IMethods.class);
 
-        mockOne.simpleMethod(1);
-        mockOne.simpleMethod(1);
-        mockTwo.simpleMethod(2);
-        mockThree.simpleMethod(3);
-        mockThree.simpleMethod(4);
+    mockOne.simpleMethod(1);
+    mockOne.simpleMethod(1);
+    mockTwo.simpleMethod(2);
+    mockThree.simpleMethod(3);
+    mockThree.simpleMethod(4);
 
-        inOrder = inOrder(mockOne, mockThree);
+    inOrder = inOrder(mockOne, mockThree);
+  }
+
+  @Test
+  public void shouldMixVerificationInOrderAndOrdinaryVerification() {
+    inOrder.verify(mockOne, atLeastOnce()).simpleMethod(1);
+    inOrder.verify(mockThree).simpleMethod(3);
+    inOrder.verify(mockThree).simpleMethod(4);
+    verify(mockTwo).simpleMethod(2);
+
+    verifyNoMoreInteractions(mockOne, mockTwo, mockThree);
+  }
+
+  @Test
+  public void shouldAllowOrdinarilyVerifyingMockPassedToInOrderObject() {
+    inOrder.verify(mockOne, atLeastOnce()).simpleMethod(1);
+
+    verify(mockThree).simpleMethod(3);
+    verify(mockThree).simpleMethod(4);
+    verify(mockTwo).simpleMethod(2);
+
+    verifyNoMoreInteractions(mockOne, mockTwo, mockThree);
+  }
+
+  @Test
+  public void shouldAllowRedundantVerifications() {
+    verify(mockOne, atLeastOnce()).simpleMethod(1);
+    verify(mockTwo).simpleMethod(2);
+    verify(mockThree).simpleMethod(3);
+    verify(mockThree).simpleMethod(4);
+
+    inOrder.verify(mockOne, atLeastOnce()).simpleMethod(1);
+    inOrder.verify(mockThree).simpleMethod(3);
+    inOrder.verify(mockThree).simpleMethod(4);
+
+    verifyNoMoreInteractions(mockOne, mockTwo, mockThree);
+  }
+
+  @Test
+  public void shouldFailOnNoMoreInteractions() {
+    inOrder.verify(mockOne, atLeastOnce()).simpleMethod(1);
+    inOrder.verify(mockThree).simpleMethod(3);
+    inOrder.verify(mockThree).simpleMethod(4);
+
+    try {
+      verifyNoMoreInteractions(mockOne, mockTwo, mockThree);
+      fail();
+    } catch (NoInteractionsWanted e) {
     }
+  }
 
-    @Test
-    public void shouldMixVerificationInOrderAndOrdinaryVerification() {
-        inOrder.verify(mockOne, atLeastOnce()).simpleMethod(1);
-        inOrder.verify(mockThree).simpleMethod(3);
-        inOrder.verify(mockThree).simpleMethod(4);
-        verify(mockTwo).simpleMethod(2);
+  @Test
+  public void shouldFailOnNoMoreInteractionsOnMockVerifiedInOrder() {
+    inOrder.verify(mockOne, atLeastOnce()).simpleMethod(1);
+    inOrder.verify(mockThree).simpleMethod(3);
+    verify(mockTwo).simpleMethod(2);
 
-        verifyNoMoreInteractions(mockOne, mockTwo, mockThree);
+    try {
+      verifyNoMoreInteractions(mockOne, mockTwo, mockThree);
+      fail();
+    } catch (NoInteractionsWanted e) {
     }
+  }
 
-    @Test
-    public void shouldAllowOrdinarilyVerifyingMockPassedToInOrderObject() {
-        inOrder.verify(mockOne, atLeastOnce()).simpleMethod(1);
+  @Test
+  public void shouldAllowOneMethodVerifiedInOrder() {
+    verify(mockTwo).simpleMethod(2);
+    verify(mockOne, atLeastOnce()).simpleMethod(1);
 
-        verify(mockThree).simpleMethod(3);
-        verify(mockThree).simpleMethod(4);
-        verify(mockTwo).simpleMethod(2);
+    inOrder.verify(mockOne, atLeastOnce()).simpleMethod(1);
+  }
 
-        verifyNoMoreInteractions(mockOne, mockTwo, mockThree);
+  @Test
+  public void shouldFailOnLastInvocationTooEarly() {
+    inOrder.verify(mockThree).simpleMethod(4);
+
+    verify(mockThree).simpleMethod(4);
+    verify(mockTwo).simpleMethod(2);
+
+    try {
+      inOrder.verify(mockOne, atLeastOnce()).simpleMethod(1);
+      fail();
+    } catch (VerificationInOrderFailure e) {
     }
+  }
 
-    @Test
-    public void shouldAllowRedundantVerifications() {
-        verify(mockOne, atLeastOnce()).simpleMethod(1);
-        verify(mockTwo).simpleMethod(2);
-        verify(mockThree).simpleMethod(3);
-        verify(mockThree).simpleMethod(4);
+  @Test(expected = MockitoException.class)
+  public void shouldScreamWhenUnfamiliarMockPassedToInOrderObject() {
+    inOrder.verify(mockTwo, atLeastOnce()).simpleMethod(1);
+  }
 
-        inOrder.verify(mockOne, atLeastOnce()).simpleMethod(1);
-        inOrder.verify(mockThree).simpleMethod(3);
-        inOrder.verify(mockThree).simpleMethod(4);
+  @Test
+  public void shouldUseEqualsToVerifyMethodArguments() {
+    mockOne = mock(IMethods.class);
 
-        verifyNoMoreInteractions(mockOne, mockTwo, mockThree);
-    }
+    String textOne = "test";
+    String textTwo = new String(textOne);
 
-    @Test
-    public void shouldFailOnNoMoreInteractions() {
-        inOrder.verify(mockOne, atLeastOnce()).simpleMethod(1);
-        inOrder.verify(mockThree).simpleMethod(3);
-        inOrder.verify(mockThree).simpleMethod(4);
+    assertEquals(textOne, textTwo);
+    assertNotSame(textOne, textTwo);
 
-        try {
-            verifyNoMoreInteractions(mockOne, mockTwo, mockThree);
-            fail();
-        } catch (NoInteractionsWanted e) {
-        }
-    }
+    mockOne.simpleMethod(textOne);
+    mockOne.simpleMethod(textTwo);
 
-    @Test
-    public void shouldFailOnNoMoreInteractionsOnMockVerifiedInOrder() {
-        inOrder.verify(mockOne, atLeastOnce()).simpleMethod(1);
-        inOrder.verify(mockThree).simpleMethod(3);
-        verify(mockTwo).simpleMethod(2);
+    verify(mockOne, times(2)).simpleMethod(textOne);
 
-        try {
-            verifyNoMoreInteractions(mockOne, mockTwo, mockThree);
-            fail();
-        } catch (NoInteractionsWanted e) {
-        }
-    }
+    inOrder = inOrder(mockOne);
+    inOrder.verify(mockOne, times(2)).simpleMethod(textOne);
+  }
 
-    @Test
-    public void shouldAllowOneMethodVerifiedInOrder() {
-        verify(mockTwo).simpleMethod(2);
-        verify(mockOne, atLeastOnce()).simpleMethod(1);
+  @Test
+  public void shouldUseEqualsToVerifyMethodVarargs() {
+    mockOne = mock(IMethods.class);
 
-        inOrder.verify(mockOne, atLeastOnce()).simpleMethod(1);
-    }
+    String textOne = "test";
+    String textTwo = new String(textOne);
 
-    @Test
-    public void shouldFailOnLastInvocationTooEarly() {
-        inOrder.verify(mockThree).simpleMethod(4);
+    assertEquals(textOne, textTwo);
+    assertNotSame(textOne, textTwo);
 
-        verify(mockThree).simpleMethod(4);
-        verify(mockTwo).simpleMethod(2);
+    mockOne.varargsObject(1, textOne, textOne);
+    mockOne.varargsObject(1, textTwo, textTwo);
 
-        try {
-            inOrder.verify(mockOne, atLeastOnce()).simpleMethod(1);
-            fail();
-        } catch (VerificationInOrderFailure e) {
-        }
-    }
+    verify(mockOne, times(2)).varargsObject(1, textOne, textOne);
 
-    @Test(expected = MockitoException.class)
-    public void shouldScreamWhenUnfamiliarMockPassedToInOrderObject() {
-        inOrder.verify(mockTwo, atLeastOnce()).simpleMethod(1);
-    }
-
-    @Test
-    public void shouldUseEqualsToVerifyMethodArguments() {
-        mockOne = mock(IMethods.class);
-
-        String textOne = "test";
-        String textTwo = new String(textOne);
-
-        assertEquals(textOne, textTwo);
-        assertNotSame(textOne, textTwo);
-
-        mockOne.simpleMethod(textOne);
-        mockOne.simpleMethod(textTwo);
-
-        verify(mockOne, times(2)).simpleMethod(textOne);
-
-        inOrder = inOrder(mockOne);
-        inOrder.verify(mockOne, times(2)).simpleMethod(textOne);
-    }
-
-    @Test
-    public void shouldUseEqualsToVerifyMethodVarargs() {
-        mockOne = mock(IMethods.class);
-
-        String textOne = "test";
-        String textTwo = new String(textOne);
-
-        assertEquals(textOne, textTwo);
-        assertNotSame(textOne, textTwo);
-
-        mockOne.varargsObject(1, textOne, textOne);
-        mockOne.varargsObject(1, textTwo, textTwo);
-
-        verify(mockOne, times(2)).varargsObject(1, textOne, textOne);
-
-        inOrder = inOrder(mockOne);
-        inOrder.verify(mockOne, times(2)).varargsObject(1, textOne, textOne);
-    }
+    inOrder = inOrder(mockOne);
+    inOrder.verify(mockOne, times(2)).varargsObject(1, textOne, textOne);
+  }
 }

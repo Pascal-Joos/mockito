@@ -9,8 +9,9 @@ import org.mockito.NotExtensible;
 
 /**
  * Allows to choose a method when stubbing in doThrow()|doAnswer()|doNothing()|doReturn() style
- * <p>
- * Example:
+ *
+ * <p>Example:
+ *
  * <pre class="code"><code class="java">
  *   doThrow(new RuntimeException()).when(mockedList).clear();
  *
@@ -27,49 +28,48 @@ import org.mockito.NotExtensible;
  * </code></pre>
  *
  * Read more about those methods:
- * <p>
- * {@link Mockito#doThrow(Throwable[])}
- * <p>
- * {@link Mockito#doAnswer(Answer)}
- * <p>
- * {@link Mockito#doNothing()}
- * <p>
- * {@link Mockito#doReturn(Object)}
- * <p>
  *
- * See examples in javadoc for {@link Mockito}
+ * <p>{@link Mockito#doThrow(Throwable[])}
+ *
+ * <p>{@link Mockito#doAnswer(Answer)}
+ *
+ * <p>{@link Mockito#doNothing()}
+ *
+ * <p>{@link Mockito#doReturn(Object)}
+ *
+ * <p>See examples in javadoc for {@link Mockito}
  */
 @SuppressWarnings("unchecked")
 @NotExtensible
 public interface Stubber extends BaseStubber {
 
-    /**
-     * Allows to choose a method when stubbing in doThrow()|doAnswer()|doNothing()|doReturn() style
-     * <p>
-     * Example:
-     * <pre class="code"><code class="java">
-     *   doThrow(new RuntimeException())
-     *   .when(mockedList).clear();
-     *
-     *   //following throws RuntimeException:
-     *   mockedList.clear();
-     * </code></pre>
-     *
-     * Read more about those methods:
-     * <p>
-     * {@link Mockito#doThrow(Throwable[])}
-     * <p>
-     * {@link Mockito#doAnswer(Answer)}
-     * <p>
-     * {@link Mockito#doNothing()}
-     * <p>
-     * {@link Mockito#doReturn(Object)}
-     * <p>
-     *
-     * See examples in javadoc for {@link Mockito}
-     *
-     * @param mock The mock
-     * @return select method for stubbing
-     */
-    <T> T when(T mock);
+  /**
+   * Allows to choose a method when stubbing in doThrow()|doAnswer()|doNothing()|doReturn() style
+   *
+   * <p>Example:
+   *
+   * <pre class="code"><code class="java">
+   *   doThrow(new RuntimeException())
+   *   .when(mockedList).clear();
+   *
+   *   //following throws RuntimeException:
+   *   mockedList.clear();
+   * </code></pre>
+   *
+   * Read more about those methods:
+   *
+   * <p>{@link Mockito#doThrow(Throwable[])}
+   *
+   * <p>{@link Mockito#doAnswer(Answer)}
+   *
+   * <p>{@link Mockito#doNothing()}
+   *
+   * <p>{@link Mockito#doReturn(Object)}
+   *
+   * <p>See examples in javadoc for {@link Mockito}
+   *
+   * @param mock The mock
+   * @return select method for stubbing
+   */
+  <T> T when(T mock);
 }

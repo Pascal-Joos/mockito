@@ -9,39 +9,36 @@ import org.mockito.Incubating;
 /**
  * Mockito logger.
  *
- * <p>By default logs to console</p>
+ * <p>By default logs to console
  *
- * <p>All mockito logging goes through this class and could be customized as usual Mockito plugin.</p>
+ * <p>All mockito logging goes through this class and could be customized as usual Mockito plugin.
  *
  * <h3>Using the extension point</h3>
  *
- * <p>Suppose you wrote an extension to customize logging, in order to tell Mockito to use it you need to put
- * in your <strong>classpath</strong>:
- * <ol style="list-style-type: lower-alpha">
- *     <li>
- *         The implementation itself, for example <code>org.awesome.mockito.AwesomeLogger</code> that
- *         extends the <code>MockitoLogger</code>.
- *     </li>
- *     <li>
- *         A file "<code>mockito-extensions/org.mockito.plugins.MockitoLogger</code>". The content of this file is
- *         exactly a <strong>one</strong> line with the qualified name:
- *         <code>org.awesome.mockito.AwesomeLogger</code>.
- *      </li>
- * </ol>
- * </p>
+ * <p>Suppose you wrote an extension to customize logging, in order to tell Mockito to use it you
+ * need to put in your <strong>classpath</strong>:
  *
- * <p>Note that if several <code>mockito-extensions/org.mockito.plugins.MockitoLogger</code> files exists in the
- * classpath Mockito will only use the first returned by the standard {@link ClassLoader#getResource} mechanism.
+ * <ol style="list-style-type: lower-alpha">
+ *   <li>The implementation itself, for example <code>org.awesome.mockito.AwesomeLogger</code> that
+ *       extends the <code>MockitoLogger</code>.
+ *   <li>A file "<code>mockito-extensions/org.mockito.plugins.MockitoLogger</code>". The content of
+ *       this file is exactly a <strong>one</strong> line with the qualified name: <code>
+ *       org.awesome.mockito.AwesomeLogger</code>.
+ * </ol>
+ *
+ * <p>Note that if several <code>mockito-extensions/org.mockito.plugins.MockitoLogger</code> files
+ * exists in the classpath Mockito will only use the first returned by the standard {@link
+ * ClassLoader#getResource} mechanism.
  *
  * @since 2.23.19
  */
 @Incubating
 public interface MockitoLogger {
-    /**
-     * Log specified object.
-     *
-     * @param what to be logged
-     */
-    @Incubating
-    void log(Object what);
+  /**
+   * Log specified object.
+   *
+   * @param what to be logged
+   */
+  @Incubating
+  void log(Object what);
 }

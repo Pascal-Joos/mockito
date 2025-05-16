@@ -14,33 +14,33 @@ import org.mockitoutil.TestBase;
 
 public class OverloadingPuzzleTest extends TestBase {
 
-    private Super mock;
+  private Super mock;
 
-    private void setMockWithDowncast(Super mock) {
-        this.mock = mock;
-    }
+  private void setMockWithDowncast(Super mock) {
+    this.mock = mock;
+  }
 
-    private interface Super {
-        void say(Object message);
-    }
+  private interface Super {
+    void say(Object message);
+  }
 
-    private interface Sub extends Super {
-        void say(String message);
-    }
+  private interface Sub extends Super {
+    void say(String message);
+  }
 
-    private void say(Object message) {
-        mock.say(message);
-    }
+  private void say(Object message) {
+    mock.say(message);
+  }
 
-    @Test
-    public void shouldUseArgumentTypeWhenOverloadingPuzzleDetected() throws Exception {
-        Sub sub = mock(Sub.class);
-        setMockWithDowncast(sub);
-        say("Hello");
-        try {
-            verify(sub).say("Hello");
-            fail();
-        } catch (WantedButNotInvoked e) {
-        }
+  @Test
+  public void shouldUseArgumentTypeWhenOverloadingPuzzleDetected() throws Exception {
+    Sub sub = mock(Sub.class);
+    setMockWithDowncast(sub);
+    say("Hello");
+    try {
+      verify(sub).say("Hello");
+      fail();
+    } catch (WantedButNotInvoked e) {
     }
+  }
 }

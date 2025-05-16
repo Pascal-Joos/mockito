@@ -5,7 +5,6 @@
 package org.mockito.junit;
 
 import java.lang.reflect.InvocationTargetException;
-
 import org.junit.runners.model.InitializationError;
 import org.mockito.internal.junit.MismatchReportingTestListener;
 import org.mockito.internal.junit.MockitoTestListener;
@@ -16,30 +15,28 @@ import org.mockito.internal.util.Supplier;
 
 public class TestableJUnitRunner extends MockitoJUnitRunner {
 
-    private static final ThreadLocal<SimpleMockitoLogger> LOGGER =
-            new ThreadLocal<SimpleMockitoLogger>() {
-                protected SimpleMockitoLogger initialValue() {
-                    return new SimpleMockitoLogger();
-                }
-            };
+  private static final ThreadLocal<SimpleMockitoLogger> LOGGER =
+      new ThreadLocal<SimpleMockitoLogger>() {
+        protected SimpleMockitoLogger initialValue() {
+          return new SimpleMockitoLogger();
+        }
+      };
 
-    public TestableJUnitRunner(Class<?> klass)
-            throws InvocationTargetException, InitializationError {
-        super(
-                new StrictRunner(
-                        new RunnerFactory()
-                                .create(
-                                        klass,
-                                        new Supplier<MockitoTestListener>() {
-                                            public MockitoTestListener get() {
-                                                return new MismatchReportingTestListener(
-                                                        LOGGER.get());
-                                            }
-                                        }),
-                        klass));
-    }
+  public TestableJUnitRunner(Class<?> klass) throws InvocationTargetException, InitializationError {
+    super(
+        new StrictRunner(
+            new RunnerFactory()
+                .create(
+                    klass,
+                    new Supplier<MockitoTestListener>() {
+                      public MockitoTestListener get() {
+                        return new MismatchReportingTestListener(LOGGER.get());
+                      }
+                    }),
+            klass));
+  }
 
-    public static SimpleMockitoLogger refreshedLogger() {
-        return LOGGER.get().clear();
-    }
+  public static SimpleMockitoLogger refreshedLogger() {
+    return LOGGER.get().clear();
+  }
 }

@@ -7,37 +7,34 @@ package org.mockito.internal.stubbing;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 
-/**
- * Holds answers declared using 'doAnswer' stubbing style.
- */
+/** Holds answers declared using 'doAnswer' stubbing style. */
 class DoAnswerStyleStubbing implements Serializable {
 
-    private final List<Answer<?>> answers = new ArrayList<Answer<?>>();
-    private Strictness stubbingStrictness;
+  private final List<Answer<?>> answers = new ArrayList<Answer<?>>();
+  private Strictness stubbingStrictness;
 
-    void setAnswers(List<Answer<?>> answers, Strictness stubbingStrictness) {
-        this.stubbingStrictness = stubbingStrictness;
-        this.answers.addAll(answers);
-    }
+  void setAnswers(List<Answer<?>> answers, Strictness stubbingStrictness) {
+    this.stubbingStrictness = stubbingStrictness;
+    this.answers.addAll(answers);
+  }
 
-    boolean isSet() {
-        return answers.isEmpty();
-    }
+  boolean isSet() {
+    return answers.isEmpty();
+  }
 
-    void clear() {
-        answers.clear();
-        stubbingStrictness = null;
-    }
+  void clear() {
+    answers.clear();
+    stubbingStrictness = null;
+  }
 
-    List<Answer<?>> getAnswers() {
-        return answers;
-    }
+  List<Answer<?>> getAnswers() {
+    return answers;
+  }
 
-    Strictness getStubbingStrictness() {
-        return stubbingStrictness;
-    }
+  Strictness getStubbingStrictness() {
+    return stubbingStrictness;
+  }
 }

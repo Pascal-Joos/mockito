@@ -22,107 +22,107 @@ import org.mockitoutil.TestBase;
 @RunWith(MockitoJUnitRunner.class)
 public class PointingStackTraceToActualInvocationInOrderTest extends TestBase {
 
-    @Mock private IMethods mock;
-    @Mock private IMethods mockTwo;
-    private InOrder inOrder;
+  @Mock private IMethods mock;
+  @Mock private IMethods mockTwo;
+  private InOrder inOrder;
 
-    @Before
-    public void setup() {
-        inOrder = inOrder(mock, mockTwo);
+  @Before
+  public void setup() {
+    inOrder = inOrder(mock, mockTwo);
 
-        first();
-        second();
-        third();
-        fourth();
+    first();
+    second();
+    third();
+    fourth();
+  }
+
+  private void first() {
+    mock.simpleMethod(1);
+  }
+
+  private void second() {
+    mockTwo.simpleMethod(2);
+  }
+
+  private void third() {
+    mock.simpleMethod(3);
+  }
+
+  private void fourth() {
+    mockTwo.simpleMethod(4);
+  }
+
+  @Test
+  public void shouldPointStackTraceToPreviousVerified() {
+    inOrder.verify(mock, atLeastOnce()).simpleMethod(anyInt());
+    inOrder.verify(mockTwo).simpleMethod(anyInt());
+
+    try {
+      inOrder.verify(mock).simpleMethod(999);
+      fail();
+    } catch (VerificationInOrderFailure e) {
+      assertThat(e).hasMessageContaining("fourth(");
     }
+  }
 
-    private void first() {
-        mock.simpleMethod(1);
+  @Test
+  public void shouldPointToThirdMethod() {
+    inOrder.verify(mock, atLeastOnce()).simpleMethod(anyInt());
+
+    try {
+      inOrder.verify(mockTwo).simpleMethod(999);
+      fail();
+    } catch (VerificationInOrderFailure e) {
+      assertThat(e).hasMessageContaining("third(");
     }
+  }
 
-    private void second() {
-        mockTwo.simpleMethod(2);
+  @Test
+  public void shouldPointToSecondMethod() {
+    inOrder.verify(mock).simpleMethod(anyInt());
+    inOrder.verify(mockTwo).simpleMethod(anyInt());
+
+    try {
+      inOrder.verify(mockTwo, times(3)).simpleMethod(999);
+      fail();
+    } catch (VerificationInOrderFailure e) {
+      assertThat(e).hasMessageContaining("second(");
     }
+  }
 
-    private void third() {
-        mock.simpleMethod(3);
+  @Test
+  public void shouldPointToFirstMethodBecauseOfTooManyActualInvocations() {
+    try {
+      inOrder.verify(mock, times(0)).simpleMethod(anyInt());
+      fail();
+    } catch (VerificationInOrderFailure e) {
+      assertThat(e).hasMessageContaining("first(");
     }
+  }
 
-    private void fourth() {
-        mockTwo.simpleMethod(4);
+  @Test
+  public void shouldPointToSecondMethodBecauseOfTooManyActualInvocations() {
+    inOrder.verify(mock).simpleMethod(anyInt());
+
+    try {
+      inOrder.verify(mockTwo, times(0)).simpleMethod(anyInt());
+      fail();
+    } catch (VerificationInOrderFailure e) {
+      assertThat(e).hasMessageContaining("second(");
     }
+  }
 
-    @Test
-    public void shouldPointStackTraceToPreviousVerified() {
-        inOrder.verify(mock, atLeastOnce()).simpleMethod(anyInt());
-        inOrder.verify(mockTwo).simpleMethod(anyInt());
+  @Test
+  public void shouldPointToFourthMethodBecauseOfTooFewActualInvocations() {
+    inOrder.verify(mock).simpleMethod(anyInt());
+    inOrder.verify(mockTwo).simpleMethod(anyInt());
+    inOrder.verify(mock).simpleMethod(anyInt());
 
-        try {
-            inOrder.verify(mock).simpleMethod(999);
-            fail();
-        } catch (VerificationInOrderFailure e) {
-            assertThat(e).hasMessageContaining("fourth(");
-        }
+    try {
+      inOrder.verify(mockTwo, times(3)).simpleMethod(anyInt());
+      fail();
+    } catch (VerificationInOrderFailure e) {
+      assertThat(e).hasMessageContaining("fourth(");
     }
-
-    @Test
-    public void shouldPointToThirdMethod() {
-        inOrder.verify(mock, atLeastOnce()).simpleMethod(anyInt());
-
-        try {
-            inOrder.verify(mockTwo).simpleMethod(999);
-            fail();
-        } catch (VerificationInOrderFailure e) {
-            assertThat(e).hasMessageContaining("third(");
-        }
-    }
-
-    @Test
-    public void shouldPointToSecondMethod() {
-        inOrder.verify(mock).simpleMethod(anyInt());
-        inOrder.verify(mockTwo).simpleMethod(anyInt());
-
-        try {
-            inOrder.verify(mockTwo, times(3)).simpleMethod(999);
-            fail();
-        } catch (VerificationInOrderFailure e) {
-            assertThat(e).hasMessageContaining("second(");
-        }
-    }
-
-    @Test
-    public void shouldPointToFirstMethodBecauseOfTooManyActualInvocations() {
-        try {
-            inOrder.verify(mock, times(0)).simpleMethod(anyInt());
-            fail();
-        } catch (VerificationInOrderFailure e) {
-            assertThat(e).hasMessageContaining("first(");
-        }
-    }
-
-    @Test
-    public void shouldPointToSecondMethodBecauseOfTooManyActualInvocations() {
-        inOrder.verify(mock).simpleMethod(anyInt());
-
-        try {
-            inOrder.verify(mockTwo, times(0)).simpleMethod(anyInt());
-            fail();
-        } catch (VerificationInOrderFailure e) {
-            assertThat(e).hasMessageContaining("second(");
-        }
-    }
-
-    @Test
-    public void shouldPointToFourthMethodBecauseOfTooFewActualInvocations() {
-        inOrder.verify(mock).simpleMethod(anyInt());
-        inOrder.verify(mockTwo).simpleMethod(anyInt());
-        inOrder.verify(mock).simpleMethod(anyInt());
-
-        try {
-            inOrder.verify(mockTwo, times(3)).simpleMethod(anyInt());
-            fail();
-        } catch (VerificationInOrderFailure e) {
-            assertThat(e).hasMessageContaining("fourth(");
-        }
-    }
+  }
 }

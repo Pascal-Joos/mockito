@@ -11,16 +11,16 @@ import org.mockito.Mockito;
 
 public class InterfaceOverrideTest {
 
-    public interface CloneableInterface extends Cloneable {
+  public interface CloneableInterface extends Cloneable {
 
-        CloneableInterface clone();
-    }
+    CloneableInterface clone();
+  }
 
-    @Test
-    public void inherit_public_method_from_interface() {
-        CloneableInterface i = Mockito.mock(CloneableInterface.class);
-        Mockito.when(i.clone()).thenReturn(i);
+  @Test
+  public void inherit_public_method_from_interface() {
+    CloneableInterface i = Mockito.mock(CloneableInterface.class);
+    Mockito.when(i.clone()).thenReturn(i);
 
-        assertEquals(i, i.clone());
-    }
+    assertEquals(i, i.clone());
+  }
 }

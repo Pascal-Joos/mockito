@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Mockito configuration.
- */
+/** Mockito configuration. */
 package org.mockito.internal.configuration;

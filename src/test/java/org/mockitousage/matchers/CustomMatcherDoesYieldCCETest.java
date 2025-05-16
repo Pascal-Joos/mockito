@@ -17,28 +17,28 @@ import org.mockitoutil.TestBase;
 
 public class CustomMatcherDoesYieldCCETest extends TestBase {
 
-    @Mock private IMethods mock;
+  @Mock private IMethods mock;
 
-    @Test
-    public void shouldNotThrowCCE() {
-        mock.simpleMethod(new Object());
+  @Test
+  public void shouldNotThrowCCE() {
+    mock.simpleMethod(new Object());
 
-        try {
-            // calling overloaded method so that matcher will be called with
-            // different type
-            verify(mock).simpleMethod(argThat(isStringWithTextFoo()));
-            fail();
-        } catch (ArgumentsAreDifferent e) {
-        }
+    try {
+      // calling overloaded method so that matcher will be called with
+      // different type
+      verify(mock).simpleMethod(argThat(isStringWithTextFoo()));
+      fail();
+    } catch (ArgumentsAreDifferent e) {
     }
+  }
 
-    private ArgumentMatcher<String> isStringWithTextFoo() {
-        return new ArgumentMatcher<String>() {
-            public boolean matches(String argument) {
-                // casting that should not be thrown:
-                String str = (String) argument;
-                return str.equals("foo");
-            }
-        };
-    }
+  private ArgumentMatcher<String> isStringWithTextFoo() {
+    return new ArgumentMatcher<String>() {
+      public boolean matches(String argument) {
+        // casting that should not be thrown:
+        String str = (String) argument;
+        return str.equals("foo");
+      }
+    };
+  }
 }

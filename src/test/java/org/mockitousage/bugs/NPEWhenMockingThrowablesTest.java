@@ -14,21 +14,21 @@ import org.mockitoutil.TestBase;
 
 public class NPEWhenMockingThrowablesTest extends TestBase {
 
-    @Mock IMethods mock;
-    @Mock DummyException mock2;
+  @Mock IMethods mock;
+  @Mock DummyException mock2;
 
-    class DummyException extends RuntimeException {
-        private static final long serialVersionUID = 1L;
-    }
+  class DummyException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+  }
 
-    // issue 70
-    @Test
-    public void shouldNotThrowNPE() {
-        when(mock.simpleMethod()).thenThrow(mock2);
-        try {
-            mock.simpleMethod();
-            fail();
-        } catch (DummyException e) {
-        }
+  // issue 70
+  @Test
+  public void shouldNotThrowNPE() {
+    when(mock.simpleMethod()).thenThrow(mock2);
+    try {
+      mock.simpleMethod();
+      fail();
+    } catch (DummyException e) {
     }
+  }
 }

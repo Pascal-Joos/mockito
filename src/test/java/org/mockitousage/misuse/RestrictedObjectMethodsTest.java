@@ -10,7 +10,6 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 
 import java.util.List;
-
 import org.junit.After;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -20,45 +19,45 @@ import org.mockitoutil.TestBase;
 
 public class RestrictedObjectMethodsTest extends TestBase {
 
-    @Mock List<?> mock;
+  @Mock List<?> mock;
 
-    @After
-    public void after() {
-        this.resetState();
-    }
+  @After
+  public void after() {
+    this.resetState();
+  }
 
-    @Test
-    public void shouldScreamWhenVerifyToString() {
-        try {
-            verify(mock).toString();
-            fail();
-        } catch (MockitoException e) {
-            assertThat(e).hasMessageContaining("cannot verify");
-        }
+  @Test
+  public void shouldScreamWhenVerifyToString() {
+    try {
+      verify(mock).toString();
+      fail();
+    } catch (MockitoException e) {
+      assertThat(e).hasMessageContaining("cannot verify");
     }
+  }
 
-    @Test
-    public void shouldBeSilentWhenVerifyHashCode() {
-        // because it leads to really weird behavior sometimes
-        // it's because cglib & my code can occasionelly call those methods
-        // and when user has verification started at that time there will be a mess
-        verify(mock).hashCode();
-    }
+  @Test
+  public void shouldBeSilentWhenVerifyHashCode() {
+    // because it leads to really weird behavior sometimes
+    // it's because cglib & my code can occasionelly call those methods
+    // and when user has verification started at that time there will be a mess
+    verify(mock).hashCode();
+  }
 
-    @Test
-    public void shouldBeSilentWhenVerifyEquals() {
-        // because it leads to really weird behavior sometimes
-        // it's because cglib & my code can occasionelly call those methods
-        // and when user has verification started at that time there will be a mess
-        verify(mock).equals(null);
-    }
+  @Test
+  public void shouldBeSilentWhenVerifyEquals() {
+    // because it leads to really weird behavior sometimes
+    // it's because cglib & my code can occasionelly call those methods
+    // and when user has verification started at that time there will be a mess
+    verify(mock).equals(null);
+  }
 
-    @Test
-    public void shouldBeSilentWhenVerifyEqualsInOrder() {
-        // because it leads to really weird behavior sometimes
-        // it's because cglib & my code can occasionelly call those methods
-        // and when user has verification started at that time there will be a mess
-        InOrder inOrder = inOrder(mock);
-        inOrder.verify(mock).equals(null);
-    }
+  @Test
+  public void shouldBeSilentWhenVerifyEqualsInOrder() {
+    // because it leads to really weird behavior sometimes
+    // it's because cglib & my code can occasionelly call those methods
+    // and when user has verification started at that time there will be a mess
+    InOrder inOrder = inOrder(mock);
+    inOrder.verify(mock).equals(null);
+  }
 }

@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.Before;
@@ -27,87 +26,87 @@ import org.mockitoutil.TestBase;
 
 public class MockingProgressImplTest extends TestBase {
 
-    private MockingProgress mockingProgress;
+  private MockingProgress mockingProgress;
 
-    @Before
-    public void setup() {
-        mockingProgress = new MockingProgressImpl();
+  @Before
+  public void setup() {
+    mockingProgress = new MockingProgressImpl();
+  }
+
+  @Test
+  public void shouldStartVerificationAndPullVerificationMode() throws Exception {
+    assertNull(mockingProgress.pullVerificationMode());
+
+    VerificationMode mode = VerificationModeFactory.times(19);
+
+    mockingProgress.verificationStarted(mode);
+
+    assertSame(mode, mockingProgress.pullVerificationMode());
+
+    assertNull(mockingProgress.pullVerificationMode());
+  }
+
+  @Test
+  public void shouldCheckIfVerificationWasFinished() throws Exception {
+    mockingProgress.verificationStarted(VerificationModeFactory.atLeastOnce());
+    try {
+      mockingProgress.verificationStarted(VerificationModeFactory.atLeastOnce());
+      fail();
+    } catch (MockitoException e) {
     }
+  }
 
-    @Test
-    public void shouldStartVerificationAndPullVerificationMode() throws Exception {
-        assertNull(mockingProgress.pullVerificationMode());
+  @Test
+  public void shouldNotifyListenerSafely() throws Exception {
+    // when
+    mockingProgress.addListener(null);
 
-        VerificationMode mode = VerificationModeFactory.times(19);
+    // then no exception is thrown:
+    mockingProgress.mockingStarted(null, null);
+  }
 
-        mockingProgress.verificationStarted(mode);
+  @Test
+  public void should_not_allow_redundant_listeners() {
+    MockitoListener listener1 = mock(MockitoListener.class);
+    final MockitoListener listener2 = mock(MockitoListener.class);
 
-        assertSame(mode, mockingProgress.pullVerificationMode());
+    final Set<MockitoListener> listeners = new LinkedHashSet<MockitoListener>();
 
-        assertNull(mockingProgress.pullVerificationMode());
-    }
+    // when
+    MockingProgressImpl.addListener(listener1, listeners);
 
-    @Test
-    public void shouldCheckIfVerificationWasFinished() throws Exception {
-        mockingProgress.verificationStarted(VerificationModeFactory.atLeastOnce());
-        try {
-            mockingProgress.verificationStarted(VerificationModeFactory.atLeastOnce());
-            fail();
-        } catch (MockitoException e) {
-        }
-    }
+    // then
+    Assertions.assertThatThrownBy(
+            new ThrowableAssert.ThrowingCallable() {
+              public void call() {
+                MockingProgressImpl.addListener(listener2, listeners);
+              }
+            })
+        .isInstanceOf(RedundantListenerException.class);
+  }
 
-    @Test
-    public void shouldNotifyListenerSafely() throws Exception {
-        // when
-        mockingProgress.addListener(null);
+  @Test
+  public void should_clean_up_listeners_automatically() {
+    MockitoListener someListener = mock(MockitoListener.class);
+    MyListener cleanListener = mock(MyListener.class);
+    MyListener dirtyListener =
+        when(mock(MyListener.class).isListenerDirty()).thenReturn(true).getMock();
 
-        // then no exception is thrown:
-        mockingProgress.mockingStarted(null, null);
-    }
+    Set<MockitoListener> listeners = new LinkedHashSet<MockitoListener>();
 
-    @Test
-    public void should_not_allow_redundant_listeners() {
-        MockitoListener listener1 = mock(MockitoListener.class);
-        final MockitoListener listener2 = mock(MockitoListener.class);
+    // when
+    MockingProgressImpl.addListener(someListener, listeners);
+    MockingProgressImpl.addListener(dirtyListener, listeners);
 
-        final Set<MockitoListener> listeners = new LinkedHashSet<MockitoListener>();
+    // then
+    Assertions.assertThat(listeners).containsExactlyInAnyOrder(someListener, dirtyListener);
 
-        // when
-        MockingProgressImpl.addListener(listener1, listeners);
+    // when
+    MockingProgressImpl.addListener(cleanListener, listeners);
 
-        // then
-        Assertions.assertThatThrownBy(
-                        new ThrowableAssert.ThrowingCallable() {
-                            public void call() {
-                                MockingProgressImpl.addListener(listener2, listeners);
-                            }
-                        })
-                .isInstanceOf(RedundantListenerException.class);
-    }
+    // then dirty listener was removed automatically
+    Assertions.assertThat(listeners).containsExactlyInAnyOrder(someListener, cleanListener);
+  }
 
-    @Test
-    public void should_clean_up_listeners_automatically() {
-        MockitoListener someListener = mock(MockitoListener.class);
-        MyListener cleanListener = mock(MyListener.class);
-        MyListener dirtyListener =
-                when(mock(MyListener.class).isListenerDirty()).thenReturn(true).getMock();
-
-        Set<MockitoListener> listeners = new LinkedHashSet<MockitoListener>();
-
-        // when
-        MockingProgressImpl.addListener(someListener, listeners);
-        MockingProgressImpl.addListener(dirtyListener, listeners);
-
-        // then
-        Assertions.assertThat(listeners).containsExactlyInAnyOrder(someListener, dirtyListener);
-
-        // when
-        MockingProgressImpl.addListener(cleanListener, listeners);
-
-        // then dirty listener was removed automatically
-        Assertions.assertThat(listeners).containsExactlyInAnyOrder(someListener, cleanListener);
-    }
-
-    interface MyListener extends MockitoListener, AutoCleanableListener {}
+  interface MyListener extends MockitoListener, AutoCleanableListener {}
 }

@@ -11,21 +11,21 @@ import java.lang.management.ManagementFactory;
 import java.util.List;
 
 public class VmArgAssumptions {
-    public static void assumeVmArgPresent(String vmArg) {
-        assumeTrue(assertEnabled(vmArg));
-    }
+  public static void assumeVmArgPresent(String vmArg) {
+    assumeTrue(assertEnabled(vmArg));
+  }
 
-    public static void assumeVmArgNotPresent(String vmArg) {
-        assumeFalse(assertEnabled(vmArg));
-    }
+  public static void assumeVmArgNotPresent(String vmArg) {
+    assumeFalse(assertEnabled(vmArg));
+  }
 
-    private static boolean assertEnabled(String vmArg) {
-        List<String> inputArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
-        for (String inputArgument : inputArguments) {
-            if (inputArgument.contains(vmArg)) {
-                return true;
-            }
-        }
-        return false;
+  private static boolean assertEnabled(String vmArg) {
+    List<String> inputArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
+    for (String inputArgument : inputArguments) {
+      if (inputArgument.contains(vmArg)) {
+        return true;
+      }
     }
+    return false;
+  }
 }

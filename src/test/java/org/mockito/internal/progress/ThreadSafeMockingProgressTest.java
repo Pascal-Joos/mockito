@@ -10,7 +10,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
 
 import java.util.List;
-
 import org.junit.After;
 import org.junit.Test;
 import org.mockito.internal.verification.DummyVerificationMode;
@@ -18,30 +17,30 @@ import org.mockitoutil.TestBase;
 
 public class ThreadSafeMockingProgressTest extends TestBase {
 
-    @After
-    public void after() {
-        this.resetState();
-    }
+  @After
+  public void after() {
+    this.resetState();
+  }
 
-    @Test
-    public void shouldShareState() throws Exception {
-        // given
-        MockingProgress p = mockingProgress();
-        p.verificationStarted(new DummyVerificationMode());
+  @Test
+  public void shouldShareState() throws Exception {
+    // given
+    MockingProgress p = mockingProgress();
+    p.verificationStarted(new DummyVerificationMode());
 
-        // then
-        p = mockingProgress();
-        assertNotNull(p.pullVerificationMode());
-    }
+    // then
+    p = mockingProgress();
+    assertNotNull(p.pullVerificationMode());
+  }
 
-    @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-    @Test
-    public void shouldKnowWhenVerificationHasStarted() throws Exception {
-        // given
-        verify(mock(List.class));
-        MockingProgress p = mockingProgress();
+  @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
+  @Test
+  public void shouldKnowWhenVerificationHasStarted() throws Exception {
+    // given
+    verify(mock(List.class));
+    MockingProgress p = mockingProgress();
 
-        // then
-        assertNotNull(p.pullVerificationMode());
-    }
+    // then
+    assertNotNull(p.pullVerificationMode());
+  }
 }

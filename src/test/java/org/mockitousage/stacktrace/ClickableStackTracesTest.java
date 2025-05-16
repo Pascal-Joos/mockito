@@ -17,26 +17,26 @@ import org.mockitoutil.TestBase;
 
 public class ClickableStackTracesTest extends TestBase {
 
-    @Mock private IMethods mock;
+  @Mock private IMethods mock;
 
-    private void callMethodOnMock(String param) {
-        mock.simpleMethod(param);
-    }
+  private void callMethodOnMock(String param) {
+    mock.simpleMethod(param);
+  }
 
-    private void verifyTheMock(int times, String param) {
-        verify(mock, times(times)).simpleMethod(param);
-    }
+  private void verifyTheMock(int times, String param) {
+    verify(mock, times(times)).simpleMethod(param);
+  }
 
-    @Test
-    public void shouldShowActualAndExpectedWhenArgumentsAreDifferent() {
-        callMethodOnMock("foo");
-        try {
-            verifyTheMock(1, "not foo");
-            fail();
-        } catch (ArgumentsAreDifferent e) {
-            assertThat(e)
-                    .hasMessageContaining("callMethodOnMock(")
-                    .hasMessageContaining("verifyTheMock(");
-        }
+  @Test
+  public void shouldShowActualAndExpectedWhenArgumentsAreDifferent() {
+    callMethodOnMock("foo");
+    try {
+      verifyTheMock(1, "not foo");
+      fail();
+    } catch (ArgumentsAreDifferent e) {
+      assertThat(e)
+          .hasMessageContaining("callMethodOnMock(")
+          .hasMessageContaining("verifyTheMock(");
     }
+  }
 }

@@ -5,7 +5,6 @@
 package org.mockitousage.verification;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.after;
@@ -25,71 +24,69 @@ import org.mockitoutil.Stopwatch;
 
 public class VerificationWithAfterAndCaptorTest {
 
-    @Rule public MockitoRule mockito = rule();
+  @Rule public MockitoRule mockito = rule();
 
-    @Mock private IMethods mock;
+  @Mock private IMethods mock;
 
-    @Captor private ArgumentCaptor<Character> captor;
+  @Captor private ArgumentCaptor<Character> captor;
 
-    private Stopwatch watch = createNotStarted();
+  private Stopwatch watch = createNotStarted();
 
-    /**
-     * Test for issue #345.
-     */
-    @Test
-    public void shouldReturnListOfArgumentsWithSameSizeAsGivenInAtMostVerification() {
-        // given
-        int n = 3;
+  /** Test for issue #345. */
+  @Test
+  public void shouldReturnListOfArgumentsWithSameSizeAsGivenInAtMostVerification() {
+    // given
+    int n = 3;
 
-        // when
-        exerciseMockNTimes(n);
+    // when
+    exerciseMockNTimes(n);
 
-        watch.start();
+    watch.start();
 
-        // then
-        verify(mock, after(200).atMost(n)).oneArg((char) captor.capture());
+    // then
+    verify(mock, after(200).atMost(n)).oneArg((char) captor.capture());
 
-        watch.assertElapsedTimeIsMoreThan(200, MILLISECONDS);
-        assertThat(captor.getAllValues()).containsExactly('0', '1', '2');
+    watch.assertElapsedTimeIsMoreThan(200, MILLISECONDS);
+    assertThat(captor.getAllValues()).containsExactly('0', '1', '2');
+  }
+
+  @Test
+  @Ignore("TODO review after #936")
+  public void shouldReturnListOfArgumentsWithSameSizeAsGivenInTimesVerification() {
+    // given
+    int n = 3;
+
+    // when
+    exerciseMockNTimes(n);
+
+    // Then
+    verify(mock, after(200).times(n)).oneArg((char) captor.capture());
+    assertEquals(n, captor.getAllValues().size());
+    assertEquals('0', (char) captor.getAllValues().get(0));
+    assertEquals('1', (char) captor.getAllValues().get(1));
+    assertEquals('2', (char) captor.getAllValues().get(2));
+  }
+
+  @Test
+  @Ignore("TODO review after #936")
+  public void shouldReturnListOfArgumentsWithSameSizeAsGivenInAtLeastVerification() {
+    // given
+    int n = 3;
+
+    // when
+    exerciseMockNTimes(n);
+
+    // Then
+    verify(mock, after(200).atLeast(n)).oneArg((char) captor.capture());
+    assertEquals(n, captor.getAllValues().size());
+    assertEquals('0', (char) captor.getAllValues().get(0));
+    assertEquals('1', (char) captor.getAllValues().get(1));
+    assertEquals('2', (char) captor.getAllValues().get(2));
+  }
+
+  private void exerciseMockNTimes(int n) {
+    for (int i = 0; i < n; i++) {
+      mock.oneArg((char) ('0' + i));
     }
-
-    @Test
-    @Ignore("TODO review after #936")
-    public void shouldReturnListOfArgumentsWithSameSizeAsGivenInTimesVerification() {
-        // given
-        int n = 3;
-
-        // when
-        exerciseMockNTimes(n);
-
-        // Then
-        verify(mock, after(200).times(n)).oneArg((char) captor.capture());
-        assertEquals(n, captor.getAllValues().size());
-        assertEquals('0', (char) captor.getAllValues().get(0));
-        assertEquals('1', (char) captor.getAllValues().get(1));
-        assertEquals('2', (char) captor.getAllValues().get(2));
-    }
-
-    @Test
-    @Ignore("TODO review after #936")
-    public void shouldReturnListOfArgumentsWithSameSizeAsGivenInAtLeastVerification() {
-        // given
-        int n = 3;
-
-        // when
-        exerciseMockNTimes(n);
-
-        // Then
-        verify(mock, after(200).atLeast(n)).oneArg((char) captor.capture());
-        assertEquals(n, captor.getAllValues().size());
-        assertEquals('0', (char) captor.getAllValues().get(0));
-        assertEquals('1', (char) captor.getAllValues().get(1));
-        assertEquals('2', (char) captor.getAllValues().get(2));
-    }
-
-    private void exerciseMockNTimes(int n) {
-        for (int i = 0; i < n; i++) {
-            mock.oneArg((char) ('0' + i));
-        }
-    }
+  }
 }

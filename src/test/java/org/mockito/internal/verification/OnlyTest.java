@@ -8,7 +8,6 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Test;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.internal.invocation.InvocationBuilder;
@@ -19,60 +18,59 @@ import org.mockito.invocation.MatchableInvocation;
 
 public class OnlyTest {
 
-    Only only = new Only();
+  Only only = new Only();
 
-    public class VerificationDataStub implements VerificationData {
-        private final Invocation invocation;
-        private final InvocationMatcher wanted;
+  public class VerificationDataStub implements VerificationData {
+    private final Invocation invocation;
+    private final InvocationMatcher wanted;
 
-        public VerificationDataStub(InvocationMatcher wanted, Invocation invocation) {
-            this.invocation = invocation;
-            this.wanted = wanted;
-        }
-
-        public List<Invocation> getAllInvocations() {
-            return Arrays.asList(invocation);
-        }
-
-        @Override
-        public MatchableInvocation getTarget() {
-            return wanted;
-        }
-
-        public InvocationMatcher getWanted() {
-            return wanted;
-        }
+    public VerificationDataStub(InvocationMatcher wanted, Invocation invocation) {
+      this.invocation = invocation;
+      this.wanted = wanted;
     }
 
-    @Test
-    public void shouldMarkAsVerified() {
-        // given
-        Invocation invocation = new InvocationBuilder().toInvocation();
-        assertFalse(invocation.isVerified());
-
-        // when
-        only.verify(new VerificationDataStub(new InvocationMatcher(invocation), invocation));
-
-        // then
-        assertTrue(invocation.isVerified());
+    public List<Invocation> getAllInvocations() {
+      return Arrays.asList(invocation);
     }
 
-    @Test
-    public void shouldNotMarkAsVerifiedWhenAssertionFailed() {
-        // given
-        Invocation invocation = new InvocationBuilder().toInvocation();
-        assertFalse(invocation.isVerified());
-
-        // when
-        try {
-            only.verify(
-                    new VerificationDataStub(
-                            new InvocationBuilder().toInvocationMatcher(), invocation));
-            fail();
-        } catch (MockitoAssertionError e) {
-        }
-
-        // then
-        assertFalse(invocation.isVerified());
+    @Override
+    public MatchableInvocation getTarget() {
+      return wanted;
     }
+
+    public InvocationMatcher getWanted() {
+      return wanted;
+    }
+  }
+
+  @Test
+  public void shouldMarkAsVerified() {
+    // given
+    Invocation invocation = new InvocationBuilder().toInvocation();
+    assertFalse(invocation.isVerified());
+
+    // when
+    only.verify(new VerificationDataStub(new InvocationMatcher(invocation), invocation));
+
+    // then
+    assertTrue(invocation.isVerified());
+  }
+
+  @Test
+  public void shouldNotMarkAsVerifiedWhenAssertionFailed() {
+    // given
+    Invocation invocation = new InvocationBuilder().toInvocation();
+    assertFalse(invocation.isVerified());
+
+    // when
+    try {
+      only.verify(
+          new VerificationDataStub(new InvocationBuilder().toInvocationMatcher(), invocation));
+      fail();
+    } catch (MockitoAssertionError e) {
+    }
+
+    // then
+    assertFalse(invocation.isVerified());
+  }
 }

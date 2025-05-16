@@ -12,17 +12,17 @@ import org.mockitoutil.TestBase;
 
 public class MockitoExceptionTest extends TestBase {
 
-    private void throwIt() {
-        throw new MockitoException("boom");
-    }
+  private void throwIt() {
+    throw new MockitoException("boom");
+  }
 
-    @Test
-    public void shouldKeepUnfilteredStackTrace() {
-        try {
-            throwIt();
-            fail();
-        } catch (MockitoException e) {
-            assertEquals("throwIt", e.getUnfilteredStackTrace()[0].getMethodName());
-        }
+  @Test
+  public void shouldKeepUnfilteredStackTrace() {
+    try {
+      throwIt();
+      fail();
+    } catch (MockitoException e) {
+      assertEquals("throwIt", e.getUnfilteredStackTrace()[0].getMethodName());
     }
+  }
 }

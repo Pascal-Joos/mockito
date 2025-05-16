@@ -18,58 +18,58 @@ import org.mockitousage.IMethods;
 
 public class DoesNothingTest {
 
-    private IMethods mock;
-    private Invocation invocation_Void;
-    private Invocation invocation_void;
-    private Invocation invocation_String;
+  private IMethods mock;
+  private Invocation invocation_Void;
+  private Invocation invocation_void;
+  private Invocation invocation_String;
 
-    @Before
-    public void init() {
-        mock = mock(IMethods.class);
+  @Before
+  public void init() {
+    mock = mock(IMethods.class);
 
-        mock.voidMethod();
-        invocation_Void = getLastInvocation();
+    mock.voidMethod();
+    invocation_Void = getLastInvocation();
 
-        mock.voidReturningMethod();
-        invocation_void = getLastInvocation();
+    mock.voidReturningMethod();
+    invocation_void = getLastInvocation();
 
-        mock.simpleMethod();
-        invocation_String = getLastInvocation();
+    mock.simpleMethod();
+    invocation_String = getLastInvocation();
+  }
+
+  @Test
+  public void answer_returnsNull() throws Throwable {
+    assertThat(doesNothing().answer(invocation_Void)).isNull();
+    assertThat(doesNothing().answer(invocation_void)).isNull();
+    assertThat(doesNothing().answer(invocation_String)).isNull();
+  }
+
+  @Test(expected = MockitoException.class)
+  public void validateFor_nonVoidReturnType_shouldFail() {
+    doesNothing().validateFor(invocation_String);
+  }
+
+  @Test
+  public void validateFor_voidReturnType_shouldPass() {
+    doesNothing().validateFor(invocation_void);
+  }
+
+  @Test
+  public void validateFor_voidObjectReturnType() throws Throwable {
+    doesNothing().validateFor(invocation_Void);
+  }
+
+  @Test
+  public void answer_returns_null_for_generic_parameter() {
+    SubclassWithGenericParameter mock = mock(SubclassWithGenericParameter.class);
+    doNothing().when(mock).methodReturningT();
+  }
+
+  static class SuperClassWithGenericParameter<T> {
+    T methodReturningT() {
+      return null;
     }
+  }
 
-    @Test
-    public void answer_returnsNull() throws Throwable {
-        assertThat(doesNothing().answer(invocation_Void)).isNull();
-        assertThat(doesNothing().answer(invocation_void)).isNull();
-        assertThat(doesNothing().answer(invocation_String)).isNull();
-    }
-
-    @Test(expected = MockitoException.class)
-    public void validateFor_nonVoidReturnType_shouldFail() {
-        doesNothing().validateFor(invocation_String);
-    }
-
-    @Test
-    public void validateFor_voidReturnType_shouldPass() {
-        doesNothing().validateFor(invocation_void);
-    }
-
-    @Test
-    public void validateFor_voidObjectReturnType() throws Throwable {
-        doesNothing().validateFor(invocation_Void);
-    }
-
-    @Test
-    public void answer_returns_null_for_generic_parameter() {
-        SubclassWithGenericParameter mock = mock(SubclassWithGenericParameter.class);
-        doNothing().when(mock).methodReturningT();
-    }
-
-    static class SuperClassWithGenericParameter<T> {
-        T methodReturningT() {
-            return null;
-        }
-    }
-
-    static class SubclassWithGenericParameter extends SuperClassWithGenericParameter<Void> {}
+  static class SubclassWithGenericParameter extends SuperClassWithGenericParameter<Void> {}
 }

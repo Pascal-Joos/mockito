@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.mockito.internal.invocation.StubInfoImpl;
 import org.mockito.internal.verification.DefaultRegisteredInvocations;
 import org.mockito.internal.verification.RegisteredInvocations;
@@ -28,151 +27,142 @@ import org.mockito.stubbing.ValidableAnswer;
 @SuppressWarnings("unchecked")
 public class InvocationContainerImpl implements InvocationContainer, Serializable {
 
-    private static final long serialVersionUID = -5334301962749537177L;
-    private final LinkedList<StubbedInvocationMatcher> stubbed =
-            new LinkedList<StubbedInvocationMatcher>();
-    private final DoAnswerStyleStubbing doAnswerStyleStubbing;
-    private final RegisteredInvocations registeredInvocations;
-    private final Strictness mockStrictness;
+  private static final long serialVersionUID = -5334301962749537177L;
+  private final LinkedList<StubbedInvocationMatcher> stubbed =
+      new LinkedList<StubbedInvocationMatcher>();
+  private final DoAnswerStyleStubbing doAnswerStyleStubbing;
+  private final RegisteredInvocations registeredInvocations;
+  private final Strictness mockStrictness;
 
-    private MatchableInvocation invocationForStubbing;
+  private MatchableInvocation invocationForStubbing;
 
-    public InvocationContainerImpl(MockCreationSettings mockSettings) {
-        this.registeredInvocations = createRegisteredInvocations(mockSettings);
-        this.mockStrictness = mockSettings.isLenient() ? Strictness.LENIENT : null;
-        this.doAnswerStyleStubbing = new DoAnswerStyleStubbing();
+  public InvocationContainerImpl(MockCreationSettings mockSettings) {
+    this.registeredInvocations = createRegisteredInvocations(mockSettings);
+    this.mockStrictness = mockSettings.isLenient() ? Strictness.LENIENT : null;
+    this.doAnswerStyleStubbing = new DoAnswerStyleStubbing();
+  }
+
+  public void setInvocationForPotentialStubbing(MatchableInvocation invocation) {
+    registeredInvocations.add(invocation.getInvocation());
+    this.invocationForStubbing = invocation;
+  }
+
+  public void resetInvocationForPotentialStubbing(MatchableInvocation invocationMatcher) {
+    this.invocationForStubbing = invocationMatcher;
+  }
+
+  public void addAnswer(Answer answer, Strictness stubbingStrictness) {
+    registeredInvocations.removeLast();
+    addAnswer(answer, false, stubbingStrictness);
+  }
+
+  public void addConsecutiveAnswer(Answer answer) {
+    addAnswer(answer, true, null);
+  }
+
+  /** Adds new stubbed answer and returns the invocation matcher the answer was added to. */
+  public StubbedInvocationMatcher addAnswer(
+      Answer answer, boolean isConsecutive, Strictness stubbingStrictness) {
+    Invocation invocation = invocationForStubbing.getInvocation();
+    mockingProgress().stubbingCompleted();
+    if (answer instanceof ValidableAnswer) {
+      ((ValidableAnswer) answer).validateFor(invocation);
     }
 
-    public void setInvocationForPotentialStubbing(MatchableInvocation invocation) {
-        registeredInvocations.add(invocation.getInvocation());
-        this.invocationForStubbing = invocation;
+    synchronized (stubbed) {
+      if (isConsecutive) {
+        stubbed.getFirst().addAnswer(answer);
+      } else {
+        Strictness effectiveStrictness =
+            stubbingStrictness != null ? stubbingStrictness : this.mockStrictness;
+        stubbed.addFirst(
+            new StubbedInvocationMatcher(answer, invocationForStubbing, effectiveStrictness));
+      }
+      return stubbed.getFirst();
     }
+  }
 
-    public void resetInvocationForPotentialStubbing(MatchableInvocation invocationMatcher) {
-        this.invocationForStubbing = invocationMatcher;
-    }
+  Object answerTo(Invocation invocation) throws Throwable {
+    return findAnswerFor(invocation).answer(invocation);
+  }
 
-    public void addAnswer(Answer answer, Strictness stubbingStrictness) {
-        registeredInvocations.removeLast();
-        addAnswer(answer, false, stubbingStrictness);
-    }
-
-    public void addConsecutiveAnswer(Answer answer) {
-        addAnswer(answer, true, null);
-    }
-
-    /**
-     * Adds new stubbed answer and returns the invocation matcher the answer was added to.
-     */
-    public StubbedInvocationMatcher addAnswer(
-            Answer answer, boolean isConsecutive, Strictness stubbingStrictness) {
-        Invocation invocation = invocationForStubbing.getInvocation();
-        mockingProgress().stubbingCompleted();
-        if (answer instanceof ValidableAnswer) {
-            ((ValidableAnswer) answer).validateFor(invocation);
+  public StubbedInvocationMatcher findAnswerFor(Invocation invocation) {
+    synchronized (stubbed) {
+      for (StubbedInvocationMatcher s : stubbed) {
+        if (s.matches(invocation)) {
+          s.markStubUsed(invocation);
+          // TODO we should mark stubbed at the point of stubbing, not at the point where
+          // the stub is being used
+          invocation.markStubbed(new StubInfoImpl(s));
+          return s;
         }
-
-        synchronized (stubbed) {
-            if (isConsecutive) {
-                stubbed.getFirst().addAnswer(answer);
-            } else {
-                Strictness effectiveStrictness =
-                        stubbingStrictness != null ? stubbingStrictness : this.mockStrictness;
-                stubbed.addFirst(
-                        new StubbedInvocationMatcher(
-                                answer, invocationForStubbing, effectiveStrictness));
-            }
-            return stubbed.getFirst();
-        }
+      }
     }
 
-    Object answerTo(Invocation invocation) throws Throwable {
-        return findAnswerFor(invocation).answer(invocation);
-    }
+    return null;
+  }
 
-    public StubbedInvocationMatcher findAnswerFor(Invocation invocation) {
-        synchronized (stubbed) {
-            for (StubbedInvocationMatcher s : stubbed) {
-                if (s.matches(invocation)) {
-                    s.markStubUsed(invocation);
-                    // TODO we should mark stubbed at the point of stubbing, not at the point where
-                    // the stub is being used
-                    invocation.markStubbed(new StubInfoImpl(s));
-                    return s;
-                }
-            }
-        }
+  /** Sets the answers declared with 'doAnswer' style. */
+  public void setAnswersForStubbing(List<Answer<?>> answers, Strictness strictness) {
+    doAnswerStyleStubbing.setAnswers(answers, strictness);
+  }
 
-        return null;
-    }
+  public boolean hasAnswersForStubbing() {
+    return !doAnswerStyleStubbing.isSet();
+  }
 
-    /**
-     * Sets the answers declared with 'doAnswer' style.
-     */
-    public void setAnswersForStubbing(List<Answer<?>> answers, Strictness strictness) {
-        doAnswerStyleStubbing.setAnswers(answers, strictness);
-    }
+  public boolean hasInvocationForPotentialStubbing() {
+    return !registeredInvocations.isEmpty();
+  }
 
-    public boolean hasAnswersForStubbing() {
-        return !doAnswerStyleStubbing.isSet();
+  public void setMethodForStubbing(MatchableInvocation invocation) {
+    invocationForStubbing = invocation;
+    assert hasAnswersForStubbing();
+    for (int i = 0; i < doAnswerStyleStubbing.getAnswers().size(); i++) {
+      addAnswer(
+          doAnswerStyleStubbing.getAnswers().get(i),
+          i != 0,
+          doAnswerStyleStubbing.getStubbingStrictness());
     }
+    doAnswerStyleStubbing.clear();
+  }
 
-    public boolean hasInvocationForPotentialStubbing() {
-        return !registeredInvocations.isEmpty();
-    }
+  @Override
+  public String toString() {
+    return "invocationForStubbing: " + invocationForStubbing;
+  }
 
-    public void setMethodForStubbing(MatchableInvocation invocation) {
-        invocationForStubbing = invocation;
-        assert hasAnswersForStubbing();
-        for (int i = 0; i < doAnswerStyleStubbing.getAnswers().size(); i++) {
-            addAnswer(
-                    doAnswerStyleStubbing.getAnswers().get(i),
-                    i != 0,
-                    doAnswerStyleStubbing.getStubbingStrictness());
-        }
-        doAnswerStyleStubbing.clear();
-    }
+  public List<Invocation> getInvocations() {
+    return registeredInvocations.getAll();
+  }
 
-    @Override
-    public String toString() {
-        return "invocationForStubbing: " + invocationForStubbing;
-    }
+  public void clearInvocations() {
+    registeredInvocations.clear();
+  }
 
-    public List<Invocation> getInvocations() {
-        return registeredInvocations.getAll();
-    }
+  /** Stubbings in descending order, most recent first */
+  public List<Stubbing> getStubbingsDescending() {
+    return (List) stubbed;
+  }
 
-    public void clearInvocations() {
-        registeredInvocations.clear();
-    }
+  /** Stubbings in ascending order, most recent last */
+  public Collection<Stubbing> getStubbingsAscending() {
+    List<Stubbing> result = new LinkedList<Stubbing>(stubbed);
+    Collections.reverse(result);
+    return result;
+  }
 
-    /**
-     * Stubbings in descending order, most recent first
-     */
-    public List<Stubbing> getStubbingsDescending() {
-        return (List) stubbed;
-    }
+  public Object invokedMock() {
+    return invocationForStubbing.getInvocation().getMock();
+  }
 
-    /**
-     * Stubbings in ascending order, most recent last
-     */
-    public Collection<Stubbing> getStubbingsAscending() {
-        List<Stubbing> result = new LinkedList<Stubbing>(stubbed);
-        Collections.reverse(result);
-        return result;
-    }
+  public MatchableInvocation getInvocationForStubbing() {
+    return invocationForStubbing;
+  }
 
-    public Object invokedMock() {
-        return invocationForStubbing.getInvocation().getMock();
-    }
-
-    public MatchableInvocation getInvocationForStubbing() {
-        return invocationForStubbing;
-    }
-
-    private RegisteredInvocations createRegisteredInvocations(MockCreationSettings mockSettings) {
-        return mockSettings.isStubOnly()
-                ? new SingleRegisteredInvocation()
-                : new DefaultRegisteredInvocations();
-    }
+  private RegisteredInvocations createRegisteredInvocations(MockCreationSettings mockSettings) {
+    return mockSettings.isStubOnly()
+        ? new SingleRegisteredInvocation()
+        : new DefaultRegisteredInvocations();
+  }
 }

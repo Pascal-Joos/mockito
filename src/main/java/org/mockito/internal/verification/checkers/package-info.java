@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Verification checkers.
- */
+/** Verification checkers. */
 package org.mockito.internal.verification.checkers;

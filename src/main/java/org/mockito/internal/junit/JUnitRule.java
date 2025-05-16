@@ -13,26 +13,27 @@ import org.mockito.quality.Strictness;
 /** Internal implementation. */
 public final class JUnitRule implements MockitoRule {
 
-    private final JUnitSessionStore sessionStore;
+  private final JUnitSessionStore sessionStore;
 
-    /** @param strictness how strict mocking / stubbing is concerned */
-    public JUnitRule(MockitoLogger logger, Strictness strictness) {
-        this.sessionStore = new JUnitSessionStore(logger, strictness);
-    }
+  /**
+   * @param strictness how strict mocking / stubbing is concerned
+   */
+  public JUnitRule(MockitoLogger logger, Strictness strictness) {
+    this.sessionStore = new JUnitSessionStore(logger, strictness);
+  }
 
-    @Override
-    public Statement apply(
-            final Statement base, final FrameworkMethod method, final Object target) {
-        return sessionStore.createStatement(
-                base, target.getClass().getSimpleName() + "." + method.getName(), target);
-    }
+  @Override
+  public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
+    return sessionStore.createStatement(
+        base, target.getClass().getSimpleName() + "." + method.getName(), target);
+  }
 
-    public MockitoRule silent() {
-        return strictness(Strictness.LENIENT);
-    }
+  public MockitoRule silent() {
+    return strictness(Strictness.LENIENT);
+  }
 
-    public MockitoRule strictness(Strictness strictness) {
-        sessionStore.setStrictness(strictness);
-        return this;
-    }
+  public MockitoRule strictness(Strictness strictness) {
+    sessionStore.setStrictness(strictness);
+    return this;
+  }
 }

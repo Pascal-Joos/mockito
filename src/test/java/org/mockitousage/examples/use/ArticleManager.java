@@ -8,29 +8,29 @@ import java.util.List;
 
 public class ArticleManager {
 
-    private final ArticleCalculator calculator;
-    private final ArticleDatabase database;
+  private final ArticleCalculator calculator;
+  private final ArticleDatabase database;
 
-    public ArticleManager(ArticleCalculator calculator, ArticleDatabase database) {
-        this.calculator = calculator;
-        this.database = database;
+  public ArticleManager(ArticleCalculator calculator, ArticleDatabase database) {
+    this.calculator = calculator;
+    this.database = database;
+  }
+
+  public void updateArticleCounters(String newspaper) {
+    int articles = calculator.countArticles(newspaper);
+    int polishArticles = calculator.countArticlesInPolish(newspaper);
+
+    database.updateNumberOfArticles(newspaper, articles);
+    database.updateNumberOfPolishArticles(newspaper, polishArticles);
+    database.updateNumberOfEnglishArticles(newspaper, articles - polishArticles);
+  }
+
+  public void updateRelatedArticlesCounters(String newspaper) {
+    List<Article> articles = database.getArticlesFor("Guardian");
+    for (Article article : articles) {
+      int numberOfRelatedArticles = calculator.countNumberOfRelatedArticles(article);
+      article.setNumberOfRelatedArticles(numberOfRelatedArticles);
+      database.save(article);
     }
-
-    public void updateArticleCounters(String newspaper) {
-        int articles = calculator.countArticles(newspaper);
-        int polishArticles = calculator.countArticlesInPolish(newspaper);
-
-        database.updateNumberOfArticles(newspaper, articles);
-        database.updateNumberOfPolishArticles(newspaper, polishArticles);
-        database.updateNumberOfEnglishArticles(newspaper, articles - polishArticles);
-    }
-
-    public void updateRelatedArticlesCounters(String newspaper) {
-        List<Article> articles = database.getArticlesFor("Guardian");
-        for (Article article : articles) {
-            int numberOfRelatedArticles = calculator.countNumberOfRelatedArticles(article);
-            article.setNumberOfRelatedArticles(numberOfRelatedArticles);
-            database.save(article);
-        }
-    }
+  }
 }

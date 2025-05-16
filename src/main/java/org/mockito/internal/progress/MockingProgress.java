@@ -5,7 +5,6 @@
 package org.mockito.internal.progress;
 
 import java.util.Set;
-
 import org.mockito.listeners.MockitoListener;
 import org.mockito.listeners.VerificationListener;
 import org.mockito.mock.MockCreationSettings;
@@ -15,46 +14,44 @@ import org.mockito.verification.VerificationStrategy;
 
 public interface MockingProgress {
 
-    void reportOngoingStubbing(OngoingStubbing<?> ongoingStubbing);
+  void reportOngoingStubbing(OngoingStubbing<?> ongoingStubbing);
 
-    OngoingStubbing<?> pullOngoingStubbing();
+  OngoingStubbing<?> pullOngoingStubbing();
 
-    Set<VerificationListener> verificationListeners();
+  Set<VerificationListener> verificationListeners();
 
-    void verificationStarted(VerificationMode verificationMode);
+  void verificationStarted(VerificationMode verificationMode);
 
-    VerificationMode pullVerificationMode();
+  VerificationMode pullVerificationMode();
 
-    void stubbingStarted();
+  void stubbingStarted();
 
-    void stubbingCompleted();
+  void stubbingCompleted();
 
-    void validateState();
+  void validateState();
 
-    void reset();
+  void reset();
 
-    /**
-     * Removes ongoing stubbing so that in case the framework is misused
-     * state validation errors are more accurate
-     */
-    void resetOngoingStubbing();
+  /**
+   * Removes ongoing stubbing so that in case the framework is misused state validation errors are
+   * more accurate
+   */
+  void resetOngoingStubbing();
 
-    ArgumentMatcherStorage getArgumentMatcherStorage();
+  ArgumentMatcherStorage getArgumentMatcherStorage();
 
-    void mockingStarted(Object mock, MockCreationSettings settings);
+  void mockingStarted(Object mock, MockCreationSettings settings);
 
-    void mockingStarted(Class<?> mock, MockCreationSettings settings);
+  void mockingStarted(Class<?> mock, MockCreationSettings settings);
 
-    void addListener(MockitoListener listener);
+  void addListener(MockitoListener listener);
 
-    void removeListener(MockitoListener listener);
+  void removeListener(MockitoListener listener);
 
-    void setVerificationStrategy(VerificationStrategy strategy);
+  void setVerificationStrategy(VerificationStrategy strategy);
 
-    VerificationMode maybeVerifyLazily(VerificationMode mode);
+  VerificationMode maybeVerifyLazily(VerificationMode mode);
 
-    /**
-     * Removes all listeners added via {@link #addListener(MockitoListener)}.
-     */
-    void clearListeners();
+  /** Removes all listeners added via {@link #addListener(MockitoListener)}. */
+  void clearListeners();
 }

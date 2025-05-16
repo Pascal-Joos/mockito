@@ -14,18 +14,18 @@ import org.mockitoutil.TestBase;
 
 public class AtLeastTest extends TestBase {
 
-    @Test
-    public void shouldNotAllowNegativeNumberOfMinimumInvocations() throws Exception {
-        try {
-            VerificationModeFactory.atLeast(-50);
-            fail();
-        } catch (MockitoException e) {
-            assertEquals("Negative value is not allowed here", e.getMessage());
-        }
+  @Test
+  public void shouldNotAllowNegativeNumberOfMinimumInvocations() throws Exception {
+    try {
+      VerificationModeFactory.atLeast(-50);
+      fail();
+    } catch (MockitoException e) {
+      assertEquals("Negative value is not allowed here", e.getMessage());
     }
+  }
 
-    @Test
-    public void shouldAllowZeroInvocations() throws Exception {
-        VerificationModeFactory.atLeast(0);
-    }
+  @Test
+  public void shouldAllowZeroInvocations() throws Exception {
+    VerificationModeFactory.atLeast(0);
+  }
 }

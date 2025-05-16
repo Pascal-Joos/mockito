@@ -11,14 +11,14 @@ import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.verification.VerificationModeFactory;
 
 public class TimesTest {
-    @Rule public ExpectedException exception = ExpectedException.none();
+  @Rule public ExpectedException exception = ExpectedException.none();
 
-    @Test
-    public void shouldNotAllowNegativeNumberOfInvocations() throws Exception {
+  @Test
+  public void shouldNotAllowNegativeNumberOfInvocations() throws Exception {
 
-        exception.expect(MockitoException.class);
-        exception.expectMessage("Negative value is not allowed here");
+    exception.expect(MockitoException.class);
+    exception.expectMessage("Negative value is not allowed here");
 
-        VerificationModeFactory.times(-50);
-    }
+    VerificationModeFactory.times(-50);
+  }
 }

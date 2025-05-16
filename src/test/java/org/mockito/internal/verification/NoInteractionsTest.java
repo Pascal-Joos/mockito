@@ -19,23 +19,23 @@ import org.mockitoutil.TestBase;
 
 public class NoInteractionsTest extends TestBase {
 
-    @Test
-    public void noInteractionsExceptionMessageShouldDescribeMock() {
-        // given
-        NoInteractions n = new NoInteractions();
-        IMethods mock = mock(IMethods.class, "a mock");
-        InvocationMatcher i = new InvocationBuilder().mock(mock).toInvocationMatcher();
+  @Test
+  public void noInteractionsExceptionMessageShouldDescribeMock() {
+    // given
+    NoInteractions n = new NoInteractions();
+    IMethods mock = mock(IMethods.class, "a mock");
+    InvocationMatcher i = new InvocationBuilder().mock(mock).toInvocationMatcher();
 
-        InvocationContainerImpl invocations = new InvocationContainerImpl(new MockSettingsImpl());
-        invocations.setInvocationForPotentialStubbing(i);
+    InvocationContainerImpl invocations = new InvocationContainerImpl(new MockSettingsImpl());
+    invocations.setInvocationForPotentialStubbing(i);
 
-        try {
-            // when
-            n.verify(new VerificationDataImpl(invocations, null));
-            // then
-            fail();
-        } catch (NoInteractionsWanted e) {
-            Assertions.assertThat(e.toString()).contains(mock.toString());
-        }
+    try {
+      // when
+      n.verify(new VerificationDataImpl(invocations, null));
+      // then
+      fail();
+    } catch (NoInteractionsWanted e) {
+      Assertions.assertThat(e.toString()).contains(mock.toString());
     }
+  }
 }

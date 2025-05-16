@@ -10,19 +10,17 @@ import org.mockito.listeners.MockitoListener;
 
 public class StateMaster {
 
-    public void reset() {
-        mockingProgress().reset();
-        mockingProgress().resetOngoingStubbing();
-    }
+  public void reset() {
+    mockingProgress().reset();
+    mockingProgress().resetOngoingStubbing();
+  }
 
-    public void validate() {
-        mockingProgress().validateState();
-    }
+  public void validate() {
+    mockingProgress().validateState();
+  }
 
-    /**
-     * Clears Mockito listeners added by {@link MockitoFramework#addListener(MockitoListener)}
-     */
-    public void clearMockitoListeners() {
-        mockingProgress().clearListeners();
-    }
+  /** Clears Mockito listeners added by {@link MockitoFramework#addListener(MockitoListener)} */
+  public void clearMockitoListeners() {
+    mockingProgress().clearListeners();
+  }
 }

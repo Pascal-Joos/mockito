@@ -11,15 +11,15 @@ import org.mockitoutil.TestBase;
 
 public class MockingPackageProtectedTest extends TestBase {
 
-    static class Foo {}
+  static class Foo {}
 
-    class Bar {}
+  class Bar {}
 
-    @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-    @Test
-    public void shouldMockPackageProtectedClasses() {
-        mock(PackageProtected.class);
-        mock(Foo.class);
-        mock(Bar.class);
-    }
+  @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
+  @Test
+  public void shouldMockPackageProtectedClasses() {
+    mock(PackageProtected.class);
+    mock(Foo.class);
+    mock(Bar.class);
+  }
 }

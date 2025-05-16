@@ -6,19 +6,19 @@ package org.mockito.internal.stubbing.defaultanswers;
 
 @SuppressWarnings("unused")
 interface HasPrimitiveMethods {
-    boolean booleanMethod();
+  boolean booleanMethod();
 
-    char charMethod();
+  char charMethod();
 
-    byte byteMethod();
+  byte byteMethod();
 
-    short shortMethod();
+  short shortMethod();
 
-    int intMethod();
+  int intMethod();
 
-    long longMethod();
+  long longMethod();
 
-    float floatMethod();
+  float floatMethod();
 
-    double doubleMethod();
+  double doubleMethod();
 }

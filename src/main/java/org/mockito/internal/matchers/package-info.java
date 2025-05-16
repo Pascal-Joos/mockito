@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Argument matchers for verification and stubbing.
- */
+/** Argument matchers for verification and stubbing. */
 package org.mockito.internal.matchers;

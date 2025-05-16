@@ -19,20 +19,18 @@ import org.mockitoutil.TestBase;
 
 public class DefaultMockitoPluginsTest extends TestBase {
 
-    private DefaultMockitoPlugins plugins = new DefaultMockitoPlugins();
+  private DefaultMockitoPlugins plugins = new DefaultMockitoPlugins();
 
-    @Test
-    public void provides_plugins() throws Exception {
-        assertEquals(
-                "org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker",
-                plugins.getDefaultPluginClass(INLINE_ALIAS));
-        assertEquals(InlineByteBuddyMockMaker.class, plugins.getInlineMockMaker().getClass());
-        assertEquals(
-                ByteBuddyMockMaker.class, plugins.getDefaultPlugin(MockMaker.class).getClass());
-        assertNotNull(plugins.getDefaultPlugin(InstantiatorProvider.class));
-        assertNotNull(plugins.getDefaultPlugin(InstantiatorProvider2.class));
-        assertEquals(
-                ConsoleMockitoLogger.class,
-                plugins.getDefaultPlugin(MockitoLogger.class).getClass());
-    }
+  @Test
+  public void provides_plugins() throws Exception {
+    assertEquals(
+        "org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker",
+        plugins.getDefaultPluginClass(INLINE_ALIAS));
+    assertEquals(InlineByteBuddyMockMaker.class, plugins.getInlineMockMaker().getClass());
+    assertEquals(ByteBuddyMockMaker.class, plugins.getDefaultPlugin(MockMaker.class).getClass());
+    assertNotNull(plugins.getDefaultPlugin(InstantiatorProvider.class));
+    assertNotNull(plugins.getDefaultPlugin(InstantiatorProvider2.class));
+    assertEquals(
+        ConsoleMockitoLogger.class, plugins.getDefaultPlugin(MockitoLogger.class).getClass());
+  }
 }

@@ -12,14 +12,14 @@ import org.mockitoutil.TestBase;
 // see issue 221
 public class NPEOnAnyClassMatcherAutounboxTest extends TestBase {
 
-    interface Foo {
-        void bar(long id);
-    }
+  interface Foo {
+    void bar(long id);
+  }
 
-    @Test
-    public void shouldNotThrowNPE() {
-        Foo f = mock(Foo.class);
-        f.bar(1);
-        verify(f).bar(any(Long.class));
-    }
+  @Test
+  public void shouldNotThrowNPE() {
+    Foo f = mock(Foo.class);
+    f.bar(1);
+    verify(f).bar(any(Long.class));
+  }
 }

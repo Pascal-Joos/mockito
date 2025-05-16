@@ -15,25 +15,25 @@ import org.mockitoutil.TestBase;
 
 public class ByteBuddyMockMakerTest extends TestBase {
 
-    @InjectMocks private ByteBuddyMockMaker mockMaker = new ByteBuddyMockMaker();
+  @InjectMocks private ByteBuddyMockMaker mockMaker = new ByteBuddyMockMaker();
 
-    @Mock private ClassCreatingMockMaker delegate;
+  @Mock private ClassCreatingMockMaker delegate;
 
-    @Test
-    public void should_delegate_call() {
-        CreationSettings<Object> creationSettings = new CreationSettings<Object>();
-        MockHandlerImpl<Object> handler = new MockHandlerImpl<Object>(creationSettings);
+  @Test
+  public void should_delegate_call() {
+    CreationSettings<Object> creationSettings = new CreationSettings<Object>();
+    MockHandlerImpl<Object> handler = new MockHandlerImpl<Object>(creationSettings);
 
-        mockMaker.createMockType(creationSettings);
-        mockMaker.createMock(creationSettings, handler);
-        mockMaker.getHandler(this);
-        mockMaker.isTypeMockable(Object.class);
-        mockMaker.resetMock(this, handler, creationSettings);
+    mockMaker.createMockType(creationSettings);
+    mockMaker.createMock(creationSettings, handler);
+    mockMaker.getHandler(this);
+    mockMaker.isTypeMockable(Object.class);
+    mockMaker.resetMock(this, handler, creationSettings);
 
-        verify(delegate).createMock(creationSettings, handler);
-        verify(delegate).createMockType(creationSettings);
-        verify(delegate).getHandler(this);
-        verify(delegate).isTypeMockable(Object.class);
-        verify(delegate).resetMock(this, handler, creationSettings);
-    }
+    verify(delegate).createMock(creationSettings, handler);
+    verify(delegate).createMockType(creationSettings);
+    verify(delegate).getHandler(this);
+    verify(delegate).isTypeMockable(Object.class);
+    verify(delegate).resetMock(this, handler, creationSettings);
+  }
 }

@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Mocking quality related classes.
- */
+/** Mocking quality related classes. */
 package org.mockito.quality;

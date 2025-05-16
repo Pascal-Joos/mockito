@@ -12,18 +12,18 @@ import org.mockitoutil.TestBase;
 
 public class VarargsErrorWhenCallingRealMethodTest extends TestBase {
 
-    class Foo {
-        int blah(String a, String b, Object... c) {
-            return 1;
-        }
+  class Foo {
+    int blah(String a, String b, Object... c) {
+      return 1;
     }
+  }
 
-    @Test
-    public void shouldNotThrowAnyException() throws Exception {
-        Foo foo = mock(Foo.class);
+  @Test
+  public void shouldNotThrowAnyException() throws Exception {
+    Foo foo = mock(Foo.class);
 
-        when(foo.blah(anyString(), anyString())).thenCallRealMethod();
+    when(foo.blah(anyString(), anyString())).thenCallRealMethod();
 
-        assertEquals(1, foo.blah("foo", "bar"));
-    }
+    assertEquals(1, foo.blah("foo", "bar"));
+  }
 }

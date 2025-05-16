@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.mockito.listeners.InvocationListener;
 import org.mockito.listeners.StubbingLookupListener;
 import org.mockito.listeners.VerificationStartedListener;
@@ -21,155 +20,155 @@ import org.mockito.mock.SerializableMode;
 import org.mockito.stubbing.Answer;
 
 public class CreationSettings<T> implements MockCreationSettings<T>, Serializable {
-    private static final long serialVersionUID = -6789800638070123629L;
+  private static final long serialVersionUID = -6789800638070123629L;
 
-    protected Class<T> typeToMock;
-    protected Set<Class<?>> extraInterfaces = new LinkedHashSet<Class<?>>();
-    protected String name;
-    protected Object spiedInstance;
-    protected Answer<Object> defaultAnswer;
-    protected MockName mockName;
-    protected SerializableMode serializableMode = SerializableMode.NONE;
-    protected List<InvocationListener> invocationListeners = new ArrayList<InvocationListener>();
+  protected Class<T> typeToMock;
+  protected Set<Class<?>> extraInterfaces = new LinkedHashSet<Class<?>>();
+  protected String name;
+  protected Object spiedInstance;
+  protected Answer<Object> defaultAnswer;
+  protected MockName mockName;
+  protected SerializableMode serializableMode = SerializableMode.NONE;
+  protected List<InvocationListener> invocationListeners = new ArrayList<InvocationListener>();
 
-    // Other listeners in this class may also need concurrency-safe implementation. However, no
-    // issue was reported about it.
-    // If we do it, we need to understand usage patterns and choose the right concurrent
-    // implementation.
-    protected List<StubbingLookupListener> stubbingLookupListeners =
-            new CopyOnWriteArrayList<StubbingLookupListener>();
+  // Other listeners in this class may also need concurrency-safe implementation. However, no
+  // issue was reported about it.
+  // If we do it, we need to understand usage patterns and choose the right concurrent
+  // implementation.
+  protected List<StubbingLookupListener> stubbingLookupListeners =
+      new CopyOnWriteArrayList<StubbingLookupListener>();
 
-    protected List<VerificationStartedListener> verificationStartedListeners =
-            new LinkedList<VerificationStartedListener>();
-    protected boolean stubOnly;
-    protected boolean stripAnnotations;
-    private boolean useConstructor;
-    private Object outerClassInstance;
-    private Object[] constructorArgs;
-    protected boolean lenient;
+  protected List<VerificationStartedListener> verificationStartedListeners =
+      new LinkedList<VerificationStartedListener>();
+  protected boolean stubOnly;
+  protected boolean stripAnnotations;
+  private boolean useConstructor;
+  private Object outerClassInstance;
+  private Object[] constructorArgs;
+  protected boolean lenient;
 
-    public CreationSettings() {}
+  public CreationSettings() {}
 
-    @SuppressWarnings("unchecked")
-    public CreationSettings(CreationSettings copy) {
-        // TODO can we have a reflection test here? We had a couple of bugs here in the past.
-        this.typeToMock = copy.typeToMock;
-        this.extraInterfaces = copy.extraInterfaces;
-        this.name = copy.name;
-        this.spiedInstance = copy.spiedInstance;
-        this.defaultAnswer = copy.defaultAnswer;
-        this.mockName = copy.mockName;
-        this.serializableMode = copy.serializableMode;
-        this.invocationListeners = copy.invocationListeners;
-        this.stubbingLookupListeners = copy.stubbingLookupListeners;
-        this.verificationStartedListeners = copy.verificationStartedListeners;
-        this.stubOnly = copy.stubOnly;
-        this.useConstructor = copy.isUsingConstructor();
-        this.outerClassInstance = copy.getOuterClassInstance();
-        this.constructorArgs = copy.getConstructorArgs();
-        this.lenient = copy.lenient;
-        this.stripAnnotations = copy.stripAnnotations;
-    }
+  @SuppressWarnings("unchecked")
+  public CreationSettings(CreationSettings copy) {
+    // TODO can we have a reflection test here? We had a couple of bugs here in the past.
+    this.typeToMock = copy.typeToMock;
+    this.extraInterfaces = copy.extraInterfaces;
+    this.name = copy.name;
+    this.spiedInstance = copy.spiedInstance;
+    this.defaultAnswer = copy.defaultAnswer;
+    this.mockName = copy.mockName;
+    this.serializableMode = copy.serializableMode;
+    this.invocationListeners = copy.invocationListeners;
+    this.stubbingLookupListeners = copy.stubbingLookupListeners;
+    this.verificationStartedListeners = copy.verificationStartedListeners;
+    this.stubOnly = copy.stubOnly;
+    this.useConstructor = copy.isUsingConstructor();
+    this.outerClassInstance = copy.getOuterClassInstance();
+    this.constructorArgs = copy.getConstructorArgs();
+    this.lenient = copy.lenient;
+    this.stripAnnotations = copy.stripAnnotations;
+  }
 
-    @Override
-    public Class<T> getTypeToMock() {
-        return typeToMock;
-    }
+  @Override
+  public Class<T> getTypeToMock() {
+    return typeToMock;
+  }
 
-    public CreationSettings<T> setTypeToMock(Class<T> typeToMock) {
-        this.typeToMock = typeToMock;
-        return this;
-    }
+  public CreationSettings<T> setTypeToMock(Class<T> typeToMock) {
+    this.typeToMock = typeToMock;
+    return this;
+  }
 
-    @Override
-    public Set<Class<?>> getExtraInterfaces() {
-        return extraInterfaces;
-    }
+  @Override
+  public Set<Class<?>> getExtraInterfaces() {
+    return extraInterfaces;
+  }
 
-    public CreationSettings<T> setExtraInterfaces(Set<Class<?>> extraInterfaces) {
-        this.extraInterfaces = extraInterfaces;
-        return this;
-    }
+  public CreationSettings<T> setExtraInterfaces(Set<Class<?>> extraInterfaces) {
+    this.extraInterfaces = extraInterfaces;
+    return this;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    @Override
-    public Object getSpiedInstance() {
-        return spiedInstance;
-    }
+  @Override
+  public Object getSpiedInstance() {
+    return spiedInstance;
+  }
 
-    @Override
-    public Answer<Object> getDefaultAnswer() {
-        return defaultAnswer;
-    }
+  @Override
+  public Answer<Object> getDefaultAnswer() {
+    return defaultAnswer;
+  }
 
-    @Override
-    public MockName getMockName() {
-        return mockName;
-    }
+  @Override
+  public MockName getMockName() {
+    return mockName;
+  }
 
-    public CreationSettings<T> setMockName(MockName mockName) {
-        this.mockName = mockName;
-        return this;
-    }
+  public CreationSettings<T> setMockName(MockName mockName) {
+    this.mockName = mockName;
+    return this;
+  }
 
-    public boolean isSerializable() {
-        return serializableMode != SerializableMode.NONE;
-    }
+  public boolean isSerializable() {
+    return serializableMode != SerializableMode.NONE;
+  }
 
-    public CreationSettings<T> setSerializableMode(SerializableMode serializableMode) {
-        this.serializableMode = serializableMode;
-        return this;
-    }
+  public CreationSettings<T> setSerializableMode(SerializableMode serializableMode) {
+    this.serializableMode = serializableMode;
+    return this;
+  }
 
-    @Override
-    public SerializableMode getSerializableMode() {
-        return serializableMode;
-    }
+  @Override
+  public SerializableMode getSerializableMode() {
+    return serializableMode;
+  }
 
-    @Override
-    public List<InvocationListener> getInvocationListeners() {
-        return invocationListeners;
-    }
+  @Override
+  public List<InvocationListener> getInvocationListeners() {
+    return invocationListeners;
+  }
 
-    @Override
-    public List<VerificationStartedListener> getVerificationStartedListeners() {
-        return verificationStartedListeners;
-    }
+  @Override
+  public List<VerificationStartedListener> getVerificationStartedListeners() {
+    return verificationStartedListeners;
+  }
 
-    public List<StubbingLookupListener> getStubbingLookupListeners() {
-        return stubbingLookupListeners;
-    }
+  public List<StubbingLookupListener> getStubbingLookupListeners() {
+    return stubbingLookupListeners;
+  }
 
-    @Override
-    public boolean isUsingConstructor() {
-        return useConstructor;
-    }
+  @Override
+  public boolean isUsingConstructor() {
+    return useConstructor;
+  }
 
-    @Override
-    public boolean isStripAnnotations() {
-        return stripAnnotations;
-    }
+  @Override
+  public boolean isStripAnnotations() {
+    return stripAnnotations;
+  }
 
-    @Override
-    public Object[] getConstructorArgs() {
-        return constructorArgs;
-    }
+  @Override
+  public Object[] getConstructorArgs() {
+    return constructorArgs;
+  }
 
-    @Override
-    public Object getOuterClassInstance() {
-        return outerClassInstance;
-    }
+  @Override
+  public Object getOuterClassInstance() {
+    return outerClassInstance;
+  }
 
-    @Override
-    public boolean isStubOnly() {
-        return stubOnly;
-    }
+  @Override
+  public boolean isStubOnly() {
+    return stubOnly;
+  }
 
-    @Override
-    public boolean isLenient() {
-        return lenient;
-    }
+  @Override
+  public boolean isLenient() {
+    return lenient;
+  }
 }

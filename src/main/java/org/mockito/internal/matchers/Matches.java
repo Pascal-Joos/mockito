@@ -6,26 +6,25 @@ package org.mockito.internal.matchers;
 
 import java.io.Serializable;
 import java.util.regex.Pattern;
-
 import org.mockito.ArgumentMatcher;
 
 public class Matches implements ArgumentMatcher<Object>, Serializable {
 
-    private final Pattern pattern;
+  private final Pattern pattern;
 
-    public Matches(String regex) {
-        this(Pattern.compile(regex));
-    }
+  public Matches(String regex) {
+    this(Pattern.compile(regex));
+  }
 
-    public Matches(Pattern pattern) {
-        this.pattern = pattern;
-    }
+  public Matches(Pattern pattern) {
+    this.pattern = pattern;
+  }
 
-    public boolean matches(Object actual) {
-        return (actual instanceof String) && pattern.matcher((String) actual).find();
-    }
+  public boolean matches(Object actual) {
+    return (actual instanceof String) && pattern.matcher((String) actual).find();
+  }
 
-    public String toString() {
-        return "matches(\"" + pattern.pattern().replaceAll("\\\\", "\\\\\\\\") + "\")";
-    }
+  public String toString() {
+    return "matches(\"" + pattern.pattern().replaceAll("\\\\", "\\\\\\\\") + "\")";
+  }
 }

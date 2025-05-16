@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Internal classes for runners implementations.
- */
+/** Internal classes for runners implementations. */
 package org.mockito.internal.runners;

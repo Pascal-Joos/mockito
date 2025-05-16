@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Mock settings related classes.
- */
+/** Mock settings related classes. */
 package org.mockito.mock;

@@ -15,35 +15,34 @@ import org.mockito.verification.VerificationMode;
 
 public class AtLeast implements VerificationInOrderMode, VerificationMode {
 
-    final int wantedCount;
+  final int wantedCount;
 
-    public AtLeast(int wantedNumberOfInvocations) {
-        if (wantedNumberOfInvocations < 0) {
-            throw new MockitoException("Negative value is not allowed here");
-        }
-        this.wantedCount = wantedNumberOfInvocations;
+  public AtLeast(int wantedNumberOfInvocations) {
+    if (wantedNumberOfInvocations < 0) {
+      throw new MockitoException("Negative value is not allowed here");
     }
+    this.wantedCount = wantedNumberOfInvocations;
+  }
 
-    @Override
-    public void verify(VerificationData data) {
-        if (wantedCount == 1) {
-            checkMissingInvocation(data.getAllInvocations(), data.getTarget());
-        }
-        checkAtLeastNumberOfInvocations(data.getAllInvocations(), data.getTarget(), wantedCount);
+  @Override
+  public void verify(VerificationData data) {
+    if (wantedCount == 1) {
+      checkMissingInvocation(data.getAllInvocations(), data.getTarget());
     }
+    checkAtLeastNumberOfInvocations(data.getAllInvocations(), data.getTarget(), wantedCount);
+  }
 
-    @Override
-    public void verifyInOrder(VerificationDataInOrder data) {
-        if (wantedCount == 1) {
-            checkMissingInvocation(
-                    data.getAllInvocations(), data.getWanted(), data.getOrderingContext());
-        }
-        checkAtLeastNumberOfInvocations(
-                data.getAllInvocations(), data.getWanted(), wantedCount, data.getOrderingContext());
+  @Override
+  public void verifyInOrder(VerificationDataInOrder data) {
+    if (wantedCount == 1) {
+      checkMissingInvocation(data.getAllInvocations(), data.getWanted(), data.getOrderingContext());
     }
+    checkAtLeastNumberOfInvocations(
+        data.getAllInvocations(), data.getWanted(), wantedCount, data.getOrderingContext());
+  }
 
-    @Override
-    public String toString() {
-        return "Wanted invocations count: at least " + wantedCount;
-    }
+  @Override
+  public String toString() {
+    return "Wanted invocations count: at least " + wantedCount;
+  }
 }

@@ -6,7 +6,7 @@ package org.mockito.internal.junit;
 
 public interface TestFinishedEvent {
 
-    Throwable getFailure();
+  Throwable getFailure();
 
-    String getTestName();
+  String getTestName();
 }

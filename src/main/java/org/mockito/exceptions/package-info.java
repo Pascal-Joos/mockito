@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Mockito exceptions utilities
- */
+/** Mockito exceptions utilities */
 package org.mockito.exceptions;

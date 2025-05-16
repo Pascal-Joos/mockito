@@ -5,7 +5,6 @@
 package org.mockitousage.bugs.creation;
 
 import java.util.Random;
-
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -15,62 +14,62 @@ import org.mockito.Spy;
 @RunWith(Enclosed.class)
 public class ConstructorInvokingMethodShouldNotRaiseExceptionTest {
 
-    public static class WithDumbMethod {
-        @Spy HasConstructorInvokingMethod hasConstructorInvokingMethod;
+  public static class WithDumbMethod {
+    @Spy HasConstructorInvokingMethod hasConstructorInvokingMethod;
 
-        @Test
-        public void should_be_able_to_create_spy() throws Exception {
-            MockitoAnnotations.openMocks(this);
-        }
-
-        private static class HasConstructorInvokingMethod {
-            public HasConstructorInvokingMethod() {
-                someMethod();
-            }
-
-            void someMethod() {}
-        }
+    @Test
+    public void should_be_able_to_create_spy() throws Exception {
+      MockitoAnnotations.openMocks(this);
     }
 
-    public static class UsingMethodObjectReferenceResult {
-        @Spy HasConstructorInvokingMethod hasConstructorInvokingMethod;
+    private static class HasConstructorInvokingMethod {
+      public HasConstructorInvokingMethod() {
+        someMethod();
+      }
 
-        @Test
-        public void should_be_able_to_create_spy() throws Exception {
-            MockitoAnnotations.openMocks(this);
-        }
+      void someMethod() {}
+    }
+  }
 
-        private static class HasConstructorInvokingMethod {
-            private final boolean doesIt;
+  public static class UsingMethodObjectReferenceResult {
+    @Spy HasConstructorInvokingMethod hasConstructorInvokingMethod;
 
-            public HasConstructorInvokingMethod() {
-                doesIt = someMethod().contains("yup");
-            }
-
-            String someMethod() {
-                return "tada!";
-            }
-        }
+    @Test
+    public void should_be_able_to_create_spy() throws Exception {
+      MockitoAnnotations.openMocks(this);
     }
 
-    public static class UsingMethodPrimitiveResult {
-        @Spy HasConstructorInvokingMethod hasConstructorInvokingMethod;
+    private static class HasConstructorInvokingMethod {
+      private final boolean doesIt;
 
-        @Test
-        public void should_be_able_to_create_spy() throws Exception {
-            MockitoAnnotations.openMocks(this);
-        }
+      public HasConstructorInvokingMethod() {
+        doesIt = someMethod().contains("yup");
+      }
 
-        private static class HasConstructorInvokingMethod {
-            private final boolean doesIt;
-
-            public HasConstructorInvokingMethod() {
-                doesIt = someMethod();
-            }
-
-            boolean someMethod() {
-                return new Random().nextBoolean();
-            }
-        }
+      String someMethod() {
+        return "tada!";
+      }
     }
+  }
+
+  public static class UsingMethodPrimitiveResult {
+    @Spy HasConstructorInvokingMethod hasConstructorInvokingMethod;
+
+    @Test
+    public void should_be_able_to_create_spy() throws Exception {
+      MockitoAnnotations.openMocks(this);
+    }
+
+    private static class HasConstructorInvokingMethod {
+      private final boolean doesIt;
+
+      public HasConstructorInvokingMethod() {
+        doesIt = someMethod();
+      }
+
+      boolean someMethod() {
+        return new Random().nextBoolean();
+      }
+    }
+  }
 }

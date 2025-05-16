@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Mockito injection internals.
- */
+/** Mockito injection internals. */
 package org.mockito.internal.configuration.injection;

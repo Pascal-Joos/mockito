@@ -12,52 +12,52 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Sort fields in an order suitable for injection, by name with superclasses
- * moved after their subclasses.
+ * Sort fields in an order suitable for injection, by name with superclasses moved after their
+ * subclasses.
  */
 public class SuperTypesLastSorter {
 
-    private SuperTypesLastSorter() {}
+  private SuperTypesLastSorter() {}
 
-    /**
-     * Return a new collection with the fields sorted first by name,
-     * then with any fields moved after their supertypes.
-     */
-    public static List<Field> sortSuperTypesLast(Collection<? extends Field> unsortedFields) {
-        List<Field> fields = new ArrayList<Field>(unsortedFields);
+  /**
+   * Return a new collection with the fields sorted first by name, then with any fields moved after
+   * their supertypes.
+   */
+  public static List<Field> sortSuperTypesLast(Collection<? extends Field> unsortedFields) {
+    List<Field> fields = new ArrayList<Field>(unsortedFields);
 
-        Collections.sort(fields, compareFieldsByName);
+    Collections.sort(fields, compareFieldsByName);
 
-        int i = 0;
+    int i = 0;
 
-        while (i < fields.size() - 1) {
-            Field f = fields.get(i);
-            Class<?> ft = f.getType();
-            int newPos = i;
-            for (int j = i + 1; j < fields.size(); j++) {
-                Class<?> t = fields.get(j).getType();
+    while (i < fields.size() - 1) {
+      Field f = fields.get(i);
+      Class<?> ft = f.getType();
+      int newPos = i;
+      for (int j = i + 1; j < fields.size(); j++) {
+        Class<?> t = fields.get(j).getType();
 
-                if (ft != t && ft.isAssignableFrom(t)) {
-                    newPos = j;
-                }
-            }
-
-            if (newPos == i) {
-                i++;
-            } else {
-                fields.remove(i);
-                fields.add(newPos, f);
-            }
+        if (ft != t && ft.isAssignableFrom(t)) {
+          newPos = j;
         }
+      }
 
-        return fields;
+      if (newPos == i) {
+        i++;
+      } else {
+        fields.remove(i);
+        fields.add(newPos, f);
+      }
     }
 
-    private static final Comparator<Field> compareFieldsByName =
-            new Comparator<Field>() {
-                @Override
-                public int compare(Field o1, Field o2) {
-                    return o1.getName().compareTo(o2.getName());
-                }
-            };
+    return fields;
+  }
+
+  private static final Comparator<Field> compareFieldsByName =
+      new Comparator<Field>() {
+        @Override
+        public int compare(Field o1, Field o2) {
+          return o1.getName().compareTo(o2.getName());
+        }
+      };
 }

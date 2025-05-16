@@ -7,22 +7,21 @@ package org.mockitousage.bugs;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
-
 import org.junit.Test;
 import org.mockito.listeners.InvocationListener;
 import org.mockito.listeners.MethodInvocationReport;
 
 public class ListenersLostOnResetMockTest {
 
-    @Test
-    public void listener() throws Exception {
-        InvocationListener invocationListener = mock(InvocationListener.class);
+  @Test
+  public void listener() throws Exception {
+    InvocationListener invocationListener = mock(InvocationListener.class);
 
-        List mockedList = mock(List.class, withSettings().invocationListeners(invocationListener));
-        reset(mockedList);
+    List mockedList = mock(List.class, withSettings().invocationListeners(invocationListener));
+    reset(mockedList);
 
-        mockedList.clear();
+    mockedList.clear();
 
-        verify(invocationListener).reportInvocation(any(MethodInvocationReport.class));
-    }
+    verify(invocationListener).reportInvocation(any(MethodInvocationReport.class));
+  }
 }

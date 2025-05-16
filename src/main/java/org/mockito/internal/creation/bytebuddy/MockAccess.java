@@ -6,7 +6,7 @@ package org.mockito.internal.creation.bytebuddy;
 
 public interface MockAccess {
 
-    MockMethodInterceptor getMockitoInterceptor();
+  MockMethodInterceptor getMockitoInterceptor();
 
-    void setMockitoInterceptor(MockMethodInterceptor mockMethodInterceptor);
+  void setMockitoInterceptor(MockMethodInterceptor mockMethodInterceptor);
 }

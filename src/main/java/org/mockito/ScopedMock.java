@@ -11,21 +11,17 @@ package org.mockito;
 @Incubating
 public interface ScopedMock extends AutoCloseable {
 
-    /**
-     * Checks if this mock is closed.
-     *
-     * @return {@code true} if this mock is closed.
-     */
-    boolean isClosed();
+  /**
+   * Checks if this mock is closed.
+   *
+   * @return {@code true} if this mock is closed.
+   */
+  boolean isClosed();
 
-    /**
-     * Closes this scoped mock and throws an exception if already closed.
-     */
-    @Override
-    void close();
+  /** Closes this scoped mock and throws an exception if already closed. */
+  @Override
+  void close();
 
-    /**
-     * Releases this scoped mock and is non-operational if already released.
-     */
-    void closeOnDemand();
+  /** Releases this scoped mock and is non-operational if already released. */
+  void closeOnDemand();
 }

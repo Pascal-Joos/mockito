@@ -13,7 +13,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
 
 import java.util.Arrays;
-
 import org.junit.Test;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.exceptions.misusing.InvalidUseOfMatchersException;
@@ -35,93 +34,90 @@ import org.mockitoutil.TestBase;
 @SuppressWarnings({"unchecked", "serial"})
 public class MockHandlerImplTest extends TestBase {
 
-    private StubbedInvocationMatcher stubbedInvocationMatcher =
-            mock(StubbedInvocationMatcher.class);
-    private Invocation invocation = mock(Invocation.class);
+  private StubbedInvocationMatcher stubbedInvocationMatcher = mock(StubbedInvocationMatcher.class);
+  private Invocation invocation = mock(Invocation.class);
 
-    @Test
-    public void should_remove_verification_mode_even_when_invalid_matchers() throws Throwable {
-        // given
-        Invocation invocation = new InvocationBuilder().toInvocation();
-        @SuppressWarnings("rawtypes")
-        MockHandlerImpl<?> handler = new MockHandlerImpl(new MockSettingsImpl());
-        mockingProgress().verificationStarted(VerificationModeFactory.atLeastOnce());
-        handler.matchersBinder =
-                new MatchersBinder() {
-                    public InvocationMatcher bindMatchers(
-                            ArgumentMatcherStorage argumentMatcherStorage, Invocation invocation) {
-                        throw new InvalidUseOfMatchersException();
-                    }
-                };
+  @Test
+  public void should_remove_verification_mode_even_when_invalid_matchers() throws Throwable {
+    // given
+    Invocation invocation = new InvocationBuilder().toInvocation();
+    @SuppressWarnings("rawtypes")
+    MockHandlerImpl<?> handler = new MockHandlerImpl(new MockSettingsImpl());
+    mockingProgress().verificationStarted(VerificationModeFactory.atLeastOnce());
+    handler.matchersBinder =
+        new MatchersBinder() {
+          public InvocationMatcher bindMatchers(
+              ArgumentMatcherStorage argumentMatcherStorage, Invocation invocation) {
+            throw new InvalidUseOfMatchersException();
+          }
+        };
 
-        try {
-            // when
-            handler.handle(invocation);
+    try {
+      // when
+      handler.handle(invocation);
 
-            // then
-            fail();
-        } catch (InvalidUseOfMatchersException ignored) {
-        }
-
-        assertNull(mockingProgress().pullVerificationMode());
+      // then
+      fail();
+    } catch (InvalidUseOfMatchersException ignored) {
     }
 
-    @Test(expected = MockitoException.class)
-    public void should_throw_mockito_exception_when_invocation_handler_throws_anything()
-            throws Throwable {
-        // given
-        InvocationListener throwingListener = mock(InvocationListener.class);
-        doThrow(new Throwable())
-                .when(throwingListener)
-                .reportInvocation(any(MethodInvocationReport.class));
-        MockHandlerImpl<?> handler = create_correctly_stubbed_handler(throwingListener);
+    assertNull(mockingProgress().pullVerificationMode());
+  }
 
-        // when
-        handler.handle(invocation);
-    }
+  @Test(expected = MockitoException.class)
+  public void should_throw_mockito_exception_when_invocation_handler_throws_anything()
+      throws Throwable {
+    // given
+    InvocationListener throwingListener = mock(InvocationListener.class);
+    doThrow(new Throwable())
+        .when(throwingListener)
+        .reportInvocation(any(MethodInvocationReport.class));
+    MockHandlerImpl<?> handler = create_correctly_stubbed_handler(throwingListener);
 
-    @Test(expected = WrongTypeOfReturnValue.class)
-    public void should_report_bogus_default_answer() throws Throwable {
-        MockSettingsImpl mockSettings = mock(MockSettingsImpl.class);
-        MockHandlerImpl<?> handler = new MockHandlerImpl(mockSettings);
-        given(mockSettings.getDefaultAnswer()).willReturn(new Returns(AWrongType.WRONG_TYPE));
+    // when
+    handler.handle(invocation);
+  }
 
-        @SuppressWarnings("unused") // otherwise cast is not done
-        String there_should_not_be_a_CCE_here =
-                (String)
-                        handler.handle(
-                                new InvocationBuilder()
-                                        .method(Object.class.getDeclaredMethod("toString"))
-                                        .toInvocation());
-    }
+  @Test(expected = WrongTypeOfReturnValue.class)
+  public void should_report_bogus_default_answer() throws Throwable {
+    MockSettingsImpl mockSettings = mock(MockSettingsImpl.class);
+    MockHandlerImpl<?> handler = new MockHandlerImpl(mockSettings);
+    given(mockSettings.getDefaultAnswer()).willReturn(new Returns(AWrongType.WRONG_TYPE));
 
-    private MockHandlerImpl<?> create_correctly_stubbed_handler(
-            InvocationListener throwingListener) {
-        MockHandlerImpl<?> handler = create_handler_with_listeners(throwingListener);
-        stub_ordinary_invocation_with_given_return_value(handler);
-        return handler;
-    }
+    @SuppressWarnings("unused") // otherwise cast is not done
+    String there_should_not_be_a_CCE_here =
+        (String)
+            handler.handle(
+                new InvocationBuilder()
+                    .method(Object.class.getDeclaredMethod("toString"))
+                    .toInvocation());
+  }
 
-    private void stub_ordinary_invocation_with_given_return_value(MockHandlerImpl<?> handler) {
-        stub_ordinary_invocation_with_invocation_matcher(handler, stubbedInvocationMatcher);
-    }
+  private MockHandlerImpl<?> create_correctly_stubbed_handler(InvocationListener throwingListener) {
+    MockHandlerImpl<?> handler = create_handler_with_listeners(throwingListener);
+    stub_ordinary_invocation_with_given_return_value(handler);
+    return handler;
+  }
 
-    private void stub_ordinary_invocation_with_invocation_matcher(
-            MockHandlerImpl<?> handler, StubbedInvocationMatcher value) {
-        handler.invocationContainer = mock(InvocationContainerImpl.class);
-        given(handler.invocationContainer.findAnswerFor(any(Invocation.class))).willReturn(value);
-    }
+  private void stub_ordinary_invocation_with_given_return_value(MockHandlerImpl<?> handler) {
+    stub_ordinary_invocation_with_invocation_matcher(handler, stubbedInvocationMatcher);
+  }
 
-    private MockHandlerImpl<?> create_handler_with_listeners(InvocationListener... listener) {
-        @SuppressWarnings("rawtypes")
-        MockHandlerImpl<?> handler = new MockHandlerImpl(mock(MockSettingsImpl.class));
-        handler.matchersBinder = mock(MatchersBinder.class);
-        given(handler.getMockSettings().getInvocationListeners())
-                .willReturn(Arrays.asList(listener));
-        return handler;
-    }
+  private void stub_ordinary_invocation_with_invocation_matcher(
+      MockHandlerImpl<?> handler, StubbedInvocationMatcher value) {
+    handler.invocationContainer = mock(InvocationContainerImpl.class);
+    given(handler.invocationContainer.findAnswerFor(any(Invocation.class))).willReturn(value);
+  }
 
-    private static class AWrongType {
-        public static final AWrongType WRONG_TYPE = new AWrongType();
-    }
+  private MockHandlerImpl<?> create_handler_with_listeners(InvocationListener... listener) {
+    @SuppressWarnings("rawtypes")
+    MockHandlerImpl<?> handler = new MockHandlerImpl(mock(MockSettingsImpl.class));
+    handler.matchersBinder = mock(MatchersBinder.class);
+    given(handler.getMockSettings().getInvocationListeners()).willReturn(Arrays.asList(listener));
+    return handler;
+  }
+
+  private static class AWrongType {
+    public static final AWrongType WRONG_TYPE = new AWrongType();
+  }
 }

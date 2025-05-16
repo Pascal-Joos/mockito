@@ -12,23 +12,23 @@ import org.mockitoutil.TestBase;
 // see bug 116
 public class AIOOBExceptionWithAtLeastTest extends TestBase {
 
-    interface IProgressMonitor {
-        void beginTask(String s, int i);
+  interface IProgressMonitor {
+    void beginTask(String s, int i);
 
-        void worked(int i);
+    void worked(int i);
 
-        void done();
-    }
+    void done();
+  }
 
-    @Test
-    public void testCompleteProgress() throws Exception {
-        IProgressMonitor progressMonitor = mock(IProgressMonitor.class);
+  @Test
+  public void testCompleteProgress() throws Exception {
+    IProgressMonitor progressMonitor = mock(IProgressMonitor.class);
 
-        progressMonitor.beginTask("foo", 12);
-        progressMonitor.worked(10);
-        progressMonitor.done();
+    progressMonitor.beginTask("foo", 12);
+    progressMonitor.worked(10);
+    progressMonitor.done();
 
-        verify(progressMonitor).beginTask(anyString(), anyInt());
-        verify(progressMonitor, atLeastOnce()).worked(anyInt());
-    }
+    verify(progressMonitor).beginTask(anyString(), anyInt());
+    verify(progressMonitor, atLeastOnce()).worked(anyInt());
+  }
 }

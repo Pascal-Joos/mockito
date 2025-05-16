@@ -16,27 +16,27 @@ import org.mockito.junit.MockitoRule;
 
 public class RuleTestWithFactoryMethodTest {
 
-    @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
+  @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock private Injected injected;
+  @Mock private Injected injected;
 
-    @InjectMocks private InjectInto injectInto;
+  @InjectMocks private InjectInto injectInto;
 
-    @Test
-    public void testInjectMocks() throws Exception {
-        assertNotNull("Mock created", injected);
-        assertNotNull("Object created", injectInto);
-        assertEquals("A injected into B", injected, injectInto.getInjected());
+  @Test
+  public void testInjectMocks() throws Exception {
+    assertNotNull("Mock created", injected);
+    assertNotNull("Object created", injectInto);
+    assertEquals("A injected into B", injected, injectInto.getInjected());
+  }
+
+  public static class Injected {}
+
+  public static class InjectInto {
+
+    private Injected injected;
+
+    public Injected getInjected() {
+      return injected;
     }
-
-    public static class Injected {}
-
-    public static class InjectInto {
-
-        private Injected injected;
-
-        public Injected getInjected() {
-            return injected;
-        }
-    }
+  }
 }

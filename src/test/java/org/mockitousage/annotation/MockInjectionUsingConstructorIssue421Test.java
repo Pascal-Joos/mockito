@@ -17,27 +17,27 @@ import org.mockitousage.examples.use.ArticleCalculator;
 @RunWith(MockitoJUnitRunner.class)
 public class MockInjectionUsingConstructorIssue421Test {
 
-    @Mock private ArticleCalculator calculator;
+  @Mock private ArticleCalculator calculator;
 
-    @InjectMocks private Issue421 issue421;
+  @InjectMocks private Issue421 issue421;
 
-    @Test
-    public void mockJustWorks() {
-        issue421.checkIfMockIsInjected();
+  @Test
+  public void mockJustWorks() {
+    issue421.checkIfMockIsInjected();
+  }
+
+  static class Issue421 {
+
+    private ArticleCalculator calculator;
+
+    public Issue421(int a) {}
+
+    public Issue421(ArticleCalculator calculator) {
+      this.calculator = calculator;
     }
 
-    static class Issue421 {
-
-        private ArticleCalculator calculator;
-
-        public Issue421(int a) {}
-
-        public Issue421(ArticleCalculator calculator) {
-            this.calculator = calculator;
-        }
-
-        public void checkIfMockIsInjected() {
-            assertThat(MockUtil.isMock(calculator)).isTrue();
-        }
+    public void checkIfMockIsInjected() {
+      assertThat(MockUtil.isMock(calculator)).isTrue();
     }
+  }
 }

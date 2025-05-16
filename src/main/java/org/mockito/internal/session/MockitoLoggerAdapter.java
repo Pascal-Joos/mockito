@@ -9,14 +9,14 @@ import org.mockito.session.MockitoSessionLogger;
 
 class MockitoLoggerAdapter implements MockitoLogger {
 
-    private final MockitoSessionLogger logger;
+  private final MockitoSessionLogger logger;
 
-    MockitoLoggerAdapter(MockitoSessionLogger logger) {
-        this.logger = logger;
-    }
+  MockitoLoggerAdapter(MockitoSessionLogger logger) {
+    this.logger = logger;
+  }
 
-    @Override
-    public void log(Object what) {
-        logger.log(String.valueOf(what));
-    }
+  @Override
+  public void log(Object what) {
+    logger.log(String.valueOf(what));
+  }
 }

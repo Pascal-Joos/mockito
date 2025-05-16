@@ -28,143 +28,138 @@ import org.mockitoutil.TestBase;
 
 public class StackTraceFilteringTest extends TestBase {
 
-    @Mock private IMethods mock;
+  @Mock private IMethods mock;
 
-    @After
-    public void resetState() {
-        super.resetState();
+  @After
+  public void resetState() {
+    super.resetState();
+  }
+
+  @Before
+  public void setup() {
+    makeStackTracesClean();
+  }
+
+  @Test
+  public void shouldFilterStackTraceOnVerify() {
+    try {
+      verify(mock).simpleMethod();
+      fail();
+    } catch (WantedButNotInvoked e) {
+      Assertions.assertThat(e).has(firstMethodInStackTrace("shouldFilterStackTraceOnVerify"));
     }
+  }
 
-    @Before
-    public void setup() {
-        makeStackTracesClean();
+  @Test
+  public void shouldFilterStackTraceOnVerifyNoMoreInteractions() {
+    mock.oneArg(true);
+    try {
+      verifyNoMoreInteractions(mock);
+      fail();
+    } catch (NoInteractionsWanted e) {
+      Assertions.assertThat(e)
+          .has(firstMethodInStackTrace("shouldFilterStackTraceOnVerifyNoMoreInteractions"));
     }
+  }
 
-    @Test
-    public void shouldFilterStackTraceOnVerify() {
-        try {
-            verify(mock).simpleMethod();
-            fail();
-        } catch (WantedButNotInvoked e) {
-            Assertions.assertThat(e).has(firstMethodInStackTrace("shouldFilterStackTraceOnVerify"));
-        }
+  @Test
+  public void shouldFilterStackTraceOnVerifyZeroInteractions() {
+    mock.oneArg(true);
+    try {
+      verifyZeroInteractions(mock);
+      fail();
+    } catch (NoInteractionsWanted e) {
+      Assertions.assertThat(e)
+          .has(firstMethodInStackTrace("shouldFilterStackTraceOnVerifyZeroInteractions"));
     }
+  }
 
-    @Test
-    public void shouldFilterStackTraceOnVerifyNoMoreInteractions() {
-        mock.oneArg(true);
-        try {
-            verifyNoMoreInteractions(mock);
-            fail();
-        } catch (NoInteractionsWanted e) {
-            Assertions.assertThat(e)
-                    .has(
-                            firstMethodInStackTrace(
-                                    "shouldFilterStackTraceOnVerifyNoMoreInteractions"));
-        }
+  @Test
+  public void shouldFilterStackTraceOnVerifyNoInteractions() {
+    mock.oneArg(true);
+    try {
+      verifyNoInteractions(mock);
+      fail();
+    } catch (NoInteractionsWanted e) {
+      Assertions.assertThat(e)
+          .has(firstMethodInStackTrace("shouldFilterStackTraceOnVerifyNoInteractions"));
     }
+  }
 
-    @Test
-    public void shouldFilterStackTraceOnVerifyZeroInteractions() {
-        mock.oneArg(true);
-        try {
-            verifyZeroInteractions(mock);
-            fail();
-        } catch (NoInteractionsWanted e) {
-            Assertions.assertThat(e)
-                    .has(firstMethodInStackTrace("shouldFilterStackTraceOnVerifyZeroInteractions"));
-        }
+  @SuppressWarnings({"MockitoUsage", "CheckReturnValue"})
+  @Test
+  public void shouldFilterStacktraceOnMockitoException() {
+    verify(mock);
+    try {
+      verify(mock).oneArg(true);
+      fail();
+    } catch (MockitoException expected) {
+      Assertions.assertThat(expected)
+          .has(firstMethodInStackTrace("shouldFilterStacktraceOnMockitoException"));
     }
+  }
 
-    @Test
-    public void shouldFilterStackTraceOnVerifyNoInteractions() {
-        mock.oneArg(true);
-        try {
-            verifyNoInteractions(mock);
-            fail();
-        } catch (NoInteractionsWanted e) {
-            Assertions.assertThat(e)
-                    .has(firstMethodInStackTrace("shouldFilterStackTraceOnVerifyNoInteractions"));
-        }
+  @Test
+  public void shouldFilterStacktraceWhenVerifyingInOrder() {
+    InOrder inOrder = inOrder(mock);
+    mock.oneArg(true);
+    mock.oneArg(false);
+
+    inOrder.verify(mock).oneArg(false);
+    try {
+      inOrder.verify(mock).oneArg(true);
+      fail();
+    } catch (VerificationInOrderFailure e) {
+      Assertions.assertThat(e)
+          .has(firstMethodInStackTrace("shouldFilterStacktraceWhenVerifyingInOrder"));
     }
+  }
 
-    @SuppressWarnings({"MockitoUsage", "CheckReturnValue"})
-    @Test
-    public void shouldFilterStacktraceOnMockitoException() {
-        verify(mock);
-        try {
-            verify(mock).oneArg(true);
-            fail();
-        } catch (MockitoException expected) {
-            Assertions.assertThat(expected)
-                    .has(firstMethodInStackTrace("shouldFilterStacktraceOnMockitoException"));
-        }
+  @Test
+  public void shouldFilterStacktraceWhenInOrderThrowsMockitoException() {
+    try {
+      inOrder();
+      fail();
+    } catch (MockitoException expected) {
+      Assertions.assertThat(expected)
+          .has(firstMethodInStackTrace("shouldFilterStacktraceWhenInOrderThrowsMockitoException"));
     }
+  }
 
-    @Test
-    public void shouldFilterStacktraceWhenVerifyingInOrder() {
-        InOrder inOrder = inOrder(mock);
-        mock.oneArg(true);
-        mock.oneArg(false);
-
-        inOrder.verify(mock).oneArg(false);
-        try {
-            inOrder.verify(mock).oneArg(true);
-            fail();
-        } catch (VerificationInOrderFailure e) {
-            Assertions.assertThat(e)
-                    .has(firstMethodInStackTrace("shouldFilterStacktraceWhenVerifyingInOrder"));
-        }
+  @Test
+  public void shouldFilterStacktraceWhenInOrderVerifies() {
+    try {
+      InOrder inOrder = inOrder(mock);
+      inOrder.verify(null);
+      fail();
+    } catch (MockitoException expected) {
+      Assertions.assertThat(expected)
+          .has(firstMethodInStackTrace("shouldFilterStacktraceWhenInOrderVerifies"));
     }
+  }
 
-    @Test
-    public void shouldFilterStacktraceWhenInOrderThrowsMockitoException() {
-        try {
-            inOrder();
-            fail();
-        } catch (MockitoException expected) {
-            Assertions.assertThat(expected)
-                    .has(
-                            firstMethodInStackTrace(
-                                    "shouldFilterStacktraceWhenInOrderThrowsMockitoException"));
-        }
+  @Test
+  public void shouldFilterStackTraceWhenThrowingExceptionFromMockHandler() {
+    try {
+      when(mock.oneArg(true)).thenThrow(new Exception());
+      fail();
+    } catch (MockitoException expected) {
+      Assertions.assertThat(expected)
+          .has(
+              firstMethodInStackTrace(
+                  "shouldFilterStackTraceWhenThrowingExceptionFromMockHandler"));
     }
+  }
 
-    @Test
-    public void shouldFilterStacktraceWhenInOrderVerifies() {
-        try {
-            InOrder inOrder = inOrder(mock);
-            inOrder.verify(null);
-            fail();
-        } catch (MockitoException expected) {
-            Assertions.assertThat(expected)
-                    .has(firstMethodInStackTrace("shouldFilterStacktraceWhenInOrderVerifies"));
-        }
+  @Test
+  public void shouldShowProperExceptionStackTrace() throws Exception {
+    when(mock.simpleMethod()).thenThrow(new RuntimeException());
+
+    try {
+      mock.simpleMethod();
+      fail();
+    } catch (RuntimeException e) {
+      Assertions.assertThat(e).has(firstMethodInStackTrace("shouldShowProperExceptionStackTrace"));
     }
-
-    @Test
-    public void shouldFilterStackTraceWhenThrowingExceptionFromMockHandler() {
-        try {
-            when(mock.oneArg(true)).thenThrow(new Exception());
-            fail();
-        } catch (MockitoException expected) {
-            Assertions.assertThat(expected)
-                    .has(
-                            firstMethodInStackTrace(
-                                    "shouldFilterStackTraceWhenThrowingExceptionFromMockHandler"));
-        }
-    }
-
-    @Test
-    public void shouldShowProperExceptionStackTrace() throws Exception {
-        when(mock.simpleMethod()).thenThrow(new RuntimeException());
-
-        try {
-            mock.simpleMethod();
-            fail();
-        } catch (RuntimeException e) {
-            Assertions.assertThat(e)
-                    .has(firstMethodInStackTrace("shouldShowProperExceptionStackTrace"));
-        }
-    }
+  }
 }

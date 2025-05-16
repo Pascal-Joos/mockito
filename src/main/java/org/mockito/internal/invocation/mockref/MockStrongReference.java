@@ -8,24 +8,24 @@ import java.io.ObjectStreamException;
 
 public class MockStrongReference<T> implements MockReference<T> {
 
-    private final T ref;
-    private final boolean deserializeAsWeakRef;
+  private final T ref;
+  private final boolean deserializeAsWeakRef;
 
-    public MockStrongReference(T ref, boolean deserializeAsWeakRef) {
-        this.ref = ref;
-        this.deserializeAsWeakRef = deserializeAsWeakRef;
-    }
+  public MockStrongReference(T ref, boolean deserializeAsWeakRef) {
+    this.ref = ref;
+    this.deserializeAsWeakRef = deserializeAsWeakRef;
+  }
 
-    @Override
-    public T get() {
-        return ref;
-    }
+  @Override
+  public T get() {
+    return ref;
+  }
 
-    private Object readResolve() throws ObjectStreamException {
-        if (deserializeAsWeakRef) {
-            return new MockWeakReference<T>(ref);
-        } else {
-            return this;
-        }
+  private Object readResolve() throws ObjectStreamException {
+    if (deserializeAsWeakRef) {
+      return new MockWeakReference<T>(ref);
+    } else {
+      return this;
     }
+  }
 }

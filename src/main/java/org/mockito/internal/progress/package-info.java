@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Mocking progress stateful classes.
- */
+/** Mocking progress stateful classes. */
 package org.mockito.internal.progress;

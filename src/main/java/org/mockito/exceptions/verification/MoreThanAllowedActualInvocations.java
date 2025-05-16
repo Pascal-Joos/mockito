@@ -13,7 +13,7 @@ import org.mockito.exceptions.base.MockitoAssertionError;
  */
 public class MoreThanAllowedActualInvocations extends MockitoAssertionError {
 
-    public MoreThanAllowedActualInvocations(String message) {
-        super(message);
-    }
+  public MoreThanAllowedActualInvocations(String message) {
+    super(message);
+  }
 }

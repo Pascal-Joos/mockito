@@ -7,33 +7,32 @@ package org.mockito.internal.util.reflection;
 import static org.mockito.Mockito.mock;
 
 import java.util.Set;
-
 import org.junit.Test;
 import org.mockito.Answers;
 
 public class GenericArrayReturnTypeTest {
 
-    @Test
-    public void toArrayTypedDoesNotWork() throws Exception {
-        Container container = mock(Container.class, Answers.RETURNS_DEEP_STUBS);
-        container.getInnerContainer().getTheProblem().toArray(new String[] {});
+  @Test
+  public void toArrayTypedDoesNotWork() throws Exception {
+    Container container = mock(Container.class, Answers.RETURNS_DEEP_STUBS);
+    container.getInnerContainer().getTheProblem().toArray(new String[] {});
+  }
+
+  class Container {
+
+    private InnerContainer innerContainer;
+
+    public InnerContainer getInnerContainer() {
+      return innerContainer;
     }
+  }
 
-    class Container {
+  class InnerContainer {
 
-        private InnerContainer innerContainer;
+    private Set<String> theProblem;
 
-        public InnerContainer getInnerContainer() {
-            return innerContainer;
-        }
+    public Set<String> getTheProblem() {
+      return theProblem;
     }
-
-    class InnerContainer {
-
-        private Set<String> theProblem;
-
-        public Set<String> getTheProblem() {
-            return theProblem;
-        }
-    }
+  }
 }

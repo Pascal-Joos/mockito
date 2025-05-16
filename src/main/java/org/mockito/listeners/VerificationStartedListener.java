@@ -57,13 +57,13 @@ import org.mockito.Incubating;
 @Incubating
 public interface VerificationStartedListener {
 
-    /**
-     * Triggered when the user calls {@code Mockito.verify()}.
-     * For details see {@link VerificationStartedListener}.
-     *
-     * @param event object that allows to identify and replace mock for verification.
-     * @since 2.11.0
-     */
-    @Incubating
-    void onVerificationStarted(VerificationStartedEvent event);
+  /**
+   * Triggered when the user calls {@code Mockito.verify()}. For details see {@link
+   * VerificationStartedListener}.
+   *
+   * @param event object that allows to identify and replace mock for verification.
+   * @since 2.11.0
+   */
+  @Incubating
+  void onVerificationStarted(VerificationStartedEvent event);
 }

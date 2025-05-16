@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Public API related to mock method invocations.
- */
+/** Public API related to mock method invocations. */
 package org.mockito.invocation;

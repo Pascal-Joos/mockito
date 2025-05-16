@@ -5,14 +5,11 @@
 package org.mockito.internal.invocation;
 
 import java.util.Comparator;
-
 import org.mockito.invocation.Invocation;
 
-/**
- * Compares invocations based on the sequence number
- */
+/** Compares invocations based on the sequence number */
 public class InvocationComparator implements Comparator<Invocation> {
-    public int compare(Invocation o1, Invocation o2) {
-        return Integer.valueOf(o1.getSequenceNumber()).compareTo(o2.getSequenceNumber());
-    }
+  public int compare(Invocation o1, Invocation o2) {
+    return Integer.valueOf(o1.getSequenceNumber()).compareTo(o2.getSequenceNumber());
+  }
 }

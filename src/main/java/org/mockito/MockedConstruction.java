@@ -12,8 +12,8 @@ import java.util.List;
  * mocked construction, the invocation of any interceptor will generate a mock which will be
  * prepared as specified when generating this scope. The mock can also be received via this
  * instance.
- * <p>
- * If the {@link Mock} annotation is used on fields or method parameters of this type, a mocked
+ *
+ * <p>If the {@link Mock} annotation is used on fields or method parameters of this type, a mocked
  * construction is created instead of a regular mock. The mocked construction is activated and
  * released upon completing any relevant test.
  *
@@ -22,19 +22,19 @@ import java.util.List;
 @Incubating
 public interface MockedConstruction<T> extends ScopedMock {
 
-    List<T> constructed();
+  List<T> constructed();
 
-    interface Context {
+  interface Context {
 
-        int getCount();
+    int getCount();
 
-        Constructor<?> constructor();
+    Constructor<?> constructor();
 
-        List<?> arguments();
-    }
+    List<?> arguments();
+  }
 
-    interface MockInitializer<T> {
+  interface MockInitializer<T> {
 
-        void prepare(T mock, Context context) throws Throwable;
-    }
+    void prepare(T mock, Context context) throws Throwable;
+  }
 }

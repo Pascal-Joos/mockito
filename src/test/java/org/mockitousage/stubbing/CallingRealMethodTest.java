@@ -13,63 +13,63 @@ import org.mockitoutil.TestBase;
 
 public class CallingRealMethodTest extends TestBase {
 
-    @Mock TestedObject mock;
+  @Mock TestedObject mock;
 
-    static class TestedObject {
+  static class TestedObject {
 
-        String value;
+    String value;
 
-        void setValue(String value) {
-            this.value = value;
-        }
-
-        String getValue() {
-            return "HARD_CODED_RETURN_VALUE";
-        }
-
-        String callInternalMethod() {
-            return getValue();
-        }
+    void setValue(String value) {
+      this.value = value;
     }
 
-    @Test
-    public void shouldAllowCallingInternalMethod() {
-        when(mock.getValue()).thenReturn("foo");
-        when(mock.callInternalMethod()).thenCallRealMethod();
-
-        assertEquals("foo", mock.callInternalMethod());
+    String getValue() {
+      return "HARD_CODED_RETURN_VALUE";
     }
 
-    @Test
-    public void shouldReturnRealValue() {
-        when(mock.getValue()).thenCallRealMethod();
-
-        assertEquals("HARD_CODED_RETURN_VALUE", mock.getValue());
+    String callInternalMethod() {
+      return getValue();
     }
+  }
 
-    @Test
-    public void shouldExecuteRealMethod() {
-        doCallRealMethod().when(mock).setValue(anyString());
+  @Test
+  public void shouldAllowCallingInternalMethod() {
+    when(mock.getValue()).thenReturn("foo");
+    when(mock.callInternalMethod()).thenCallRealMethod();
 
-        mock.setValue("REAL_VALUE");
+    assertEquals("foo", mock.callInternalMethod());
+  }
 
-        assertEquals("REAL_VALUE", mock.value);
-    }
+  @Test
+  public void shouldReturnRealValue() {
+    when(mock.getValue()).thenCallRealMethod();
 
-    @Test
-    public void shouldCallRealMethodByDefault() {
-        TestedObject mock = mock(TestedObject.class, CALLS_REAL_METHODS);
+    assertEquals("HARD_CODED_RETURN_VALUE", mock.getValue());
+  }
 
-        assertEquals("HARD_CODED_RETURN_VALUE", mock.getValue());
-    }
+  @Test
+  public void shouldExecuteRealMethod() {
+    doCallRealMethod().when(mock).setValue(anyString());
 
-    @Test
-    public void shouldNotCallRealMethodWhenStubbedLater() {
-        TestedObject mock = mock(TestedObject.class);
+    mock.setValue("REAL_VALUE");
 
-        when(mock.getValue()).thenCallRealMethod();
-        when(mock.getValue()).thenReturn("FAKE_VALUE");
+    assertEquals("REAL_VALUE", mock.value);
+  }
 
-        assertEquals("FAKE_VALUE", mock.getValue());
-    }
+  @Test
+  public void shouldCallRealMethodByDefault() {
+    TestedObject mock = mock(TestedObject.class, CALLS_REAL_METHODS);
+
+    assertEquals("HARD_CODED_RETURN_VALUE", mock.getValue());
+  }
+
+  @Test
+  public void shouldNotCallRealMethodWhenStubbedLater() {
+    TestedObject mock = mock(TestedObject.class);
+
+    when(mock.getValue()).thenCallRealMethod();
+    when(mock.getValue()).thenReturn("FAKE_VALUE");
+
+    assertEquals("FAKE_VALUE", mock.getValue());
+  }
 }

@@ -8,7 +8,6 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
-
 import org.junit.Test;
 import org.mockito.internal.verification.InOrderContextImpl;
 import org.mockito.invocation.Invocation;
@@ -17,54 +16,54 @@ import org.mockitoutil.TestBase;
 
 public class InvocationMarkerTest extends TestBase {
 
-    @Test
-    public void shouldMarkInvocationAsVerified() {
-        // given
-        Invocation i = new InvocationBuilder().toInvocation();
-        InvocationMatcher im = new InvocationBuilder().toInvocationMatcher();
-        assertFalse(i.isVerified());
+  @Test
+  public void shouldMarkInvocationAsVerified() {
+    // given
+    Invocation i = new InvocationBuilder().toInvocation();
+    InvocationMatcher im = new InvocationBuilder().toInvocationMatcher();
+    assertFalse(i.isVerified());
 
-        // when
-        InvocationMarker.markVerified(Arrays.asList(i), im);
+    // when
+    InvocationMarker.markVerified(Arrays.asList(i), im);
 
-        // then
-        assertTrue(i.isVerified());
-    }
+    // then
+    assertTrue(i.isVerified());
+  }
 
-    @Test
-    public void shouldCaptureArguments() {
-        // given
-        Invocation i = new InvocationBuilder().toInvocation();
-        final AtomicReference<Invocation> box = new AtomicReference<Invocation>();
-        MatchableInvocation c =
-                new InvocationMatcher(i) {
-                    public void captureArgumentsFrom(Invocation i) {
-                        box.set(i);
-                    }
-                };
+  @Test
+  public void shouldCaptureArguments() {
+    // given
+    Invocation i = new InvocationBuilder().toInvocation();
+    final AtomicReference<Invocation> box = new AtomicReference<Invocation>();
+    MatchableInvocation c =
+        new InvocationMatcher(i) {
+          public void captureArgumentsFrom(Invocation i) {
+            box.set(i);
+          }
+        };
 
-        // when
-        InvocationMarker.markVerified(Arrays.asList(i), c);
+    // when
+    InvocationMarker.markVerified(Arrays.asList(i), c);
 
-        // then
-        assertEquals(i, box.get());
-    }
+    // then
+    assertEquals(i, box.get());
+  }
 
-    @Test
-    public void shouldMarkInvocationsAsVerifiedInOrder() {
-        // given
-        InOrderContextImpl context = new InOrderContextImpl();
+  @Test
+  public void shouldMarkInvocationsAsVerifiedInOrder() {
+    // given
+    InOrderContextImpl context = new InOrderContextImpl();
 
-        Invocation i = new InvocationBuilder().toInvocation();
-        InvocationMatcher im = new InvocationBuilder().toInvocationMatcher();
-        assertFalse(context.isVerified(i));
-        assertFalse(i.isVerified());
+    Invocation i = new InvocationBuilder().toInvocation();
+    InvocationMatcher im = new InvocationBuilder().toInvocationMatcher();
+    assertFalse(context.isVerified(i));
+    assertFalse(i.isVerified());
 
-        // when
-        InvocationMarker.markVerifiedInOrder(Arrays.asList(i), im, context);
+    // when
+    InvocationMarker.markVerifiedInOrder(Arrays.asList(i), im, context);
 
-        // then
-        assertTrue(context.isVerified(i));
-        assertTrue(i.isVerified());
-    }
+    // then
+    assertTrue(context.isVerified(i));
+    assertTrue(i.isVerified());
+  }
 }

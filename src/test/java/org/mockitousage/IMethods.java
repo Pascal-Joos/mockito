@@ -10,232 +10,232 @@ import java.util.*;
 
 public interface IMethods {
 
-    boolean booleanReturningMethod();
+  boolean booleanReturningMethod();
 
-    Boolean booleanObjectReturningMethod();
+  Boolean booleanObjectReturningMethod();
 
-    byte byteReturningMethod();
+  byte byteReturningMethod();
 
-    Byte byteObjectReturningMethod();
+  Byte byteObjectReturningMethod();
 
-    short shortReturningMethod();
+  short shortReturningMethod();
 
-    Short shortObjectReturningMethod();
+  Short shortObjectReturningMethod();
 
-    char charReturningMethod();
+  char charReturningMethod();
 
-    Character charObjectReturningMethod();
+  Character charObjectReturningMethod();
 
-    int intReturningMethod();
+  int intReturningMethod();
 
-    Integer integerReturningMethod();
+  Integer integerReturningMethod();
 
-    long longReturningMethod();
+  long longReturningMethod();
 
-    Long longObjectReturningMethod();
+  Long longObjectReturningMethod();
 
-    float floatReturningMethod();
+  float floatReturningMethod();
 
-    Float floatObjectReturningMethod();
+  Float floatObjectReturningMethod();
 
-    double doubleReturningMethod();
+  double doubleReturningMethod();
 
-    Double doubleObjectReturningMethod();
+  Double doubleObjectReturningMethod();
 
-    Object objectReturningMethod(Object... objects);
+  Object objectReturningMethod(Object... objects);
 
-    Object objectReturningMethodNoArgs();
+  Object objectReturningMethodNoArgs();
 
-    String oneArg(boolean value);
+  String oneArg(boolean value);
 
-    String oneArg(Boolean value);
+  String oneArg(Boolean value);
 
-    String forBoolean(Boolean value);
+  String forBoolean(Boolean value);
 
-    String oneArg(byte value);
+  String oneArg(byte value);
 
-    String oneArg(Byte value);
+  String oneArg(Byte value);
 
-    String forByte(Byte value);
+  String forByte(Byte value);
 
-    String oneArg(short value);
+  String oneArg(short value);
 
-    String oneArg(Short value);
+  String oneArg(Short value);
 
-    String forShort(Short value);
+  String forShort(Short value);
 
-    String oneArg(char value);
+  String oneArg(char value);
 
-    String oneArg(Character value);
+  String oneArg(Character value);
 
-    String forCharacter(Character value);
+  String forCharacter(Character value);
 
-    String oneArg(int value);
+  String oneArg(int value);
 
-    String oneArg(Integer value);
+  String oneArg(Integer value);
 
-    String forInteger(Integer value);
+  String forInteger(Integer value);
 
-    String oneArg(long value);
+  String oneArg(long value);
 
-    String oneArg(Long value);
+  String oneArg(Long value);
 
-    String forLong(Long value);
+  String forLong(Long value);
 
-    String oneArg(float value);
+  String oneArg(float value);
 
-    String oneArg(Float value);
+  String oneArg(Float value);
 
-    String forFloat(Float value);
+  String forFloat(Float value);
 
-    String oneArg(double value);
+  String oneArg(double value);
 
-    String oneArg(Double value);
+  String oneArg(Double value);
 
-    String forDouble(Double value);
+  String forDouble(Double value);
 
-    String oneArg(Object value);
+  String oneArg(Object value);
 
-    String oneArg(String value);
+  String oneArg(String value);
 
-    String throwsNothing(boolean value);
+  String throwsNothing(boolean value);
 
-    String throwsIOException(int count) throws IOException;
+  String throwsIOException(int count) throws IOException;
 
-    String throwsError(int count);
+  String throwsError(int count);
 
-    String simpleMethod();
+  String simpleMethod();
 
-    String differentMethod();
+  String differentMethod();
 
-    String differentMethod(String argument);
+  String differentMethod(String argument);
 
-    String otherMethod();
+  String otherMethod();
 
-    String simpleMethod(String argument);
+  String simpleMethod(String argument);
 
-    String simpleMethod(Collection<?> collection);
+  String simpleMethod(Collection<?> collection);
 
-    String simpleMethod(Object argument);
+  String simpleMethod(Object argument);
 
-    String simpleMethod(int argument);
+  String simpleMethod(int argument);
 
-    String simpleMethod(String argOne, Integer argTwo);
+  String simpleMethod(String argOne, Integer argTwo);
 
-    String simpleMethod(String one, Integer two, Integer three, Integer four, Integer five);
+  String simpleMethod(String one, Integer two, Integer three, Integer four, Integer five);
 
-    String simpleMethod(
-            String one, Integer two, Integer three, Integer four, Integer five, Integer six);
+  String simpleMethod(
+      String one, Integer two, Integer three, Integer four, Integer five, Integer six);
 
-    String simpleMethod(String one, String[] two);
+  String simpleMethod(String one, String[] two);
 
-    Object threeArgumentMethod(int valueOne, Object valueTwo, String valueThree);
+  Object threeArgumentMethod(int valueOne, Object valueTwo, String valueThree);
 
-    String threeArgumentMethodWithStrings(int valueOne, String valueTwo, String valueThree);
+  String threeArgumentMethodWithStrings(int valueOne, String valueTwo, String valueThree);
 
-    String fourArgumentMethod(int valueOne, String valueTwo, String valueThree, boolean[] array);
+  String fourArgumentMethod(int valueOne, String valueTwo, String valueThree, boolean[] array);
 
-    void twoArgumentMethod(int one, int two);
+  void twoArgumentMethod(int one, int two);
 
-    void arrayMethod(String[] strings);
+  void arrayMethod(String[] strings);
 
-    String oneArray(boolean[] array);
+  String oneArray(boolean[] array);
 
-    String oneArray(byte[] array);
+  String oneArray(byte[] array);
 
-    String oneArray(char[] array);
+  String oneArray(char[] array);
 
-    String oneArray(double[] array);
+  String oneArray(double[] array);
 
-    String oneArray(float[] array);
+  String oneArray(float[] array);
 
-    String oneArray(int[] array);
+  String oneArray(int[] array);
 
-    String oneArray(long[] array);
+  String oneArray(long[] array);
 
-    String oneArray(short[] array);
+  String oneArray(short[] array);
 
-    String oneArray(Object[] array);
+  String oneArray(Object[] array);
 
-    String canThrowException() throws CharacterCodingException;
+  String canThrowException() throws CharacterCodingException;
 
-    String oneArray(String[] array);
+  String oneArray(String[] array);
 
-    void varargsString(int i, String... string);
+  void varargsString(int i, String... string);
 
-    Object varargsObject(int i, Object... object);
+  Object varargsObject(int i, Object... object);
 
-    void varargsbyte(byte... bytes);
+  void varargsbyte(byte... bytes);
 
-    int varargs(Object... object);
+  int varargs(Object... object);
 
-    String varargsReturningString(Object... object);
+  String varargsReturningString(Object... object);
 
-    int varargs(String... string);
+  int varargs(String... string);
 
-    void mixedVarargs(Object i, String... string);
+  void mixedVarargs(Object i, String... string);
 
-    String mixedVarargsReturningString(Object i, String... string);
+  String mixedVarargsReturningString(Object i, String... string);
 
-    String[] mixedVarargsReturningStringArray(Object i, String... string);
+  String[] mixedVarargsReturningStringArray(Object i, String... string);
 
-    Object[] mixedVarargsReturningObjectArray(Object i, String... string);
+  Object[] mixedVarargsReturningObjectArray(Object i, String... string);
 
-    List<String> listReturningMethod(Object... objects);
+  List<String> listReturningMethod(Object... objects);
 
-    LinkedList<String> linkedListReturningMethod();
+  LinkedList<String> linkedListReturningMethod();
 
-    String toString();
+  String toString();
 
-    String toString(String foo);
+  String toString(String foo);
 
-    void voidMethod();
+  void voidMethod();
 
-    Void voidReturningMethod();
+  Void voidReturningMethod();
 
-    String forList(List<String> list);
+  String forList(List<String> list);
 
-    String forSet(Set<String> anySet);
+  String forSet(Set<String> anySet);
 
-    String forMap(Map<String, String> map);
+  String forMap(Map<String, String> map);
 
-    String forCollection(Collection<String> collection);
+  String forCollection(Collection<String> collection);
 
-    String forIterable(Iterable<String> iterable);
+  String forIterable(Iterable<String> iterable);
 
-    Object[] arrayReturningMethod();
+  Object[] arrayReturningMethod();
 
-    IMethods iMethodsReturningMethod();
+  IMethods iMethodsReturningMethod();
 
-    String stringReturningMethod();
+  String stringReturningMethod();
 
-    Object objectArgMethod(Object str);
+  Object objectArgMethod(Object str);
 
-    Object listArgMethod(List<String> list);
+  Object listArgMethod(List<String> list);
 
-    Object collectionArgMethod(Collection<String> collection);
+  Object collectionArgMethod(Collection<String> collection);
 
-    Object iterableArgMethod(Iterable<String> collection);
+  Object iterableArgMethod(Iterable<String> collection);
 
-    Object setArgMethod(Set<String> set);
+  Object setArgMethod(Set<String> set);
 
-    void longArg(long longArg);
+  void longArg(long longArg);
 
-    void intArgumentMethod(int i);
+  void intArgumentMethod(int i);
 
-    int intArgumentReturningInt(int i);
+  int intArgumentReturningInt(int i);
 
-    boolean equals(String str);
+  boolean equals(String str);
 
-    boolean equals();
+  boolean equals();
 
-    int hashCode(String str);
+  int hashCode(String str);
 
-    int toIntPrimitive(Integer i);
+  int toIntPrimitive(Integer i);
 
-    Integer toIntWrapper(int i);
+  Integer toIntWrapper(int i);
 
-    String forObject(Object object);
+  String forObject(Object object);
 
-    <T> String genericToString(T arg);
+  <T> String genericToString(T arg);
 }

@@ -15,17 +15,17 @@ import org.mockitoutil.TestBase;
 
 public class ClassPathLoaderTest extends TestBase {
 
-    @Test
-    public void shouldReadConfigurationClassFromClassPath() {
-        ConfigurationAccess.getConfig()
-                .overrideDefaultAnswer(
-                        new Answer<Object>() {
-                            public Object answer(InvocationOnMock invocation) {
-                                return "foo";
-                            }
-                        });
+  @Test
+  public void shouldReadConfigurationClassFromClassPath() {
+    ConfigurationAccess.getConfig()
+        .overrideDefaultAnswer(
+            new Answer<Object>() {
+              public Object answer(InvocationOnMock invocation) {
+                return "foo";
+              }
+            });
 
-        IMethods mock = mock(IMethods.class);
-        assertEquals("foo", mock.simpleMethod());
-    }
+    IMethods mock = mock(IMethods.class);
+    assertEquals("foo", mock.simpleMethod());
+  }
 }

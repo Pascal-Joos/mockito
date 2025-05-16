@@ -11,22 +11,22 @@ import org.mockito.internal.matchers.VarargMatcher;
 
 public class HamcrestArgumentMatcher<T> implements ArgumentMatcher<T> {
 
-    private final Matcher matcher;
+  private final Matcher matcher;
 
-    public HamcrestArgumentMatcher(Matcher<T> matcher) {
-        this.matcher = matcher;
-    }
+  public HamcrestArgumentMatcher(Matcher<T> matcher) {
+    this.matcher = matcher;
+  }
 
-    public boolean matches(Object argument) {
-        return this.matcher.matches(argument);
-    }
+  public boolean matches(Object argument) {
+    return this.matcher.matches(argument);
+  }
 
-    public boolean isVarargMatcher() {
-        return matcher instanceof VarargMatcher;
-    }
+  public boolean isVarargMatcher() {
+    return matcher instanceof VarargMatcher;
+  }
 
-    public String toString() {
-        // TODO SF add unit tests and integ test coverage for toString()
-        return StringDescription.toString(matcher);
-    }
+  public String toString() {
+    // TODO SF add unit tests and integ test coverage for toString()
+    return StringDescription.toString(matcher);
+  }
 }

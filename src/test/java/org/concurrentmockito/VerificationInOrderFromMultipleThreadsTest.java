@@ -13,38 +13,38 @@ import org.mockitoutil.TestBase;
 
 public class VerificationInOrderFromMultipleThreadsTest extends TestBase {
 
-    @Test
-    public void shouldVerifyInOrderWhenMultipleThreadsInteractWithMock() throws Exception {
-        final Foo testInf = mock(Foo.class);
+  @Test
+  public void shouldVerifyInOrderWhenMultipleThreadsInteractWithMock() throws Exception {
+    final Foo testInf = mock(Foo.class);
 
-        Thread threadOne =
-                new Thread(
-                        new Runnable() {
-                            public void run() {
-                                testInf.methodOne();
-                            }
-                        });
-        threadOne.start();
-        threadOne.join();
+    Thread threadOne =
+        new Thread(
+            new Runnable() {
+              public void run() {
+                testInf.methodOne();
+              }
+            });
+    threadOne.start();
+    threadOne.join();
 
-        Thread threadTwo =
-                new Thread(
-                        new Runnable() {
-                            public void run() {
-                                testInf.methodTwo();
-                            }
-                        });
-        threadTwo.start();
-        threadTwo.join();
+    Thread threadTwo =
+        new Thread(
+            new Runnable() {
+              public void run() {
+                testInf.methodTwo();
+              }
+            });
+    threadTwo.start();
+    threadTwo.join();
 
-        InOrder inOrder = inOrder(testInf);
-        inOrder.verify(testInf).methodOne();
-        inOrder.verify(testInf).methodTwo();
-    }
+    InOrder inOrder = inOrder(testInf);
+    inOrder.verify(testInf).methodOne();
+    inOrder.verify(testInf).methodTwo();
+  }
 
-    public interface Foo {
-        void methodOne();
+  public interface Foo {
+    void methodOne();
 
-        void methodTwo();
-    }
+    void methodTwo();
+  }
 }

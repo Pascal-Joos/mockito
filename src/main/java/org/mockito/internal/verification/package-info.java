@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Verification logic.
- */
+/** Verification logic. */
 package org.mockito.internal.verification;

@@ -21,246 +21,240 @@ import org.mockitoutil.TestBase;
 /**
  * invalid state happens if:
  *
- *    -unfinished stubbing
- *    -unfinished doReturn()
- *    -stubbing without actual method call
- *    -verify without actual method call
+ * <p>-unfinished stubbing -unfinished doReturn() -stubbing without actual method call -verify
+ * without actual method call
  *
- * we should aim to detect invalid state in following scenarios:
+ * <p>we should aim to detect invalid state in following scenarios:
  *
- *    -on method call on mock
- *    -on verify
- *    -on verifyZeroInteractions
- *    -on verifyNoMoreInteractions
- *    -on verify in order
- *    -on stub
+ * <p>-on method call on mock -on verify -on verifyZeroInteractions -on verifyNoMoreInteractions -on
+ * verify in order -on stub
  */
 @SuppressWarnings({"unchecked", "deprecation"})
 public class InvalidStateDetectionTest extends TestBase {
 
-    @Mock private IMethods mock;
+  @Mock private IMethods mock;
 
-    @After
-    public void resetState() {
-        super.resetState();
+  @After
+  public void resetState() {
+    super.resetState();
+  }
+
+  @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
+  @Test
+  public void shouldDetectUnfinishedStubbing() {
+    when(mock.simpleMethod());
+    detectsAndCleansUp(new OnMethodCallOnMock(), UnfinishedStubbingException.class);
+
+    when(mock.simpleMethod());
+    detectsAndCleansUp(new OnStub(), UnfinishedStubbingException.class);
+
+    when(mock.simpleMethod());
+    detectsAndCleansUp(new OnVerify(), UnfinishedStubbingException.class);
+
+    when(mock.simpleMethod());
+    detectsAndCleansUp(new OnVerifyInOrder(), UnfinishedStubbingException.class);
+
+    when(mock.simpleMethod());
+    detectsAndCleansUp(new OnVerifyZeroInteractions(), UnfinishedStubbingException.class);
+
+    when(mock.simpleMethod());
+    detectsAndCleansUp(new OnVerifyNoMoreInteractions(), UnfinishedStubbingException.class);
+
+    when(mock.simpleMethod());
+    detectsAndCleansUp(new OnVerifyNoInteractions(), UnfinishedStubbingException.class);
+
+    when(mock.simpleMethod());
+    detectsAndCleansUp(new OnDoAnswer(), UnfinishedStubbingException.class);
+  }
+
+  @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
+  @Test
+  public void shouldDetectUnfinishedDoAnswerStubbing() {
+    doAnswer(null);
+    detectsAndCleansUp(new OnMethodCallOnMock(), UnfinishedStubbingException.class);
+
+    doAnswer(null);
+    detectsAndCleansUp(new OnStub(), UnfinishedStubbingException.class);
+
+    doAnswer(null);
+    detectsAndCleansUp(new OnVerify(), UnfinishedStubbingException.class);
+
+    doAnswer(null);
+    detectsAndCleansUp(new OnVerifyInOrder(), UnfinishedStubbingException.class);
+
+    doAnswer(null);
+    detectsAndCleansUp(new OnVerifyZeroInteractions(), UnfinishedStubbingException.class);
+
+    doAnswer(null);
+    detectsAndCleansUp(new OnVerifyNoMoreInteractions(), UnfinishedStubbingException.class);
+
+    doAnswer(null);
+    detectsAndCleansUp(new OnVerifyNoInteractions(), UnfinishedStubbingException.class);
+
+    doAnswer(null);
+    detectsAndCleansUp(new OnDoAnswer(), UnfinishedStubbingException.class);
+  }
+
+  @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
+  @Test
+  public void shouldDetectUnfinishedVerification() {
+    verify(mock);
+    detectsAndCleansUp(new OnStub(), UnfinishedVerificationException.class);
+
+    verify(mock);
+    detectsAndCleansUp(new OnVerify(), UnfinishedVerificationException.class);
+
+    verify(mock);
+    detectsAndCleansUp(new OnVerifyInOrder(), UnfinishedVerificationException.class);
+
+    verify(mock);
+    detectsAndCleansUp(new OnVerifyZeroInteractions(), UnfinishedVerificationException.class);
+
+    verify(mock);
+    detectsAndCleansUp(new OnVerifyNoMoreInteractions(), UnfinishedVerificationException.class);
+
+    verify(mock);
+    detectsAndCleansUp(new OnVerifyNoInteractions(), UnfinishedVerificationException.class);
+
+    verify(mock);
+    detectsAndCleansUp(new OnDoAnswer(), UnfinishedVerificationException.class);
+  }
+
+  @Test
+  public void shouldDetectMisplacedArgumentMatcher() {
+    anyObject();
+    detectsAndCleansUp(new OnVerify(), InvalidUseOfMatchersException.class);
+
+    anyObject();
+    detectsAndCleansUp(new OnVerifyInOrder(), InvalidUseOfMatchersException.class);
+
+    anyObject();
+    detectsAndCleansUp(new OnVerifyZeroInteractions(), InvalidUseOfMatchersException.class);
+
+    anyObject();
+    detectsAndCleansUp(new OnVerifyNoMoreInteractions(), InvalidUseOfMatchersException.class);
+
+    anyObject();
+    detectsAndCleansUp(new OnVerifyNoInteractions(), InvalidUseOfMatchersException.class);
+
+    anyObject();
+    detectsAndCleansUp(new OnDoAnswer(), InvalidUseOfMatchersException.class);
+  }
+
+  @Test
+  public void shouldCorrectStateAfterDetectingUnfinishedStubbing() {
+    doThrow(new RuntimeException()).when(mock);
+
+    try {
+      doThrow(new RuntimeException()).when(mock).oneArg(true);
+      fail();
+    } catch (UnfinishedStubbingException e) {
     }
 
+    doThrow(new RuntimeException()).when(mock).oneArg(true);
+    try {
+      mock.oneArg(true);
+      fail();
+    } catch (RuntimeException e) {
+    }
+  }
+
+  @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
+  @Test
+  public void shouldCorrectStateAfterDetectingUnfinishedVerification() {
+    mock.simpleMethod();
+    verify(mock);
+
+    try {
+      verify(mock).simpleMethod();
+      fail();
+    } catch (UnfinishedVerificationException e) {
+    }
+
+    verify(mock).simpleMethod();
+  }
+
+  private interface DetectsInvalidState {
+    void detect(IMethods mock);
+  }
+
+  private static class OnVerify implements DetectsInvalidState {
     @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-    @Test
-    public void shouldDetectUnfinishedStubbing() {
-        when(mock.simpleMethod());
-        detectsAndCleansUp(new OnMethodCallOnMock(), UnfinishedStubbingException.class);
-
-        when(mock.simpleMethod());
-        detectsAndCleansUp(new OnStub(), UnfinishedStubbingException.class);
-
-        when(mock.simpleMethod());
-        detectsAndCleansUp(new OnVerify(), UnfinishedStubbingException.class);
-
-        when(mock.simpleMethod());
-        detectsAndCleansUp(new OnVerifyInOrder(), UnfinishedStubbingException.class);
-
-        when(mock.simpleMethod());
-        detectsAndCleansUp(new OnVerifyZeroInteractions(), UnfinishedStubbingException.class);
-
-        when(mock.simpleMethod());
-        detectsAndCleansUp(new OnVerifyNoMoreInteractions(), UnfinishedStubbingException.class);
-
-        when(mock.simpleMethod());
-        detectsAndCleansUp(new OnVerifyNoInteractions(), UnfinishedStubbingException.class);
-
-        when(mock.simpleMethod());
-        detectsAndCleansUp(new OnDoAnswer(), UnfinishedStubbingException.class);
+    public void detect(IMethods mock) {
+      verify(mock);
     }
+  }
 
+  private static class OnVerifyInOrder implements DetectsInvalidState {
     @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-    @Test
-    public void shouldDetectUnfinishedDoAnswerStubbing() {
-        doAnswer(null);
-        detectsAndCleansUp(new OnMethodCallOnMock(), UnfinishedStubbingException.class);
-
-        doAnswer(null);
-        detectsAndCleansUp(new OnStub(), UnfinishedStubbingException.class);
-
-        doAnswer(null);
-        detectsAndCleansUp(new OnVerify(), UnfinishedStubbingException.class);
-
-        doAnswer(null);
-        detectsAndCleansUp(new OnVerifyInOrder(), UnfinishedStubbingException.class);
-
-        doAnswer(null);
-        detectsAndCleansUp(new OnVerifyZeroInteractions(), UnfinishedStubbingException.class);
-
-        doAnswer(null);
-        detectsAndCleansUp(new OnVerifyNoMoreInteractions(), UnfinishedStubbingException.class);
-
-        doAnswer(null);
-        detectsAndCleansUp(new OnVerifyNoInteractions(), UnfinishedStubbingException.class);
-
-        doAnswer(null);
-        detectsAndCleansUp(new OnDoAnswer(), UnfinishedStubbingException.class);
+    public void detect(IMethods mock) {
+      inOrder(mock).verify(mock);
     }
+  }
 
+  private static class OnVerifyZeroInteractions implements DetectsInvalidState {
     @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-    @Test
-    public void shouldDetectUnfinishedVerification() {
-        verify(mock);
-        detectsAndCleansUp(new OnStub(), UnfinishedVerificationException.class);
-
-        verify(mock);
-        detectsAndCleansUp(new OnVerify(), UnfinishedVerificationException.class);
-
-        verify(mock);
-        detectsAndCleansUp(new OnVerifyInOrder(), UnfinishedVerificationException.class);
-
-        verify(mock);
-        detectsAndCleansUp(new OnVerifyZeroInteractions(), UnfinishedVerificationException.class);
-
-        verify(mock);
-        detectsAndCleansUp(new OnVerifyNoMoreInteractions(), UnfinishedVerificationException.class);
-
-        verify(mock);
-        detectsAndCleansUp(new OnVerifyNoInteractions(), UnfinishedVerificationException.class);
-
-        verify(mock);
-        detectsAndCleansUp(new OnDoAnswer(), UnfinishedVerificationException.class);
+    public void detect(IMethods mock) {
+      verifyZeroInteractions(mock);
     }
+  }
 
-    @Test
-    public void shouldDetectMisplacedArgumentMatcher() {
-        anyObject();
-        detectsAndCleansUp(new OnVerify(), InvalidUseOfMatchersException.class);
-
-        anyObject();
-        detectsAndCleansUp(new OnVerifyInOrder(), InvalidUseOfMatchersException.class);
-
-        anyObject();
-        detectsAndCleansUp(new OnVerifyZeroInteractions(), InvalidUseOfMatchersException.class);
-
-        anyObject();
-        detectsAndCleansUp(new OnVerifyNoMoreInteractions(), InvalidUseOfMatchersException.class);
-
-        anyObject();
-        detectsAndCleansUp(new OnVerifyNoInteractions(), InvalidUseOfMatchersException.class);
-
-        anyObject();
-        detectsAndCleansUp(new OnDoAnswer(), InvalidUseOfMatchersException.class);
-    }
-
-    @Test
-    public void shouldCorrectStateAfterDetectingUnfinishedStubbing() {
-        doThrow(new RuntimeException()).when(mock);
-
-        try {
-            doThrow(new RuntimeException()).when(mock).oneArg(true);
-            fail();
-        } catch (UnfinishedStubbingException e) {
-        }
-
-        doThrow(new RuntimeException()).when(mock).oneArg(true);
-        try {
-            mock.oneArg(true);
-            fail();
-        } catch (RuntimeException e) {
-        }
-    }
-
+  private static class OnVerifyNoMoreInteractions implements DetectsInvalidState {
     @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-    @Test
-    public void shouldCorrectStateAfterDetectingUnfinishedVerification() {
-        mock.simpleMethod();
-        verify(mock);
-
-        try {
-            verify(mock).simpleMethod();
-            fail();
-        } catch (UnfinishedVerificationException e) {
-        }
-
-        verify(mock).simpleMethod();
+    public void detect(IMethods mock) {
+      verifyNoMoreInteractions(mock);
     }
+  }
 
-    private interface DetectsInvalidState {
-        void detect(IMethods mock);
+  private static class OnVerifyNoInteractions implements DetectsInvalidState {
+    @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
+    public void detect(IMethods mock) {
+      verifyNoInteractions(mock);
     }
+  }
 
-    private static class OnVerify implements DetectsInvalidState {
-        @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-        public void detect(IMethods mock) {
-            verify(mock);
-        }
+  private static class OnDoAnswer implements DetectsInvalidState {
+    @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
+    public void detect(IMethods mock) {
+      doAnswer(null);
     }
+  }
 
-    private static class OnVerifyInOrder implements DetectsInvalidState {
-        @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-        public void detect(IMethods mock) {
-            inOrder(mock).verify(mock);
-        }
+  private static class OnStub implements DetectsInvalidState {
+    @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
+    public void detect(IMethods mock) {
+      when(mock);
     }
+  }
 
-    private static class OnVerifyZeroInteractions implements DetectsInvalidState {
-        @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-        public void detect(IMethods mock) {
-            verifyZeroInteractions(mock);
-        }
+  private static class OnMethodCallOnMock implements DetectsInvalidState {
+    public void detect(IMethods mock) {
+      mock.simpleMethod();
     }
+  }
 
-    private static class OnVerifyNoMoreInteractions implements DetectsInvalidState {
-        @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-        public void detect(IMethods mock) {
-            verifyNoMoreInteractions(mock);
-        }
+  private static class OnMockCreation implements DetectsInvalidState {
+    @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
+    public void detect(IMethods mock) {
+      mock(IMethods.class);
     }
+  }
 
-    private static class OnVerifyNoInteractions implements DetectsInvalidState {
-        @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-        public void detect(IMethods mock) {
-            verifyNoInteractions(mock);
-        }
+  private static class OnSpyCreation implements DetectsInvalidState {
+    @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
+    public void detect(IMethods mock) {
+      spy(new Object());
     }
+  }
 
-    private static class OnDoAnswer implements DetectsInvalidState {
-        @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-        public void detect(IMethods mock) {
-            doAnswer(null);
-        }
+  private void detectsAndCleansUp(DetectsInvalidState detector, Class<?> expected) {
+    try {
+      detector.detect(mock);
+      fail("Should throw an exception");
+    } catch (Exception e) {
+      assertEquals(expected, e.getClass());
     }
-
-    private static class OnStub implements DetectsInvalidState {
-        @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-        public void detect(IMethods mock) {
-            when(mock);
-        }
-    }
-
-    private static class OnMethodCallOnMock implements DetectsInvalidState {
-        public void detect(IMethods mock) {
-            mock.simpleMethod();
-        }
-    }
-
-    private static class OnMockCreation implements DetectsInvalidState {
-        @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-        public void detect(IMethods mock) {
-            mock(IMethods.class);
-        }
-    }
-
-    private static class OnSpyCreation implements DetectsInvalidState {
-        @SuppressWarnings({"CheckReturnValue", "MockitoUsage"})
-        public void detect(IMethods mock) {
-            spy(new Object());
-        }
-    }
-
-    private void detectsAndCleansUp(DetectsInvalidState detector, Class<?> expected) {
-        try {
-            detector.detect(mock);
-            fail("Should throw an exception");
-        } catch (Exception e) {
-            assertEquals(expected, e.getClass());
-        }
-        // Make sure state is cleaned up
-        new StateMaster().validate();
-    }
+    // Make sure state is cleaned up
+    new StateMaster().validate();
+  }
 }

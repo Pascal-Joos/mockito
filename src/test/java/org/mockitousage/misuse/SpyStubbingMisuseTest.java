@@ -13,48 +13,45 @@ import org.mockito.exceptions.misusing.WrongTypeOfReturnValue;
 
 public class SpyStubbingMisuseTest {
 
-    @Test
-    public void nestedWhenTest() {
-        Strategy mfoo = mock(Strategy.class);
-        Sampler mpoo = mock(Sampler.class);
-        Producer out = spy(new Producer(mfoo));
+  @Test
+  public void nestedWhenTest() {
+    Strategy mfoo = mock(Strategy.class);
+    Sampler mpoo = mock(Sampler.class);
+    Producer out = spy(new Producer(mfoo));
 
-        try {
-            when(out.produce()).thenReturn(mpoo);
-            fail();
-        } catch (WrongTypeOfReturnValue e) {
-            assertThat(e.getMessage())
-                    .contains("spy")
-                    .contains("syntax")
-                    .contains("doReturn|Throw");
-        }
+    try {
+      when(out.produce()).thenReturn(mpoo);
+      fail();
+    } catch (WrongTypeOfReturnValue e) {
+      assertThat(e.getMessage()).contains("spy").contains("syntax").contains("doReturn|Throw");
+    }
+  }
+
+  public class Sample {}
+
+  public class Strategy {
+    Sample getSample() {
+      return new Sample();
+    }
+  }
+
+  public class Sampler {
+    Sample sample;
+
+    Sampler(Strategy f) {
+      sample = f.getSample();
+    }
+  }
+
+  public class Producer {
+    Strategy strategy;
+
+    Producer(Strategy f) {
+      strategy = f;
     }
 
-    public class Sample {}
-
-    public class Strategy {
-        Sample getSample() {
-            return new Sample();
-        }
+    Sampler produce() {
+      return new Sampler(strategy);
     }
-
-    public class Sampler {
-        Sample sample;
-
-        Sampler(Strategy f) {
-            sample = f.getSample();
-        }
-    }
-
-    public class Producer {
-        Strategy strategy;
-
-        Producer(Strategy f) {
-            strategy = f;
-        }
-
-        Sampler produce() {
-            return new Sampler(strategy);
-        }
-    }
+  }
 }

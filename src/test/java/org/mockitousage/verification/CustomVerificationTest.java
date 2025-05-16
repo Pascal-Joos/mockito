@@ -19,56 +19,54 @@ import org.mockitoutil.TestBase;
 
 public class CustomVerificationTest extends TestBase {
 
-    @Mock IMethods mock;
+  @Mock IMethods mock;
 
-    @Test
-    public void custom_verification_with_old_api() {
-        // given:
-        mock.simpleMethod("a", 10);
+  @Test
+  public void custom_verification_with_old_api() {
+    // given:
+    mock.simpleMethod("a", 10);
 
-        // expect:
-        verify(mock, ignoreParametersUsingOldApi()).simpleMethod();
+    // expect:
+    verify(mock, ignoreParametersUsingOldApi()).simpleMethod();
 
-        try {
-            verify(mock, ignoreParametersUsingOldApi()).otherMethod();
-            fail();
-        } catch (MockitoAssertionError e) {
+    try {
+      verify(mock, ignoreParametersUsingOldApi()).otherMethod();
+      fail();
+    } catch (MockitoAssertionError e) {
+    }
+  }
+
+  // Old api still supported, see https://github.com/mockito/mockito/issues/730
+  private VerificationMode ignoreParametersUsingOldApi() {
+    return new VerificationMode() {
+      public void verify(VerificationData data) {
+        // use old api
+        InvocationMatcher target = data.getWanted();
+
+        // sanity check the new api
+        if (data.getTarget() != target) {
+          throw new RuntimeException("Sanity check");
         }
-    }
 
-    // Old api still supported, see https://github.com/mockito/mockito/issues/730
-    private VerificationMode ignoreParametersUsingOldApi() {
-        return new VerificationMode() {
-            public void verify(VerificationData data) {
-                // use old api
-                InvocationMatcher target = data.getWanted();
+        // look for the relevant invocation and exit if found
+        for (Invocation invocation : data.getAllInvocations()) {
+          if (target
+              .getInvocation()
+              .getMethod()
+              .getName()
+              .equals(invocation.getMethod().getName())) {
+            return;
+          }
+        }
 
-                // sanity check the new api
-                if (data.getTarget() != target) {
-                    throw new RuntimeException("Sanity check");
-                }
+        // verification failed!
+        throw new MockitoAssertionError(
+            "Expected method with name: " + target + " not found in:\n" + data.getAllInvocations());
+      }
 
-                // look for the relevant invocation and exit if found
-                for (Invocation invocation : data.getAllInvocations()) {
-                    if (target.getInvocation()
-                            .getMethod()
-                            .getName()
-                            .equals(invocation.getMethod().getName())) {
-                        return;
-                    }
-                }
-
-                // verification failed!
-                throw new MockitoAssertionError(
-                        "Expected method with name: "
-                                + target
-                                + " not found in:\n"
-                                + data.getAllInvocations());
-            }
-
-            public VerificationMode description(String description) {
-                return this;
-            }
-        };
-    }
+      public VerificationMode description(String description) {
+        return this;
+      }
+    };
+  }
 }

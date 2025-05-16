@@ -12,17 +12,17 @@ import org.mockitoutil.TestBase;
 
 public class ReturnsMoreEmptyValuesTest extends TestBase {
 
-    private ReturnsMoreEmptyValues rv = new ReturnsMoreEmptyValues();
+  private ReturnsMoreEmptyValues rv = new ReturnsMoreEmptyValues();
 
-    @Test
-    public void shouldReturnEmptyArray() {
-        String[] ret = (String[]) rv.returnValueFor((new String[0]).getClass());
-        assertTrue(ret.getClass().isArray());
-        assertTrue(ret.length == 0);
-    }
+  @Test
+  public void shouldReturnEmptyArray() {
+    String[] ret = (String[]) rv.returnValueFor((new String[0]).getClass());
+    assertTrue(ret.getClass().isArray());
+    assertTrue(ret.length == 0);
+  }
 
-    @Test
-    public void shouldReturnEmptyString() {
-        assertEquals("", rv.returnValueFor(String.class));
-    }
+  @Test
+  public void shouldReturnEmptyString() {
+    assertEquals("", rv.returnValueFor(String.class));
+  }
 }

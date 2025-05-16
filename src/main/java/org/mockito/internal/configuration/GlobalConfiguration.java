@@ -5,7 +5,6 @@
 package org.mockito.internal.configuration;
 
 import java.io.Serializable;
-
 import org.mockito.configuration.AnnotationEngine;
 import org.mockito.configuration.DefaultMockitoConfiguration;
 import org.mockito.configuration.IMockitoConfiguration;
@@ -16,58 +15,58 @@ import org.mockito.stubbing.Answer;
  * Thread-safe wrapper on user-defined org.mockito.configuration.MockitoConfiguration implementation
  */
 public class GlobalConfiguration implements IMockitoConfiguration, Serializable {
-    private static final long serialVersionUID = -2860353062105505938L;
+  private static final long serialVersionUID = -2860353062105505938L;
 
-    private static final ThreadLocal<IMockitoConfiguration> GLOBAL_CONFIGURATION =
-            new ThreadLocal<IMockitoConfiguration>();
+  private static final ThreadLocal<IMockitoConfiguration> GLOBAL_CONFIGURATION =
+      new ThreadLocal<IMockitoConfiguration>();
 
-    // back door for testing
-    IMockitoConfiguration getIt() {
-        return GLOBAL_CONFIGURATION.get();
+  // back door for testing
+  IMockitoConfiguration getIt() {
+    return GLOBAL_CONFIGURATION.get();
+  }
+
+  public GlobalConfiguration() {
+    // Configuration should be loaded only once but I cannot really test it
+    if (GLOBAL_CONFIGURATION.get() == null) {
+      GLOBAL_CONFIGURATION.set(createConfig());
     }
+  }
 
-    public GlobalConfiguration() {
-        // Configuration should be loaded only once but I cannot really test it
-        if (GLOBAL_CONFIGURATION.get() == null) {
-            GLOBAL_CONFIGURATION.set(createConfig());
-        }
+  private IMockitoConfiguration createConfig() {
+    IMockitoConfiguration defaultConfiguration = new DefaultMockitoConfiguration();
+    IMockitoConfiguration config = new ClassPathLoader().loadConfiguration();
+    if (config != null) {
+      return config;
+    } else {
+      return defaultConfiguration;
     }
+  }
 
-    private IMockitoConfiguration createConfig() {
-        IMockitoConfiguration defaultConfiguration = new DefaultMockitoConfiguration();
-        IMockitoConfiguration config = new ClassPathLoader().loadConfiguration();
-        if (config != null) {
-            return config;
-        } else {
-            return defaultConfiguration;
-        }
-    }
+  public static void validate() {
+    new GlobalConfiguration();
+  }
 
-    public static void validate() {
-        new GlobalConfiguration();
-    }
+  public AnnotationEngine getAnnotationEngine() {
+    return GLOBAL_CONFIGURATION.get().getAnnotationEngine();
+  }
 
-    public AnnotationEngine getAnnotationEngine() {
-        return GLOBAL_CONFIGURATION.get().getAnnotationEngine();
+  public org.mockito.plugins.AnnotationEngine tryGetPluginAnnotationEngine() {
+    IMockitoConfiguration configuration = GLOBAL_CONFIGURATION.get();
+    if (configuration.getClass() == DefaultMockitoConfiguration.class) {
+      return Plugins.getAnnotationEngine();
     }
+    return configuration.getAnnotationEngine();
+  }
 
-    public org.mockito.plugins.AnnotationEngine tryGetPluginAnnotationEngine() {
-        IMockitoConfiguration configuration = GLOBAL_CONFIGURATION.get();
-        if (configuration.getClass() == DefaultMockitoConfiguration.class) {
-            return Plugins.getAnnotationEngine();
-        }
-        return configuration.getAnnotationEngine();
-    }
+  public boolean cleansStackTrace() {
+    return GLOBAL_CONFIGURATION.get().cleansStackTrace();
+  }
 
-    public boolean cleansStackTrace() {
-        return GLOBAL_CONFIGURATION.get().cleansStackTrace();
-    }
+  public boolean enableClassCache() {
+    return GLOBAL_CONFIGURATION.get().enableClassCache();
+  }
 
-    public boolean enableClassCache() {
-        return GLOBAL_CONFIGURATION.get().enableClassCache();
-    }
-
-    public Answer<Object> getDefaultAnswer() {
-        return GLOBAL_CONFIGURATION.get().getDefaultAnswer();
-    }
+  public Answer<Object> getDefaultAnswer() {
+    return GLOBAL_CONFIGURATION.get().getDefaultAnswer();
+  }
 }

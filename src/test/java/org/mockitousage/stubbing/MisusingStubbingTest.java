@@ -13,21 +13,21 @@ import org.mockitoutil.TestBase;
 
 public class MisusingStubbingTest extends TestBase {
 
-    @Test
-    public void clean_state_after_not_a_mock() {
-        // when
-        assertThatThrownBy(() -> doReturn(100).when("not a mock"));
+  @Test
+  public void clean_state_after_not_a_mock() {
+    // when
+    assertThatThrownBy(() -> doReturn(100).when("not a mock"));
 
-        // then
-        validateMockitoUsage();
-    }
+    // then
+    validateMockitoUsage();
+  }
 
-    @Test
-    public void clean_state_after_null_passed() {
-        // when
-        assertThatThrownBy(() -> doReturn(100).when(null));
+  @Test
+  public void clean_state_after_null_passed() {
+    // when
+    assertThatThrownBy(() -> doReturn(100).when(null));
 
-        // then
-        validateMockitoUsage();
-    }
+    // then
+    validateMockitoUsage();
+  }
 }

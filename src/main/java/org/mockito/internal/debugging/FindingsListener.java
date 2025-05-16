@@ -8,9 +8,9 @@ import org.mockito.internal.invocation.InvocationMatcher;
 import org.mockito.invocation.Invocation;
 
 public interface FindingsListener {
-    void foundStubCalledWithDifferentArgs(Invocation unused, InvocationMatcher unstubbed);
+  void foundStubCalledWithDifferentArgs(Invocation unused, InvocationMatcher unstubbed);
 
-    void foundUnusedStub(Invocation unused);
+  void foundUnusedStub(Invocation unused);
 
-    void foundUnstubbed(InvocationMatcher unstubbed);
+  void foundUnstubbed(InvocationMatcher unstubbed);
 }

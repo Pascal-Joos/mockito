@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Stuff that does not have a good package yet.
- */
+/** Stuff that does not have a good package yet. */
 package org.mockito.internal.creation.util;

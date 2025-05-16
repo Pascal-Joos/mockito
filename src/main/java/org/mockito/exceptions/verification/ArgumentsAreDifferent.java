@@ -10,27 +10,26 @@ import org.mockito.exceptions.base.MockitoAssertionError;
 
 public class ArgumentsAreDifferent extends MockitoAssertionError {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public ArgumentsAreDifferent(String message) {
-        super(message);
-    }
+  public ArgumentsAreDifferent(String message) {
+    super(message);
+  }
 
-    /**
-     * Three-arg constructor for compatibility with ExceptionFactory's three-arg
-     * create method. This implementation simply ignores the second and third
-     * arguments.
-     *
-     * @param message
-     * @param wanted ignored
-     * @param actual ignored
-     */
-    public ArgumentsAreDifferent(String message, String wanted, String actual) {
-        this(message);
-    }
+  /**
+   * Three-arg constructor for compatibility with ExceptionFactory's three-arg create method. This
+   * implementation simply ignores the second and third arguments.
+   *
+   * @param message
+   * @param wanted ignored
+   * @param actual ignored
+   */
+  public ArgumentsAreDifferent(String message, String wanted, String actual) {
+    this(message);
+  }
 
-    @Override
-    public String toString() {
-        return removeFirstLine(super.toString());
-    }
+  @Override
+  public String toString() {
+    return removeFirstLine(super.toString());
+  }
 }

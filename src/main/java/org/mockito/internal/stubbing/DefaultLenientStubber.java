@@ -13,58 +13,57 @@ import org.mockito.stubbing.Stubber;
 
 public class DefaultLenientStubber implements LenientStubber {
 
-    private static final MockitoCore MOCKITO_CORE = new MockitoCore();
+  private static final MockitoCore MOCKITO_CORE = new MockitoCore();
 
-    @Override
-    public Stubber doThrow(Throwable... toBeThrown) {
-        return stubber().doThrow(toBeThrown);
-    }
+  @Override
+  public Stubber doThrow(Throwable... toBeThrown) {
+    return stubber().doThrow(toBeThrown);
+  }
 
-    @Override
-    public Stubber doThrow(Class<? extends Throwable> toBeThrown) {
-        return stubber().doThrow(toBeThrown);
-    }
+  @Override
+  public Stubber doThrow(Class<? extends Throwable> toBeThrown) {
+    return stubber().doThrow(toBeThrown);
+  }
 
-    @Override
-    public Stubber doThrow(
-            Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... nextToBeThrown) {
-        return stubber().doThrow(toBeThrown, nextToBeThrown);
-    }
+  @Override
+  public Stubber doThrow(
+      Class<? extends Throwable> toBeThrown, Class<? extends Throwable>... nextToBeThrown) {
+    return stubber().doThrow(toBeThrown, nextToBeThrown);
+  }
 
-    @Override
-    public Stubber doAnswer(Answer answer) {
-        return stubber().doAnswer(answer);
-    }
+  @Override
+  public Stubber doAnswer(Answer answer) {
+    return stubber().doAnswer(answer);
+  }
 
-    @Override
-    public Stubber doNothing() {
-        return stubber().doNothing();
-    }
+  @Override
+  public Stubber doNothing() {
+    return stubber().doNothing();
+  }
 
-    @Override
-    public Stubber doReturn(Object toBeReturned) {
-        return stubber().doReturn(toBeReturned);
-    }
+  @Override
+  public Stubber doReturn(Object toBeReturned) {
+    return stubber().doReturn(toBeReturned);
+  }
 
-    @Override
-    public Stubber doReturn(Object toBeReturned, Object... nextToBeReturned) {
-        return stubber().doReturn(toBeReturned, nextToBeReturned);
-    }
+  @Override
+  public Stubber doReturn(Object toBeReturned, Object... nextToBeReturned) {
+    return stubber().doReturn(toBeReturned, nextToBeReturned);
+  }
 
-    @Override
-    public Stubber doCallRealMethod() {
-        return stubber().doCallRealMethod();
-    }
+  @Override
+  public Stubber doCallRealMethod() {
+    return stubber().doCallRealMethod();
+  }
 
-    @Override
-    public <T> OngoingStubbing<T> when(T methodCall) {
-        OngoingStubbingImpl<T> ongoingStubbing =
-                (OngoingStubbingImpl) MOCKITO_CORE.when(methodCall);
-        ongoingStubbing.setStrictness(Strictness.LENIENT);
-        return ongoingStubbing;
-    }
+  @Override
+  public <T> OngoingStubbing<T> when(T methodCall) {
+    OngoingStubbingImpl<T> ongoingStubbing = (OngoingStubbingImpl) MOCKITO_CORE.when(methodCall);
+    ongoingStubbing.setStrictness(Strictness.LENIENT);
+    return ongoingStubbing;
+  }
 
-    private static Stubber stubber() {
-        return MOCKITO_CORE.stubber(Strictness.LENIENT);
-    }
+  private static Stubber stubber() {
+    return MOCKITO_CORE.stubber(Strictness.LENIENT);
+  }
 }

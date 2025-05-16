@@ -10,83 +10,82 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.withSettings;
 
 import java.util.concurrent.Callable;
-
 import org.junit.Test;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.InvocationFactory;
 import org.mockitoutil.TestBase;
 
 public class InvocationFactoryTest extends TestBase {
-    static class TestClass {
-        public String testMethod() throws Throwable {
-            return "un-mocked";
-        }
+  static class TestClass {
+    public String testMethod() throws Throwable {
+      return "un-mocked";
+    }
+  }
+
+  final TestClass mock = spy(TestClass.class);
+
+  @Test
+  public void call_method_that_throws_a_throwable() throws Throwable {
+    Invocation invocation =
+        Mockito.framework()
+            .getInvocationFactory()
+            .createInvocation(
+                mock,
+                withSettings().build(TestClass.class),
+                TestClass.class.getDeclaredMethod("testMethod"),
+                new InvocationFactory.RealMethodBehavior() {
+                  @Override
+                  public Object call() throws Throwable {
+                    throw new Throwable("mocked");
+                  }
+                });
+
+    try {
+      Mockito.mockingDetails(mock).getMockHandler().handle(invocation);
+    } catch (Throwable t) {
+      assertEquals("mocked", t.getMessage());
+      return;
     }
 
-    final TestClass mock = spy(TestClass.class);
+    fail();
+  }
 
-    @Test
-    public void call_method_that_throws_a_throwable() throws Throwable {
-        Invocation invocation =
-                Mockito.framework()
-                        .getInvocationFactory()
-                        .createInvocation(
-                                mock,
-                                withSettings().build(TestClass.class),
-                                TestClass.class.getDeclaredMethod("testMethod"),
-                                new InvocationFactory.RealMethodBehavior() {
-                                    @Override
-                                    public Object call() throws Throwable {
-                                        throw new Throwable("mocked");
-                                    }
-                                });
+  @Test
+  public void call_method_that_returns_a_string() throws Throwable {
+    Invocation invocation =
+        Mockito.framework()
+            .getInvocationFactory()
+            .createInvocation(
+                mock,
+                withSettings().build(TestClass.class),
+                TestClass.class.getDeclaredMethod("testMethod"),
+                new InvocationFactory.RealMethodBehavior() {
+                  @Override
+                  public Object call() throws Throwable {
+                    return "mocked";
+                  }
+                });
 
-        try {
-            Mockito.mockingDetails(mock).getMockHandler().handle(invocation);
-        } catch (Throwable t) {
-            assertEquals("mocked", t.getMessage());
-            return;
-        }
+    Object ret = Mockito.mockingDetails(mock).getMockHandler().handle(invocation);
+    assertEquals("mocked", ret);
+  }
 
-        fail();
-    }
+  @Test
+  public void deprecated_api_still_works() throws Throwable {
+    Invocation invocation =
+        Mockito.framework()
+            .getInvocationFactory()
+            .createInvocation(
+                mock,
+                withSettings().build(TestClass.class),
+                TestClass.class.getDeclaredMethod("testMethod"),
+                new Callable() {
+                  public Object call() throws Exception {
+                    return "mocked";
+                  }
+                });
 
-    @Test
-    public void call_method_that_returns_a_string() throws Throwable {
-        Invocation invocation =
-                Mockito.framework()
-                        .getInvocationFactory()
-                        .createInvocation(
-                                mock,
-                                withSettings().build(TestClass.class),
-                                TestClass.class.getDeclaredMethod("testMethod"),
-                                new InvocationFactory.RealMethodBehavior() {
-                                    @Override
-                                    public Object call() throws Throwable {
-                                        return "mocked";
-                                    }
-                                });
-
-        Object ret = Mockito.mockingDetails(mock).getMockHandler().handle(invocation);
-        assertEquals("mocked", ret);
-    }
-
-    @Test
-    public void deprecated_api_still_works() throws Throwable {
-        Invocation invocation =
-                Mockito.framework()
-                        .getInvocationFactory()
-                        .createInvocation(
-                                mock,
-                                withSettings().build(TestClass.class),
-                                TestClass.class.getDeclaredMethod("testMethod"),
-                                new Callable() {
-                                    public Object call() throws Exception {
-                                        return "mocked";
-                                    }
-                                });
-
-        Object ret = Mockito.mockingDetails(mock).getMockHandler().handle(invocation);
-        assertEquals("mocked", ret);
-    }
+    Object ret = Mockito.mockingDetails(mock).getMockHandler().handle(invocation);
+    assertEquals("mocked", ret);
+  }
 }

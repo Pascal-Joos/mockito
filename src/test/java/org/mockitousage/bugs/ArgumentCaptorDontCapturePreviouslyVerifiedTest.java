@@ -14,19 +14,19 @@ import org.mockito.ArgumentCaptor;
 import org.mockitousage.IMethods;
 
 public class ArgumentCaptorDontCapturePreviouslyVerifiedTest {
-    @Test
-    public void previous_verified_invocation_should_still_capture_args() {
-        IMethods mock = mock(IMethods.class);
+  @Test
+  public void previous_verified_invocation_should_still_capture_args() {
+    IMethods mock = mock(IMethods.class);
 
-        mock.oneArg("first");
-        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-        verify(mock, times(1)).oneArg(argument.capture());
-        assertThat(argument.getAllValues()).hasSize(1);
+    mock.oneArg("first");
+    ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+    verify(mock, times(1)).oneArg(argument.capture());
+    assertThat(argument.getAllValues()).hasSize(1);
 
-        // additional interactions
-        mock.oneArg("second");
-        argument = ArgumentCaptor.forClass(String.class);
-        verify(mock, times(2)).oneArg(argument.capture());
-        assertThat(argument.getAllValues()).hasSize(2);
-    }
+    // additional interactions
+    mock.oneArg("second");
+    argument = ArgumentCaptor.forClass(String.class);
+    verify(mock, times(2)).oneArg(argument.capture());
+    assertThat(argument.getAllValues()).hasSize(2);
+  }
 }

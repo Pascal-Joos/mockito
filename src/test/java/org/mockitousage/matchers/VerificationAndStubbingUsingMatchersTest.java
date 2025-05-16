@@ -15,68 +15,68 @@ import org.mockitousage.IMethods;
 import org.mockitoutil.TestBase;
 
 public class VerificationAndStubbingUsingMatchersTest extends TestBase {
-    private IMethods one;
-    private IMethods two;
-    private IMethods three;
+  private IMethods one;
+  private IMethods two;
+  private IMethods three;
 
-    @Before
-    public void setUp() {
-        one = mock(IMethods.class);
-        two = mock(IMethods.class);
-        three = mock(IMethods.class);
+  @Before
+  public void setUp() {
+    one = mock(IMethods.class);
+    two = mock(IMethods.class);
+    three = mock(IMethods.class);
+  }
+
+  @Test
+  public void shouldStubUsingMatchers() {
+    when(one.simpleMethod(2)).thenReturn("2");
+    when(two.simpleMethod(anyString())).thenReturn("any");
+    when(three.simpleMethod(startsWith("test"))).thenThrow(new RuntimeException());
+
+    assertEquals(null, one.simpleMethod(1));
+    assertEquals("2", one.simpleMethod(2));
+
+    assertEquals("any", two.simpleMethod("two"));
+    assertEquals("any", two.simpleMethod("two again"));
+
+    assertEquals(null, three.simpleMethod("three"));
+    assertEquals(null, three.simpleMethod("three again"));
+
+    try {
+      three.simpleMethod("test three again");
+      fail();
+    } catch (RuntimeException e) {
+    }
+  }
+
+  @Test
+  public void shouldVerifyUsingMatchers() {
+    doThrow(new RuntimeException()).when(one).oneArg(true);
+    when(three.varargsObject(5, "first arg", "second arg")).thenReturn("stubbed");
+
+    try {
+      one.oneArg(true);
+      fail();
+    } catch (RuntimeException e) {
     }
 
-    @Test
-    public void shouldStubUsingMatchers() {
-        when(one.simpleMethod(2)).thenReturn("2");
-        when(two.simpleMethod(anyString())).thenReturn("any");
-        when(three.simpleMethod(startsWith("test"))).thenThrow(new RuntimeException());
+    one.simpleMethod(100);
+    two.simpleMethod("test Mockito");
+    three.varargsObject(10, "first arg", "second arg");
 
-        assertEquals(null, one.simpleMethod(1));
-        assertEquals("2", one.simpleMethod(2));
+    assertEquals("stubbed", three.varargsObject(5, "first arg", "second arg"));
 
-        assertEquals("any", two.simpleMethod("two"));
-        assertEquals("any", two.simpleMethod("two again"));
+    verify(one).oneArg(eq(true));
+    verify(one).simpleMethod(anyInt());
+    verify(two).simpleMethod(startsWith("test"));
+    verify(three).varargsObject(5, "first arg", "second arg");
+    verify(three).varargsObject(eq(10), eq("first arg"), startsWith("second"));
 
-        assertEquals(null, three.simpleMethod("three"));
-        assertEquals(null, three.simpleMethod("three again"));
+    verifyNoMoreInteractions(one, two, three);
 
-        try {
-            three.simpleMethod("test three again");
-            fail();
-        } catch (RuntimeException e) {
-        }
+    try {
+      verify(three).varargsObject(eq(10), eq("first arg"), startsWith("third"));
+      fail();
+    } catch (WantedButNotInvoked e) {
     }
-
-    @Test
-    public void shouldVerifyUsingMatchers() {
-        doThrow(new RuntimeException()).when(one).oneArg(true);
-        when(three.varargsObject(5, "first arg", "second arg")).thenReturn("stubbed");
-
-        try {
-            one.oneArg(true);
-            fail();
-        } catch (RuntimeException e) {
-        }
-
-        one.simpleMethod(100);
-        two.simpleMethod("test Mockito");
-        three.varargsObject(10, "first arg", "second arg");
-
-        assertEquals("stubbed", three.varargsObject(5, "first arg", "second arg"));
-
-        verify(one).oneArg(eq(true));
-        verify(one).simpleMethod(anyInt());
-        verify(two).simpleMethod(startsWith("test"));
-        verify(three).varargsObject(5, "first arg", "second arg");
-        verify(three).varargsObject(eq(10), eq("first arg"), startsWith("second"));
-
-        verifyNoMoreInteractions(one, two, three);
-
-        try {
-            verify(three).varargsObject(eq(10), eq("first arg"), startsWith("third"));
-            fail();
-        } catch (WantedButNotInvoked e) {
-        }
-    }
+  }
 }

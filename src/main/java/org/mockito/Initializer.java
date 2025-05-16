@@ -1,4 +1,3 @@
 package org.mockito;
 
-public @interface Initializer {
-}
+public @interface Initializer {}

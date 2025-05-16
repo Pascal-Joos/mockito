@@ -21,64 +21,62 @@ import org.mockitoutil.TestBase;
 
 public class StrictStubsRunnerTest extends TestBase {
 
-    JUnitCore runner = new JUnitCore();
+  JUnitCore runner = new JUnitCore();
+
+  @Test
+  public void detects_unnecessary_stubbings() {
+    // when
+    Result result = runner.run(UnnecessaryStubbing.class);
+    // then
+    JUnitResultAssert.assertThat(result).fails(1, UnnecessaryStubbingException.class).succeeds(2);
+  }
+
+  @Test
+  public void fails_fast_on_argument_mismatch() {
+    // when
+    Result result = runner.run(StubbingArgMismatch.class);
+    // then
+    JUnitResultAssert.assertThat(result).succeeds(2).fails(1, PotentialStubbingProblem.class);
+  }
+
+  @RunWith(MockitoJUnitRunner.StrictStubs.class)
+  public static class UnnecessaryStubbing {
+    @Mock IMethods mock;
 
     @Test
-    public void detects_unnecessary_stubbings() {
-        // when
-        Result result = runner.run(UnnecessaryStubbing.class);
-        // then
-        JUnitResultAssert.assertThat(result)
-                .fails(1, UnnecessaryStubbingException.class)
-                .succeeds(2);
+    public void unused_stubbing_1() {
+      when(mock.simpleMethod()).thenReturn("");
     }
 
     @Test
-    public void fails_fast_on_argument_mismatch() {
-        // when
-        Result result = runner.run(StubbingArgMismatch.class);
-        // then
-        JUnitResultAssert.assertThat(result).succeeds(2).fails(1, PotentialStubbingProblem.class);
+    public void unused_stubbing_2() {
+      when(mock.simpleMethod()).thenReturn("");
     }
 
-    @RunWith(MockitoJUnitRunner.StrictStubs.class)
-    public static class UnnecessaryStubbing {
-        @Mock IMethods mock;
+    @Test
+    public void correct_stubbing() {
+      when(mock.simpleMethod()).thenReturn("");
+      mock.simpleMethod();
+    }
+  }
 
-        @Test
-        public void unused_stubbing_1() {
-            when(mock.simpleMethod()).thenReturn("");
-        }
+  @RunWith(MockitoJUnitRunner.StrictStubs.class)
+  public static class StubbingArgMismatch {
+    @Mock IMethods mock;
 
-        @Test
-        public void unused_stubbing_2() {
-            when(mock.simpleMethod()).thenReturn("");
-        }
+    @Test
+    public void passing1() {}
 
-        @Test
-        public void correct_stubbing() {
-            when(mock.simpleMethod()).thenReturn("");
-            mock.simpleMethod();
-        }
+    @Test
+    public void passing2() {
+      when(mock.simpleMethod()).thenReturn("");
+      mock.simpleMethod();
     }
 
-    @RunWith(MockitoJUnitRunner.StrictStubs.class)
-    public static class StubbingArgMismatch {
-        @Mock IMethods mock;
-
-        @Test
-        public void passing1() {}
-
-        @Test
-        public void passing2() {
-            when(mock.simpleMethod()).thenReturn("");
-            mock.simpleMethod();
-        }
-
-        @Test
-        public void argument_mismatch() {
-            when(mock.simpleMethod(10)).thenReturn("");
-            ProductionCode.simpleMethod(mock, 20);
-        }
+    @Test
+    public void argument_mismatch() {
+      when(mock.simpleMethod(10)).thenReturn("");
+      ProductionCode.simpleMethod(mock, 20);
     }
+  }
 }

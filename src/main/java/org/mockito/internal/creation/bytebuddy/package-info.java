@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * ByteBuddy related stuff.
- */
+/** ByteBuddy related stuff. */
 package org.mockito.internal.creation.bytebuddy;

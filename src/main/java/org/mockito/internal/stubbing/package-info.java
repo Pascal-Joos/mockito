@@ -3,7 +3,5 @@
  * This program is made available under the terms of the MIT License.
  */
 
-/**
- * Stubbing logic.
- */
+/** Stubbing logic. */
 package org.mockito.internal.stubbing;

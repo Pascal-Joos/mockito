@@ -12,20 +12,20 @@ import org.mockitoutil.TestBase;
 // see issue 112
 public class AtLeastMarksAllInvocationsVerified extends TestBase {
 
-    public static class SomeMethods {
-        public void allowedMethod() {}
+  public static class SomeMethods {
+    public void allowedMethod() {}
 
-        public void disallowedMethod() {}
-    }
+    public void disallowedMethod() {}
+  }
 
-    @Test(expected = org.mockito.exceptions.verification.NoInteractionsWanted.class)
-    public void shouldFailBecauseDisallowedMethodWasCalled() {
-        SomeMethods someMethods = mock(SomeMethods.class);
+  @Test(expected = org.mockito.exceptions.verification.NoInteractionsWanted.class)
+  public void shouldFailBecauseDisallowedMethodWasCalled() {
+    SomeMethods someMethods = mock(SomeMethods.class);
 
-        someMethods.allowedMethod();
-        someMethods.disallowedMethod();
+    someMethods.allowedMethod();
+    someMethods.disallowedMethod();
 
-        verify(someMethods, atLeast(1)).allowedMethod();
-        verifyNoMoreInteractions(someMethods);
-    }
+    verify(someMethods, atLeast(1)).allowedMethod();
+    verifyNoMoreInteractions(someMethods);
+  }
 }

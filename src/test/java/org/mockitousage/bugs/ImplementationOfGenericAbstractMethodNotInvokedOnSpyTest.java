@@ -10,25 +10,25 @@ import static org.mockito.Mockito.spy;
 import org.junit.Test;
 
 public class ImplementationOfGenericAbstractMethodNotInvokedOnSpyTest {
-    public abstract class GenericAbstract<T> {
-        protected abstract String method_to_implement(T value);
+  public abstract class GenericAbstract<T> {
+    protected abstract String method_to_implement(T value);
 
-        public String public_method(T value) {
-            return method_to_implement(value);
-        }
+    public String public_method(T value) {
+      return method_to_implement(value);
     }
+  }
 
-    public class ImplementsGenericMethodOfAbstract<T extends Number> extends GenericAbstract<T> {
-        @Override
-        protected String method_to_implement(T value) {
-            return "concrete value";
-        }
+  public class ImplementsGenericMethodOfAbstract<T extends Number> extends GenericAbstract<T> {
+    @Override
+    protected String method_to_implement(T value) {
+      return "concrete value";
     }
+  }
 
-    @Test
-    public void should_invoke_method_to_implement() {
-        GenericAbstract<Number> spy = spy(new ImplementsGenericMethodOfAbstract<Number>());
+  @Test
+  public void should_invoke_method_to_implement() {
+    GenericAbstract<Number> spy = spy(new ImplementsGenericMethodOfAbstract<Number>());
 
-        assertThat(spy.public_method(73L)).isEqualTo("concrete value");
-    }
+    assertThat(spy.public_method(73L)).isEqualTo("concrete value");
+  }
 }

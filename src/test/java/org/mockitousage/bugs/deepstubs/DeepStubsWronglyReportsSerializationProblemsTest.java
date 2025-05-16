@@ -10,28 +10,25 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
-/**
- * In GH issue 99 : https://github.com/mockito/mockito/issues/99
- */
+/** In GH issue 99 : https://github.com/mockito/mockito/issues/99 */
 public class DeepStubsWronglyReportsSerializationProblemsTest {
 
-    @Test
-    public void
-            should_not_raise_a_mockito_exception_about_serialization_when_accessing_deep_stub() {
-        NotSerializableShouldBeMocked the_deep_stub =
-                mock(ToBeDeepStubbed.class, RETURNS_DEEP_STUBS).getSomething();
-        assertThat(the_deep_stub).isNotNull();
-    }
+  @Test
+  public void should_not_raise_a_mockito_exception_about_serialization_when_accessing_deep_stub() {
+    NotSerializableShouldBeMocked the_deep_stub =
+        mock(ToBeDeepStubbed.class, RETURNS_DEEP_STUBS).getSomething();
+    assertThat(the_deep_stub).isNotNull();
+  }
 
-    public static class ToBeDeepStubbed {
-        public ToBeDeepStubbed() {}
+  public static class ToBeDeepStubbed {
+    public ToBeDeepStubbed() {}
 
-        public NotSerializableShouldBeMocked getSomething() {
-            return null;
-        }
+    public NotSerializableShouldBeMocked getSomething() {
+      return null;
     }
+  }
 
-    public static class NotSerializableShouldBeMocked {
-        NotSerializableShouldBeMocked(String mandatory_param) {}
-    }
+  public static class NotSerializableShouldBeMocked {
+    NotSerializableShouldBeMocked(String mandatory_param) {}
+  }
 }

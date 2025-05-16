@@ -5,36 +5,35 @@
 package org.mockito.internal.matchers;
 
 import java.io.Serializable;
-
 import org.mockito.ArgumentMatcher;
 
 public abstract class CompareTo<T extends Comparable<T>>
-        implements ArgumentMatcher<T>, Serializable {
-    private final T wanted;
+    implements ArgumentMatcher<T>, Serializable {
+  private final T wanted;
 
-    public CompareTo(T value) {
-        this.wanted = value;
+  public CompareTo(T value) {
+    this.wanted = value;
+  }
+
+  @Override
+  public final boolean matches(T actual) {
+    if (actual == null) {
+      return false;
+    }
+    if (!actual.getClass().isInstance(wanted)) {
+      return false;
     }
 
-    @Override
-    public final boolean matches(T actual) {
-        if (actual == null) {
-            return false;
-        }
-        if (!actual.getClass().isInstance(wanted)) {
-            return false;
-        }
+    int result = actual.compareTo(wanted);
+    return matchResult(result);
+  }
 
-        int result = actual.compareTo(wanted);
-        return matchResult(result);
-    }
+  @Override
+  public final String toString() {
+    return getName() + "(" + wanted + ")";
+  }
 
-    @Override
-    public final String toString() {
-        return getName() + "(" + wanted + ")";
-    }
+  protected abstract String getName();
 
-    protected abstract String getName();
-
-    protected abstract boolean matchResult(int result);
+  protected abstract boolean matchResult(int result);
 }
