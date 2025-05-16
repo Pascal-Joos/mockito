@@ -5,6 +5,7 @@
 package org.mockito.internal.verification.api;
 
 import java.util.List;
+import javax.annotation.Nullable;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MatchableInvocation;
 
@@ -12,6 +13,7 @@ public interface VerificationDataInOrder {
 
   List<Invocation> getAllInvocations();
 
+  @Nullable
   MatchableInvocation getWanted();
 
   InOrderContext getOrderingContext();
