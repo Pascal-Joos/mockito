@@ -149,7 +149,9 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
 
   protected GenericMetadataSupport actualParameterizedType(Object mock) {
     CreationSettings mockSettings =
-        (CreationSettings) MockUtil.getMockHandler(mock).getMockSettings();
+        (CreationSettings)
+            NullabilityUtil.castToNonnull(MockUtil.getMockHandler(mock), "throws exception first")
+                .getMockSettings();
     return GenericMetadataSupport.inferFrom(mockSettings.getTypeToMock());
   }
 
