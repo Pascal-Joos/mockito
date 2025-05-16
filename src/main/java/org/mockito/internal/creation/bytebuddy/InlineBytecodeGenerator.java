@@ -271,6 +271,9 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
     }
     Set<Object> modules = new HashSet<Object>();
     try {
+      if (getModule == null || canRead == null) {
+        return;
+      }
       Object target =
           getModule.invoke(
               Class.forName(
