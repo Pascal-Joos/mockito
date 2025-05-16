@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nullable;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.configuration.injection.filter.MockCandidateFilter;
 import org.mockito.internal.configuration.injection.filter.NameBasedCandidateFilter;
@@ -74,7 +75,6 @@ public class PropertyAndSetterInjection extends MockInjectionStrategy {
     FieldInitializationReport report =
         initializeInjectMocksField(injectMocksField, injectMocksFieldOwner);
 
-    // for each field in the class hierarchy
     boolean injectionOccurred = false;
     Class<?> fieldClass = report.fieldClass();
     Object fieldInstanceNeedingInjection = report.fieldInstance();
@@ -82,7 +82,8 @@ public class PropertyAndSetterInjection extends MockInjectionStrategy {
       injectionOccurred |=
           injectMockCandidates(
               fieldClass, fieldInstanceNeedingInjection, newMockSafeHashSet(mockCandidates));
-      fieldClass = fieldClass.getSuperclass();
+      fieldClass =
+          NullabilityUtil.castToNonnull(fieldClass.getSuperclass(), "ensured by loop condition");
     }
     return injectionOccurred;
   }
@@ -100,7 +101,7 @@ public class PropertyAndSetterInjection extends MockInjectionStrategy {
   }
 
   private boolean injectMockCandidates(
-      Class<?> awaitingInjectionClazz, Object injectee, Set<Object> mocks) {
+      @Nullable Class<?> awaitingInjectionClazz, Object injectee, Set<Object> mocks) {
     boolean injectionOccurred;
     List<Field> orderedCandidateInjecteeFields = orderedInstanceFieldsFrom(awaitingInjectionClazz);
     // pass 1
