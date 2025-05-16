@@ -4,14 +4,14 @@ apply from: "$rootDir/gradle/java-library.gradle"
 apply from: "$rootDir/gradle/dependencies.gradle"
 
 dependencies {
-    compileOnly libraries.autoservice
+    implementation libraries.autoservice
     annotationProcessor libraries.autoservice
 
-    compile project.rootProject
-    compile libraries.errorprone
+    implementation project.rootProject
+    implementation libraries.errorprone
 
-    testCompile 'junit:junit:4.13-beta-1'
-    testCompile libraries.errorproneTestApi
+    testImplementation 'junit:junit:4.13-beta-1'
+    testImplementation libraries.errorproneTestApi
 }
 
 test {

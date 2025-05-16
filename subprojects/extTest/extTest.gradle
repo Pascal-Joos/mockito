@@ -8,12 +8,12 @@ repositories {
 }
 
 dependencies {
-    testCompile project.rootProject
-    testCompile project(":junit-jupiter")
-    testCompile project(path: ':', configuration: 'testUtil')
-    testCompile libraries.junit4
-    testCompile libraries.assertj
-    testCompile libraries.junitJupiterApi
+    testImplementation project.rootProject
+    testImplementation project(":junit-jupiter")
+    testImplementation project(path: ':', configuration: 'testUtil')
+    testImplementation libraries.junit4
+    testImplementation libraries.assertj
+    testImplementation libraries.junitJupiterApi
 }
 
 configurations.all {

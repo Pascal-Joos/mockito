@@ -3,11 +3,11 @@ description = "Mockito JUnit 5 support"
 apply from: "$rootDir/gradle/java-library.gradle"
 
 dependencies {
-    compile project.rootProject
+    implementation project.rootProject
     implementation libraries.junitJupiterApi
-    testCompile libraries.assertj
-    testCompile libraries.junitPlatformLauncher
-    testRuntime libraries.junitJupiterEngine
+    testImplementation libraries.assertj
+    testImplementation libraries.junitPlatformLauncher
+    testImplementation libraries.junitJupiterEngine
 }
 
 tasks.withType(Test) {
