@@ -95,16 +95,15 @@ class RetrieveGenericsForDefaultAnswers {
   @Nullable
   private static Class<?> findTypeFromGeneric(
       final InvocationOnMock invocation, final TypeVariable returnType) {
-    final MockHandler mockHandler = MockUtil.getMockHandler(invocation.getMock());
-    if (mockHandler == null) {
-      return null;
-    }
-    final MockCreationSettings mockSettings = mockHandler.getMockSettings();
+    // Class level
+    final MockCreationSettings mockSettings =
+        MockUtil.getMockHandler(invocation.getMock()).getMockSettings();
     final GenericMetadataSupport returnTypeSupport =
         GenericMetadataSupport.inferFrom(mockSettings.getTypeToMock())
             .resolveGenericReturnType(invocation.getMethod());
     final Class<?> rawType = returnTypeSupport.rawType();
 
+    // Method level
     if (rawType == Object.class) {
       return findTypeFromGenericInArguments(invocation, returnType);
     }

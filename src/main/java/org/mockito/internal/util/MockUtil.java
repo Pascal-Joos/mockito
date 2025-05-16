@@ -56,14 +56,12 @@ public class MockUtil {
 
   public static <T> void resetMock(T mock) {
     MockHandler oldHandler = getMockHandler(mock);
-    MockCreationSettings settings =
-        NullabilityUtil.castToNonnull(oldHandler.getMockSettings(), "cannot return null");
+    MockCreationSettings settings = oldHandler.getMockSettings();
     MockHandler newHandler = createMockHandler(settings);
 
     mockMaker.resetMock(mock, newHandler, settings);
   }
 
-  @SuppressWarnings("NullAway")
   public static <T> MockHandler<T> getMockHandler(T mock) {
     if (mock == null) {
       throw new NotAMockException("Argument should be a mock, but is null!");
@@ -77,8 +75,7 @@ public class MockUtil {
   }
 
   public static InvocationContainerImpl getInvocationContainer(Object mock) {
-    MockHandler<?> handler = getMockHandler(mock);
-    return (InvocationContainerImpl) handler.getInvocationContainer();
+    return (InvocationContainerImpl) getMockHandler(mock).getInvocationContainer();
   }
 
   public static boolean isSpy(Object mock) {
@@ -101,17 +98,12 @@ public class MockUtil {
   }
 
   public static MockName getMockName(Object mock) {
-    if (mock == null || !isMock(mock)) {
-      throw new NotAMockException("Argument should be a mock, but is null or not a mock.");
-    }
     return getMockHandler(mock).getMockSettings().getMockName();
   }
 
   public static void maybeRedefineMockName(Object mock, String newName) {
-    if (mock == null) {
-      throw new NullPointerException("Mock object is null");
-    }
     MockName mockName = getMockName(mock);
+    // TODO SF hacky...
     MockCreationSettings mockSettings = getMockHandler(mock).getMockSettings();
     if (mockName.isDefault() && mockSettings instanceof CreationSettings) {
       ((CreationSettings) mockSettings).setMockName(new MockNameImpl(newName));
@@ -119,9 +111,6 @@ public class MockUtil {
   }
 
   public static MockCreationSettings getMockSettings(Object mock) {
-    if (mock == null) {
-      throw new NotAMockException("Argument should be a mock, but is null!");
-    }
     return getMockHandler(mock).getMockSettings();
   }
 
