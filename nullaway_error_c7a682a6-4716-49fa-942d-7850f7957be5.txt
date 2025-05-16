@@ -1,0 +1,4 @@
+/home/nima/Developer/git/nullness-benchmarks/mockito/src/main/java/org/mockito/AdditionalMatchers.java:54: error: [NullAway] returning @Nullable expression from method with @NonNull return type
+        return null;
+        ^
+    (see http://t.uber.com/nullaway )
