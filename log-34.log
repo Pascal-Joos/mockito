@@ -1,0 +1,108 @@
+====================
+Type='WRONG_OVERRIDE_RETURN', message='method returns @Nullable, but superclass method org.mockito.plugins.MockMaker.<T>createMock(org.mockito.mock.MockCreationSettings<T>,org.mockito.invocation.MockHandler) returns @NonNull'
+/home/nima/Developer/nullness-benchmarks/mockito/src/main/java/org/mockito/internal/creation/bytebuddy/InlineByteBuddyMockMaker.java:299
+  @Nullable
+Log:
+---NullAway.lambda$resolveRemainingErrors$17---
+==============================
+---NullAway.lambda$resolveRemainingErrors$17---
+TOP LEVEL CALL TO FIX ERROR: Type='WRONG_OVERRIDE_RETURN', message='method returns @Nullable, but superclass method org.mockito.plugins.MockMaker.<T>createMock(org.mockito.mock.MockCreationSettings<T>,org.mockito.invocation.MockHandler) returns @NonNull'
+/home/nima/Developer/nullness-benchmarks/mockito/src/main/java/org/mockito/internal/creation/bytebuddy/InlineByteBuddyMockMaker.java:299
+  @Nullable
+---ChatGPT.ask---
+Asking ChatGPT:
+I want to resolve a warning reported by NullAway.
+The error is of the type of "WRONG_OVERRIDE_RETURN" and the full error message is: "method returns @Nullable, but superclass method org.mockito.plugins.MockMaker.<T>createMock(org.mockito.mock.MockCreationSettings<T>,org.mockito.invocation.MockHandler) returns @NonNull".
+The line with the error is: "  @Nullable".
+
+The error is within "the method: createMock(org.mockito.mock.MockCreationSettings,org.mockito.invocation.MockHandler)" and the code surrounding the error is:
+```java
+              if (interceptor != null) {
+                interceptor.accept(
+                    object,
+                    new InlineConstructionMockContext(
+                        arguments, object.getClass(), parameterTypeNames));
+              }
+            }
+          } finally {
+            isSuspended.set(false);
+          }
+          return null;
+        };
+
+    bytecodeGenerator =
+        new TypeCachingBytecodeGenerator(
+            new InlineBytecodeGenerator(
+                INSTRUMENTATION, mocks, mockedStatics, isMockConstruction, onConstruction),
+            true);
+  }
+
+  @Nullable
+  @Override
+  public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
+    return doCreateMock(settings, handler, false);
+  }
+
+  @Override
+  public <T> Optional<T> createSpy(
+      MockCreationSettings<T> settings, MockHandler handler, T object) {
+    if (object == null) {
+      throw new MockitoConfigurationException("Spy instance must not be null");
+    }
+    currentSpied.set(object);
+    try {
+      return Optional.ofNullable(doCreateMock(settings, handler, true));
+    } finally {
+      currentSpied.remove();
+    }
+  }
+
+```
+
+Give me the fixed code snippet (ONLY THE METHOD REWRITE OF "createMock(org.mockito.mock.MockCreationSettings,org.mockito.invocation.MockHandler)") in XML format in <response> tag like the example below. I will apply the fix to my codebase.
+Do not import any additional libraries or classes or java comments.
+If you can provide the fixed code snippet, provide it in the following format and place the code snippet in the <code> tag within ```java block.
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  Your fixed code snippet here
+  ```
+    ]]>
+  </code>
+</response>
+
+---ChatGPT.sendRequestToOpenAI---
+Sending request to OpenAI...
+---ChatGPT.sendRequestToOpenAI---
+Response received from OpenAI.
+---Response.<init>---
+Creating Response:
+```xml
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
+    T mockInstance = doCreateMock(settings, handler, false);
+    if (mockInstance == null) {
+      throw new NullPointerException("Mock instance cannot be null");
+    }
+    return mockInstance;
+  }
+  ```
+  ]]>
+  </code>
+</response>
+```
+---Response.<init>---
+Response created:
+@Override
+  public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
+    T mockInstance = doCreateMock(settings, handler, false);
+    if (mockInstance == null) {
+      throw new NullPointerException("Mock instance cannot be null");
+    }
+    return mockInstance;
+  }
