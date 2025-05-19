@@ -93,13 +93,15 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
       for (StubbedInvocationMatcher s : stubbed) {
         if (s.matches(invocation)) {
           s.markStubUsed(invocation);
+          // TODO we should mark stubbed at the point of stubbing, not at the point where
+          // the stub is being used
           invocation.markStubbed(new StubInfoImpl(s));
           return s;
         }
       }
     }
 
-    throw new IllegalStateException("No matching stubbed invocation found");
+    return null;
   }
 
   /** Sets the answers declared with 'doAnswer' style. */
