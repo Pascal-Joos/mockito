@@ -318,19 +318,17 @@ public class MockMethodAdvice extends MockMethodDispatcher {
     }
   }
 
-  private static Object tryInvoke(Method origin, Object instance, Object[] arguments)
+  private static Object tryInvoke(Method origin, @Nullable Object instance, Object[] arguments)
       throws Throwable {
     MemberAccessor accessor = Plugins.getMemberAccessor();
     try {
       return accessor.invoke(origin, instance, arguments);
     } catch (InvocationTargetException exception) {
       Throwable cause = exception.getCause();
-      if (cause != null) {
-        new ConditionalStackTraceFilter()
-            .filter(
-                hideRecursiveCall(
-                    cause, new Throwable().getStackTrace().length, origin.getDeclaringClass()));
-      }
+      new ConditionalStackTraceFilter()
+          .filter(
+              hideRecursiveCall(
+                  cause, new Throwable().getStackTrace().length, origin.getDeclaringClass()));
       throw cause;
     }
   }
