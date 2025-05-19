@@ -272,13 +272,21 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
     Set<Object> modules = new HashSet<Object>();
     try {
       Object target =
-          getModule.invoke(
-              Class.forName(
-                  "org.mockito.internal.creation.bytebuddy.inject.MockMethodDispatcher",
-                  false,
-                  null));
+          getModule != null
+              ? getModule.invoke(
+                  Class.forName(
+                      "org.mockito.internal.creation.bytebuddy.inject.MockMethodDispatcher",
+                      false,
+                      null))
+              : null;
+      if (target == null) {
+        throw new NullPointerException("target is null");
+      }
       for (Class<?> type : types) {
-        Object module = getModule.invoke(type);
+        Object module = getModule != null ? getModule.invoke(type) : null;
+        if (module == null) {
+          throw new NullPointerException("module is null for type: " + type);
+        }
         if (!modules.contains(module) && !(Boolean) canRead.invoke(module, target)) {
           modules.add(module);
         }
