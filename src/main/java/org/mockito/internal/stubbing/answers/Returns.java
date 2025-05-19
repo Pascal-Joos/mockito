@@ -48,6 +48,9 @@ public class Returns implements Answer<Object>, ValidableAnswer, Serializable {
   }
 
   private String printReturnType() {
+    if (value == null) {
+      return "null";
+    }
     return value.getClass().getSimpleName();
   }
 
