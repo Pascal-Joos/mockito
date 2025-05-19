@@ -26,6 +26,9 @@ public class DefaultTestFinishedEvent implements TestFinishedEvent {
 
   @Override
   public String getTestName() {
+    if (testClassInstance == null) {
+      throw new NullPointerException("testClassInstance is null");
+    }
     return testClassInstance.getClass().getSimpleName() + "." + testMethodName;
   }
 }
