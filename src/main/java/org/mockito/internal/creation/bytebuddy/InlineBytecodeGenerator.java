@@ -279,8 +279,11 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
                   null));
       for (Class<?> type : types) {
         Object module = getModule.invoke(type);
-        if (!modules.contains(module) && !(Boolean) canRead.invoke(module, target)) {
-          modules.add(module);
+        if (!modules.contains(module)) {
+          Boolean canReadResult = (Boolean) canRead.invoke(module, target);
+          if (canReadResult != null && !canReadResult) {
+            modules.add(module);
+          }
         }
       }
       for (Object module : modules) {
