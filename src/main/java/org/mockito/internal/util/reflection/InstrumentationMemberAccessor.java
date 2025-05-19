@@ -193,9 +193,6 @@ class InstrumentationMemberAccessor implements MemberAccessor {
 
   @Override
   public Object get(Field field, Object target) {
-    if (!Modifier.isStatic(field.getModifiers()) && target == null) {
-      throw new IllegalArgumentException("Target cannot be null for non-static fields");
-    }
     assureArguments(
         field,
         Modifier.isStatic(field.getModifiers()) ? null : target,
