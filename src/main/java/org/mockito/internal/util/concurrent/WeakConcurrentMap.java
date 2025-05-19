@@ -346,7 +346,8 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
 
     final Map.Entry<WeakKey<K>, V> entry;
 
-    private SimpleEntry(K key, @Nullable Map.Entry<WeakKey<K>, V> entry) {
+    private SimpleEntry(K key, Map.Entry<WeakKey<K>, V> entry) {
+      if (entry == null) throw new NullPointerException("entry is marked @NonNull but is null");
       this.key = key;
       this.entry = entry;
     }
