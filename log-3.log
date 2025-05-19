@@ -1,0 +1,85 @@
+====================
+Type='WRONG_OVERRIDE_RETURN', message='method returns @Nullable, but superclass method org.mockito.internal.verification.api.VerificationDataInOrder.getWanted() returns @NonNull'
+/home/nima/Developer/nullness-benchmarks/mockito/src/main/java/org/mockito/internal/verification/api/VerificationDataInOrderImpl.java:35
+  @Nullable
+Log:
+---NullAway.lambda$resolveRemainingErrors$17---
+==============================
+---NullAway.lambda$resolveRemainingErrors$17---
+TOP LEVEL CALL TO FIX ERROR: Type='WRONG_OVERRIDE_RETURN', message='method returns @Nullable, but superclass method org.mockito.internal.verification.api.VerificationDataInOrder.getWanted() returns @NonNull'
+/home/nima/Developer/nullness-benchmarks/mockito/src/main/java/org/mockito/internal/verification/api/VerificationDataInOrderImpl.java:35
+  @Nullable
+---ChatGPT.ask---
+Asking ChatGPT:
+I want to resolve a warning reported by NullAway.
+The error is of the type of "WRONG_OVERRIDE_RETURN" and the full error message is: "method returns @Nullable, but superclass method org.mockito.internal.verification.api.VerificationDataInOrder.getWanted() returns @NonNull".
+The line with the error is: "  @Nullable".
+
+The error is within "the method: getWanted()" and the code surrounding the error is:
+```java
+  private final List<Invocation> allInvocations;
+  @Nullable private final MatchableInvocation wanted;
+
+  public VerificationDataInOrderImpl(
+      InOrderContext inOrder,
+      List<Invocation> allInvocations,
+      @Nullable MatchableInvocation wanted) {
+    this.inOrder = inOrder;
+    this.allInvocations = allInvocations;
+    this.wanted = wanted;
+  }
+
+  public List<Invocation> getAllInvocations() {
+    return allInvocations;
+  }
+
+  public InOrderContext getOrderingContext() {
+    return inOrder;
+  }
+
+  @Nullable
+  public MatchableInvocation getWanted() {
+    return wanted;
+  }
+}
+```
+
+Give me the fixed code snippet (ONLY THE METHOD REWRITE OF "getWanted()") in XML format in <response> tag like the example below. I will apply the fix to my codebase.
+Do not import any additional libraries or classes or java comments.
+If you can provide the fixed code snippet, provide it in the following format and place the code snippet in the <code> tag within ```java block.
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  Your fixed code snippet here
+  ```
+    ]]>
+  </code>
+</response>
+
+---ChatGPT.sendRequestToOpenAI---
+Sending request to OpenAI...
+---ChatGPT.sendRequestToOpenAI---
+Response received from OpenAI.
+---Response.<init>---
+Creating Response:
+Here's the fixed code snippet for the `getWanted()` method wrapped in the required XML format:
+
+```xml
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public MatchableInvocation getWanted() {
+    return Objects.requireNonNull(wanted, "Wanted invocation cannot be null");
+  }
+  ```
+    ]]>
+  </code>
+</response>
+```
+---Response.<init>---
+Response created:
+public MatchableInvocation getWanted() {
+    return Objects.requireNonNull(wanted, "Wanted invocation cannot be null");
+  }

@@ -32,8 +32,7 @@ public class VerificationDataInOrderImpl implements VerificationDataInOrder {
     return inOrder;
   }
 
-  @Nullable
   public MatchableInvocation getWanted() {
-    return wanted;
+    return Objects.requireNonNull(wanted, "Wanted invocation cannot be null");
   }
 }
