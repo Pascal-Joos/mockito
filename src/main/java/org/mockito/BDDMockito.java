@@ -4,7 +4,6 @@
  */
 package org.mockito;
 
-import javax.annotation.Nullable;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.stubbing.Stubber;
@@ -170,7 +169,7 @@ public class BDDMockito extends Mockito {
 
     private final OngoingStubbing<T> mockitoOngoingStubbing;
 
-    public BDDOngoingStubbingImpl(@Nullable OngoingStubbing<T> ongoingStubbing) {
+    public BDDOngoingStubbingImpl(@NonNull OngoingStubbing<T> ongoingStubbing) {
       this.mockitoOngoingStubbing = ongoingStubbing;
     }
 
