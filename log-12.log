@@ -1,0 +1,154 @@
+====================
+Type='PASS_NULLABLE', message='passing @Nullable parameter 'null' where @NonNull is required'
+/home/nima/Developer/nullness-benchmarks/mockito/src/main/java/org/mockito/internal/util/reflection/InstrumentationMemberAccessor.java:131
+    assureArguments(constructor, null, null, arguments, constructor.getParameterTypes());
+Log:
+---NullAway.lambda$resolveRemainingErrors$17---
+==============================
+---NullAway.lambda$resolveRemainingErrors$17---
+TOP LEVEL CALL TO FIX ERROR: Type='PASS_NULLABLE', message='passing @Nullable parameter 'null' where @NonNull is required'
+/home/nima/Developer/nullness-benchmarks/mockito/src/main/java/org/mockito/internal/util/reflection/InstrumentationMemberAccessor.java:131
+    assureArguments(constructor, null, null, arguments, constructor.getParameterTypes());
+---ChatGPT.ask---
+Asking ChatGPT:
+I want to resolve a warning reported by NullAway.
+The error is of the type of "PASS_NULLABLE" and the full error message is: "passing @Nullable parameter 'null' where @NonNull is required".
+The line with the error is: "    assureArguments(constructor, null, null, arguments, constructor.getParameterTypes());".
+
+The error is within "the method: newInstance(java.lang.reflect.Constructor,java.lang.Object[])" and the code surrounding the error is:
+```java
+                      void.class, module, Set.class, Map.class, Map.class, Set.class, Map.class));
+      privateLookupIn =
+          MethodHandles.publicLookup()
+              .findStatic(
+                  MethodHandles.class,
+                  "privateLookupIn",
+                  MethodType.methodType(
+                      MethodHandles.Lookup.class, Class.class, MethodHandles.Lookup.class));
+    } catch (Throwable t) {
+      throw new MockitoInitializationException("Could not resolve instrumentation invoker", t);
+    }
+  }
+
+  @Override
+  public Object newInstance(Constructor<?> constructor, Object... arguments)
+      throws InstantiationException, InvocationTargetException {
+    if (Modifier.isAbstract(constructor.getDeclaringClass().getModifiers())) {
+      throw new InstantiationException(
+          "Cannot instantiate abstract " + constructor.getDeclaringClass().getTypeName());
+    }
+    assureArguments(constructor, null, null, arguments, constructor.getParameterTypes());
+    try {
+      Object module = getModule.bindTo(constructor.getDeclaringClass()).invokeWithArguments();
+      String packageName = constructor.getDeclaringClass().getPackage().getName();
+      assureOpen(module, packageName);
+      MethodHandle handle =
+          ((MethodHandles.Lookup)
+                  privateLookupIn.invokeExact(
+                      constructor.getDeclaringClass(), DISPATCHER.getLookup()))
+              .unreflectConstructor(constructor);
+      try {
+        return handle.invokeWithArguments(arguments);
+      } catch (Throwable t) {
+        throw new InvocationTargetException(t);
+      }
+    } catch (InvocationTargetException e) {
+      throw e;
+    } catch (Throwable t) {
+      throw new IllegalStateException(
+          "Could not construct " + constructor + " with arguments " + Arrays.toString(arguments),
+          t);
+    }
+```
+
+Give me the fixed code snippet (ONLY THE METHOD REWRITE OF "newInstance(java.lang.reflect.Constructor,java.lang.Object[])") in XML format in <response> tag like the example below. I will apply the fix to my codebase.
+Do not import any additional libraries or classes or java comments.
+If you can provide the fixed code snippet, provide it in the following format and place the code snippet in the <code> tag within ```java block.
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  Your fixed code snippet here
+  ```
+    ]]>
+  </code>
+</response>
+
+---ChatGPT.sendRequestToOpenAI---
+Sending request to OpenAI...
+---ChatGPT.sendRequestToOpenAI---
+Response received from OpenAI.
+---Response.<init>---
+Creating Response:
+```xml
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public Object newInstance(Constructor<?> constructor, Object... arguments)
+      throws InstantiationException, InvocationTargetException {
+    if (Modifier.isAbstract(constructor.getDeclaringClass().getModifiers())) {
+      throw new InstantiationException(
+          "Cannot instantiate abstract " + constructor.getDeclaringClass().getTypeName());
+    }
+    assureArguments(constructor, constructor.getDeclaringClass(), constructor.getParameterTypes(), arguments, constructor.getParameterTypes());
+    try {
+      Object module = getModule.bindTo(constructor.getDeclaringClass()).invokeWithArguments();
+      String packageName = constructor.getDeclaringClass().getPackage().getName();
+      assureOpen(module, packageName);
+      MethodHandle handle =
+          ((MethodHandles.Lookup)
+                  privateLookupIn.invokeExact(
+                      constructor.getDeclaringClass(), DISPATCHER.getLookup()))
+              .unreflectConstructor(constructor);
+      try {
+        return handle.invokeWithArguments(arguments);
+      } catch (Throwable t) {
+        throw new InvocationTargetException(t);
+      }
+    } catch (InvocationTargetException e) {
+      throw e;
+    } catch (Throwable t) {
+      throw new IllegalStateException(
+          "Could not construct " + constructor + " with arguments " + Arrays.toString(arguments),
+          t);
+    }
+  }
+  ```
+    ]]>
+  </code>
+</response>
+```
+---Response.<init>---
+Response created:
+@Override
+  public Object newInstance(Constructor<?> constructor, Object... arguments)
+      throws InstantiationException, InvocationTargetException {
+    if (Modifier.isAbstract(constructor.getDeclaringClass().getModifiers())) {
+      throw new InstantiationException(
+          "Cannot instantiate abstract " + constructor.getDeclaringClass().getTypeName());
+    }
+    assureArguments(constructor, constructor.getDeclaringClass(), constructor.getParameterTypes(), arguments, constructor.getParameterTypes());
+    try {
+      Object module = getModule.bindTo(constructor.getDeclaringClass()).invokeWithArguments();
+      String packageName = constructor.getDeclaringClass().getPackage().getName();
+      assureOpen(module, packageName);
+      MethodHandle handle =
+          ((MethodHandles.Lookup)
+                  privateLookupIn.invokeExact(
+                      constructor.getDeclaringClass(), DISPATCHER.getLookup()))
+              .unreflectConstructor(constructor);
+      try {
+        return handle.invokeWithArguments(arguments);
+      } catch (Throwable t) {
+        throw new InvocationTargetException(t);
+      }
+    } catch (InvocationTargetException e) {
+      throw e;
+    } catch (Throwable t) {
+      throw new IllegalStateException(
+          "Could not construct " + constructor + " with arguments " + Arrays.toString(arguments),
+          t);
+    }
+  }
