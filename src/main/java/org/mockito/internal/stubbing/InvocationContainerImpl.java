@@ -39,8 +39,9 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
 
   public InvocationContainerImpl(MockCreationSettings mockSettings) {
     this.registeredInvocations = createRegisteredInvocations(mockSettings);
-    this.mockStrictness = mockSettings.isLenient() ? Strictness.LENIENT : null;
+    this.mockStrictness = mockSettings.isLenient() ? Strictness.LENIENT : Strictness.STRICT_STUBS;
     this.doAnswerStyleStubbing = new DoAnswerStyleStubbing();
+    this.invocationForStubbing = new MatchableInvocation(); // Ensure non-null initialization
   }
 
   public void setInvocationForPotentialStubbing(MatchableInvocation invocation) {
