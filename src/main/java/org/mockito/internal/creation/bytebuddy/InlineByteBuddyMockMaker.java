@@ -245,11 +245,6 @@ public class InlineByteBuddyMockMaker
           INITIALIZATION_ERROR);
     }
 
-    // Ensure INSTRUMENTATION is non-null
-    if (INSTRUMENTATION == null) {
-      throw new IllegalArgumentException("INSTRUMENTATION cannot be null");
-    }
-
     ThreadLocal<Class<?>> currentConstruction = new ThreadLocal<>();
     ThreadLocal<Boolean> isSuspended = ThreadLocal.withInitial(() -> false);
     Predicate<Class<?>> isMockConstruction =
