@@ -48,14 +48,7 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
   @Nullable private Object[] constructorArgs;
   protected boolean lenient;
 
-  public CreationSettings() {
-    this.typeToMock = null; // or set appropriate default value
-    this.defaultAnswer = null; // or set appropriate default value
-    this.mockName = null; // or set appropriate default value
-    this.extraInterfaces = new ArrayList<>(); // initialize to empty list
-    this.name = null; // or set appropriate default value
-    this.spiedInstance = null; // or set appropriate default value
-  }
+  public CreationSettings() {}
 
   @SuppressWarnings("unchecked")
   public CreationSettings(CreationSettings copy) {
