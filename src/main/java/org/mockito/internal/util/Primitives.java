@@ -30,7 +30,11 @@ public class Primitives {
     if (clazz.isPrimitive()) {
       return clazz;
     }
-    return (Class<T>) PRIMITIVE_TYPES.get(clazz);
+    Class<T> primitiveType = (Class<T>) PRIMITIVE_TYPES.get(clazz);
+    if (primitiveType != null) {
+      return primitiveType;
+    }
+    throw new IllegalArgumentException("No primitive type mapping found for: " + clazz.getName());
   }
 
   /**
