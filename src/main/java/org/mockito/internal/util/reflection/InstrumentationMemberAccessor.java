@@ -153,11 +153,14 @@ class InstrumentationMemberAccessor implements MemberAccessor {
   }
 
   @Override
-  public Object invoke(Method method, Object target, Object... arguments)
+  public Object invoke(Method method, @Nullable Object target, Object... arguments)
       throws InvocationTargetException {
-    Object nonNullTarget = Modifier.isStatic(method.getModifiers()) ? new Object() : target;
     assureArguments(
-        method, nonNullTarget, method.getDeclaringClass(), arguments, method.getParameterTypes());
+        method,
+        Modifier.isStatic(method.getModifiers()) ? null : target,
+        method.getDeclaringClass(),
+        arguments,
+        method.getParameterTypes());
     try {
       Object module = getModule.bindTo(method.getDeclaringClass()).invokeWithArguments();
       String packageName = method.getDeclaringClass().getPackage().getName();
