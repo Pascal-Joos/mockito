@@ -68,13 +68,7 @@ public class MockUtil {
     }
 
     if (isMock(mock)) {
-      MockHandler<T> handler = mockMaker.getHandler(mock);
-      if (handler != null) {
-        return handler;
-      } else {
-        throw new NotAMockException(
-            "Handler should not be null for a mock instance: " + mock.getClass());
-      }
+      return mockMaker.getHandler(mock);
     } else {
       throw new NotAMockException("Argument should be a mock, but is: " + mock.getClass());
     }
