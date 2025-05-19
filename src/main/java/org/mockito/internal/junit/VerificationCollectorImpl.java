@@ -6,7 +6,6 @@ package org.mockito.internal.junit;
 
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
 
-import javax.annotation.Nullable;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.mockito.exceptions.base.MockitoAssertionError;
@@ -73,14 +72,16 @@ public class VerificationCollectorImpl implements VerificationCollector {
     this.numberOfFailures = 0;
   }
 
-  private void append(@Nullable String message) {
-    this.numberOfFailures++;
-    this.builder
-        .append('\n')
-        .append(this.numberOfFailures)
-        .append(". ")
-        .append(message.trim())
-        .append('\n');
+  private void append(String message) {
+    if (message != null) {
+      this.numberOfFailures++;
+      this.builder
+          .append('\n')
+          .append(this.numberOfFailures)
+          .append(". ")
+          .append(message.trim())
+          .append('\n');
+    }
   }
 
   private class VerificationWrapper implements VerificationMode {
