@@ -218,9 +218,6 @@ class InstrumentationMemberAccessor implements MemberAccessor {
 
   @Override
   public void set(Field field, Object target, Object value) throws IllegalAccessException {
-    if (!Modifier.isStatic(field.getModifiers()) && target == null) {
-      throw new NullPointerException("Target cannot be null for non-static fields");
-    }
     assureArguments(
         field,
         Modifier.isStatic(field.getModifiers()) ? null : target,
@@ -232,13 +229,15 @@ class InstrumentationMemberAccessor implements MemberAccessor {
       Object module = getModule.bindTo(field.getDeclaringClass()).invokeWithArguments();
       String packageName = field.getDeclaringClass().getPackage().getName();
       assureOpen(module, packageName);
+      // Method handles do not allow setting final fields where setAccessible(true)
+      // is required before unreflecting.
       boolean isFinal;
       if (Modifier.isFinal(field.getModifiers())) {
         isFinal = true;
         try {
           DISPATCHER.setAccessible(field, true);
         } catch (Throwable ignored) {
-          illegalAccess = true;
+          illegalAccess = true; // To distinguish from propagated illegal access exception.
           throw new IllegalAccessException("Could not make final field " + field + " accessible");
         }
       } else {
