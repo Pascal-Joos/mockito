@@ -1,0 +1,218 @@
+====================
+Type='PASS_NULLABLE', message='passing @Nullable parameter 'Modifier.isStatic(field.getModifiers()) ? null : target' where @NonNull is required'
+/home/nima/Developer/nullness-benchmarks/mockito/src/main/java/org/mockito/internal/util/reflection/InstrumentationMemberAccessor.java:221
+    assureArguments(
+Log:
+---NullAway.lambda$resolveRemainingErrors$17---
+==============================
+---NullAway.lambda$resolveRemainingErrors$17---
+TOP LEVEL CALL TO FIX ERROR: Type='PASS_NULLABLE', message='passing @Nullable parameter 'Modifier.isStatic(field.getModifiers()) ? null : target' where @NonNull is required'
+/home/nima/Developer/nullness-benchmarks/mockito/src/main/java/org/mockito/internal/util/reflection/InstrumentationMemberAccessor.java:221
+    assureArguments(
+---ChatGPT.ask---
+Asking ChatGPT:
+I want to resolve a warning reported by NullAway.
+The error is of the type of "PASS_NULLABLE" and the full error message is: "passing @Nullable parameter 'Modifier.isStatic(field.getModifiers()) ? null : target' where @NonNull is required".
+The line with the error is: "    assureArguments(".
+
+The error is within "the method: set(java.lang.reflect.Field,java.lang.Object,java.lang.Object)" and the code surrounding the error is:
+```java
+        new Class<?>[0]);
+    try {
+      Object module = getModule.bindTo(field.getDeclaringClass()).invokeWithArguments();
+      String packageName = field.getDeclaringClass().getPackage().getName();
+      assureOpen(module, packageName);
+      MethodHandle handle =
+          ((MethodHandles.Lookup)
+                  privateLookupIn.invokeExact(field.getDeclaringClass(), DISPATCHER.getLookup()))
+              .unreflectGetter(field);
+      if (!Modifier.isStatic(field.getModifiers())) {
+        handle = handle.bindTo(target);
+      }
+      return handle.invokeWithArguments();
+    } catch (Throwable t) {
+      throw new IllegalStateException("Could not read " + field + " on " + target, t);
+    }
+  }
+
+  @Override
+  public void set(Field field, Object target, Object value) throws IllegalAccessException {
+    assureArguments(
+        field,
+        Modifier.isStatic(field.getModifiers()) ? null : target,
+        field.getDeclaringClass(),
+        new Object[] {value},
+        new Class<?>[] {field.getType()});
+    boolean illegalAccess = false;
+    try {
+      Object module = getModule.bindTo(field.getDeclaringClass()).invokeWithArguments();
+      String packageName = field.getDeclaringClass().getPackage().getName();
+      assureOpen(module, packageName);
+      // Method handles do not allow setting final fields where setAccessible(true)
+      // is required before unreflecting.
+      boolean isFinal;
+      if (Modifier.isFinal(field.getModifiers())) {
+        isFinal = true;
+        try {
+          DISPATCHER.setAccessible(field, true);
+        } catch (Throwable ignored) {
+          illegalAccess = true; // To distinguish from propagated illegal access exception.
+          throw new IllegalAccessException("Could not make final field " + field + " accessible");
+        }
+      } else {
+        isFinal = false;
+      }
+      try {
+        MethodHandle handle =
+            ((MethodHandles.Lookup)
+                    privateLookupIn.invokeExact(field.getDeclaringClass(), DISPATCHER.getLookup()))
+                .unreflectSetter(field);
+        if (!Modifier.isStatic(field.getModifiers())) {
+          handle = handle.bindTo(target);
+        }
+        handle.invokeWithArguments(value);
+      } finally {
+        if (isFinal) {
+          DISPATCHER.setAccessible(field, false);
+        }
+      }
+    } catch (Throwable t) {
+      if (illegalAccess) {
+        throw (IllegalAccessException) t;
+      } else {
+        throw new IllegalStateException("Could not read " + field + " on " + target, t);
+      }
+    }
+```
+
+Give me the fixed code snippet (ONLY THE METHOD REWRITE OF "set(java.lang.reflect.Field,java.lang.Object,java.lang.Object)") in XML format in <response> tag like the example below. I will apply the fix to my codebase.
+Do not import any additional libraries or classes or java comments.
+If you can provide the fixed code snippet, provide it in the following format and place the code snippet in the <code> tag within ```java block.
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  Your fixed code snippet here
+  ```
+    ]]>
+  </code>
+</response>
+
+---ChatGPT.sendRequestToOpenAI---
+Sending request to OpenAI...
+---ChatGPT.sendRequestToOpenAI---
+Response received from OpenAI.
+---Response.<init>---
+Creating Response:
+```xml
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public void set(Field field, Object target, Object value) throws IllegalAccessException {
+    if (!Modifier.isStatic(field.getModifiers()) && target == null) {
+      throw new NullPointerException("Target cannot be null for non-static fields");
+    }
+    assureArguments(
+        field,
+        Modifier.isStatic(field.getModifiers()) ? null : target,
+        field.getDeclaringClass(),
+        new Object[] {value},
+        new Class<?>[] {field.getType()});
+    boolean illegalAccess = false;
+    try {
+      Object module = getModule.bindTo(field.getDeclaringClass()).invokeWithArguments();
+      String packageName = field.getDeclaringClass().getPackage().getName();
+      assureOpen(module, packageName);
+      boolean isFinal;
+      if (Modifier.isFinal(field.getModifiers())) {
+        isFinal = true;
+        try {
+          DISPATCHER.setAccessible(field, true);
+        } catch (Throwable ignored) {
+          illegalAccess = true;
+          throw new IllegalAccessException("Could not make final field " + field + " accessible");
+        }
+      } else {
+        isFinal = false;
+      }
+      try {
+        MethodHandle handle =
+            ((MethodHandles.Lookup)
+                    privateLookupIn.invokeExact(field.getDeclaringClass(), DISPATCHER.getLookup()))
+                .unreflectSetter(field);
+        if (!Modifier.isStatic(field.getModifiers())) {
+          handle = handle.bindTo(target);
+        }
+        handle.invokeWithArguments(value);
+      } finally {
+        if (isFinal) {
+          DISPATCHER.setAccessible(field, false);
+        }
+      }
+    } catch (Throwable t) {
+      if (illegalAccess) {
+        throw (IllegalAccessException) t;
+      } else {
+        throw new IllegalStateException("Could not read " + field + " on " + target, t);
+      }
+    }
+  }
+  ```
+  ]]>
+  </code>
+</response>
+```
+---Response.<init>---
+Response created:
+@Override
+  public void set(Field field, Object target, Object value) throws IllegalAccessException {
+    if (!Modifier.isStatic(field.getModifiers()) && target == null) {
+      throw new NullPointerException("Target cannot be null for non-static fields");
+    }
+    assureArguments(
+        field,
+        Modifier.isStatic(field.getModifiers()) ? null : target,
+        field.getDeclaringClass(),
+        new Object[] {value},
+        new Class<?>[] {field.getType()});
+    boolean illegalAccess = false;
+    try {
+      Object module = getModule.bindTo(field.getDeclaringClass()).invokeWithArguments();
+      String packageName = field.getDeclaringClass().getPackage().getName();
+      assureOpen(module, packageName);
+      boolean isFinal;
+      if (Modifier.isFinal(field.getModifiers())) {
+        isFinal = true;
+        try {
+          DISPATCHER.setAccessible(field, true);
+        } catch (Throwable ignored) {
+          illegalAccess = true;
+          throw new IllegalAccessException("Could not make final field " + field + " accessible");
+        }
+      } else {
+        isFinal = false;
+      }
+      try {
+        MethodHandle handle =
+            ((MethodHandles.Lookup)
+                    privateLookupIn.invokeExact(field.getDeclaringClass(), DISPATCHER.getLookup()))
+                .unreflectSetter(field);
+        if (!Modifier.isStatic(field.getModifiers())) {
+          handle = handle.bindTo(target);
+        }
+        handle.invokeWithArguments(value);
+      } finally {
+        if (isFinal) {
+          DISPATCHER.setAccessible(field, false);
+        }
+      }
+    } catch (Throwable t) {
+      if (illegalAccess) {
+        throw (IllegalAccessException) t;
+      } else {
+        throw new IllegalStateException("Could not read " + field + " on " + target, t);
+      }
+    }
+  }
