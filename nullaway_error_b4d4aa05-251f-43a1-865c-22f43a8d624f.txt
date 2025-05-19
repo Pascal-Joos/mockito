@@ -1,4 +1,0 @@
-/home/nima/Developer/git/nullness-benchmarks/mockito/src/main/java/org/mockito/internal/util/Primitives.java:33: error: [NullAway] returning @Nullable expression from method with @NonNull return type
-    return (Class<T>) PRIMITIVE_TYPES.get(clazz);
-    ^
-    (see http://t.uber.com/nullaway )
