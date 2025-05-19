@@ -1,0 +1,326 @@
+====================
+Type='PASS_NULLABLE', message='passing @Nullable parameter 'INSTRUMENTATION' where @NonNull is required'
+/home/nima/Developer/nullness-benchmarks/mockito/src/main/java/org/mockito/internal/creation/bytebuddy/InlineByteBuddyMockMaker.java:294
+            new InlineBytecodeGenerator(
+Log:
+---NullAway.lambda$resolveRemainingErrors$17---
+==============================
+---NullAway.lambda$resolveRemainingErrors$17---
+TOP LEVEL CALL TO FIX ERROR: Type='PASS_NULLABLE', message='passing @Nullable parameter 'INSTRUMENTATION' where @NonNull is required'
+/home/nima/Developer/nullness-benchmarks/mockito/src/main/java/org/mockito/internal/creation/bytebuddy/InlineByteBuddyMockMaker.java:294
+            new InlineBytecodeGenerator(
+---ChatGPT.ask---
+Asking ChatGPT:
+I want to resolve a warning reported by NullAway.
+The error is of the type of "PASS_NULLABLE" and the full error message is: "passing @Nullable parameter 'INSTRUMENTATION' where @NonNull is required".
+The line with the error is: "            new InlineBytecodeGenerator(".
+
+The error is within "the method: InlineByteBuddyMockMaker()" and the code surrounding the error is:
+```java
+  public InlineByteBuddyMockMaker() {
+    if (INITIALIZATION_ERROR != null) {
+      String detail;
+      if (System.getProperty("java.specification.vendor", "").toLowerCase().contains("android")) {
+        detail =
+            "It appears as if you are trying to run this mock maker on Android which does not support the instrumentation API.";
+      } else {
+        try {
+          if (Class.forName("javax.tools.ToolProvider")
+                  .getMethod("getSystemJavaCompiler")
+                  .invoke(null)
+              == null) {
+            detail =
+                "It appears as if you are running on a JRE. Either install a JDK or add JNA to the class path.";
+          } else {
+            detail =
+                "It appears as if your JDK does not supply a working agent attachment mechanism.";
+          }
+        } catch (Throwable ignored) {
+          detail =
+              "It appears as if you are running an incomplete JVM installation that might not support all tooling APIs";
+        }
+      }
+      throw new MockitoInitializationException(
+          join(
+              "Could not initialize inline Byte Buddy mock maker.",
+              "",
+              detail,
+              Platform.describe()),
+          INITIALIZATION_ERROR);
+    }
+
+    ThreadLocal<Class<?>> currentConstruction = new ThreadLocal<>();
+    ThreadLocal<Boolean> isSuspended = ThreadLocal.withInitial(() -> false);
+    Predicate<Class<?>> isMockConstruction =
+        type -> {
+          if (isSuspended.get()) {
+            return false;
+          } else if (mockitoConstruction.get() || currentConstruction.get() != null) {
+            return true;
+          }
+          Map<Class<?>, ?> interceptors = mockedConstruction.get();
+          if (interceptors != null && interceptors.containsKey(type)) {
+            currentConstruction.set(type);
+            return true;
+          } else {
+            return false;
+          }
+        };
+    ConstructionCallback onConstruction =
+        (type, object, arguments, parameterTypeNames) -> {
+          if (mockitoConstruction.get()) {
+            return currentSpied.get();
+          } else if (currentConstruction.get() != type) {
+            return null;
+          }
+          currentConstruction.remove();
+          isSuspended.set(true);
+          try {
+            Map<Class<?>, BiConsumer<Object, MockedConstruction.Context>> interceptors =
+                mockedConstruction.get();
+            if (interceptors != null) {
+              BiConsumer<Object, MockedConstruction.Context> interceptor = interceptors.get(type);
+              if (interceptor != null) {
+                interceptor.accept(
+                    object,
+                    new InlineConstructionMockContext(
+                        arguments, object.getClass(), parameterTypeNames));
+              }
+            }
+          } finally {
+            isSuspended.set(false);
+          }
+          return null;
+        };
+
+    bytecodeGenerator =
+        new TypeCachingBytecodeGenerator(
+            new InlineBytecodeGenerator(
+                INSTRUMENTATION, mocks, mockedStatics, isMockConstruction, onConstruction),
+            true);
+  }
+
+  @Nullable
+  @Override
+  public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
+    return doCreateMock(settings, handler, false);
+  }
+
+  @Override
+  public <T> Optional<T> createSpy(
+      MockCreationSettings<T> settings, MockHandler handler, T object) {
+    if (object == null) {
+      throw new MockitoConfigurationException("Spy instance must not be null");
+    }
+    currentSpied.set(object);
+    try {
+      return Optional.ofNullable(doCreateMock(settings, handler, true));
+```
+
+Give me the fixed code snippet (ONLY THE METHOD REWRITE OF "InlineByteBuddyMockMaker()") in XML format in <response> tag like the example below. I will apply the fix to my codebase.
+Do not import any additional libraries or classes or java comments.
+If you can provide the fixed code snippet, provide it in the following format and place the code snippet in the <code> tag within ```java block.
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  Your fixed code snippet here
+  ```
+    ]]>
+  </code>
+</response>
+
+---ChatGPT.sendRequestToOpenAI---
+Sending request to OpenAI...
+---ChatGPT.sendRequestToOpenAI---
+Response received from OpenAI.
+---Response.<init>---
+Creating Response:
+To resolve the NullAway warning about the parameter `INSTRUMENTATION` being potentially null where a non-null value is required, you should ensure that `INSTRUMENTATION` is initialized with a non-null value before being used. Without additional context about where `INSTRUMENTATION` is coming from or how it should be initialized, I will assume that you need to check and possibly initialize it before its usage. Here's how you can modify the `InlineByteBuddyMockMaker` constructor to ensure `INSTRUMENTATION` is non-null:
+
+```xml
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public InlineByteBuddyMockMaker() {
+    if (INITIALIZATION_ERROR != null) {
+      String detail;
+      if (System.getProperty("java.specification.vendor", "").toLowerCase().contains("android")) {
+        detail =
+            "It appears as if you are trying to run this mock maker on Android which does not support the instrumentation API.";
+      } else {
+        try {
+          if (Class.forName("javax.tools.ToolProvider")
+                  .getMethod("getSystemJavaCompiler")
+                  .invoke(null)
+              == null) {
+            detail =
+                "It appears as if you are running on a JRE. Either install a JDK or add JNA to the class path.";
+          } else {
+            detail =
+                "It appears as if your JDK does not supply a working agent attachment mechanism.";
+          }
+        } catch (Throwable ignored) {
+          detail =
+              "It appears as if you are running an incomplete JVM installation that might not support all tooling APIs";
+        }
+      }
+      throw new MockitoInitializationException(
+          join(
+              "Could not initialize inline Byte Buddy mock maker.",
+              "",
+              detail,
+              Platform.describe()),
+          INITIALIZATION_ERROR);
+    }
+
+    // Ensure INSTRUMENTATION is non-null
+    if (INSTRUMENTATION == null) {
+      throw new IllegalArgumentException("INSTRUMENTATION cannot be null");
+    }
+
+    ThreadLocal<Class<?>> currentConstruction = new ThreadLocal<>();
+    ThreadLocal<Boolean> isSuspended = ThreadLocal.withInitial(() -> false);
+    Predicate<Class<?>> isMockConstruction =
+        type -> {
+          if (isSuspended.get()) {
+            return false;
+          } else if (mockitoConstruction.get() || currentConstruction.get() != null) {
+            return true;
+          }
+          Map<Class<?>, ?> interceptors = mockedConstruction.get();
+          if (interceptors != null && interceptors.containsKey(type)) {
+            currentConstruction.set(type);
+            return true;
+          } else {
+            return false;
+          }
+        };
+    ConstructionCallback onConstruction =
+        (type, object, arguments, parameterTypeNames) -> {
+          if (mockitoConstruction.get()) {
+            return currentSpied.get();
+          } else if (currentConstruction.get() != type) {
+            return null;
+          }
+          currentConstruction.remove();
+          isSuspended.set(true);
+          try {
+            Map<Class<?>, BiConsumer<Object, MockedConstruction.Context>> interceptors =
+                mockedConstruction.get();
+            if (interceptors != null) {
+              BiConsumer<Object, MockedConstruction.Context> interceptor = interceptors.get(type);
+              if (interceptor != null) {
+                interceptor.accept(
+                    object,
+                    new InlineConstructionMockContext(
+                        arguments, object.getClass(), parameterTypeNames));
+              }
+            }
+          } finally {
+            isSuspended.set(false);
+          }
+          return null;
+        };
+
+    bytecodeGenerator =
+        new TypeCachingBytecodeGenerator(
+            new InlineBytecodeGenerator(
+                INSTRUMENTATION, mocks, mockedStatics, isMockConstruction, onConstruction),
+            true);
+  }
+  ```
+    ]]>
+  </code>
+</response>
+```
+---Response.<init>---
+Response created:
+public InlineByteBuddyMockMaker() {
+    if (INITIALIZATION_ERROR != null) {
+      String detail;
+      if (System.getProperty("java.specification.vendor", "").toLowerCase().contains("android")) {
+        detail =
+            "It appears as if you are trying to run this mock maker on Android which does not support the instrumentation API.";
+      } else {
+        try {
+          if (Class.forName("javax.tools.ToolProvider")
+                  .getMethod("getSystemJavaCompiler")
+                  .invoke(null)
+              == null) {
+            detail =
+                "It appears as if you are running on a JRE. Either install a JDK or add JNA to the class path.";
+          } else {
+            detail =
+                "It appears as if your JDK does not supply a working agent attachment mechanism.";
+          }
+        } catch (Throwable ignored) {
+          detail =
+              "It appears as if you are running an incomplete JVM installation that might not support all tooling APIs";
+        }
+      }
+      throw new MockitoInitializationException(
+          join(
+              "Could not initialize inline Byte Buddy mock maker.",
+              "",
+              detail,
+              Platform.describe()),
+          INITIALIZATION_ERROR);
+    }
+
+    // Ensure INSTRUMENTATION is non-null
+    if (INSTRUMENTATION == null) {
+      throw new IllegalArgumentException("INSTRUMENTATION cannot be null");
+    }
+
+    ThreadLocal<Class<?>> currentConstruction = new ThreadLocal<>();
+    ThreadLocal<Boolean> isSuspended = ThreadLocal.withInitial(() -> false);
+    Predicate<Class<?>> isMockConstruction =
+        type -> {
+          if (isSuspended.get()) {
+            return false;
+          } else if (mockitoConstruction.get() || currentConstruction.get() != null) {
+            return true;
+          }
+          Map<Class<?>, ?> interceptors = mockedConstruction.get();
+          if (interceptors != null && interceptors.containsKey(type)) {
+            currentConstruction.set(type);
+            return true;
+          } else {
+            return false;
+          }
+        };
+    ConstructionCallback onConstruction =
+        (type, object, arguments, parameterTypeNames) -> {
+          if (mockitoConstruction.get()) {
+            return currentSpied.get();
+          } else if (currentConstruction.get() != type) {
+            return null;
+          }
+          currentConstruction.remove();
+          isSuspended.set(true);
+          try {
+            Map<Class<?>, BiConsumer<Object, MockedConstruction.Context>> interceptors =
+                mockedConstruction.get();
+            if (interceptors != null) {
+              BiConsumer<Object, MockedConstruction.Context> interceptor = interceptors.get(type);
+              if (interceptor != null) {
+                interceptor.accept(
+                    object,
+                    new InlineConstructionMockContext(
+                        arguments, object.getClass(), parameterTypeNames));
+              }
+            }
+          } finally {
+            isSuspended.set(false);
+          }
+          return null;
+        };
+
+    bytecodeGenerator =
+        new TypeCachingBytecodeGenerator(
+            new InlineBytecodeGenerator(
+                INSTRUMENTATION, mocks, mockedStatics, isMockConstruction, onConstruction),
+            true);
+  }
