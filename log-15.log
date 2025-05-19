@@ -1,0 +1,147 @@
+====================
+Type='PASS_NULLABLE', message='passing @Nullable parameter 'Modifier.isStatic(field.getModifiers()) ? null : target' where @NonNull is required'
+/home/nima/Developer/nullness-benchmarks/mockito/src/main/java/org/mockito/internal/util/reflection/InstrumentationMemberAccessor.java:196
+    assureArguments(
+Log:
+---NullAway.lambda$resolveRemainingErrors$17---
+==============================
+---NullAway.lambda$resolveRemainingErrors$17---
+TOP LEVEL CALL TO FIX ERROR: Type='PASS_NULLABLE', message='passing @Nullable parameter 'Modifier.isStatic(field.getModifiers()) ? null : target' where @NonNull is required'
+/home/nima/Developer/nullness-benchmarks/mockito/src/main/java/org/mockito/internal/util/reflection/InstrumentationMemberAccessor.java:196
+    assureArguments(
+---ChatGPT.ask---
+Asking ChatGPT:
+I want to resolve a warning reported by NullAway.
+The error is of the type of "PASS_NULLABLE" and the full error message is: "passing @Nullable parameter 'Modifier.isStatic(field.getModifiers()) ? null : target' where @NonNull is required".
+The line with the error is: "    assureArguments(".
+
+The error is within "the method: get(java.lang.reflect.Field,java.lang.Object)" and the code surrounding the error is:
+```java
+        return handle.invokeWithArguments(arguments);
+      } catch (Throwable t) {
+        throw new InvocationTargetException(t);
+      }
+    } catch (InvocationTargetException e) {
+      throw e;
+    } catch (Throwable t) {
+      throw new IllegalStateException(
+          "Could not invoke "
+              + method
+              + " on "
+              + target
+              + " with arguments "
+              + Arrays.toString(arguments),
+          t);
+    }
+  }
+
+  @Override
+  public Object get(Field field, Object target) {
+    assureArguments(
+        field,
+        Modifier.isStatic(field.getModifiers()) ? null : target,
+        field.getDeclaringClass(),
+        new Object[0],
+        new Class<?>[0]);
+    try {
+      Object module = getModule.bindTo(field.getDeclaringClass()).invokeWithArguments();
+      String packageName = field.getDeclaringClass().getPackage().getName();
+      assureOpen(module, packageName);
+      MethodHandle handle =
+          ((MethodHandles.Lookup)
+                  privateLookupIn.invokeExact(field.getDeclaringClass(), DISPATCHER.getLookup()))
+              .unreflectGetter(field);
+      if (!Modifier.isStatic(field.getModifiers())) {
+        handle = handle.bindTo(target);
+      }
+      return handle.invokeWithArguments();
+    } catch (Throwable t) {
+      throw new IllegalStateException("Could not read " + field + " on " + target, t);
+    }
+```
+
+Give me the fixed code snippet (ONLY THE METHOD REWRITE OF "get(java.lang.reflect.Field,java.lang.Object)") in XML format in <response> tag like the example below. I will apply the fix to my codebase.
+Do not import any additional libraries or classes or java comments.
+If you can provide the fixed code snippet, provide it in the following format and place the code snippet in the <code> tag within ```java block.
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  Your fixed code snippet here
+  ```
+    ]]>
+  </code>
+</response>
+
+---ChatGPT.sendRequestToOpenAI---
+Sending request to OpenAI...
+---ChatGPT.sendRequestToOpenAI---
+Response received from OpenAI.
+---Response.<init>---
+Creating Response:
+```xml
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public Object get(Field field, Object target) {
+    if (!Modifier.isStatic(field.getModifiers()) && target == null) {
+      throw new IllegalArgumentException("Target cannot be null for non-static fields");
+    }
+    assureArguments(
+        field,
+        Modifier.isStatic(field.getModifiers()) ? null : target,
+        field.getDeclaringClass(),
+        new Object[0],
+        new Class<?>[0]);
+    try {
+      Object module = getModule.bindTo(field.getDeclaringClass()).invokeWithArguments();
+      String packageName = field.getDeclaringClass().getPackage().getName();
+      assureOpen(module, packageName);
+      MethodHandle handle =
+          ((MethodHandles.Lookup)
+                  privateLookupIn.invokeExact(field.getDeclaringClass(), DISPATCHER.getLookup()))
+              .unreflectGetter(field);
+      if (!Modifier.isStatic(field.getModifiers())) {
+        handle = handle.bindTo(target);
+      }
+      return handle.invokeWithArguments();
+    } catch (Throwable t) {
+      throw new IllegalStateException("Could not read " + field + " on " + target, t);
+    }
+  }
+  ```
+    ]]>
+  </code>
+</response>
+```
+---Response.<init>---
+Response created:
+@Override
+  public Object get(Field field, Object target) {
+    if (!Modifier.isStatic(field.getModifiers()) && target == null) {
+      throw new IllegalArgumentException("Target cannot be null for non-static fields");
+    }
+    assureArguments(
+        field,
+        Modifier.isStatic(field.getModifiers()) ? null : target,
+        field.getDeclaringClass(),
+        new Object[0],
+        new Class<?>[0]);
+    try {
+      Object module = getModule.bindTo(field.getDeclaringClass()).invokeWithArguments();
+      String packageName = field.getDeclaringClass().getPackage().getName();
+      assureOpen(module, packageName);
+      MethodHandle handle =
+          ((MethodHandles.Lookup)
+                  privateLookupIn.invokeExact(field.getDeclaringClass(), DISPATCHER.getLookup()))
+              .unreflectGetter(field);
+      if (!Modifier.isStatic(field.getModifiers())) {
+        handle = handle.bindTo(target);
+      }
+      return handle.invokeWithArguments();
+    } catch (Throwable t) {
+      throw new IllegalStateException("Could not read " + field + " on " + target, t);
+    }
+  }
