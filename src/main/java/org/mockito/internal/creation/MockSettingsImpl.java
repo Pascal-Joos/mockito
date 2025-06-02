@@ -71,6 +71,7 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
     return this;
   }
 
+  @Nullable
   @Override
   public MockName getMockName() {
     return mockName;
@@ -108,6 +109,7 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
     return this;
   }
 
+  @Nullable
   @Override
   public Answer<Object> getDefaultAnswer() {
     return defaultAnswer;
@@ -224,6 +226,7 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
     return !getInvocationListeners().isEmpty();
   }
 
+  @Nullable
   @Override
   public Class<T> getTypeToMock() {
     return typeToMock;

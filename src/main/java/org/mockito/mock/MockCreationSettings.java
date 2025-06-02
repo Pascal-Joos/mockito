@@ -21,6 +21,7 @@ import org.mockito.stubbing.Answer;
 public interface MockCreationSettings<T> {
 
   /** Mocked type. An interface or class the mock should implement / extend. */
+  @Nullable
   Class<T> getTypeToMock();
 
   /** the extra interfaces the mock object should implement. */
@@ -30,9 +31,11 @@ public interface MockCreationSettings<T> {
    * the name of this mock, as printed on verification errors; see {@link
    * org.mockito.MockSettings#name}.
    */
+  @Nullable
   MockName getMockName();
 
   /** the default answer for this mock, see {@link org.mockito.MockSettings#defaultAnswer}. */
+  @Nullable
   Answer<?> getDefaultAnswer();
 
   /** the spied instance - needed for spies. */
