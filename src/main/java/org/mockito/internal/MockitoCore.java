@@ -209,8 +209,7 @@ public class MockitoCore {
   }
 
   private void assertNotStubOnlyMock(Object mock) {
-    MockHandler<?> handler = getMockHandler(mock);
-    if (handler.getMockSettings().isStubOnly()) {
+    if (getMockHandler(mock).getMockSettings().isStubOnly()) {
       throw stubPassedToVerify(mock);
     }
   }
