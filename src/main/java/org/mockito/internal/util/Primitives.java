@@ -26,6 +26,7 @@ public class Primitives {
    * @param <T> The type
    * @return The primitive type if relevant, otherwise <code>null</code>
    */
+  @Nullable
   public static <T> Class<T> primitiveTypeOf(Class<T> clazz) {
     if (clazz.isPrimitive()) {
       return clazz;
@@ -45,8 +46,12 @@ public class Primitives {
 
   public static boolean isAssignableFromWrapper(Class<?> valueClass, Class<?> referenceType) {
     if (isPrimitiveOrWrapper(valueClass) && isPrimitiveOrWrapper(referenceType)) {
-      return Primitives.primitiveTypeOf(valueClass)
-          .isAssignableFrom(Primitives.primitiveTypeOf(referenceType));
+      Class<?> valueClassPrimitive = Primitives.primitiveTypeOf(valueClass);
+      Class<?> referenceTypePrimitive = Primitives.primitiveTypeOf(referenceType);
+
+      if (valueClassPrimitive != null && referenceTypePrimitive != null) {
+        return valueClassPrimitive.isAssignableFrom(referenceTypePrimitive);
+      }
     }
     return false;
   }
