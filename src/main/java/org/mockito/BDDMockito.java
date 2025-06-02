@@ -168,47 +168,74 @@ public class BDDMockito extends Mockito {
 
   private static class BDDOngoingStubbingImpl<T> implements BDDMyOngoingStubbing<T> {
 
-    private final OngoingStubbing<T> mockitoOngoingStubbing;
+    @Nullable private final OngoingStubbing<T> mockitoOngoingStubbing;
 
     public BDDOngoingStubbingImpl(@Nullable OngoingStubbing<T> ongoingStubbing) {
       this.mockitoOngoingStubbing = ongoingStubbing;
     }
 
     public BDDMyOngoingStubbing<T> willAnswer(Answer<?> answer) {
+      if (mockitoOngoingStubbing == null) {
+        throw new NullPointerException("mockitoOngoingStubbing is null");
+      }
       return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenAnswer(answer));
     }
 
     public BDDMyOngoingStubbing<T> will(Answer<?> answer) {
+      if (mockitoOngoingStubbing == null) {
+        throw new NullPointerException("mockitoOngoingStubbing is null");
+      }
       return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.then(answer));
     }
 
     public BDDMyOngoingStubbing<T> willReturn(T value) {
+      if (mockitoOngoingStubbing == null) {
+        throw new NullPointerException("mockitoOngoingStubbing is null");
+      }
       return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenReturn(value));
     }
 
     public BDDMyOngoingStubbing<T> willReturn(T value, T... values) {
+      if (mockitoOngoingStubbing == null) {
+        throw new NullPointerException("mockitoOngoingStubbing is null");
+      }
       return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenReturn(value, values));
     }
 
     public BDDMyOngoingStubbing<T> willThrow(Throwable... throwables) {
+      if (mockitoOngoingStubbing == null) {
+        throw new NullPointerException("mockitoOngoingStubbing is null");
+      }
       return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenThrow(throwables));
     }
 
     public BDDMyOngoingStubbing<T> willThrow(Class<? extends Throwable> throwableType) {
+      if (mockitoOngoingStubbing == null) {
+        throw new NullPointerException("mockitoOngoingStubbing cannot be null");
+      }
       return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenThrow(throwableType));
     }
 
     public BDDMyOngoingStubbing<T> willThrow(
         Class<? extends Throwable> throwableType, Class<? extends Throwable>... throwableTypes) {
+      if (mockitoOngoingStubbing == null) {
+        throw new NullPointerException("mockitoOngoingStubbing is null");
+      }
       return new BDDOngoingStubbingImpl<T>(
           mockitoOngoingStubbing.thenThrow(throwableType, throwableTypes));
     }
 
     public BDDMyOngoingStubbing<T> willCallRealMethod() {
+      if (mockitoOngoingStubbing == null) {
+        throw new NullPointerException("mockitoOngoingStubbing is null");
+      }
       return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenCallRealMethod());
     }
 
     public <M> M getMock() {
+      if (mockitoOngoingStubbing == null) {
+        throw new NullPointerException("mockitoOngoingStubbing is null");
+      }
       return (M) mockitoOngoingStubbing.getMock();
     }
   }
