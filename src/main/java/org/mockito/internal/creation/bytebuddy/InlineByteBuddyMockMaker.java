@@ -289,11 +289,6 @@ public class InlineByteBuddyMockMaker
           return null;
         };
 
-    // Check if INSTRUMENTATION is not null before using it
-    if (INSTRUMENTATION == null) {
-      throw new IllegalStateException("INSTRUMENTATION is null and cannot be used here.");
-    }
-
     bytecodeGenerator =
         new TypeCachingBytecodeGenerator(
             new InlineBytecodeGenerator(
@@ -479,9 +474,6 @@ public class InlineByteBuddyMockMaker
     return new TypeMockability() {
       @Override
       public boolean mockable() {
-        if (INSTRUMENTATION == null) {
-          return false;
-        }
         return INSTRUMENTATION.isModifiableClass(type) && !EXCLUDES.contains(type);
       }
 
