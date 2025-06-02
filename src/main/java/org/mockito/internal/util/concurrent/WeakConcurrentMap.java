@@ -344,7 +344,7 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
 
     private final K key;
 
-    final Map.Entry<WeakKey<K>, V> entry;
+    @Nullable final Map.Entry<WeakKey<K>, V> entry;
 
     private SimpleEntry(K key, @Nullable Map.Entry<WeakKey<K>, V> entry) {
       this.key = key;
@@ -358,12 +358,16 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
 
     @Override
     public V getValue() {
-      return entry.getValue();
+      if (entry != null) {
+        return entry.getValue();
+      }
+      throw new NullPointerException("Entry is null");
     }
 
     @Override
     public V setValue(V value) {
       if (value == null) throw new NullPointerException();
+      if (entry == null) throw new NullPointerException("Entry is null");
       return entry.setValue(value);
     }
   }
