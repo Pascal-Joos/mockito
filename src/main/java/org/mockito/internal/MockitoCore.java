@@ -253,9 +253,7 @@ public class MockitoCore {
   public Invocation getLastInvocation() {
     OngoingStubbingImpl ongoingStubbing =
         ((OngoingStubbingImpl) mockingProgress().pullOngoingStubbing());
-    List<Invocation> allInvocations =
-        NullabilityUtil.castToNonnull(ongoingStubbing, "exception prevents null")
-            .getRegisteredInvocations();
+    List<Invocation> allInvocations = ongoingStubbing.getRegisteredInvocations();
     return allInvocations.get(allInvocations.size() - 1);
   }
 
