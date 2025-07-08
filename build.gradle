@@ -22,7 +22,9 @@ plugins {
     id 'eclipse'
     id 'com.github.ben-manes.versions' version '0.38.0'
     id 'biz.aQute.bnd.builder' version '5.3.0'
+    id "net.ltgt.errorprone" version "3.0.1" apply false
     id 'ru.vyarus.animalsniffer' version '1.5.2'
+
 }
 
 apply plugin: "pl.allegro.tech.build.axion-release"
@@ -85,6 +87,20 @@ allprojects { proj ->
         reproducibleFileOrder = true
     }
 
+    if (proj.name == 'mockito') {
+        apply plugin: "net.ltgt.errorprone"
+        dependencies{
+            annotationProcessor "com.uber.nullaway:nullaway:0.12.4-SNAPSHOT"
+            annotationProcessor "edu.ucr.cs.riple.annotator:annotator-scanner:1.3.16-SNAPSHOT"
+            implementation "edu.ucr.cs.riple.annotator:annotation-util:1.3.16-SNAPSHOT"
+            compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+            errorprone "com.google.errorprone:error_prone_core:2.35.1"
+            errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
+            compileOnly "com.uber.nullaway:nullaway-annotations:0.12.4-SNAPSHOT"
+        }
+        
+    }
+
     apply plugin: 'checkstyle'
     checkstyle {
        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
@@ -96,18 +112,18 @@ configurations {
 }
 
 dependencies {
-    compile libraries.bytebuddy, libraries.bytebuddyagent
+    implementation libraries.bytebuddy, libraries.bytebuddyagent
 
     compileOnly libraries.junit4, libraries.hamcrest, libraries.opentest4j
-    compile libraries.objenesis
+    implementation libraries.objenesis
 
-    testCompile libraries.assertj
+    testImplementation libraries.assertj
 
     //putting 'provided' dependencies on test compile and runtime classpath
-    testCompileOnly configurations.compileOnly
-    testRuntime configurations.compileOnly
+    testImplementation configurations.compileOnly
+    testImplementation configurations.compileOnly
 
-    testUtil sourceSets.test.output
+    testImplementation sourceSets.test.output
 
     signature 'org.codehaus.mojo.signature:java18:1.0@signature'
     signature 'net.sf.androidscents.signature:android-api-level-24:7.0_r2@signature'
