@@ -157,7 +157,12 @@ subprojects {
     eclipse {
         project {
             name = rootProject.name + '-' + project.name
+            println(name)
         }
+    }
+
+    tasks.withType(Test).configureEach {
+        ignoreFailures = false
     }
 
     afterEvaluate {

@@ -5,7 +5,7 @@ allprojects {
     license {
         header = licenseHeaderFile
         strictCheck = true
-        ignoreFailures = true
+        ignoreFailures = false
         skipExistingHeaders = true
         mapping {
             java = 'SLASHSTAR_STYLE'

@@ -57,7 +57,7 @@ test {
                 logger.info "[retryTest] all failed tests:\n  " + failedTests.join("\n  ")
                 retryTest.enabled = true
                 retryTest.filter.includePatterns = failedTests.toArray(new String[failedTests.size()])
-                ignoreFailures = true
+                ignoreFailures = false
             } else {
                 logger.info "\n[retryTest] There are no failed tests, '$reportPath' file was deleted (if existed)."
             }
