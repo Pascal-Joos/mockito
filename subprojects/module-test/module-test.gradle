@@ -18,5 +18,5 @@ dependencies {
 
 tasks.javadoc.enabled = false
 
-sourceCompatibility = 1.9
-targetCompatibility = 1.9
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
