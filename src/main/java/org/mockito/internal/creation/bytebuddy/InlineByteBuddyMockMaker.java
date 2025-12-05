@@ -245,6 +245,8 @@ public class InlineByteBuddyMockMaker
           INITIALIZATION_ERROR);
     }
 
+    Instrumentation instrumentation = java.util.Objects.requireNonNull(INSTRUMENTATION);
+
     ThreadLocal<Class<?>> currentConstruction = new ThreadLocal<>();
     ThreadLocal<Boolean> isSuspended = ThreadLocal.withInitial(() -> false);
     Predicate<Class<?>> isMockConstruction =
@@ -292,7 +294,7 @@ public class InlineByteBuddyMockMaker
     bytecodeGenerator =
         new TypeCachingBytecodeGenerator(
             new InlineBytecodeGenerator(
-                INSTRUMENTATION, mocks, mockedStatics, isMockConstruction, onConstruction),
+                instrumentation, mocks, mockedStatics, isMockConstruction, onConstruction),
             true);
   }
 
