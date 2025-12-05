@@ -52,11 +52,9 @@ public abstract class MockMethodDispatcher {
       Object object,
       Object[] arguments,
       String[] parameterTypeNames) {
-    MockMethodDispatcher dispatcher = DISPATCHERS.get(identifier);
-    if (dispatcher == null) {
-      return null;
-    }
-    return dispatcher.handleConstruction(type, object, arguments, parameterTypeNames);
+    return DISPATCHERS
+        .get(identifier)
+        .handleConstruction(type, object, arguments, parameterTypeNames);
   }
 
   @Nullable
