@@ -85,11 +85,9 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
 
   @Nullable
   Object answerTo(Invocation invocation) throws Throwable {
-    StubbedInvocationMatcher matcher = findAnswerFor(invocation);
-    return matcher != null ? matcher.answer(invocation) : null;
+    return findAnswerFor(invocation).answer(invocation);
   }
 
-  @Nullable
   public StubbedInvocationMatcher findAnswerFor(Invocation invocation) {
     synchronized (stubbed) {
       for (StubbedInvocationMatcher s : stubbed) {
