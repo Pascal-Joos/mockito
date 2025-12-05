@@ -37,10 +37,48 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
 
   private MatchableInvocation invocationForStubbing;
 
+  // Dummy initial value to satisfy NullAway; real value is set via setter methods before use.
+  private static final MatchableInvocation UNINITIALIZED_INVOCATION_FOR_STUBBING =
+      new MatchableInvocation() {
+
+        public Invocation getInvocation() {
+          throw new IllegalStateException("invocationForStubbing not initialized");
+        }
+
+        public boolean matches(Invocation invocation) {
+          throw new IllegalStateException("invocationForStubbing not initialized");
+        }
+
+        public void captureArgumentsFrom(Invocation invocation) {
+          throw new IllegalStateException("invocationForStubbing not initialized");
+        }
+
+        public boolean hasSameMethod(Invocation invocation) {
+          throw new IllegalStateException("invocationForStubbing not initialized");
+        }
+
+        public boolean hasSimilarMethod(Invocation invocation) {
+          throw new IllegalStateException("invocationForStubbing not initialized");
+        }
+
+        public java.util.List<org.mockito.ArgumentMatcher> getMatchers() {
+          throw new IllegalStateException("invocationForStubbing not initialized");
+        }
+
+        public org.mockito.invocation.Location getLocation() {
+          throw new IllegalStateException("invocationForStubbing not initialized");
+        }
+
+        public String toString() {
+          return "UNINITIALIZED_INVOCATION_FOR_STUBBING";
+        }
+      };
+
   public InvocationContainerImpl(MockCreationSettings mockSettings) {
     this.registeredInvocations = createRegisteredInvocations(mockSettings);
     this.mockStrictness = mockSettings.isLenient() ? Strictness.LENIENT : null;
     this.doAnswerStyleStubbing = new DoAnswerStyleStubbing();
+    this.invocationForStubbing = UNINITIALIZED_INVOCATION_FOR_STUBBING;
   }
 
   public void setInvocationForPotentialStubbing(MatchableInvocation invocation) {
