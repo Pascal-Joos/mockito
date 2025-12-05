@@ -26,8 +26,6 @@ public class DefaultTestFinishedEvent implements TestFinishedEvent {
 
   @Override
   public String getTestName() {
-    String className =
-        (testClassInstance != null) ? testClassInstance.getClass().getSimpleName() : "UnknownTest";
-    return className + "." + testMethodName;
+    return testClassInstance.getClass().getSimpleName() + "." + testMethodName;
   }
 }
