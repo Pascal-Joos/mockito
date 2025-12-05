@@ -74,7 +74,23 @@ class InstrumentationMemberAccessor implements MemberAccessor {
       throwable = null;
     } catch (Throwable t) {
       instrumentation = null;
-      dispatcher = null;
+      dispatcher =
+          new Dispatcher() {
+            @Override
+            public MethodHandles.Lookup getLookup() {
+              throw new IllegalStateException("Dispatcher not initialized", t);
+            }
+
+            @Override
+            public Object getModule(Class<?> type) {
+              throw new IllegalStateException("Dispatcher not initialized", t);
+            }
+
+            @Override
+            public void setAccessible(AccessibleObject accessibleObject, boolean accessible) {
+              throw new IllegalStateException("Dispatcher not initialized", t);
+            }
+          };
       throwable = t;
     }
     INSTRUMENTATION = instrumentation;
@@ -210,126 +226,129 @@ class InstrumentationMemberAccessor implements MemberAccessor {
       if (!Modifier.isStatic(field.getModifiers())) {
         handle = handle.bindTo(target);
       }
-      return handle.invokeWithArguments();
+      try {
+        return handle.invokeWithArguments();
+      } catch (Throwable t) {
+        throw new IllegalStateException("Could not read " + field + " from " + target, t);
+      }
     } catch (Throwable t) {
-      throw new IllegalStateException("Could not read " + field + " on " + target, t);
+      throw new IllegalStateException("Could not read " + field + " from " + target, t);
     }
   }
 
   @Override
-  public void set(Field field, Object target, Object value) throws IllegalAccessException {
+  public void set(Field field, Object target, Object value) {
     assureArguments(
         field,
         Modifier.isStatic(field.getModifiers()) ? null : target,
         field.getDeclaringClass(),
         new Object[] {value},
         new Class<?>[] {field.getType()});
-    boolean illegalAccess = false;
     try {
       Object module = getModule.bindTo(field.getDeclaringClass()).invokeWithArguments();
       String packageName = field.getDeclaringClass().getPackage().getName();
       assureOpen(module, packageName);
-      // Method handles do not allow setting final fields where setAccessible(true)
-      // is required before unreflecting.
-      boolean isFinal;
-      if (Modifier.isFinal(field.getModifiers())) {
-        isFinal = true;
-        try {
-          DISPATCHER.setAccessible(field, true);
-        } catch (Throwable ignored) {
-          illegalAccess = true; // To distinguish from propagated illegal access exception.
-          throw new IllegalAccessException("Could not make final field " + field + " accessible");
-        }
-      } else {
-        isFinal = false;
+      MethodHandle handle =
+          ((MethodHandles.Lookup)
+                  privateLookupIn.invokeExact(field.getDeclaringClass(), DISPATCHER.getLookup()))
+              .unreflectSetter(field);
+      if (!Modifier.isStatic(field.getModifiers())) {
+        handle = handle.bindTo(target);
       }
       try {
-        MethodHandle handle =
-            ((MethodHandles.Lookup)
-                    privateLookupIn.invokeExact(field.getDeclaringClass(), DISPATCHER.getLookup()))
-                .unreflectSetter(field);
-        if (!Modifier.isStatic(field.getModifiers())) {
-          handle = handle.bindTo(target);
-        }
         handle.invokeWithArguments(value);
-      } finally {
-        if (isFinal) {
-          DISPATCHER.setAccessible(field, false);
-        }
+      } catch (Throwable t) {
+        throw new IllegalStateException(
+            "Could not write " + field + " to " + target + " with value " + value, t);
       }
     } catch (Throwable t) {
-      if (illegalAccess) {
-        throw (IllegalAccessException) t;
-      } else {
-        throw new IllegalStateException("Could not read " + field + " on " + target, t);
+      throw new IllegalStateException(
+          "Could not write " + field + " to " + target + " with value " + value, t);
+    }
+  }
+
+  private void assureArguments(
+      Member member,
+      @Nullable Object target,
+      @Nullable Class<?> type,
+      Object[] arguments,
+      Class<?>[] parameterTypes) {
+    if (Modifier.isStatic(member.getModifiers())) {
+      if (target != null) {
+        throw new IllegalArgumentException("Static member requires no target instance");
+      }
+    } else if (target == null) {
+      throw new IllegalArgumentException("Non-static member requires a target instance");
+    } else if (type != null && !type.isInstance(target)) {
+      throw new IllegalArgumentException(
+          "Target instance must be of type " + type.getTypeName() + " but was " + target);
+    }
+    if (arguments.length != parameterTypes.length) {
+      throw new IllegalArgumentException(
+          "Expected "
+              + parameterTypes.length
+              + " arguments for "
+              + member
+              + " but got "
+              + arguments.length);
+    }
+    for (int index = 0; index < arguments.length; index++) {
+      Object argument = arguments[index];
+      Class<?> parameterType = parameterTypes[index];
+      if (parameterType.isPrimitive()) {
+        if (argument == null) {
+          throw new IllegalArgumentException(
+              "Argument " + index + " for " + member + " must not be null");
+        }
+        Class<?> wrapper = WRAPPERS.get(parameterType);
+        if (wrapper == null || !wrapper.isInstance(argument)) {
+          throw new IllegalArgumentException(
+              "Argument "
+                  + index
+                  + " for "
+                  + member
+                  + " must be of type "
+                  + parameterType.getTypeName()
+                  + " but was "
+                  + argument.getClass().getTypeName());
+        }
+      } else if (argument != null && !parameterType.isInstance(argument)) {
+        throw new IllegalArgumentException(
+            "Argument "
+                + index
+                + " for "
+                + member
+                + " must be of type "
+                + parameterType.getTypeName()
+                + " but was "
+                + argument.getClass().getTypeName());
       }
     }
   }
 
   private void assureOpen(Object module, String packageName) throws Throwable {
-    if (!(Boolean) isOpen.invokeWithArguments(module, packageName, DISPATCHER.getModule())) {
+    if (!(Boolean)
+        isOpen
+            .bindTo(module)
+            .invokeWithArguments(packageName, InstrumentationMemberAccessor.class.getModule())) {
       redefineModule
           .bindTo(INSTRUMENTATION)
           .invokeWithArguments(
               module,
               Collections.emptySet(),
               Collections.emptyMap(),
-              Collections.singletonMap(packageName, Collections.singleton(DISPATCHER.getModule())),
-              Collections.emptySet(),
+              Collections.emptyMap(),
+              Collections.singleton(InstrumentationMemberAccessor.class.getModule()),
               Collections.emptyMap());
     }
   }
 
-  private static void assureArguments(
-      AccessibleObject target, Object owner, Class<?> type, Object[] values, Class<?>[] types) {
-    if (owner != null) {
-      if (!type.isAssignableFrom(owner.getClass())) {
-        throw new IllegalArgumentException("Cannot access " + target + " on " + owner);
-      }
-    }
-    if (types.length != values.length) {
-      throw new IllegalArgumentException(
-          "Incorrect number of arguments for "
-              + target
-              + ": expected "
-              + types.length
-              + " but recevied "
-              + values.length);
-    }
-    for (int index = 0; index < values.length; index++) {
-      if (values[index] == null) {
-        if (types[index].isPrimitive()) {
-          throw new IllegalArgumentException(
-              "Cannot assign null to primitive type "
-                  + types[index].getTypeName()
-                  + " for "
-                  + index
-                  + " parameter of "
-                  + target);
-        }
-      } else {
-        Class<?> resolved = WRAPPERS.getOrDefault(types[index], types[index]);
-        if (!resolved.isAssignableFrom(values[index].getClass())) {
-          throw new IllegalArgumentException(
-              "Cannot assign value of type "
-                  + values[index].getClass()
-                  + " to "
-                  + resolved
-                  + " for "
-                  + index
-                  + " parameter of "
-                  + target);
-        }
-      }
-    }
-  }
+  private abstract static class Dispatcher {
 
-  public interface Dispatcher {
+    public abstract MethodHandles.Lookup getLookup();
 
-    MethodHandles.Lookup getLookup();
+    public abstract Object getModule(Class<?> type);
 
-    Object getModule();
-
-    void setAccessible(AccessibleObject target, boolean value);
+    public abstract void setAccessible(AccessibleObject accessibleObject, boolean accessible);
   }
 }
