@@ -24,7 +24,7 @@ import org.mockito.stubbing.Answer;
 public class ForwardsInvocations implements Answer<Object>, Serializable {
   private static final long serialVersionUID = -8343690268123254910L;
 
-  private final Object delegatedObject;
+  private Object delegatedObject = null;
 
   public ForwardsInvocations(Object delegatedObject) {
     this.delegatedObject = delegatedObject;
