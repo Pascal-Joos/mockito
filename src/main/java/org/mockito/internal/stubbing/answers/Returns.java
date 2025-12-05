@@ -52,9 +52,6 @@ public class Returns implements Answer<Object>, ValidableAnswer, Serializable {
   }
 
   private Class<?> returnType() {
-    if (value == null) {
-      throw new IllegalStateException("Cannot determine return type when value is null");
-    }
     return value.getClass();
   }
 
