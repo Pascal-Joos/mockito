@@ -74,20 +74,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
       throwable = null;
     } catch (Throwable t) {
       instrumentation = null;
-      dispatcher =
-          new Dispatcher() {
-            public MethodHandles.Lookup getLookup() {
-              return MethodHandles.lookup();
-            }
-
-            public Object getModule() {
-              return new Object();
-            }
-
-            public void setAccessible(AccessibleObject target, boolean value) {
-              target.setAccessible(value);
-            }
-          };
+      dispatcher = null;
       throwable = t;
     }
     INSTRUMENTATION = instrumentation;
