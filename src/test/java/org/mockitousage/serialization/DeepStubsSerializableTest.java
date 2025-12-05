@@ -75,7 +75,9 @@ public class DeepStubsSerializableTest {
       fail(
           "Expected an exception to be thrown as deep stubs and serialization does not play well together");
     } catch (NullPointerException e) {
-      assertThat(e).hasMessage("Cannot invoke \"java.util.List.get(int)\" because the return value of \"java.util.Iterator.next()\" is null");
+      assertThat(e)
+          .hasMessage(
+              "Cannot invoke \"java.util.List.get(int)\" because the return value of \"java.util.Iterator.next()\" is null");
     }
   }
 
