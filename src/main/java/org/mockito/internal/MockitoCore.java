@@ -251,8 +251,11 @@ public class MockitoCore {
    * @return last invocation
    */
   public Invocation getLastInvocation() {
-    OngoingStubbingImpl ongoingStubbing =
-        ((OngoingStubbingImpl) mockingProgress().pullOngoingStubbing());
+    OngoingStubbing<?> stubbing = mockingProgress().pullOngoingStubbing();
+    if (!(stubbing instanceof OngoingStubbingImpl)) {
+      throw new IllegalStateException("No ongoing stubbing available");
+    }
+    OngoingStubbingImpl ongoingStubbing = (OngoingStubbingImpl) stubbing;
     List<Invocation> allInvocations = ongoingStubbing.getRegisteredInvocations();
     return allInvocations.get(allInvocations.size() - 1);
   }
