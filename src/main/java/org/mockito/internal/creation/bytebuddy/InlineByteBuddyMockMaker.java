@@ -296,11 +296,10 @@ public class InlineByteBuddyMockMaker
             true);
   }
 
+  @Nullable
   @Override
   public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
-    T instance = doCreateMock(settings, handler, false);
-    return java.util.Objects.requireNonNull(
-        instance, "InlineByteBuddyMockMaker.createMock must not return null");
+    return doCreateMock(settings, handler, false);
   }
 
   @Override
