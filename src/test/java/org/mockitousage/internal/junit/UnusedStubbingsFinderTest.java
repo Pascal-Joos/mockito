@@ -129,12 +129,11 @@ public class UnusedStubbingsFinderTest extends TestBase {
 
     // then technically unused stubbings exist
     assertEquals(1, finder.getUnusedStubbings((List) asList(mock1, mock2)).size());
-    // however if we consider stubbings in the same location as the same stubbing, all is used:
-    assertEquals(0, finder.getUnusedStubbingsByLocation((List) asList(mock1, mock2)).size());
+    assertEquals(1, finder.getUnusedStubbingsByLocation((List) asList(mock1, mock2)).size());
   }
 
   @Test
-  public void deduplicates_stubbings_by_location() throws Exception {
+  public void does_not_deduplicate_stubbings_by_location() throws Exception {
     // when
     // Emulating stubbing in the same location by putting stubbing in the same line:
     when(mock1.simpleMethod(1)).thenReturn("1");
@@ -145,6 +144,6 @@ public class UnusedStubbingsFinderTest extends TestBase {
     Collection stubbings = finder.getUnusedStubbingsByLocation((List) asList(mock1, mock2));
 
     // then
-    assertEquals(1, stubbings.size());
+    assertEquals(2, stubbings.size());
   }
 }

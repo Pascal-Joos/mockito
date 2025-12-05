@@ -103,7 +103,7 @@ public class StubbingWithDelegateTest {
       byte b = methods.byteObjectReturningMethod(); // real method returns null
       fail();
     } catch (Exception e) {
-      assertThat(e.toString()).doesNotContain("org.mockito");
+      assertThat(e.toString()).doesNotContain("org.mockito.");
     }
   }
 

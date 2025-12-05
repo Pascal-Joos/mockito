@@ -103,7 +103,7 @@ public class InvalidUseOfMatchersTest {
     assertThat(run.getFailures()).hasSize(2);
     assertThat(run.getFailures().get(0).getException())
         .isInstanceOf(NullPointerException.class)
-        .hasMessage(null);
+        .hasMessage("Cannot invoke \"java.lang.Integer.intValue()\" because the return value of \"org.mockito.ArgumentMatchers.any()\" is null");
     assertThat(run.getFailures().get(1).getException())
         .isInstanceOf(InvalidUseOfMatchersException.class)
         .hasMessageContaining("primitive alternatives");
