@@ -768,7 +768,7 @@ public class Reporter {
                 + "'.",
             "You haven't provided the instance at field declaration so I tried to construct the instance.",
             "However the constructor or the initialization block threw an exception : "
-                + details.getMessage(),
+                + (details == null ? "<no details>" : details.getMessage()),
             ""),
         details);
   }
