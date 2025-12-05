@@ -281,11 +281,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
   }
 
   private static void assureArguments(
-      AccessibleObject target,
-      @Nullable Object owner,
-      Class<?> type,
-      Object[] values,
-      Class<?>[] types) {
+      AccessibleObject target, Object owner, Class<?> type, Object[] values, Class<?>[] types) {
     if (owner != null) {
       if (!type.isAssignableFrom(owner.getClass())) {
         throw new IllegalArgumentException("Cannot access " + target + " on " + owner);
