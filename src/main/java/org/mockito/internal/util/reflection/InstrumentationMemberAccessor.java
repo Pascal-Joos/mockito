@@ -220,7 +220,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
   public void set(Field field, Object target, Object value) throws IllegalAccessException {
     assureArguments(
         field,
-        Modifier.isStatic(field.getModifiers()) ? field.getDeclaringClass() : target,
+        Modifier.isStatic(field.getModifiers()) ? null : target,
         field.getDeclaringClass(),
         new Object[] {value},
         new Class<?>[] {field.getType()});
