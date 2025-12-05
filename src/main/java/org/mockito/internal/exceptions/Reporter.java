@@ -463,7 +463,7 @@ public class Reporter {
   }
 
   public static MockitoAssertionError noMoreInteractionsWanted(
-      @Nullable Invocation undesired, List<VerificationAwareInvocation> invocations) {
+      Invocation undesired, List<VerificationAwareInvocation> invocations) {
     ScenarioPrinter scenarioPrinter = new ScenarioPrinter();
     String scenario = scenarioPrinter.print(invocations);
 
