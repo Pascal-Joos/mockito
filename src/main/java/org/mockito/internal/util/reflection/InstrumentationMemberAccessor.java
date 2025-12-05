@@ -195,7 +195,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
   public Object get(Field field, Object target) {
     assureArguments(
         field,
-        Modifier.isStatic(field.getModifiers()) ? field.getDeclaringClass() : target,
+        Modifier.isStatic(field.getModifiers()) ? null : target,
         field.getDeclaringClass(),
         new Object[0],
         new Class<?>[0]);
