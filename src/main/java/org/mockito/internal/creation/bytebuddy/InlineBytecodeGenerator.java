@@ -266,7 +266,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
   }
 
   private void assureCanReadMockito(Set<Class<?>> types) {
-    if (redefineModule == null || getModule == null || canRead == null) {
+    if (redefineModule == null) {
       return;
     }
     Set<Object> modules = new HashSet<Object>();
