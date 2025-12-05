@@ -22,6 +22,9 @@ public class VerificationDataImpl implements VerificationData {
 
   public VerificationDataImpl(
       InvocationContainerImpl invocations, @Nullable InvocationMatcher wanted) {
+    if (wanted == null) {
+      throw new IllegalArgumentException("wanted must not be null");
+    }
     this.invocations = invocations;
     this.wanted = wanted;
     this.assertWantedIsVerifiable();
