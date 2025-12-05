@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.annotation.Nullable;
+import org.mockito.internal.configuration.GlobalConfiguration;
+import org.mockito.internal.util.MockNameImpl;
 import org.mockito.listeners.InvocationListener;
 import org.mockito.listeners.StubbingLookupListener;
 import org.mockito.listeners.VerificationStartedListener;
@@ -48,7 +50,12 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
   @Nullable private Object[] constructorArgs;
   protected boolean lenient;
 
-  public CreationSettings() {}
+  @SuppressWarnings("unchecked")
+  public CreationSettings() {
+    this.typeToMock = (Class<T>) Object.class;
+    this.defaultAnswer = new GlobalConfiguration().getDefaultAnswer();
+    this.mockName = new MockNameImpl("mock");
+  }
 
   @SuppressWarnings("unchecked")
   public CreationSettings(CreationSettings copy) {
