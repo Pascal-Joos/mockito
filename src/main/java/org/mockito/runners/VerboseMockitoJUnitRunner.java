@@ -54,11 +54,7 @@ public class VerboseMockitoJUnitRunner extends Runner implements Filterable {
           @Override
           @SuppressWarnings("deprecation")
           public void testFailure(final Failure failure) throws Exception {
-            WarningsCollector localCollector = warningsCollector;
-            if (localCollector == null) {
-              return;
-            }
-            String warnings = localCollector.getWarnings();
+            String warnings = warningsCollector.getWarnings();
             new JUnitFailureHacker().appendWarnings(failure, warnings);
           }
         };
