@@ -74,12 +74,13 @@ public class VerificationCollectorImpl implements VerificationCollector {
   }
 
   private void append(@Nullable String message) {
+    String nonNullMessage = (message == null) ? "" : message;
     this.numberOfFailures++;
     this.builder
         .append('\n')
         .append(this.numberOfFailures)
         .append(". ")
-        .append(message.trim())
+        .append(nonNullMessage.trim())
         .append('\n');
   }
 
