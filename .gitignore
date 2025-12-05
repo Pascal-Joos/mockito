@@ -21,6 +21,7 @@ build-cache
 target
 out
 .gradle
+.gradle-cache
 classes
 .gradletasknamecache
 
@@ -28,3 +29,4 @@ classes
 checksums/
 
 annotator-out/
+*.log
