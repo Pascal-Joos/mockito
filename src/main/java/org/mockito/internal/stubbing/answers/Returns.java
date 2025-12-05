@@ -8,6 +8,7 @@ import static org.mockito.internal.exceptions.Reporter.cannotStubVoidMethodWithA
 import static org.mockito.internal.exceptions.Reporter.wrongTypeOfReturnValue;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.annotation.Nullable;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -48,7 +49,8 @@ public class Returns implements Answer<Object>, ValidableAnswer, Serializable {
   }
 
   private String printReturnType() {
-    return value.getClass().getSimpleName();
+    Object nonNullValue = Objects.requireNonNull(value);
+    return nonNullValue.getClass().getSimpleName();
   }
 
   private Class<?> returnType() {
