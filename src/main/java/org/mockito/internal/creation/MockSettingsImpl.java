@@ -156,6 +156,9 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
   @Nullable
   @Override
   public Object[] getConstructorArgs() {
+    if (constructorArgs == null) {
+      return null;
+    }
     if (outerClassInstance == null) {
       return constructorArgs;
     }
