@@ -99,9 +99,6 @@ class InstrumentationMemberAccessor implements MemberAccessor {
     INSTRUMENTATION = instrumentation;
     DISPATCHER = dispatcher;
     INITIALIZATION_ERROR = throwable;
-    INSTRUMENTATION = instrumentation;
-    DISPATCHER = dispatcher;
-    INITIALIZATION_ERROR = throwable;
   }
 
   private final MethodHandle getModule, isOpen, redefineModule, privateLookupIn;
