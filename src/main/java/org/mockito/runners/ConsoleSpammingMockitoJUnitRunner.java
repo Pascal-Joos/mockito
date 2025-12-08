@@ -53,7 +53,7 @@ public class ConsoleSpammingMockitoJUnitRunner extends Runner implements Filtera
 
           @Override
           public void testFailure(Failure failure) throws Exception {
-            logger.log(warningsCollector.getWarnings());
+            if (warningsCollector != null) logger.log(warningsCollector.getWarnings());
           }
         };
 
