@@ -74,9 +74,31 @@ class InstrumentationMemberAccessor implements MemberAccessor {
       throwable = null;
     } catch (Throwable t) {
       instrumentation = null;
-      dispatcher = null;
+      dispatcher =
+          new Dispatcher() {
+            @Override
+            public MethodHandles.Lookup getLookup() {
+              throw new MockitoInitializationException(
+                  "Dispatcher unavailable due to initialization failure", t);
+            }
+
+            @Override
+            public Object getModule() {
+              throw new MockitoInitializationException(
+                  "Dispatcher unavailable due to initialization failure", t);
+            }
+
+            @Override
+            public void setAccessible(AccessibleObject target, boolean value) {
+              throw new MockitoInitializationException(
+                  "Dispatcher unavailable due to initialization failure", t);
+            }
+          };
       throwable = t;
     }
+    INSTRUMENTATION = instrumentation;
+    DISPATCHER = dispatcher;
+    INITIALIZATION_ERROR = throwable;
     INSTRUMENTATION = instrumentation;
     DISPATCHER = dispatcher;
     INITIALIZATION_ERROR = throwable;
