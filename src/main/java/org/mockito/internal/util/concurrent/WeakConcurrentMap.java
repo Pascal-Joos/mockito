@@ -10,6 +10,7 @@ import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -328,7 +329,7 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
         throw new NoSuchElementException();
       }
       try {
-        return new SimpleEntry(nextKey, nextEntry);
+        return new SimpleEntry(nextKey, Objects.requireNonNull(nextEntry));
       } finally {
         findNext();
       }
@@ -346,7 +347,7 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
 
     final Map.Entry<WeakKey<K>, V> entry;
 
-    private SimpleEntry(K key, @Nullable Map.Entry<WeakKey<K>, V> entry) {
+    private SimpleEntry(K key, Map.Entry<WeakKey<K>, V> entry) {
       this.key = key;
       this.entry = entry;
     }
