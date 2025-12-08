@@ -128,7 +128,12 @@ class InstrumentationMemberAccessor implements MemberAccessor {
       throw new InstantiationException(
           "Cannot instantiate abstract " + constructor.getDeclaringClass().getTypeName());
     }
-    assureArguments(constructor, null, null, arguments, constructor.getParameterTypes());
+    assureArguments(
+        constructor,
+        null,
+        constructor.getDeclaringClass(),
+        arguments,
+        constructor.getParameterTypes());
     try {
       Object module = getModule.bindTo(constructor.getDeclaringClass()).invokeWithArguments();
       String packageName = constructor.getDeclaringClass().getPackage().getName();
@@ -155,12 +160,9 @@ class InstrumentationMemberAccessor implements MemberAccessor {
   @Override
   public Object invoke(Method method, @Nullable Object target, Object... arguments)
       throws InvocationTargetException {
+    Object owner = Modifier.isStatic(method.getModifiers()) ? method.getDeclaringClass() : target;
     assureArguments(
-        method,
-        Modifier.isStatic(method.getModifiers()) ? null : target,
-        method.getDeclaringClass(),
-        arguments,
-        method.getParameterTypes());
+        method, owner, method.getDeclaringClass(), arguments, method.getParameterTypes());
     try {
       Object module = getModule.bindTo(method.getDeclaringClass()).invokeWithArguments();
       String packageName = method.getDeclaringClass().getPackage().getName();
