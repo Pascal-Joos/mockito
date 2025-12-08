@@ -68,7 +68,11 @@ public class MockUtil {
     }
 
     if (isMock(mock)) {
-      return mockMaker.getHandler(mock);
+      MockHandler<T> handler = mockMaker.getHandler(mock);
+      if (handler == null) {
+        throw new NotAMockException("Argument should be a mock, but is: " + mock.getClass());
+      }
+      return handler;
     } else {
       throw new NotAMockException("Argument should be a mock, but is: " + mock.getClass());
     }
