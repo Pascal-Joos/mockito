@@ -289,6 +289,16 @@ public class InlineByteBuddyMockMaker
           return null;
         };
 
+    if (INSTRUMENTATION == null) {
+      Throwable cause =
+          INITIALIZATION_ERROR != null
+              ? INITIALIZATION_ERROR
+              : new IllegalStateException(
+                  "Instrumentation initialization failed for unknown reasons");
+      throw new MockitoInitializationException(
+          "Could not initialize inline Byte Buddy mock maker", cause);
+    }
+
     bytecodeGenerator =
         new TypeCachingBytecodeGenerator(
             new InlineBytecodeGenerator(
@@ -296,10 +306,13 @@ public class InlineByteBuddyMockMaker
             true);
   }
 
-  @Nullable
   @Override
   public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
-    return doCreateMock(settings, handler, false);
+    T mock = doCreateMock(settings, handler, false);
+    if (mock == null) {
+      throw new MockitoException("InlineByteBuddyMockMaker.createMock must not return null");
+    }
+    return mock;
   }
 
   @Override
@@ -474,7 +487,9 @@ public class InlineByteBuddyMockMaker
     return new TypeMockability() {
       @Override
       public boolean mockable() {
-        return INSTRUMENTATION.isModifiableClass(type) && !EXCLUDES.contains(type);
+        return INSTRUMENTATION != null
+            && INSTRUMENTATION.isModifiableClass(type)
+            && !EXCLUDES.contains(type);
       }
 
       @Override
