@@ -41,7 +41,11 @@ public abstract class MockMethodDispatcher {
 
   @SuppressWarnings("unused")
   public static boolean isConstructorMock(String identifier, Class<?> type) {
-    return DISPATCHERS.get(identifier).isConstructorMock(type);
+    MockMethodDispatcher dispatcher = DISPATCHERS.get(identifier);
+    if (dispatcher == null) {
+      return false;
+    }
+    return dispatcher.isConstructorMock(type);
   }
 
   @Nullable
