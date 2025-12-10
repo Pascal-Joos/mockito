@@ -70,7 +70,6 @@ public interface MockMaker {
    * @return The mock instance.
    * @since 1.9.5
    */
-  @Nullable
   <T> T createMock(MockCreationSettings<T> settings, MockHandler handler);
 
   /**
