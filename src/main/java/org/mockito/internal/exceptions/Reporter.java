@@ -8,7 +8,6 @@ import static org.mockito.internal.reporting.Pluralizer.pluralize;
 import static org.mockito.internal.reporting.Pluralizer.were_exactly_x_interactions;
 import static org.mockito.internal.util.StringUtil.join;
 
-import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -473,7 +472,7 @@ public class Reporter {
             "No interactions wanted here:",
             new LocationImpl(),
             "But found this interaction on mock '"
-                + MockUtil.getMockName(Nullability.castToNonnull(undesired).getMock())
+                + MockUtil.getMockName(undesired.getMock())
                 + "':",
             undesired.getLocation(),
             scenario));
