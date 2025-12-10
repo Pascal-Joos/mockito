@@ -7,7 +7,6 @@ package org.mockito.internal.util.reflection;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static org.mockito.internal.util.StringUtil.join;
 
-import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.lang.instrument.Instrumentation;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -129,12 +128,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
       throw new InstantiationException(
           "Cannot instantiate abstract " + constructor.getDeclaringClass().getTypeName());
     }
-    assureArguments(
-        constructor,
-        Nullability.castToNonnull(null),
-        Nullability.castToNonnull(null),
-        arguments,
-        constructor.getParameterTypes());
+    assureArguments(constructor, null, null, arguments, constructor.getParameterTypes());
     try {
       Object module = getModule.bindTo(constructor.getDeclaringClass()).invokeWithArguments();
       String packageName = constructor.getDeclaringClass().getPackage().getName();
