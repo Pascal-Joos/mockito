@@ -7,7 +7,6 @@ package org.mockito.internal.handler;
 import static org.mockito.internal.listeners.StubbingLookupNotifier.notifyStubbedAnswerLookup;
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
 
-import edu.ucr.cs.riple.annotator.util.Nullability;
 import javax.annotation.Nullable;
 import org.mockito.internal.creation.settings.CreationSettings;
 import org.mockito.internal.invocation.InvocationMatcher;
@@ -104,7 +103,7 @@ public class MockHandlerImpl<T> implements MockHandler<T> {
         mockingProgress().reportOngoingStubbing(ongoingStubbing);
       }
     } else {
-      Object ret = Nullability.castToNonnull(mockSettings.getDefaultAnswer()).answer(invocation);
+      Object ret = mockSettings.getDefaultAnswer().answer(invocation);
       DefaultAnswerValidator.validateReturnValueFor(invocation, ret);
 
       // Mockito uses it to redo setting invocation for potential stubbing in case of partial
