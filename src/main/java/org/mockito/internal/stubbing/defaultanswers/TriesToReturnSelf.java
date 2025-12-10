@@ -4,7 +4,6 @@
  */
 package org.mockito.internal.stubbing.defaultanswers;
 
-import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.io.Serializable;
 import javax.annotation.Nullable;
 import org.mockito.internal.util.MockUtil;
@@ -19,8 +18,7 @@ public class TriesToReturnSelf implements Answer<Object>, Serializable {
   public Object answer(InvocationOnMock invocation) throws Throwable {
     Class<?> methodReturnType = invocation.getMethod().getReturnType();
     Object mock = invocation.getMock();
-    Class<?> mockType =
-        Nullability.castToNonnull(MockUtil.getMockHandler(mock)).getMockSettings().getTypeToMock();
+    Class<?> mockType = MockUtil.getMockHandler(mock).getMockSettings().getTypeToMock();
 
     if (methodReturnType.isAssignableFrom(mockType)) {
       return invocation.getMock();

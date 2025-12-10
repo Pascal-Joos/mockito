@@ -49,11 +49,8 @@ public class InvocationInfo implements AbstractAwareMethod {
    * keyword {@code void}. E.g: {@code void foo()} or {@code Void bar()}
    */
   public boolean isVoid() {
-    final Object mock = invocation.getMock();
-    if (mock == null) {
-      throw new NotAMockException("Argument should be a mock, but is null!");
-    }
-    final MockCreationSettings mockSettings = MockUtil.getMockHandler(mock).getMockSettings();
+    final MockCreationSettings mockSettings =
+        MockUtil.getMockHandler(invocation.getMock()).getMockSettings();
     Class<?> returnType =
         GenericMetadataSupport.inferFrom(mockSettings.getTypeToMock())
             .resolveGenericReturnType(this.method)

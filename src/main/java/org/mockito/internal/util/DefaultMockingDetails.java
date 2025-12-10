@@ -4,9 +4,7 @@
  */
 package org.mockito.internal.util;
 
-import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.util.Collection;
-import javax.annotation.Nullable;
 import org.mockito.MockingDetails;
 import org.mockito.exceptions.misusing.NotAMockException;
 import org.mockito.internal.debugging.InvocationsPrinter;
@@ -50,7 +48,7 @@ public class DefaultMockingDetails implements MockingDetails {
 
   @Override
   public MockCreationSettings<?> getMockCreationSettings() {
-    return Nullability.castToNonnull(mockHandler()).getMockSettings();
+    return mockHandler().getMockSettings();
   }
 
   @Override
@@ -64,7 +62,6 @@ public class DefaultMockingDetails implements MockingDetails {
     return new InvocationsPrinter().printInvocations(toInspect);
   }
 
-  @Nullable
   @Override
   public MockHandler getMockHandler() {
     return mockHandler();
