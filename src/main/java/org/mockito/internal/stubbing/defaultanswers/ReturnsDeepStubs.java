@@ -148,6 +148,9 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
   }
 
   protected GenericMetadataSupport actualParameterizedType(Object mock) {
+    if (mock == null) {
+      throw new NotAMockException("Argument should be a mock, but is null!");
+    }
     CreationSettings mockSettings =
         (CreationSettings) MockUtil.getMockHandler(mock).getMockSettings();
     return GenericMetadataSupport.inferFrom(mockSettings.getTypeToMock());
