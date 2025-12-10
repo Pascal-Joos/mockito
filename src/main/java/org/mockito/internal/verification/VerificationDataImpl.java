@@ -17,7 +17,7 @@ import org.mockito.invocation.MatchableInvocation;
 
 public class VerificationDataImpl implements VerificationData {
 
-  private final InvocationMatcher wanted;
+  @Nullable private final InvocationMatcher wanted;
   private final InvocationContainerImpl invocations;
 
   public VerificationDataImpl(
@@ -32,11 +32,13 @@ public class VerificationDataImpl implements VerificationData {
     return invocations.getInvocations();
   }
 
+  @Nullable
   @Override
   public MatchableInvocation getTarget() {
     return wanted;
   }
 
+  @Nullable
   @Override
   public InvocationMatcher getWanted() {
     return wanted;
