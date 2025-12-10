@@ -7,7 +7,6 @@ package org.mockito.internal.creation.bytebuddy;
 import static org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.*;
 import static org.mockito.internal.util.StringUtil.*;
 
-import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -293,11 +292,7 @@ public class InlineByteBuddyMockMaker
     bytecodeGenerator =
         new TypeCachingBytecodeGenerator(
             new InlineBytecodeGenerator(
-                Nullability.castToNonnull(INSTRUMENTATION),
-                mocks,
-                mockedStatics,
-                isMockConstruction,
-                onConstruction),
+                INSTRUMENTATION, mocks, mockedStatics, isMockConstruction, onConstruction),
             true);
   }
 
