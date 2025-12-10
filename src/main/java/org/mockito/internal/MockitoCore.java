@@ -251,8 +251,14 @@ public class MockitoCore {
    * @return last invocation
    */
   public Invocation getLastInvocation() {
+    MockingProgress mockingProgress = mockingProgress();
+    @SuppressWarnings("unchecked")
     OngoingStubbingImpl ongoingStubbing =
-        ((OngoingStubbingImpl) mockingProgress().pullOngoingStubbing());
+        (OngoingStubbingImpl) mockingProgress.pullOngoingStubbing();
+    if (ongoingStubbing == null) {
+      mockingProgress.reset();
+      throw missingMethodInvocation();
+    }
     List<Invocation> allInvocations = ongoingStubbing.getRegisteredInvocations();
     return allInvocations.get(allInvocations.size() - 1);
   }
