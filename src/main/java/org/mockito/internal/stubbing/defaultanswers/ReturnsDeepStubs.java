@@ -6,6 +6,7 @@ package org.mockito.internal.stubbing.defaultanswers;
 
 import static org.mockito.Mockito.withSettings;
 
+import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.annotation.Nullable;
@@ -150,7 +151,8 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
   protected GenericMetadataSupport actualParameterizedType(Object mock) {
     CreationSettings mockSettings =
         (CreationSettings) MockUtil.getMockHandler(mock).getMockSettings();
-    return GenericMetadataSupport.inferFrom(mockSettings.getTypeToMock());
+    return GenericMetadataSupport.inferFrom(
+        Nullability.castToNonnull(mockSettings.getTypeToMock()));
   }
 
   private static class ReturnsDeepStubsSerializationFallback extends ReturnsDeepStubs
