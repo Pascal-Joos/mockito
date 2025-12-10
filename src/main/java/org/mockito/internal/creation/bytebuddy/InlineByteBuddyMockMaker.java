@@ -290,12 +290,10 @@ public class InlineByteBuddyMockMaker
         };
 
     bytecodeGenerator =
-        INSTRUMENTATION != null
-            ? new TypeCachingBytecodeGenerator(
-                new InlineBytecodeGenerator(
-                    INSTRUMENTATION, mocks, mockedStatics, isMockConstruction, onConstruction),
-                true)
-            : null;
+        new TypeCachingBytecodeGenerator(
+            new InlineBytecodeGenerator(
+                INSTRUMENTATION, mocks, mockedStatics, isMockConstruction, onConstruction),
+            true);
   }
 
   @Nullable
@@ -476,9 +474,7 @@ public class InlineByteBuddyMockMaker
     return new TypeMockability() {
       @Override
       public boolean mockable() {
-        return INSTRUMENTATION != null
-            && INSTRUMENTATION.isModifiableClass(type)
-            && !EXCLUDES.contains(type);
+        return INSTRUMENTATION.isModifiableClass(type) && !EXCLUDES.contains(type);
       }
 
       @Override
