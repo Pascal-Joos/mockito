@@ -1,0 +1,49 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public Object invoke(Method method, Object target, Object... arguments)
+      throws InvocationTargetException {
+    assureArguments(
+        method,
+        Modifier.isStatic(method.getModifiers()) ? null : target,
+        method.getDeclaringClass(),
+        arguments,
+        method.getParameterTypes());
+    if (DISPATCHER == null) {
+      throw new MockitoInitializationException("Could not initialize the Mockito instrumentation member accessor", INITIALIZATION_ERROR);
+    }
+    try {
+      Object module = getModule.bindTo(method.getDeclaringClass()).invokeWithArguments();
+      String packageName = method.getDeclaringClass().getPackage().getName();
+      assureOpen(module, packageName);
+      MethodHandle handle =
+          ((MethodHandles.Lookup)
+                  privateLookupIn.invokeExact(method.getDeclaringClass(), DISPATCHER.getLookup()))
+              .unreflect(method);
+      if (!Modifier.isStatic(method.getModifiers())) {
+        handle = handle.bindTo(target);
+      }
+      try {
+        return handle.invokeWithArguments(arguments);
+      } catch (Throwable t) {
+        throw new InvocationTargetException(t);
+      }
+    } catch (InvocationTargetException e) {
+      throw e;
+    } catch (Throwable t) {
+      throw new IllegalStateException(
+          "Could not invoke "
+              + method
+              + " on "
+              + target
+              + " with arguments "
+              + Arrays.toString(arguments),
+          t);
+    }
+  }
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,12 @@
+<response>
+    <reason><![CDATA[
+The `append(String message)` method is only called from `VerificationCollectorImpl$VerificationWrapper.verify`, which passes `error.getMessage()` from a caught `AssertionError`.
+
+In Java, `Throwable.getMessage()` is allowed to return `null`. There is no guarantee in the code shown that `AssertionError` will always be constructed with a non-null message. Thus, based solely on usage, `append` can receive `null`.
+
+Inside `append`, `message.trim()` is called without any null check. If `message` were null at runtime, this would cause a `NullPointerException`. That indicates the code *expects* a non-null message, but the call chain does not enforce this expectation; `getMessage()` can still return null.
+
+Since the analysis must be based strictly on usage patterns and not on annotations or intentions, the parameter `message` *can* be null in practice.
+]]></reason>
+    <value>YES</value>
+</response>

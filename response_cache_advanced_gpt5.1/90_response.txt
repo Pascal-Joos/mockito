@@ -1,0 +1,52 @@
+<response>
+  <reason><![CDATA[
+Within `MockUtil.getMockHandler` there is exactly one non-exceptional return path:
+
+```java
+if (isMock(mock)) {
+  return mockMaker.getHandler(mock);
+}
+```
+
+At the call site in question:
+
+```java
+MockHandler oldHandler = getMockHandler(mock);
+```
+
+inside:
+
+```java
+public static <T> void resetMock(T mock) {
+    MockHandler oldHandler = getMockHandler(mock);
+    ...
+}
+```
+
+the value `oldHandler` is exactly the value returned by `mockMaker.getHandler(mock)` when `isMock(mock)` is true.
+
+From the information provided:
+
+- `getMockHandler` explicitly throws if `mock == null`.
+- `getMockHandler` explicitly throws if `!isMock(mock)`.
+- The only branch that returns is `return mockMaker.getHandler(mock);`.
+
+Whether that return expression can be `null` depends entirely on the implementation contract of:
+
+```java
+mockMaker.getHandler(mock)
+```
+
+No declaration or documentation for `mockMaker.getHandler` is included in the supplied code. Per the instructions, we cannot assume:
+- that `mockMaker.getHandler(mock)` never returns `null`, nor
+- that `mockMaker.getHandler(mock)` always returns a non-null `MockHandler` for any `mock` for which `isMock(mock)` is true.
+
+Because this is the only non-exceptional return path, and its nullness cannot be determined without knowing the behavior of `mockMaker.getHandler`, we cannot soundly conclude that `oldHandler` is guaranteed non-null, nor can we assert it may be null, based solely on the given snippets.
+
+Thus, to make a confident determination about nullability at this call site, the implementation (or precise contract) of `mockMaker.getHandler` is required.
+  ]]></reason>
+  <success>false</success>
+  <methods>
+    <method>mockMaker.getHandler</method>
+  </methods>
+</response>

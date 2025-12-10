@@ -1,0 +1,29 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public StubbedInvocationMatcher addAnswer(
+      Answer answer, boolean isConsecutive,  Strictness stubbingStrictness) {
+    assert invocationForStubbing != null;
+    Invocation invocation = invocationForStubbing.getInvocation();
+    mockingProgress().stubbingCompleted();
+    if (answer instanceof ValidableAnswer) {
+      ((ValidableAnswer) answer).validateFor(invocation);
+    }
+
+    synchronized (stubbed) {
+      if (isConsecutive) {
+        stubbed.getFirst().addAnswer(answer);
+      } else {
+        Strictness effectiveStrictness =
+            stubbingStrictness != null ? stubbingStrictness : this.mockStrictness;
+        stubbed.addFirst(
+            new StubbedInvocationMatcher(answer, invocationForStubbing, effectiveStrictness));
+      }
+      return stubbed.getFirst();
+    }
+  }
+  ```
+    ]]>
+  </code>
+</response>

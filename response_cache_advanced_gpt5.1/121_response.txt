@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public static InvocationContainerImpl getInvocationContainer(Object mock) {
+      if (mock == null) {
+          throw new NotAMockException("Argument should be a mock, but is null!");
+      }
+      return (InvocationContainerImpl) getMockHandler(mock).getInvocationContainer();
+  }
+  ```
+    ]]>
+  </code>
+</response>

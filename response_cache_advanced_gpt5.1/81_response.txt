@@ -1,0 +1,20 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private Method getDelegateMethod(Method mockMethod) throws NoSuchMethodException {
+    Object delegatedObject = this.delegatedObject;
+    if (mockMethod.getDeclaringClass().isAssignableFrom(delegatedObject.getClass())) {
+      // Compatible class. Return original method.
+      return mockMethod;
+    } else {
+      // Return method of delegate object with the same signature as mockMethod.
+      return delegatedObject
+          .getClass()
+          .getMethod(mockMethod.getName(), mockMethod.getParameterTypes());
+    }
+  }
+  ```
+    ]]>
+  </code>
+</response>

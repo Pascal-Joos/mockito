@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public BDDMyOngoingStubbing<T> willThrow(Class<? extends Throwable> throwableType) {
+      if (mockitoOngoingStubbing == null) {
+          return null;
+      }
+      return Nullability.castToNonnull(mockitoOngoingStubbing);
+  }
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,25 @@
+```xml
+<response>
+    <reason><![CDATA[
+Within the specific return expression
+
+    return mockitoOngoingStubbing == null 
+        ? null 
+        : new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenCallRealMethod());
+
+the subexpression "mockitoOngoingStubbing" that appears in:
+
+    mockitoOngoingStubbing.thenCallRealMethod()
+
+is evaluated only in the `:` branch of the ternary operator, which is taken if and only if `mockitoOngoingStubbing != null`.
+
+That is, the control flow guarantees:
+
+- If `mockitoOngoingStubbing` is null, the method returns null directly and never evaluates `mockitoOngoingStubbing.thenCallRealMethod()`.
+- If `mockitoOngoingStubbing.thenCallRealMethod()` is evaluated, it happens in a branch where `mockitoOngoingStubbing` is known to be non-null.
+
+Therefore, at the point of use in this expression, `mockitoOngoingStubbing` cannot be null and cannot cause a NullPointerException in the `thenCallRealMethod()` call. (The method may still return null or throw for other reasons, but the variable itself is guaranteed non-null on that path.)
+    ]]></reason>
+    <value>NO</value>
+</response>
+```

@@ -1,0 +1,35 @@
+<response>
+    <reason><![CDATA[
+The parameter `undesired` in `noMoreInteractionsWanted(Invocation undesired, ...)` is always passed from local variables named `unverified` in its callers.
+
+Callers:
+
+1. `org.mockito.internal.verification.Only.verify`:
+   ```java
+   Invocation unverified = findFirstUnverified(invocations);
+   if (invocations.size() != 1 && !chunk.isEmpty()) {
+     Invocation unverified = findFirstUnverified(invocations);
+     throw noMoreInteractionsWanted(unverified, (List) invocations);
+   }
+   ```
+   The method only calls `noMoreInteractionsWanted(unverified, ...)` inside the `if (invocations.size() != 1 && !chunk.isEmpty())` block, but there is no explicit null check for `unverified`. To know whether `unverified` can be null here, we would need the contract/implementation of `findFirstUnverified(...)`. It might return `null` when there is no unverified invocation, or it might guarantee a non-null return if the condition `invocations.size() != 1 && !chunk.isEmpty()` is satisfied. The provided code does not let us infer which is true.
+
+2. `org.mockito.internal.verification.NoMoreInteractions.verify`:
+   ```java
+   Invocation unverified = findFirstUnverified(data.getAllInvocations());
+   if (unverified != null) {
+     throw noMoreInteractionsWanted(unverified, (List) data.getAllInvocations());
+   }
+   ```
+   Here, `noMoreInteractionsWanted` is only called when `unverified != null`, so within this caller `undesired` is definitely non-null.
+
+However, we cannot conclude globally that `undesired` can or cannot be null because the key behavior depends on `findFirstUnverified(...)`. In `Only.verify`, `unverified` is not checked against null before being passed, so the possibility that `findFirstUnverified` returns null would directly imply that `undesired` can be null. Conversely, if `findFirstUnverified` is guaranteed non-null under the given conditions, then `undesired` is never null.
+
+Since the implementation/contract of `findFirstUnverified` is not provided, we cannot safely determine the nullability of `undesired` solely from the current call chain.
+    ]]></reason>
+    <success>false</success>
+    <methods>
+      <method>org.mockito.internal.verification.Only.findFirstUnverified</method>
+      <method>org.mockito.internal.verification.NoMoreInteractions.findFirstUnverified</method>
+    </methods>
+</response>

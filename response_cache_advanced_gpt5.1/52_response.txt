@@ -1,0 +1,49 @@
+<response>
+    <reason><![CDATA[
+`fieldInitialisationThrewException(Field field, Throwable details)` is called in two places:
+
+1. `PropertyAndSetterInjection.initializeInjectMocksField`:
+```java
+} catch (MockitoException e) {
+  if (e.getCause() instanceof InvocationTargetException) {
+    Throwable realCause = e.getCause().getCause();
+    throw fieldInitialisationThrewException(field, realCause);
+  }
+  ...
+}
+```
+
+2. `ConstructorInjection.processInjection`:
+```java
+} catch (MockitoException e) {
+  if (e.getCause() instanceof InvocationTargetException) {
+    Throwable realCause = e.getCause().getCause();
+    throw fieldInitialisationThrewException(field, realCause);
+  }
+  ...
+}
+```
+
+In both cases, `details` is passed as `realCause`, defined as:
+
+```java
+Throwable realCause = e.getCause().getCause();
+```
+
+Both `Throwable.getCause()` calls can legally return `null`:
+- `e.getCause()` may be `null`
+- even if non-null, `e.getCause().getCause()` may be `null`
+
+There are no null checks before passing `realCause` into `fieldInitialisationThrewException`. Thus, by usage, `details` can be `null`.
+
+Inside `fieldInitialisationThrewException`, `details` is dereferenced without a null check:
+
+```java
+"... threw an exception : " + details.getMessage()
+```
+
+If `details` were ever `null` at runtime, this would cause a `NullPointerException`. That indicates the code *intends* `details` to be non-null, but the question is about whether it *can* be null based on call patterns, ignoring annotations. Since the source calls permit `null` values (via the unguarded `getCause().getCause()`), `details` can indeed become `null` in practice, even though it would then crash.
+
+Therefore, based solely on the call chain and Java's semantics for `getCause()`, the parameter `details` **can** be null.]]></reason>
+    <value>YES</value>
+</response>

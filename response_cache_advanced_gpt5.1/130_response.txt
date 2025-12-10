@@ -1,0 +1,13 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public V getValue() {
+    Map.Entry<WeakKey<K>, V> e = entry;
+    return e == null ? null : e.getValue();
+  }
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,8 @@
+```xml
+<response>
+    <reason><![CDATA[
+The method `setTypeToMock` is a classic setter: it sets a single field and returns `this`, and its name follows the setter naming convention (`setXyz`). By definition, setter methods are not considered initializer methods in NullAway's model, even if they participate in object setup, because they can be called multiple times to update state and are not guaranteed to be part of a one-time initialization lifecycle. There is no indication this method is a special framework lifecycle hook or a method that is guaranteed to be called exactly once before all other uses of the object. Therefore it should not be treated as an initializer method.
+    ]]></reason>
+    <value>NO</value>
+</response>
+```

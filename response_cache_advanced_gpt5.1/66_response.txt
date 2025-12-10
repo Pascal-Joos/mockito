@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public Object invokedMock() {
+      if (invocationForStubbing == null) {
+          return null;
+      }
+      return invocationForStubbing.getInvocation().getMock();
+  }
+  ```
+    ]]>
+  </code>
+</response>

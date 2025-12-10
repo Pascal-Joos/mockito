@@ -1,0 +1,35 @@
+```xml
+<response>
+    <reason><![CDATA[
+We only see two relevant methods being used: isPrimitiveOrWrapper(...) and Primitives.primitiveTypeOf(...). The nullability of Primitives.primitiveTypeOf(valueClass) depends entirely on the contract and implementation of these methods, which are not shown.
+
+Typical pattern (e.g., Guava’s com.google.common.primitives.Primitives):
+- primitiveTypeOf(Class<?> type) returns:
+  - the primitive class if the input is a wrapper class, OR
+  - the input itself if it is already primitive, OR
+  - null if the input is neither a primitive nor a known wrapper.
+
+- isPrimitiveOrWrapper(Class<?> type) normally returns true if type is either a primitive or a known wrapper type, and false otherwise.
+
+If isPrimitiveOrWrapper(...) and Primitives.primitiveTypeOf(...) are consistent with that pattern (i.e., isPrimitiveOrWrapper(valueClass) implies primitiveTypeOf(valueClass) is non-null), then the call site:
+
+    if (isPrimitiveOrWrapper(valueClass) && isPrimitiveOrWrapper(referenceType)) {
+      return Primitives.primitiveTypeOf(valueClass)
+          .isAssignableFrom(Primitives.primitiveTypeOf(referenceType));
+    }
+
+guarantees that primitiveTypeOf(valueClass) is never null on the true branch of the if.
+
+However, without the actual implementations or a documented contract, we cannot be certain that:
+- isPrimitiveOrWrapper(valueClass) ⇒ primitiveTypeOf(valueClass) != null
+
+If primitiveTypeOf(...) were implemented more permissively (e.g., returning null in some edge cases even when isPrimitiveOrWrapper(...) returns true), then the expression could be null.
+
+Because these method contracts are not provided, we cannot conclusively determine that primitiveTypeOf(valueClass) is always non-null when isPrimitiveOrWrapper(valueClass) is true.]]></reason>
+    <value>UNKNOWN</value>
+    <requests>
+        <request><![CDATA[Provide the implementation or documented contract of isPrimitiveOrWrapper(Class<?>).]]></request>
+        <request><![CDATA[Provide the implementation or documented contract of Primitives.primitiveTypeOf(Class<?>).]]></request>
+    </requests>
+</response>
+```

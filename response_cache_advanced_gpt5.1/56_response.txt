@@ -1,0 +1,35 @@
+<response>
+    <reason><![CDATA[
+The parameter `undesired` in `noMoreInteractionsWanted(Invocation undesired, ...)` is always passed from local variables named `unverified` in its callers.
+
+Callers:
+
+1. `Only.verify(VerificationData data)`:
+   ```java
+   if (invocations.size() != 1 && !chunk.isEmpty()) {
+     Invocation unverified = findFirstUnverified(invocations);
+     throw noMoreInteractionsWanted(unverified, (List) invocations);
+   }
+   ```
+   This branch is executed only when `invocations.size() != 1 && !chunk.isEmpty()`. We are not given the implementation of `findFirstUnverified(List<Invocation>)`, so we cannot guarantee it will never return `null` under these conditions. There is no null check on `unverified` before passing it to `noMoreInteractionsWanted`, so if `findFirstUnverified` can yield `null`, then `undesired` could be `null` here.
+
+2. `NoMoreInteractions.verify(VerificationData data)`:
+   ```java
+   Invocation unverified = findFirstUnverified(data.getAllInvocations());
+   if (unverified != null) {
+     throw noMoreInteractionsWanted(unverified, (List) data.getAllInvocations());
+   }
+   ```
+   Here, `noMoreInteractionsWanted` is called only when `unverified != null`, so in this call site `undesired` is definitely non-null.
+
+The behavior inside `noMoreInteractionsWanted`:
+```java
+MockUtil.getMockName(undesired.getMock())
+undesired.getLocation()
+```
+would throw a `NullPointerException` if `undesired` were `null`. This suggests that, in normal usage, callers are expected to pass a non-null `Invocation`. However, we are instructed to base the analysis solely on usage patterns, not intent. Since we do not have the implementation of `findFirstUnverified(List<Invocation>)`, we cannot rule out that it may return `null` in the branch used by `Only.verify`. Without that guarantee, `undesired` *can* be `null` from the perspective of the current call chain.
+
+Therefore, based strictly on available call patterns and without assuming additional contracts for `findFirstUnverified`, we must treat `undesired` as potentially nullable.
+]]></reason>
+    <value>YES</value>
+</response>

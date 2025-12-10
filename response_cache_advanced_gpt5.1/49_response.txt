@@ -1,0 +1,8 @@
+```xml
+<response>
+    <reason><![CDATA[
+The method `setMockName` is a typical setter: its name follows the `setX` pattern, it mutates a single field, and it returns `this` to allow chaining. By definition, setter methods are not considered initializer methods in NullAway, even if they assign to fields. Initializer methods are special lifecycle or setup methods that are expected to be called once during object construction or framework-managed initialization, not arbitrary state-mutating setters that may be invoked multiple times over the object's lifetime.
+    ]]></reason>
+    <value>NO</value>
+</response>
+```

@@ -1,0 +1,35 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+    public Object get(Field field, Object target) {
+      if (DISPATCHER == null) {
+        throw new MockitoInitializationException("Could not resolve instrumentation invoker", INITIALIZATION_ERROR);
+      }
+      assureArguments(
+          field,
+          Modifier.isStatic(field.getModifiers()) ? null : target,
+          field.getDeclaringClass(),
+          new Object[0],
+          new Class<?>[0]);
+      try {
+        Object module = getModule.bindTo(field.getDeclaringClass()).invokeWithArguments();
+        String packageName = field.getDeclaringClass().getPackage().getName();
+        assureOpen(module, packageName);
+        MethodHandle handle =
+            ((MethodHandles.Lookup)
+                    privateLookupIn.invokeExact(field.getDeclaringClass(), Nullability.castToNonnull(DISPATCHER).getLookup()))
+                .unreflectGetter(field);
+        if (!Modifier.isStatic(field.getModifiers())) {
+          handle = handle.bindTo(target);
+        }
+        return handle.invokeWithArguments();
+      } catch (Throwable t) {
+        throw new IllegalStateException("Could not read " + field + " on " + target, t);
+      }
+    }
+  ```
+    ]]>
+  </code>
+</response>

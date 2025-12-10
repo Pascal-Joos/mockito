@@ -1,0 +1,24 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private static Class<?> findTypeFromGeneric(
+      final InvocationOnMock invocation, final TypeVariable returnType) {
+    // Class level
+    final MockCreationSettings mockSettings =
+        Nullability.castToNonnull(MockUtil.getMockHandler(invocation.getMock())).getMockSettings();
+    final GenericMetadataSupport returnTypeSupport =
+        GenericMetadataSupport.inferFrom(mockSettings.getTypeToMock())
+            .resolveGenericReturnType(invocation.getMethod());
+    final Class<?> rawType = returnTypeSupport.rawType();
+
+    // Method level
+    if (rawType == Object.class) {
+      return findTypeFromGenericInArguments(invocation, returnType);
+    }
+    return rawType;
+  }
+  ```
+    ]]>
+  </code>
+</response>

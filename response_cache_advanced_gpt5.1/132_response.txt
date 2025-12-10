@@ -1,0 +1,22 @@
+```xml
+<response>
+    <reason><![CDATA[
+The method is:
+
+public Class<?> fieldClass() {
+    return fieldInstance != null ? fieldInstance.getClass() : null;
+}
+
+The returned expression is a ternary:
+- If fieldInstance != null, it returns fieldInstance.getClass().
+- Otherwise, it returns null.
+
+In Java:
+- If fieldInstance is non-null, fieldInstance.getClass() is guaranteed to be non-null (Class objects are never null).
+- Therefore, the *only* way the whole expression can evaluate to null is when fieldInstance == null.
+
+Because the code explicitly returns null in that branch, the expression can in fact be null at runtime, depending on the value of fieldInstance.
+    ]]></reason>
+    <value>YES</value>
+</response>
+```

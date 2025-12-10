@@ -1,0 +1,49 @@
+<response>
+  <reason><![CDATA[
+The nullability of `mockingProgress().pullOngoingStubbing()` at the call site
+
+```java
+OngoingStubbingImpl ongoingStubbing =
+    ((OngoingStubbingImpl) mockingProgress().pullOngoingStubbing());
+```
+
+cannot be determined from the provided information because the implementation of `MockingProgress.pullOngoingStubbing()` is not shown.
+
+Key points:
+
+1. The only direct source of the value at this call site is `MockingProgress.pullOngoingStubbing()`. Without its body, we cannot see:
+   - Whether it returns `null` in any branch.
+   - Whether it always initializes and returns a non-null `OngoingStubbing<?>`.
+
+2. The other methods you provided (`MockitoCore.when`, `MockedStaticImpl.when`, etc.) show *how* the result is used:
+   - In both `MockitoCore.when` and `MockedStaticImpl.when`, the result of `mockingProgress().pullOngoingStubbing()` is explicitly checked for `null`:
+     ```java
+     OngoingStubbing<S> stubbing = (OngoingStubbing<S>) mockingProgress.pullOngoingStubbing();
+     if (stubbing == null) {
+       mockingProgress.reset();
+       throw missingMethodInvocation();
+     }
+     ```
+     This indicates that the authors considered `pullOngoingStubbing()` potentially able to return `null` in general. However, this is only evidence of possibility, not proof that, in the specific context of `getLastInvocation()`, it will or will not be `null`.
+
+3. In `MockitoCore.getLastInvocation()`:
+   ```java
+   OngoingStubbingImpl ongoingStubbing =
+       ((OngoingStubbingImpl) mockingProgress().pullOngoingStubbing());
+   List<Invocation> allInvocations = ongoingStubbing.getRegisteredInvocations();
+   return allInvocations.get(allInvocations.size() - 1);
+   ```
+   there is no null check. If `pullOngoingStubbing()` can ever return `null` here, this would cause a `NullPointerException`. To know whether that can occur, we must inspect `pullOngoingStubbing()`’s implementation and any state it relies on. Since that implementation is not provided, we cannot soundly conclude “always non-null” or “may be null” for this particular call.
+
+4. The guidelines specify:
+   - Do not assume behaviors of other methods without full declarations.
+   - Consider all return paths within the method.
+   As we do not have the body of `pullOngoingStubbing()`, we cannot enumerate its return paths.
+
+Therefore, to make a confident determination about nullability at this call site, the implementation of `MockingProgress.pullOngoingStubbing()` is required. If that method has any path returning `null` that can be reached in the control flow leading to `getLastInvocation()`, then this call site can observe `null`; if it guarantees a non-null `OngoingStubbing<?>` in this scenario, then it cannot.
+]]></reason>
+  <success>false</success>
+  <methods>
+    <method>org.mockito.internal.progress.MockingProgress#pullOngoingStubbing</method>
+  </methods>
+</response>

@@ -1,0 +1,15 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public V setValue(V value) {
+    if (value == null) throw new NullPointerException();
+    Map.Entry<WeakKey<K>, V> e = entry;
+    if (e == null) throw new NullPointerException();
+    return e.setValue(value);
+  }
+  ```
+    ]]>
+  </code>
+</response>

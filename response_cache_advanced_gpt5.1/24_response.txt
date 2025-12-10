@@ -1,0 +1,13 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public BDDMyOngoingStubbing<T> willCallRealMethod() {
+      return mockitoOngoingStubbing == null 
+          ? null 
+          : new BDDOngoingStubbingImpl<T>(Nullability.castToNonnull(mockitoOngoingStubbing).thenCallRealMethod());
+  }
+  ```
+    ]]>
+  </code>
+</response>

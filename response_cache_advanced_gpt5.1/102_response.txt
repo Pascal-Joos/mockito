@@ -1,0 +1,12 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public MockCreationSettings<?> getMockCreationSettings() {
+    return Nullability.castToNonnull(mockHandler()).getMockSettings();
+  }
+  ```
+    ]]>
+  </code>
+</response>

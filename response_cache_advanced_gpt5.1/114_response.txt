@@ -1,0 +1,38 @@
+<response>
+  <reason><![CDATA[
+At the call site `getMockHandler(mock)`, the only non-exceptional return path is:
+
+```java
+if (isMock(mock)) {
+  return mockMaker.getHandler(mock);
+}
+```
+
+All other paths throw `NotAMockException` and are therefore not relevant for nullability of the return value.
+
+Whether `getMockHandler(mock)` can return null therefore depends entirely on `mockMaker.getHandler(mock)`. No implementation or contract for `MockMaker.getHandler(Object mock)` is provided beyond its signature:
+
+```java
+class org.mockito.plugins.MockMaker {
+  MockHandler getHandler(Object mock)
+}
+```
+
+There is no guarantee here that:
+- `getHandler` never returns null, or
+- `getHandler` throws instead of returning null for invalid input.
+
+In fact, the code at depth 1 explicitly defends against a null handler:
+
+```java
+MockHandler oldHandler = getMockHandler(mock);
+if (oldHandler == null) {
+  throw new NotAMockException("Argument should be a mock, but is null!");
+}
+```
+
+This null-check directly on the result of `getMockHandler(mock)` demonstrates that the library’s own authors consider `getMockHandler(mock)` potentially null-producing (otherwise this check would be dead code). Since we are instructed to “make your best guess” for third-party implementations and not to assume any additional guarantees, we must treat `mockMaker.getHandler(mock)` as possibly returning null.
+
+Therefore, at this specific call site, `getMockHandler(mock)` can return null (rather than always throwing or always returning a non-null value).]]></reason>
+  <value>YES</value>
+</response>

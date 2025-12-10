@@ -1,0 +1,63 @@
+<response>
+  <reason><![CDATA[
+At the call site
+
+    MockHandler oldHandler = getMockHandler(mock);
+
+inside
+
+```java
+public static <T> void resetMock(T mock) {
+    MockHandler oldHandler = getMockHandler(mock);
+    MockCreationSettings settings = oldHandler.getMockSettings();
+    MockHandler newHandler = createMockHandler(settings);
+
+    mockMaker.resetMock(mock, newHandler, settings);
+}
+```
+
+the only possible return from `getMockHandler(mock)` is whatever is returned by:
+
+```java
+return mockMaker.getHandler(mock);
+```
+
+because both alternative paths in `getMockHandler` throw:
+
+```java
+if (mock == null) {
+  throw new NotAMockException("Argument should be a mock, but is null!");
+}
+
+if (isMock(mock)) {
+  return mockMaker.getHandler(mock);
+} else {
+  throw new NotAMockException("Argument should be a mock, but is: " + mock.getClass());
+}
+```
+
+So, for `getMockHandler(mock)` to return (rather than throw), two conditions must hold at this site:
+
+1. `mock != null`
+2. `isMock(mock)` is `true`
+
+`resetMock` is a public API and places no stronger precondition on `mock` than what `getMockHandler` enforces; it simply delegates directly. Therefore, at this call site, the return value of `getMockHandler(mock)` is exactly the result of `mockMaker.getHandler(mock)` under the condition that `mock` is a valid Mockito mock.
+
+However, you have not provided the implementation of:
+
+```java
+class org.mockito.plugins.MockMaker {
+  MockHandler getHandler(Object mock)
+}
+```
+
+The nullability of `getMockHandler(mock)` depends entirely on whether `MockMaker.getHandler(Object mock)` can return `null`. There is no additional null-check or wrapping in `getMockHandler`; it just forwards the return value. Without the body of `MockMaker.getHandler`, we cannot rule out that it may return `null` even for a valid mock, nor can we assert that it never does.
+
+Because the analysis rules say not to assume behavior of methods whose full declarations are not provided, a confident yes/no answer about nullability at this call site requires the declaration (and behavior) of `MockMaker.getHandler(Object)`.
+
+Therefore, I cannot definitively state that `getMockHandler(mock)` cannot be `null` here without that method’s definition.]]></reason>
+  <success>false</success>
+  <methods>
+    <method>org.mockito.plugins.MockMaker.getHandler(Object mock)</method>
+  </methods>
+</response>

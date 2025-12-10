@@ -1,0 +1,15 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public BDDMyOngoingStubbing<T> willThrow(Throwable... throwables) {
+        OngoingStubbing<T> ongoingStubbing = mockitoOngoingStubbing;
+        if (ongoingStubbing == null) {
+            return null;
+        }
+        return new BDDOngoingStubbingImpl<T>(ongoingStubbing.thenThrow(throwables));
+  }
+  ```
+    ]]>
+  </code>
+</response>

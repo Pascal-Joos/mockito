@@ -1,0 +1,29 @@
+```xml
+<response>
+    <reason><![CDATA[
+From the provided method:
+
+public BDDMyOngoingStubbing<T> will(Answer<?> answer) {
+    return mockitoOngoingStubbing == null ? null : new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.then(answer));
+}
+
+The expression in question is "mockitoOngoingStubbing" as it appears in:
+
+return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.then(answer));
+
+However, this expression is only evaluated on the branch of the ternary operator where `mockitoOngoingStubbing != null`.
+
+Control flow:
+- If `mockitoOngoingStubbing == null`, the method returns null directly and the constructor call (and thus the use of `mockitoOngoingStubbing` in `mockitoOngoingStubbing.then(answer)`) is never executed.
+- If the constructor call is reached, the condition `mockitoOngoingStubbing == null` is false, which implies `mockitoOngoingStubbing` is non-null at that point.
+
+Therefore, on the line:
+
+return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.then(answer));
+
+it is not possible for `mockitoOngoingStubbing` itself to be null, given this method’s internal control flow. Any potential nullity of `mockitoOngoingStubbing` is fully guarded by the prior ternary condition.
+
+Note: This analysis assumes standard Java semantics (no concurrent mutation of `mockitoOngoingStubbing` between the null check and its use, and no tricks like reflection changing the field in between). Under normal, single-threaded or properly synchronized conditions, `mockitoOngoingStubbing` cannot be null at the point of use on that line.]]></reason>
+    <value>NO</value>
+</response>
+```

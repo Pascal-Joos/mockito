@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Nullable
+  Object answerTo(Invocation invocation) throws Throwable {
+    Object answer = findAnswerFor(invocation);
+    if (answer == null) {
+      return null;
+    }
+    return answer.answer(invocation);
+  }
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,28 @@
+<response>
+  <reason><![CDATA[
+We only see the static method:
+
+```java
+public static boolean isConstructorMock(String identifier, Class<?> type) {
+  return DISPATCHERS.get(identifier).isConstructorMock(type);
+}
+```
+
+and the specific "call site" to analyze is:
+
+```java
+DISPATCHERS.get(identifier)
+```
+
+Here, `DISPATCHERS.get(identifier)` returns some object on which `isConstructorMock(type)` is then invoked. If `DISPATCHERS.get(identifier)` evaluates to `null`, the code will throw a `NullPointerException` at the dereference (`.isConstructorMock(type)`), and execution will never reach a point where a `boolean` value (null or otherwise) is returned from `isConstructorMock(String, Class<?>)`.
+
+The question is whether the *method* `isConstructorMock(String, Class<?>)` can return `null` at this call site. Its declared return type is the primitive `boolean`, which cannot hold `null` under any circumstance. The only possible outcomes are:
+
+- It returns `true` or `false`, or
+- It throws an exception (e.g., due to `DISPATCHERS.get(identifier)` being `null`).
+
+An exception is not a "null return" by the problem's definition. Therefore, regardless of whether `DISPATCHERS.get(identifier)` might itself be `null`, the method `isConstructorMock(String, Class<?>)` cannot return `null` at this call site.
+
+]]></reason>
+  <value>NO</value>
+</response>

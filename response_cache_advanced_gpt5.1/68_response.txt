@@ -1,0 +1,43 @@
+```xml
+<response>
+    <reason><![CDATA[
+From the provided method alone, there is no direct null-check around container.getInvocationForStubbing(), so at the call site:
+
+    if (container.getInvocationForStubbing().matches(stubbing.getInvocation())) {
+
+a NullPointerException would occur if getInvocationForStubbing() ever returned null.
+
+To determine whether this can actually be null, we must look at the semantics and implementation of:
+
+- MockUtil.getInvocationContainer(invocation.getMock())
+- InvocationContainerImpl.getInvocationForStubbing()
+- InvocationContainerImpl.getStubbingsDescending()
+
+In Mockito (the library this code is from), the relevant classes behave as follows:
+
+1. MockUtil.getInvocationContainer(mock)
+   - For a valid Mockito mock, this method returns a non-null InvocationContainerImpl tied to that mock.
+   - It throws if the given object is not a Mockito mock. So, in correct usage, container itself is not null.
+
+2. InvocationContainerImpl.getStubbingsDescending()
+   - Returns the list (or iterable) of Stubbing instances, sorted with the most recent first.
+   - When iterating for (Stubbing stubbing : container.getStubbingsDescending()), the loop body is only entered if there is at least one existing stubbing.
+
+3. InvocationContainerImpl.getInvocationForStubbing()
+   - This method returns the "current" invocation being recorded for stubbing, if any.
+   - By design/contract in Mockito’s internals, when you are iterating over existing stubbings to find a match (as here), there is always a current invocation context present. This method is used exactly in such matching phases and is expected by the library to be non-null whenever code like this is running.
+   - In the real Mockito implementation that this pattern comes from (e.g., deep-stubbing internal logic), the method is not documented or implemented to return null along this code path; if there were states where it could be null, this code would be a known NPE hotspot. The Mockito team relies on the invariant that when deepStub(...) is invoked to answer an invocation, the invocation for stubbing is set and non-null.
+
+In other words, semantically:
+
+- deepStub(...) is called in the context of handling a real invocation on a mock.
+- At that time, the invocation has been captured and stored in the container as the "invocation for stubbing."
+- Therefore, container.getInvocationForStubbing() is assumed to be non-null at this point and is used without a null check both here and in similar internal code.
+
+If getInvocationForStubbing() could legitimately return null under some circumstances (e.g., outside of a proper mocked invocation context), the above line would crash reliably, and such a bug would be widely visible. Given how Mockito is structured and used, and given its extensive test coverage of deep stubs, the internal contract is that getInvocationForStubbing() is never null when this method executes along its normal, supported call paths.
+
+Thus, under the intended and supported usage of this API (with a proper Mockito mock and invocation), container.getInvocationForStubbing() cannot be null at this point in the method.
+    ]]></reason>
+    <value>NO</value>
+</response>
+```
