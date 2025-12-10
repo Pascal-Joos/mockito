@@ -6,7 +6,6 @@ package org.mockito.internal.stubbing.defaultanswers;
 
 import static org.mockito.Mockito.withSettings;
 
-import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.annotation.Nullable;
@@ -84,8 +83,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
     // matches invocation for verification
     // TODO why don't we do container.findAnswer here?
     for (Stubbing stubbing : container.getStubbingsDescending()) {
-      if (Nullability.castToNonnull(container.getInvocationForStubbing())
-          .matches(stubbing.getInvocation())) {
+      if (container.getInvocationForStubbing().matches(stubbing.getInvocation())) {
         return stubbing.answer(invocation);
       }
     }

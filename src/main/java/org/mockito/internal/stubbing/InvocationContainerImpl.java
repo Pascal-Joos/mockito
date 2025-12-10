@@ -35,7 +35,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
   private final RegisteredInvocations registeredInvocations;
   @Nullable private final Strictness mockStrictness;
 
-  @Nullable private MatchableInvocation invocationForStubbing;
+  private MatchableInvocation invocationForStubbing;
 
   public InvocationContainerImpl(MockCreationSettings mockSettings) {
     this.registeredInvocations = createRegisteredInvocations(mockSettings);
@@ -64,7 +64,6 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
   /** Adds new stubbed answer and returns the invocation matcher the answer was added to. */
   public StubbedInvocationMatcher addAnswer(
       Answer answer, boolean isConsecutive, @Nullable Strictness stubbingStrictness) {
-    assert invocationForStubbing != null;
     Invocation invocation = invocationForStubbing.getInvocation();
     mockingProgress().stubbingCompleted();
     if (answer instanceof ValidableAnswer) {
@@ -156,13 +155,9 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
   }
 
   public Object invokedMock() {
-    if (invocationForStubbing == null) {
-      return null;
-    }
     return invocationForStubbing.getInvocation().getMock();
   }
 
-  @Nullable
   public MatchableInvocation getInvocationForStubbing() {
     return invocationForStubbing;
   }
