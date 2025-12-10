@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.listeners;
 
+import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.util.Collection;
 import java.util.List;
 import org.mockito.internal.creation.settings.CreationSettings;
@@ -25,7 +26,8 @@ public class StubbingLookupNotifier {
       return;
     }
     StubbingLookupEvent event =
-        new Event(invocation, stubbingFound, allStubbings, creationSettings);
+        new Event(
+            invocation, Nullability.castToNonnull(stubbingFound), allStubbings, creationSettings);
     for (StubbingLookupListener listener : listeners) {
       listener.onStubbingLookup(event);
     }
