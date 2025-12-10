@@ -266,25 +266,28 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
   }
 
   private void assureCanReadMockito(Set<Class<?>> types) {
-    if (redefineModule == null) {
+    Method localRedefineModule = redefineModule;
+    Method localGetModule = getModule;
+    Method localCanRead = canRead;
+    if (localRedefineModule == null || localGetModule == null || localCanRead == null) {
       return;
     }
     Set<Object> modules = new HashSet<Object>();
     try {
       Object target =
-          getModule.invoke(
+          localGetModule.invoke(
               Class.forName(
                   "org.mockito.internal.creation.bytebuddy.inject.MockMethodDispatcher",
                   false,
                   null));
       for (Class<?> type : types) {
-        Object module = getModule.invoke(type);
-        if (!modules.contains(module) && !(Boolean) canRead.invoke(module, target)) {
+        Object module = localGetModule.invoke(type);
+        if (!modules.contains(module) && !(Boolean) localCanRead.invoke(module, target)) {
           modules.add(module);
         }
       }
       for (Object module : modules) {
-        redefineModule.invoke(
+        localRedefineModule.invoke(
             instrumentation,
             module,
             Collections.singleton(target),
