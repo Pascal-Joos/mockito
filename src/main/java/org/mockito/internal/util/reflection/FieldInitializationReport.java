@@ -51,6 +51,6 @@ public class FieldInitializationReport {
    * @return Class of the instance
    */
   public Class<?> fieldClass() {
-    return fieldInstance == null ? Object.class : fieldInstance.getClass();
+    return fieldInstance != null ? fieldInstance.getClass() : null;
   }
 }
