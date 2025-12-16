@@ -34,9 +34,6 @@ public class VerificationDataInOrderImpl implements VerificationDataInOrder {
 
   @Nullable
   public MatchableInvocation getWanted() {
-    if (wanted == null) {
-      throw new NullPointerException("wanted is null");
-    }
     return wanted;
   }
 }
