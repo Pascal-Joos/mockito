@@ -28,6 +28,31 @@ class InstrumentationMemberAccessor implements MemberAccessor {
   @Nullable private static final Instrumentation INSTRUMENTATION;
   private static final Dispatcher DISPATCHER;
 
+  static {
+    WRAPPERS.put(boolean.class, Boolean.class);
+    WRAPPERS.put(byte.class, Byte.class);
+    WRAPPERS.put(short.class, Short.class);
+    WRAPPERS.put(char.class, Character.class);
+    WRAPPERS.put(int.class, Integer.class);
+    WRAPPERS.put(long.class, Long.class);
+    WRAPPERS.put(float.class, Float.class);
+    WRAPPERS.put(double.class, Double.class);
+    Instrumentation instrumentation;
+    Dispatcher dispatcher;
+    Throwable throwable;
+    try {
+      instrumentation = ByteBuddyAgent.install();
+      // We need to generate a dispatcher instance that is located in a distinguished class
+      // loader to create a unique (unnamed) module to which we can open other packages to.
+      dispatcher = null;
+      throwable = null;
+    } catch (Throwable t) {
+      instrumentation = null;
+      dispatcher = null;
+      throwable = t;
+    }
+  }
+
   @Nullable private static final Throwable INITIALIZATION_ERROR;
 
   static {
