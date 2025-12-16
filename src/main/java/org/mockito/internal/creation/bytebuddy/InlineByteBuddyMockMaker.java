@@ -299,11 +299,7 @@ public class InlineByteBuddyMockMaker
   @Nullable
   @Override
   public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
-    T mock = doCreateMock(settings, handler, false);
-    if (mock == null) {
-      throw new MockitoConfigurationException("Mock instance must not be null");
-    }
-    return mock;
+    return doCreateMock(settings, handler, false);
   }
 
   @Override
