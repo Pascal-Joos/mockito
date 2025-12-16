@@ -245,16 +245,6 @@ public class InlineByteBuddyMockMaker
           INITIALIZATION_ERROR);
     }
 
-    if (INSTRUMENTATION == null) {
-      throw new MockitoInitializationException(
-          join(
-              "Could not initialize inline Byte Buddy mock maker.",
-              "",
-              "Instrumentation is not available but is required for inline mocking.",
-              Platform.describe()),
-          INITIALIZATION_ERROR);
-    }
-
     ThreadLocal<Class<?>> currentConstruction = new ThreadLocal<>();
     ThreadLocal<Boolean> isSuspended = ThreadLocal.withInitial(() -> false);
     Predicate<Class<?>> isMockConstruction =
