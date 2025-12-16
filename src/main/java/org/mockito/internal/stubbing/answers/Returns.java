@@ -52,7 +52,7 @@ public class Returns implements Answer<Object>, ValidableAnswer, Serializable {
   }
 
   private Class<?> returnType() {
-    return value == null ? Object.class : value.getClass();
+    return value.getClass();
   }
 
   private boolean returnsNull() {
