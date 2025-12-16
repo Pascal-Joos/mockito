@@ -101,8 +101,7 @@ public class InvocationContainerImpl implements InvocationContainer, Serializabl
       }
     }
 
-    throw new IllegalStateException(
-        "No StubbedInvocationMatcher found for invocation: " + invocation);
+    return null;
   }
 
   /** Sets the answers declared with 'doAnswer' style. */
