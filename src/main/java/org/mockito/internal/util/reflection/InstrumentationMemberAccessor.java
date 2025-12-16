@@ -193,9 +193,12 @@ class InstrumentationMemberAccessor implements MemberAccessor {
 
   @Override
   public Object get(Field field, Object target) {
-    Object nonNullTarget = Modifier.isStatic(field.getModifiers()) ? new Object() : target;
     assureArguments(
-        field, nonNullTarget, field.getDeclaringClass(), new Object[0], new Class<?>[0]);
+        field,
+        Modifier.isStatic(field.getModifiers()) ? null : target,
+        field.getDeclaringClass(),
+        new Object[0],
+        new Class<?>[0]);
     try {
       Object module = getModule.bindTo(field.getDeclaringClass()).invokeWithArguments();
       String packageName = field.getDeclaringClass().getPackage().getName();
