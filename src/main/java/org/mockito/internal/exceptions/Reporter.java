@@ -467,14 +467,19 @@ public class Reporter {
     ScenarioPrinter scenarioPrinter = new ScenarioPrinter();
     String scenario = scenarioPrinter.print(invocations);
 
+    String mockName =
+        undesired != null && undesired.getMock() != null
+            ? MockUtil.getMockName(undesired.getMock())
+            : "null";
+
+    Location location = undesired != null ? undesired.getLocation() : null;
+
     return new NoInteractionsWanted(
         join(
             "No interactions wanted here:",
             new LocationImpl(),
-            "But found this interaction on mock '"
-                + MockUtil.getMockName(undesired.getMock())
-                + "':",
-            undesired.getLocation(),
+            "But found this interaction on mock '" + mockName + "':",
+            location,
             scenario));
   }
 
