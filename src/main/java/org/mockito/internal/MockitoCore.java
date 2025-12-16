@@ -250,9 +250,17 @@ public class MockitoCore {
    *
    * @return last invocation
    */
+  /**
+   * For testing purposes only. Is not the part of main API.
+   *
+   * @return last invocation
+   */
   public Invocation getLastInvocation() {
-    OngoingStubbingImpl ongoingStubbing =
-        ((OngoingStubbingImpl) mockingProgress().pullOngoingStubbing());
+    OngoingStubbing ongoing = mockingProgress().pullOngoingStubbing();
+    if (ongoing == null) {
+      return null;
+    }
+    OngoingStubbingImpl ongoingStubbing = (OngoingStubbingImpl) ongoing;
     List<Invocation> allInvocations = ongoingStubbing.getRegisteredInvocations();
     return allInvocations.get(allInvocations.size() - 1);
   }
