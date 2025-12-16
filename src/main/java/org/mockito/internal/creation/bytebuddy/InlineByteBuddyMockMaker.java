@@ -474,9 +474,7 @@ public class InlineByteBuddyMockMaker
     return new TypeMockability() {
       @Override
       public boolean mockable() {
-        return INSTRUMENTATION != null
-            && INSTRUMENTATION.isModifiableClass(type)
-            && !EXCLUDES.contains(type);
+        return INSTRUMENTATION.isModifiableClass(type) && !EXCLUDES.contains(type);
       }
 
       @Override
