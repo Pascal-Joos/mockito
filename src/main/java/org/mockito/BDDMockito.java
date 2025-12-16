@@ -171,6 +171,9 @@ public class BDDMockito extends Mockito {
     private final OngoingStubbing<T> mockitoOngoingStubbing;
 
     public BDDOngoingStubbingImpl(@Nullable OngoingStubbing<T> ongoingStubbing) {
+      if (ongoingStubbing == null) {
+        throw new IllegalArgumentException("ongoingStubbing cannot be null");
+      }
       this.mockitoOngoingStubbing = ongoingStubbing;
     }
 
