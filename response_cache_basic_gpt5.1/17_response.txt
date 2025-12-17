@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public InvocationContainerImpl(MockCreationSettings mockSettings) {
+    this.registeredInvocations = createRegisteredInvocations(mockSettings);
+    this.mockStrictness = mockSettings.isLenient() ? Strictness.LENIENT : null;
+    this.doAnswerStyleStubbing = new DoAnswerStyleStubbing();
+    this.invocationForStubbing = null;
+  }
+  ```
+    ]]>
+  </code>
+</response>

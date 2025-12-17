@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+          @Override
+          @SuppressWarnings("deprecation")
+          public void testFailure(final Failure failure) throws Exception {
+            if (warningsCollector != null) {
+              String warnings = warningsCollector.getWarnings();
+              new JUnitFailureHacker().appendWarnings(failure, warnings);
+            }
+          }
+  ```
+    ]]>
+  </code>
+</response>

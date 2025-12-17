@@ -1,0 +1,23 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public static <T> MockHandler<T> getMockHandler(T mock) {
+    if (mock == null) {
+      throw new NotAMockException("Argument should be a mock, but is null!");
+    }
+
+    if (isMock(mock)) {
+      MockHandler<T> handler = mockMaker.getHandler(mock);
+      if (handler == null) {
+        throw new NotAMockException("Argument should be a mock, but no handler was found!");
+      }
+      return handler;
+    } else {
+      throw new NotAMockException("Argument should be a mock, but is: " + mock.getClass());
+    }
+  }
+  ```
+    ]]>
+  </code>
+</response>

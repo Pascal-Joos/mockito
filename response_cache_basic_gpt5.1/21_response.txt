@@ -1,0 +1,31 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public class ForwardsInvocations implements Answer<Object>, Serializable {
+    private static final long serialVersionUID = -8343690268123254910L;
+
+    private final Object delegatedObject;
+
+    public ForwardsInvocations(Object delegatedObject) {
+      this.delegatedObject = delegatedObject;
+    }
+
+    public Object answer(InvocationOnMock invocation) throws Throwable {
+      Method mockMethod = invocation.getMethod();
+
+      try {
+        Method delegateMethod = getDelegateMethod(mockMethod);
+
+        if (!compatibleReturnTypes(mockMethod.getReturnType(), delegateMethod.getReturnType())) {
+          throw delegatedMethodHasWrongReturnType(
+              mockMethod, delegateMethod, invocation.getMock(), delegatedObject);
+        }
+
+        MemberAccessor accessor = Plugins.getMemberAccessor();
+        Object[] rawArguments = ((Invocation) invocation).getRawArguments();
+        return accessor.invoke(delegateMethod, delegatedObject, rawArguments);
+  ```
+    ]]>
+  </code>
+</response>

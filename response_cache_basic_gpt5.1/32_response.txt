@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public MatchableInvocation getWanted() {
+    if (wanted == null) {
+      throw new NullPointerException("wanted is null");
+    }
+    return wanted;
+  }
+  ```
+    ]]>
+  </code>
+</response>

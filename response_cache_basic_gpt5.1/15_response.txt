@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public String getTestName() {
+    Object localInstance = this.testClassInstance;
+    if (localInstance == null) {
+      return testMethodName;
+    }
+    return localInstance.getClass().getSimpleName() + "." + testMethodName;
+  }
+  ```
+    ]]>
+  </code>
+</response>

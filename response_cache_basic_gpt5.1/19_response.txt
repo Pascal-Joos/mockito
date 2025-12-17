@@ -1,0 +1,11 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private String printReturnType() {
+    return value == null ? "null" : value.getClass().getSimpleName();
+  }
+  ```
+    ]]>
+  </code>
+</response>

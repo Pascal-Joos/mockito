@@ -1,0 +1,13 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @SuppressWarnings("unused")
+  public static boolean isConstructorMock(String identifier, Class<?> type) {
+    MockMethodDispatcher dispatcher = DISPATCHERS.get(identifier);
+    return dispatcher != null && dispatcher.isConstructorMock(type);
+  }
+  ```
+    ]]>
+  </code>
+</response>

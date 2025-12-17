@@ -1,0 +1,18 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public static <T> Class<T> primitiveTypeOf(Class<T> clazz) {
+    if (clazz.isPrimitive()) {
+      return clazz;
+    }
+    Class<?> primitive = PRIMITIVE_TYPES.get(clazz);
+    if (primitive == null) {
+      throw new IllegalArgumentException("No primitive type mapping for: " + clazz);
+    }
+    return (Class<T>) primitive;
+  }
+  ```
+    ]]>
+  </code>
+</response>

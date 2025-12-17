@@ -1,0 +1,13 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+    private SimpleEntry(K key, Map.Entry<WeakKey<K>, V> entry) {
+      if (entry == null) throw new NullPointerException();
+      this.key = key;
+      this.entry = entry;
+    }
+  ```
+    ]]>
+  </code>
+</response>

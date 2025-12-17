@@ -1,0 +1,21 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public Object[] getConstructorArgs() {
+    if (constructorArgs == null) {
+      return new Object[0];
+    }
+    if (outerClassInstance == null) {
+      return constructorArgs;
+    }
+    List<Object> resultArgs = new ArrayList<Object>(constructorArgs.length + 1);
+    resultArgs.add(outerClassInstance);
+    resultArgs.addAll(asList(constructorArgs));
+    return resultArgs.toArray(new Object[constructorArgs.length + 1]);
+  }
+  ```
+    ]]>
+  </code>
+</response>

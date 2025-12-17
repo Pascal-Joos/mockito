@@ -1,0 +1,25 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private static Object tryInvoke(Method origin,  Object instance, Object[] arguments)
+      throws Throwable {
+    MemberAccessor accessor = Plugins.getMemberAccessor();
+    try {
+      return accessor.invoke(origin, instance, arguments);
+    } catch (InvocationTargetException exception) {
+      Throwable cause = exception.getCause();
+      if (cause == null) {
+        throw exception;
+      }
+      new ConditionalStackTraceFilter()
+          .filter(
+              hideRecursiveCall(
+                  cause, new Throwable().getStackTrace().length, origin.getDeclaringClass()));
+      throw cause;
+    }
+  }
+  ```
+    ]]>
+  </code>
+</response>

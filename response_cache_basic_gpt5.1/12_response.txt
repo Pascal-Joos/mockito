@@ -1,0 +1,13 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public CreationSettings() {
+    this.typeToMock = null;
+    this.defaultAnswer = null;
+    this.mockName = null;
+  }
+  ```
+    ]]>
+  </code>
+</response>

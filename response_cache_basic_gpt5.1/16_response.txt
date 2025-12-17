@@ -1,0 +1,18 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private void append(String message) {
+    this.numberOfFailures++;
+    String safeMessage = message == null ? "null" : message.trim();
+    this.builder
+        .append('\n')
+        .append(this.numberOfFailures)
+        .append(". ")
+        .append(safeMessage)
+        .append('\n');
+  }
+  ```
+    ]]>
+  </code>
+</response>

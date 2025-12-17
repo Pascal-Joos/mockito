@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public VerificationDataImpl(
+      InvocationContainerImpl invocations, @Nullable InvocationMatcher wanted) {
+    this.invocations = invocations;
+    this.wanted = wanted;
+    this.assertWantedIsVerifiable();
+  }
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,12 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+      @Override
+      public boolean mockable() {
+        return INSTRUMENTATION != null && INSTRUMENTATION.isModifiableClass(type) && !EXCLUDES.contains(type);
+      }
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,11 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private Class<?> returnType() {
+    return value == null ? Object.class : value.getClass();
+  }
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+    public BDDOngoingStubbingImpl(OngoingStubbing<T> ongoingStubbing) {
+      if (ongoingStubbing == null) {
+        throw new IllegalArgumentException("ongoingStubbing cannot be null");
+      }
+      this.mockitoOngoingStubbing = ongoingStubbing;
+    }
+  ```
+    ]]>
+  </code>
+</response>

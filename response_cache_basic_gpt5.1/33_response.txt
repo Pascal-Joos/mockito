@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+          @Override
+          public void testFailure(Failure failure) throws Exception {
+            if (warningsCollector != null) {
+              logger.log(warningsCollector.getWarnings());
+            }
+          }
+  ```
+    ]]>
+  </code>
+</response>
