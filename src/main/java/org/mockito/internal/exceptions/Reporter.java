@@ -943,7 +943,7 @@ public class Reporter {
   }
 
   public static MockitoException delegatedMethodHasWrongReturnType(
-      Method mockMethod, Method delegateMethod, Object mock, Object delegate) {
+      Method mockMethod, Method delegateMethod, Object mock, @Nullable Object delegate) {
     return new MockitoException(
         join(
             "Methods called on delegated instance must have compatible return types with the mock.",
@@ -957,7 +957,7 @@ public class Reporter {
   }
 
   public static MockitoException delegatedMethodDoesNotExistOnDelegate(
-      Method mockMethod, Object mock, Object delegate) {
+      Method mockMethod, Object mock, @Nullable Object delegate) {
     return new MockitoException(
         join(
             "Methods called on mock must exist in delegated instance.",
