@@ -6,7 +6,6 @@ package org.mockito.internal.creation.bytebuddy;
 
 import static net.bytebuddy.matcher.ElementMatchers.*;
 
-import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -329,9 +328,7 @@ public class MockMethodAdvice extends MockMethodDispatcher {
       new ConditionalStackTraceFilter()
           .filter(
               hideRecursiveCall(
-                  Nullability.castToNonnull(cause),
-                  new Throwable().getStackTrace().length,
-                  origin.getDeclaringClass()));
+                  cause, new Throwable().getStackTrace().length, origin.getDeclaringClass()));
       throw cause;
     }
   }
