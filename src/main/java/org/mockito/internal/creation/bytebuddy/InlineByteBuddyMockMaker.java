@@ -289,16 +289,6 @@ public class InlineByteBuddyMockMaker
           return null;
         };
 
-    if (INSTRUMENTATION == null) {
-      throw new MockitoInitializationException(
-          join(
-              "Could not initialize inline Byte Buddy mock maker.",
-              "",
-              "It appears as if the instrumentation API is not available in the current runtime.",
-              Platform.describe()),
-          INITIALIZATION_ERROR);
-    }
-
     bytecodeGenerator =
         new TypeCachingBytecodeGenerator(
             new InlineBytecodeGenerator(
@@ -484,9 +474,7 @@ public class InlineByteBuddyMockMaker
     return new TypeMockability() {
       @Override
       public boolean mockable() {
-        return INSTRUMENTATION != null
-            && INSTRUMENTATION.isModifiableClass(type)
-            && !EXCLUDES.contains(type);
+        return INSTRUMENTATION.isModifiableClass(type) && !EXCLUDES.contains(type);
       }
 
       @Override
