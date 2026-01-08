@@ -266,7 +266,8 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
   }
 
   private void assureCanReadMockito(Set<Class<?>> types) {
-    if (redefineModule == null) {
+    Method localCanRead = canRead;
+    if (redefineModule == null || getModule == null || localCanRead == null) {
       return;
     }
     Set<Object> modules = new HashSet<Object>();
@@ -279,7 +280,7 @@ public class InlineBytecodeGenerator implements BytecodeGenerator, ClassFileTran
                   null));
       for (Class<?> type : types) {
         Object module = getModule.invoke(type);
-        if (!modules.contains(module) && !(Boolean) canRead.invoke(module, target)) {
+        if (!modules.contains(module) && !(Boolean) localCanRead.invoke(module, target)) {
           modules.add(module);
         }
       }
