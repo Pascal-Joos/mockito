@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.stubbing.defaultanswers;
 
+import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -97,7 +98,7 @@ class RetrieveGenericsForDefaultAnswers {
       final InvocationOnMock invocation, final TypeVariable returnType) {
     // Class level
     final MockCreationSettings mockSettings =
-        MockUtil.getMockHandler(invocation.getMock()).getMockSettings();
+        Nullability.castToNonnull(MockUtil.getMockHandler(invocation.getMock())).getMockSettings();
     final GenericMetadataSupport returnTypeSupport =
         GenericMetadataSupport.inferFrom(mockSettings.getTypeToMock())
             .resolveGenericReturnType(invocation.getMethod());

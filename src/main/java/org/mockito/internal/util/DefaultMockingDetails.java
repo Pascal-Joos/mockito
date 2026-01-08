@@ -5,6 +5,7 @@
 package org.mockito.internal.util;
 
 import java.util.Collection;
+import javax.annotation.Nullable;
 import org.mockito.MockingDetails;
 import org.mockito.exceptions.misusing.NotAMockException;
 import org.mockito.internal.debugging.InvocationsPrinter;
@@ -48,7 +49,7 @@ public class DefaultMockingDetails implements MockingDetails {
 
   @Override
   public MockCreationSettings<?> getMockCreationSettings() {
-    return mockHandler().getMockSettings();
+    return getMockHandler().getMockSettings();
   }
 
   @Override
@@ -72,6 +73,7 @@ public class DefaultMockingDetails implements MockingDetails {
     return toInspect;
   }
 
+  @Nullable
   private MockHandler<Object> mockHandler() {
     assertGoodMock();
     return MockUtil.getMockHandler(toInspect);

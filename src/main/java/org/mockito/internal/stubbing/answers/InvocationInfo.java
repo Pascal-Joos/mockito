@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.stubbing.answers;
 
+import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import org.mockito.internal.invocation.AbstractAwareMethod;
@@ -50,7 +51,7 @@ public class InvocationInfo implements AbstractAwareMethod {
    */
   public boolean isVoid() {
     final MockCreationSettings mockSettings =
-        MockUtil.getMockHandler(invocation.getMock()).getMockSettings();
+        Nullability.castToNonnull(MockUtil.getMockHandler(invocation.getMock())).getMockSettings();
     Class<?> returnType =
         GenericMetadataSupport.inferFrom(mockSettings.getTypeToMock())
             .resolveGenericReturnType(this.method)
