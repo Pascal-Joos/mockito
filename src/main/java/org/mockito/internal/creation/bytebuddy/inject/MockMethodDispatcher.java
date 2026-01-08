@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.creation.bytebuddy.inject;
 
+import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,7 +42,7 @@ public abstract class MockMethodDispatcher {
 
   @SuppressWarnings("unused")
   public static boolean isConstructorMock(String identifier, Class<?> type) {
-    return DISPATCHERS.get(identifier).isConstructorMock(type);
+    return Nullability.castToNonnull(DISPATCHERS.get(identifier)).isConstructorMock(type);
   }
 
   @Nullable
