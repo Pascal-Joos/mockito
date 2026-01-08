@@ -8,6 +8,7 @@ import static org.mockito.internal.reporting.Pluralizer.pluralize;
 import static org.mockito.internal.reporting.Pluralizer.were_exactly_x_interactions;
 import static org.mockito.internal.util.StringUtil.join;
 
+import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -768,7 +769,7 @@ public class Reporter {
                 + "'.",
             "You haven't provided the instance at field declaration so I tried to construct the instance.",
             "However the constructor or the initialization block threw an exception : "
-                + details.getMessage(),
+                + Nullability.castToNonnull(details).getMessage(),
             ""),
         details);
   }
