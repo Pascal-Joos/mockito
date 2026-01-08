@@ -6,7 +6,6 @@ package org.mockito.internal.creation.bytebuddy;
 
 import static org.mockito.internal.util.StringUtil.join;
 
-import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.lang.reflect.Modifier;
 import javax.annotation.Nullable;
 import org.mockito.creation.instance.Instantiator;
@@ -55,8 +54,7 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
       throw new MockitoException(
           join(
               "ClassCastException occurred while creating the mockito mock :",
-              "  class to mock : "
-                  + describeClass(Nullability.castToNonnull(settings.getTypeToMock())),
+              "  class to mock : " + describeClass(settings.getTypeToMock()),
               "  created class : " + describeClass(mockedProxyType),
               "  proxy instance class : " + describeClass(mockInstance),
               "  instance creation by : " + instantiator.getClass().getSimpleName(),
@@ -78,7 +76,7 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
     try {
       return cachingMockBytecodeGenerator.mockClass(
           MockFeatures.withMockFeatures(
-              Nullability.castToNonnull(settings.getTypeToMock()),
+              settings.getTypeToMock(),
               settings.getExtraInterfaces(),
               settings.getSerializableMode(),
               settings.isStripAnnotations()));
@@ -92,37 +90,28 @@ public class SubclassByteBuddyMockMaker implements ClassCreatingMockMaker {
     // Force explicit cast to mocked type here, instead of
     // relying on the JVM to implicitly cast on the client call site.
     // This allows us to catch earlier the ClassCastException earlier
-    Class<T> typeToMock = Nullability.castToNonnull(settings.getTypeToMock());
+    Class<T> typeToMock = settings.getTypeToMock();
     return typeToMock.cast(mock);
   }
 
   private <T> RuntimeException prettifyFailure(
       MockCreationSettings<T> mockFeatures, Exception generationFailed) {
-    if (Nullability.castToNonnull(mockFeatures.getTypeToMock()).isArray()) {
+    if (mockFeatures.getTypeToMock().isArray()) {
       throw new MockitoException(
-          join(
-              "Mockito cannot mock arrays: "
-                  + Nullability.castToNonnull(mockFeatures.getTypeToMock())
-                  + ".",
-              ""),
+          join("Mockito cannot mock arrays: " + mockFeatures.getTypeToMock() + ".", ""),
           generationFailed);
     }
-    if (Modifier.isPrivate(
-        Nullability.castToNonnull(mockFeatures.getTypeToMock()).getModifiers())) {
+    if (Modifier.isPrivate(mockFeatures.getTypeToMock().getModifiers())) {
       throw new MockitoException(
           join(
-              "Mockito cannot mock this class: "
-                  + Nullability.castToNonnull(mockFeatures.getTypeToMock())
-                  + ".",
+              "Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".",
               "Most likely it is due to mocking a private class that is not visible to Mockito",
               ""),
           generationFailed);
     }
     throw new MockitoException(
         join(
-            "Mockito cannot mock this class: "
-                + Nullability.castToNonnull(mockFeatures.getTypeToMock())
-                + ".",
+            "Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".",
             "",
             "Mockito can only mock non-private & non-final classes.",
             "If you're not sure why you're getting this error, please report to the mailing list.",

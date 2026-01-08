@@ -7,7 +7,6 @@ package org.mockito.internal.stubbing.defaultanswers;
 import static org.mockito.internal.util.ObjectMethodsGuru.isCompareToMethod;
 import static org.mockito.internal.util.ObjectMethodsGuru.isToStringMethod;
 
-import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.io.Serializable;
 import java.util.*;
 import javax.annotation.Nullable;
@@ -53,8 +52,7 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
       MockName name = MockUtil.getMockName(mock);
       if (name.isDefault()) {
         return "Mock for "
-            + Nullability.castToNonnull(MockUtil.getMockSettings(mock).getTypeToMock())
-                .getSimpleName()
+            + MockUtil.getMockSettings(mock).getTypeToMock().getSimpleName()
             + ", hashCode: "
             + mock.hashCode();
       } else {
