@@ -7,6 +7,7 @@ package org.mockito.internal.util.reflection;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static org.mockito.internal.util.StringUtil.join;
 
+import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.lang.instrument.Instrumentation;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -26,7 +27,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
   private static final Map<Class<?>, Class<?>> WRAPPERS = new HashMap<>();
 
   @Nullable private static final Instrumentation INSTRUMENTATION;
-  private static final Dispatcher DISPATCHER;
+  @Nullable private static final Dispatcher DISPATCHER;
 
   @Nullable private static final Throwable INITIALIZATION_ERROR;
 
@@ -124,6 +125,14 @@ class InstrumentationMemberAccessor implements MemberAccessor {
   @Override
   public Object newInstance(Constructor<?> constructor, Object... arguments)
       throws InstantiationException, InvocationTargetException {
+    if (INITIALIZATION_ERROR != null) {
+      throw new MockitoInitializationException(
+          join(
+              "Could not initialize the Mockito instrumentation member accessor",
+              "",
+              "This is unexpected on JVMs from Java 9 or later - possibly, the instrumentation API could not be resolved"),
+          INITIALIZATION_ERROR);
+    }
     if (Modifier.isAbstract(constructor.getDeclaringClass().getModifiers())) {
       throw new InstantiationException(
           "Cannot instantiate abstract " + constructor.getDeclaringClass().getTypeName());
@@ -165,6 +174,10 @@ class InstrumentationMemberAccessor implements MemberAccessor {
       Object module = getModule.bindTo(method.getDeclaringClass()).invokeWithArguments();
       String packageName = method.getDeclaringClass().getPackage().getName();
       assureOpen(module, packageName);
+      if (DISPATCHER == null) {
+        throw new IllegalStateException(
+            "Could not invoke " + method + " because DISPATCHER is not initialized");
+      }
       MethodHandle handle =
           ((MethodHandles.Lookup)
                   privateLookupIn.invokeExact(method.getDeclaringClass(), DISPATCHER.getLookup()))
@@ -193,6 +206,14 @@ class InstrumentationMemberAccessor implements MemberAccessor {
 
   @Override
   public Object get(Field field, Object target) {
+    if (DISPATCHER == null) {
+      throw new MockitoInitializationException(
+          join(
+              "Could not initialize the Mockito instrumentation member accessor",
+              "",
+              "This is unexpected on JVMs from Java 9 or later - possibly, the instrumentation API could not be resolved"),
+          INITIALIZATION_ERROR);
+    }
     assureArguments(
         field,
         Modifier.isStatic(field.getModifiers()) ? null : target,
@@ -205,7 +226,8 @@ class InstrumentationMemberAccessor implements MemberAccessor {
       assureOpen(module, packageName);
       MethodHandle handle =
           ((MethodHandles.Lookup)
-                  privateLookupIn.invokeExact(field.getDeclaringClass(), DISPATCHER.getLookup()))
+                  privateLookupIn.invokeExact(
+                      field.getDeclaringClass(), Nullability.castToNonnull(DISPATCHER).getLookup()))
               .unreflectGetter(field);
       if (!Modifier.isStatic(field.getModifiers())) {
         handle = handle.bindTo(target);
@@ -218,6 +240,14 @@ class InstrumentationMemberAccessor implements MemberAccessor {
 
   @Override
   public void set(Field field, Object target, Object value) throws IllegalAccessException {
+    if (DISPATCHER == null) {
+      throw new MockitoInitializationException(
+          join(
+              "Could not initialize the Mockito instrumentation member accessor",
+              "",
+              "This is unexpected on JVMs from Java 9 or later - possibly, the instrumentation API could not be resolved"),
+          INITIALIZATION_ERROR);
+    }
     assureArguments(
         field,
         Modifier.isStatic(field.getModifiers()) ? null : target,
@@ -235,7 +265,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
       if (Modifier.isFinal(field.getModifiers())) {
         isFinal = true;
         try {
-          DISPATCHER.setAccessible(field, true);
+          Nullability.castToNonnull(DISPATCHER).setAccessible(field, true);
         } catch (Throwable ignored) {
           illegalAccess = true; // To distinguish from propagated illegal access exception.
           throw new IllegalAccessException("Could not make final field " + field + " accessible");
@@ -246,7 +276,9 @@ class InstrumentationMemberAccessor implements MemberAccessor {
       try {
         MethodHandle handle =
             ((MethodHandles.Lookup)
-                    privateLookupIn.invokeExact(field.getDeclaringClass(), DISPATCHER.getLookup()))
+                    privateLookupIn.invokeExact(
+                        field.getDeclaringClass(),
+                        Nullability.castToNonnull(DISPATCHER).getLookup()))
                 .unreflectSetter(field);
         if (!Modifier.isStatic(field.getModifiers())) {
           handle = handle.bindTo(target);
@@ -254,7 +286,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
         handle.invokeWithArguments(value);
       } finally {
         if (isFinal) {
-          DISPATCHER.setAccessible(field, false);
+          Nullability.castToNonnull(DISPATCHER).setAccessible(field, false);
         }
       }
     } catch (Throwable t) {
@@ -267,6 +299,9 @@ class InstrumentationMemberAccessor implements MemberAccessor {
   }
 
   private void assureOpen(Object module, String packageName) throws Throwable {
+    if (DISPATCHER == null) {
+      throw INITIALIZATION_ERROR;
+    }
     if (!(Boolean) isOpen.invokeWithArguments(module, packageName, DISPATCHER.getModule())) {
       redefineModule
           .bindTo(INSTRUMENTATION)
