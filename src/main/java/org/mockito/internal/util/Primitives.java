@@ -4,7 +4,6 @@
  */
 package org.mockito.internal.util;
 
-import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -27,7 +26,6 @@ public class Primitives {
    * @param <T> The type
    * @return The primitive type if relevant, otherwise <code>null</code>
    */
-  @Nullable
   public static <T> Class<T> primitiveTypeOf(Class<T> clazz) {
     if (clazz.isPrimitive()) {
       return clazz;
@@ -47,8 +45,8 @@ public class Primitives {
 
   public static boolean isAssignableFromWrapper(Class<?> valueClass, Class<?> referenceType) {
     if (isPrimitiveOrWrapper(valueClass) && isPrimitiveOrWrapper(referenceType)) {
-      return Nullability.castToNonnull(Primitives.primitiveTypeOf(valueClass))
-          .isAssignableFrom(Nullability.castToNonnull(Primitives.primitiveTypeOf(referenceType)));
+      return Primitives.primitiveTypeOf(valueClass)
+          .isAssignableFrom(Primitives.primitiveTypeOf(referenceType));
     }
     return false;
   }
