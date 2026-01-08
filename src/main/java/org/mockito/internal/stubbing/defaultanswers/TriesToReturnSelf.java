@@ -15,15 +15,10 @@ public class TriesToReturnSelf implements Answer<Object>, Serializable {
   private final ReturnsEmptyValues defaultReturn = new ReturnsEmptyValues();
 
   @Nullable
-  @Override
   public Object answer(InvocationOnMock invocation) throws Throwable {
     Class<?> methodReturnType = invocation.getMethod().getReturnType();
     Object mock = invocation.getMock();
-    Object mockHandler = MockUtil.getMockHandler(mock);
-    if (mockHandler == null) {
-      return null;
-    }
-    Class<?> mockType = ((MockHandler) mockHandler).getMockSettings().getTypeToMock();
+    Class<?> mockType = MockUtil.getMockHandler(mock).getMockSettings().getTypeToMock();
 
     if (methodReturnType.isAssignableFrom(mockType)) {
       return invocation.getMock();
