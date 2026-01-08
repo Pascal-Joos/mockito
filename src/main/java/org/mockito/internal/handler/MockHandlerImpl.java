@@ -103,7 +103,11 @@ public class MockHandlerImpl<T> implements MockHandler<T> {
         mockingProgress().reportOngoingStubbing(ongoingStubbing);
       }
     } else {
-      Object ret = mockSettings.getDefaultAnswer().answer(invocation);
+      Answer defaultAnswer = mockSettings.getDefaultAnswer();
+      if (defaultAnswer == null) {
+        return null;
+      }
+      Object ret = defaultAnswer.answer(invocation);
       DefaultAnswerValidator.validateReturnValueFor(invocation, ret);
 
       // Mockito uses it to redo setting invocation for potential stubbing in case of partial

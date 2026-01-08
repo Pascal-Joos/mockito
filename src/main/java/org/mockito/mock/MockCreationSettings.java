@@ -21,6 +21,7 @@ import org.mockito.stubbing.Answer;
 public interface MockCreationSettings<T> {
 
   /** Mocked type. An interface or class the mock should implement / extend. */
+  @Nullable
   Class<T> getTypeToMock();
 
   /** the extra interfaces the mock object should implement. */

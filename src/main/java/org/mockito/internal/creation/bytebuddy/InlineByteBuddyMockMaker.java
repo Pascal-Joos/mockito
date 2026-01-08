@@ -7,6 +7,7 @@ package org.mockito.internal.creation.bytebuddy;
 import static org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.*;
 import static org.mockito.internal.util.StringUtil.*;
 
+import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -350,7 +351,7 @@ public class InlineByteBuddyMockMaker
     try {
       return bytecodeGenerator.mockClass(
           MockFeatures.withMockFeatures(
-              settings.getTypeToMock(),
+              Nullability.castToNonnull(settings.getTypeToMock()),
               settings.getExtraInterfaces(),
               settings.getSerializableMode(),
               settings.isStripAnnotations()));
@@ -361,15 +362,15 @@ public class InlineByteBuddyMockMaker
 
   private <T> RuntimeException prettifyFailure(
       MockCreationSettings<T> mockFeatures, Exception generationFailed) {
-    if (mockFeatures.getTypeToMock().isArray()) {
+    Class<?> typeToMock = Nullability.castToNonnull(mockFeatures.getTypeToMock());
+    if (typeToMock.isArray()) {
       throw new MockitoException(
-          join("Arrays cannot be mocked: " + mockFeatures.getTypeToMock() + ".", ""),
-          generationFailed);
+          join("Arrays cannot be mocked: " + typeToMock + ".", ""), generationFailed);
     }
-    if (Modifier.isFinal(mockFeatures.getTypeToMock().getModifiers())) {
+    if (Modifier.isFinal(typeToMock.getModifiers())) {
       throw new MockitoException(
           join(
-              "Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".",
+              "Mockito cannot mock this class: " + typeToMock + ".",
               "Can not mock final classes with the following settings :",
               " - explicit serialization (e.g. withSettings().serializable())",
               " - extra interfaces (e.g. withSettings().extraInterfaces(...))",
@@ -380,10 +381,10 @@ public class InlineByteBuddyMockMaker
               "Underlying exception : " + generationFailed),
           generationFailed);
     }
-    if (Modifier.isPrivate(mockFeatures.getTypeToMock().getModifiers())) {
+    if (Modifier.isPrivate(typeToMock.getModifiers())) {
       throw new MockitoException(
           join(
-              "Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".",
+              "Mockito cannot mock this class: " + typeToMock + ".",
               "Most likely it is a private class that is not visible by Mockito",
               "",
               "You are seeing this disclaimer because Mockito is configured to create inlined mocks.",
@@ -393,7 +394,7 @@ public class InlineByteBuddyMockMaker
     }
     throw new MockitoException(
         join(
-            "Mockito cannot mock this class: " + mockFeatures.getTypeToMock() + ".",
+            "Mockito cannot mock this class: " + typeToMock + ".",
             "",
             "If you're not sure why you're getting this error, please report to the mailing list.",
             "",

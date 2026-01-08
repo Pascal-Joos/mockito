@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.util.reflection;
 
+import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -330,7 +331,7 @@ public abstract class GenericMetadataSupport {
    * @throws MockitoException Raised if type is not a {@link Class} or a {@link ParameterizedType}.
    */
   public static GenericMetadataSupport inferFrom(Type type) {
-    Checks.checkNotNull(type, "type");
+    Checks.checkNotNull(Nullability.castToNonnull(type), "type");
     if (type instanceof Class) {
       return new FromClassGenericMetadataSupport((Class<?>) type);
     }
@@ -340,7 +341,7 @@ public abstract class GenericMetadataSupport {
 
     throw new MockitoException(
         "Type meta-data for this Type ("
-            + type.getClass().getCanonicalName()
+            + Nullability.castToNonnull(type).getClass().getCanonicalName()
             + ") is not supported : "
             + type);
   }

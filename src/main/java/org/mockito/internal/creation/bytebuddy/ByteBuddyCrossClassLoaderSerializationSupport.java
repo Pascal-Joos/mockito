@@ -7,11 +7,13 @@ package org.mockito.internal.creation.bytebuddy;
 import static org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.ForWriteReplace;
 import static org.mockito.internal.util.StringUtil.join;
 
+import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import javax.annotation.Nullable;
 import org.mockito.Incubating;
 import org.mockito.exceptions.base.MockitoSerializationIssue;
 import org.mockito.internal.configuration.plugins.Plugins;
@@ -106,7 +108,9 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
       return new CrossClassLoaderSerializationProxy(mockitoMock);
     } catch (IOException ioe) {
       MockName mockName = MockUtil.getMockName(mockitoMock);
-      String mockedType = MockUtil.getMockSettings(mockitoMock).getTypeToMock().getCanonicalName();
+      String mockedType =
+          Nullability.castToNonnull(MockUtil.getMockSettings(mockitoMock).getTypeToMock())
+              .getCanonicalName();
       throw new MockitoSerializationIssue(
           join(
               "The mock '" + mockName + "' of type '" + mockedType + "'",
@@ -152,7 +156,7 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
 
     private static final long serialVersionUID = -7600267929109286514L;
     private final byte[] serializedMock;
-    private final Class<?> typeToMock;
+    @Nullable private final Class<?> typeToMock;
     private final Set<Class<?>> extraInterfaces;
 
     /**
@@ -202,10 +206,11 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
 
         return deserializedMock;
       } catch (IOException ioe) {
+        MockCreationSettings<?> mockSettings = MockUtil.getMockSettings(serializedMock);
         throw new MockitoSerializationIssue(
             join(
                 "Mockito mock cannot be deserialized to a mock of '"
-                    + typeToMock.getCanonicalName()
+                    + mockSettings.getTypeToMock().getCanonicalName()
                     + "'. The error was :",
                 "  " + ioe.getMessage(),
                 "If you are unsure what is the reason of this exception, feel free to contact us on the mailing list."),
@@ -243,7 +248,8 @@ class ByteBuddyCrossClassLoaderSerializationSupport implements Serializable {
     private final Set<Class<?>> extraInterfaces;
 
     public MockitoMockObjectInputStream(
-        InputStream in, Class<?> typeToMock, Set<Class<?>> extraInterfaces) throws IOException {
+        InputStream in, @Nullable Class<?> typeToMock, Set<Class<?>> extraInterfaces)
+        throws IOException {
       super(in);
       this.typeToMock = typeToMock;
       this.extraInterfaces = extraInterfaces;

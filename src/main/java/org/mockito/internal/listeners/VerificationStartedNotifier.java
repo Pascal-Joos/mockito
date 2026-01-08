@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.listeners;
 
+import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.util.List;
 import java.util.Set;
 import org.mockito.MockingDetails;
@@ -64,12 +65,12 @@ public class VerificationStartedNotifier {
 
   static void assertCompatibleTypes(Object mock, MockCreationSettings originalSettings) {
     Class originalType = originalSettings.getTypeToMock();
-    if (!originalType.isInstance(mock)) {
+    if (!Nullability.castToNonnull(originalType).isInstance(mock)) {
       throw Reporter.methodDoesNotAcceptParameter(
           "VerificationStartedEvent.setMock",
           "parameter which is not the same type as the original mock.\n"
               + "  Required type: "
-              + originalType.getName()
+              + Nullability.castToNonnull(originalType).getName()
               + "\n"
               + "  Received parameter: "
               + ValuePrinter.print(mock)
@@ -82,7 +83,7 @@ public class VerificationStartedNotifier {
             "VerificationStartedEvent.setMock",
             "parameter which does not implement all extra interfaces of the original mock.\n"
                 + "  Required type: "
-                + originalType.getName()
+                + Nullability.castToNonnull(originalType).getName()
                 + "\n"
                 + "  Required extra interface: "
                 + iface.getName()
