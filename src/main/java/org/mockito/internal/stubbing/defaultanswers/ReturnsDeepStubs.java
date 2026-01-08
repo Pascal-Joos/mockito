@@ -83,7 +83,11 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
     // matches invocation for verification
     // TODO why don't we do container.findAnswer here?
     for (Stubbing stubbing : container.getStubbingsDescending()) {
-      if (container.getInvocationForStubbing().matches(stubbing.getInvocation())) {
+      Invocation invocationForStubbing = container.getInvocationForStubbing();
+      if (invocationForStubbing == null) {
+        return null;
+      }
+      if (invocationForStubbing.matches(stubbing.getInvocation())) {
         return stubbing.answer(invocation);
       }
     }
