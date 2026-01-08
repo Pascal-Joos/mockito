@@ -4,7 +4,6 @@
  */
 package org.mockito;
 
-import edu.ucr.cs.riple.annotator.util.Nullability;
 import javax.annotation.Nullable;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
@@ -169,76 +168,48 @@ public class BDDMockito extends Mockito {
 
   private static class BDDOngoingStubbingImpl<T> implements BDDMyOngoingStubbing<T> {
 
-    @Nullable private final OngoingStubbing<T> mockitoOngoingStubbing;
+    private final OngoingStubbing<T> mockitoOngoingStubbing;
 
     public BDDOngoingStubbingImpl(@Nullable OngoingStubbing<T> ongoingStubbing) {
       this.mockitoOngoingStubbing = ongoingStubbing;
     }
 
     public BDDMyOngoingStubbing<T> willAnswer(Answer<?> answer) {
-      if (mockitoOngoingStubbing == null) {
-        return null;
-      }
-      return new BDDOngoingStubbingImpl<T>(
-          Nullability.castToNonnull(mockitoOngoingStubbing).thenAnswer(answer));
+      return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenAnswer(answer));
     }
 
     public BDDMyOngoingStubbing<T> will(Answer<?> answer) {
-      if (mockitoOngoingStubbing == null) {
-        return new BDDOngoingStubbingImpl<T>(null);
-      }
-      return new BDDOngoingStubbingImpl<T>(
-          Nullability.castToNonnull(mockitoOngoingStubbing).then(answer));
+      return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.then(answer));
     }
 
     public BDDMyOngoingStubbing<T> willReturn(T value) {
-      if (mockitoOngoingStubbing == null) {
-        throw new NullPointerException("mockitoOngoingStubbing");
-      }
-      return new BDDOngoingStubbingImpl<T>(
-          Nullability.castToNonnull(mockitoOngoingStubbing).thenReturn(value));
+      return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenReturn(value));
     }
 
     public BDDMyOngoingStubbing<T> willReturn(T value, T... values) {
-      if (mockitoOngoingStubbing == null) {
-        return null;
-      }
-      return new BDDOngoingStubbingImpl<T>(
-          Nullability.castToNonnull(mockitoOngoingStubbing).thenReturn(value, values));
+      return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenReturn(value, values));
     }
 
     public BDDMyOngoingStubbing<T> willThrow(Throwable... throwables) {
-      if (mockitoOngoingStubbing == null) {
-        return null;
-      }
-      return new BDDOngoingStubbingImpl<T>(
-          Nullability.castToNonnull(mockitoOngoingStubbing).thenThrow(throwables));
+      return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenThrow(throwables));
     }
 
     public BDDMyOngoingStubbing<T> willThrow(Class<? extends Throwable> throwableType) {
-      return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing).willThrow(throwableType);
+      return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenThrow(throwableType));
     }
 
     public BDDMyOngoingStubbing<T> willThrow(
         Class<? extends Throwable> throwableType, Class<? extends Throwable>... throwableTypes) {
-      if (mockitoOngoingStubbing == null) {
-        return null;
-      }
       return new BDDOngoingStubbingImpl<T>(
           mockitoOngoingStubbing.thenThrow(throwableType, throwableTypes));
     }
 
     public BDDMyOngoingStubbing<T> willCallRealMethod() {
-      OngoingStubbing<T> ongoingStubbing = mockitoOngoingStubbing;
-      if (ongoingStubbing == null) {
-        throw new NullPointerException("mockitoOngoingStubbing");
-      }
-      return new BDDOngoingStubbingImpl<T>(
-          Nullability.castToNonnull(mockitoOngoingStubbing).thenCallRealMethod());
+      return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenCallRealMethod());
     }
 
     public <M> M getMock() {
-      return (M) Nullability.castToNonnull(mockitoOngoingStubbing).getMock();
+      return (M) mockitoOngoingStubbing.getMock();
     }
   }
 
