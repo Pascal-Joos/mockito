@@ -4,6 +4,7 @@
  */
 package org.mockito.internal.util.concurrent;
 
+import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -344,7 +345,7 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
 
     private final K key;
 
-    final Map.Entry<WeakKey<K>, V> entry;
+    @Nullable final Map.Entry<WeakKey<K>, V> entry;
 
     private SimpleEntry(K key, @Nullable Map.Entry<WeakKey<K>, V> entry) {
       this.key = key;
@@ -358,12 +359,13 @@ public class WeakConcurrentMap<K, V> extends ReferenceQueue<K>
 
     @Override
     public V getValue() {
-      return entry.getValue();
+      return entry == null ? null : Nullability.castToNonnull(entry).getValue();
     }
 
     @Override
     public V setValue(V value) {
       if (value == null) throw new NullPointerException();
+      if (entry == null) throw new NullPointerException();
       return entry.setValue(value);
     }
   }
