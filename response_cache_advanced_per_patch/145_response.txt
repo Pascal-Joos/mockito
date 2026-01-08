@@ -1,0 +1,26 @@
+<response>
+  <reason><![CDATA[
+At the call site `getMockHandler(mock)`, the method `MockUtil.getMockHandler` has only three possible behaviors based on its implementation:
+
+1. If `mock == null`, it throws `NotAMockException` before any return.
+2. If `isMock(mock)` is false, it throws `NotAMockException` before any return.
+3. If `isMock(mock)` is true, it executes:
+   ```java
+   return mockMaker.getHandler(mock);
+   ```
+
+The only value that reaches the caller is the result of `mockMaker.getHandler(mock)` in case (3). The code does not perform any null-check on this returned handler before returning it from `getMockHandler`.
+
+Within this analysis, we are constrained by:
+- We must not assume behavior of other methods without their declarations.
+- The return value of `getMockHandler` depends directly on `mockMaker.getHandler(mock)`, whose declaration and implementation are not provided.
+
+Without the declaration of `getHandler`, we cannot rule out that it may return `null` for some valid mock argument; therefore we cannot assert that `getMockHandler(mock)` is guaranteed to be non-null at this call site. Conversely, we also cannot assert it must be nullable unless we see whether `getHandler` can return `null`.
+
+To make a confident determination about nullability at this call site, we need the declaration of `getHandler`.
+  ]]></reason>
+  <success>false</success>
+  <methods>
+    <method>getHandler</method>
+  </methods>
+</response>

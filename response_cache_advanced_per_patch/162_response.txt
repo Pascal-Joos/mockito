@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+    public V setValue(V value) {
+      if (value == null) throw new NullPointerException();
+      if (entry == null) throw new NullPointerException();
+      return entry.setValue(value);
+  }
+  ```
+    ]]>
+  </code>
+</response>

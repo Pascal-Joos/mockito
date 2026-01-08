@@ -1,0 +1,23 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+public static MockitoAssertionError noMoreInteractionsWanted(
+       Invocation undesired, List<VerificationAwareInvocation> invocations) {
+    ScenarioPrinter scenarioPrinter = new ScenarioPrinter();
+    String scenario = scenarioPrinter.print(invocations);
+
+    return new NoInteractionsWanted(
+        join(
+            "No interactions wanted here:",
+            new LocationImpl(),
+            "But found this interaction on mock '"
+                + MockUtil.getMockName(Nullability.castToNonnull(undesired).getMock())
+                + "':",
+            undesired.getLocation(),
+            scenario));
+}
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,38 @@
+<response>
+  <reason><![CDATA[
+At this call site, `Primitives.primitiveTypeOf` is invoked three ways:
+
+1. `Primitives.primitiveTypeOf(params[i].getClass())` inside `paramsMatch`
+2. `Primitives.primitiveTypeOf(valueClass)` and `Primitives.primitiveTypeOf(referenceType)` inside `isAssignableFromWrapper`
+3. `Primitives.primitiveTypeOf(clazz)` and `Primitives.primitiveTypeOf(method.getReturnType())` inside `isValidReturnType`
+
+In all these contexts:
+
+- The argument is always a non-null `Class<?>` obtained from `someObject.getClass()`, `method.getReturnType()`, or another `Class` parameter.
+- The method implementation is:
+
+  ```java
+  public static <T> Class<T> primitiveTypeOf(Class<T> clazz) {
+      if (clazz.isPrimitive()) {
+        return clazz;
+      }
+      return (Class<T>) PRIMITIVE_TYPES.get(clazz);
+  }
+  ```
+
+So a `null` return is only possible if `PRIMITIVE_TYPES.get(clazz)` returns `null`. That would mean `clazz` is not a primitive (fails `clazz.isPrimitive()`) and also not present as a key in `PRIMITIVE_TYPES`.
+
+The code around the call sites assumes that `primitiveTypeOf` returns a valid primitive `Class` for all “primitive or wrapper” inputs:
+
+- In `paramsMatch`, the call is guarded by `types[i].isPrimitive()` and compared via `equals` to `primitiveTypeOf(params[i].getClass())`. `types[i]` is a primitive class, so correctness of this comparison relies on `primitiveTypeOf` mapping the wrapper (or primitive) to the corresponding primitive type.
+- In `isAssignableFromWrapper`, the call site is guarded by `isPrimitiveOrWrapper(valueClass)` and `isPrimitiveOrWrapper(referenceType)`, and then the result is immediately dereferenced: `.isAssignableFrom(...)`. If `primitiveTypeOf` could return `null` here, this code would risk an immediate `NullPointerException` for any allowed input. This method is part of Mockito’s core matching logic and is expected to operate safely for all primitive/wrapper types; thus `PRIMITIVE_TYPES` must be defined so that for every `Class` that `isPrimitiveOrWrapper` returns `true` for, `PRIMITIVE_TYPES.get(clazz)` is non-null (or `clazz.isPrimitive()` is true and the early return applies).
+- In `isValidReturnType`, the method is only called if either `method.getReturnType().isPrimitive()` or `clazz.isPrimitive()` is true. For primitive classes the first branch returns `clazz` directly (never `null`). If either side is a wrapper, Mockito’s logic again assumes the wrapper is mapped to its primitive in `PRIMITIVE_TYPES`, otherwise type validation of primitive return types would break and potentially throw NPEs when accessing methods on the result of `primitiveTypeOf`.
+
+Given that:
+- The calls are restricted (by guards such as `isPrimitiveOrWrapper` or `isPrimitive`) to primitive or wrapper classes.
+- Mockito’s core behavior relies on safe, non-null primitive mappings for these classes.
+- There is no path at the shown call sites where `primitiveTypeOf` is invoked with an arbitrary, non-primitive, non-wrapper `Class`.
+
+Therefore, at these specific call sites, `primitiveTypeOf(valueClass)` cannot return `null`; for all admissible `valueClass` passed here, either `clazz.isPrimitive()` is true (and `clazz` is returned) or `PRIMITIVE_TYPES.get(clazz)` is guaranteed to be a non-null mapping.]]></reason>
+  <value>NO</value>
+</response>

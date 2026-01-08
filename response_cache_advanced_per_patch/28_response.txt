@@ -1,0 +1,57 @@
+<response>
+  <reason><![CDATA[
+From the provided code, we see two other call sites of `mockingProgress().pullOngoingStubbing()`:
+
+```java
+// In MockedStaticImpl.when(...)
+OngoingStubbing<S> stubbing = (OngoingStubbing<S>) mockingProgress.pullOngoingStubbing();
+if (stubbing == null) {
+  mockingProgress.reset();
+  throw missingMethodInvocation();
+}
+return stubbing;
+```
+
+```java
+// In MockitoCore.when(...)
+OngoingStubbing<T> stubbing = (OngoingStubbing<T>) mockingProgress.pullOngoingStubbing();
+if (stubbing == null) {
+  mockingProgress.reset();
+  throw missingMethodInvocation();
+}
+return stubbing;
+```
+
+Both of these explicitly guard against `pullOngoingStubbing()` returning `null`: if it *does* return `null`, an exception is thrown instead of allowing a `null` value to propagate.
+
+However, at the call site in question:
+
+```java
+public Invocation getLastInvocation() {
+    OngoingStubbingImpl ongoingStubbing =
+        ((OngoingStubbingImpl) mockingProgress().pullOngoingStubbing());
+    List<Invocation> allInvocations = ongoingStubbing.getRegisteredInvocations();
+    return allInvocations.get(allInvocations.size() - 1);
+}
+```
+
+there is **no** such null-check. The value from `mockingProgress().pullOngoingStubbing()` is cast directly to `OngoingStubbingImpl` and then dereferenced. Whether this can be `null` depends entirely on the implementation of:
+
+```java
+OngoingStubbing<?> pullOngoingStubbing()
+```
+
+inside `org.mockito.internal.progress.MockingProgress`.
+
+Without that implementation, we cannot determine if:
+- it always returns a non-null `OngoingStubbing<?>` when `getLastInvocation()` is called, or
+- it may legitimately return `null` (in which case this call site would risk a `NullPointerException` when accessing `ongoingStubbing.getRegisteredInvocations()`).
+
+Because the behavior of `pullOngoingStubbing()` is not shown, and other parts of the code clearly anticipate a possible `null` return by checking and throwing, we cannot safely conclude that `null` is impossible at this specific call site without seeing the method body.
+
+Therefore, to make a confident determination, the declaration (implementation) of `pullOngoingStubbing` itself is required.]]></reason>
+  <success>false</success>
+  <methods>
+    <method>pullOngoingStubbing</method>
+  </methods>
+</response>

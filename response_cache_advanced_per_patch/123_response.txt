@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private void assertNotStubOnlyMock(Object mock) {
+      getMockHandler(mock).getMockSettings().isStubOnly();
+      if (getMockHandler(mock).getMockSettings().isStubOnly()) {
+        throw stubPassedToVerify(mock);
+      }
+  }
+  ```
+    ]]>
+  </code>
+</response>

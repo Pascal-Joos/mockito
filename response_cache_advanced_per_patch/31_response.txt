@@ -1,0 +1,26 @@
+```xml
+<response>
+    <reason><![CDATA[
+Within the shown method, there is no null check or prior guarantee that `constructorArgs` is non-null. The only conditional is on `outerClassInstance`:
+
+    if (outerClassInstance == null) {
+      return constructorArgs;
+    }
+
+If `outerClassInstance` is **not** null, the method executes:
+
+    List<Object> resultArgs = new ArrayList<Object>(constructorArgs.length + 1);
+
+At this point, if `constructorArgs` is null, accessing `constructorArgs.length` will throw a `NullPointerException`. Nothing in the provided method prevents `constructorArgs` from being null, and there is no information here about how or where `constructorArgs` is initialized, what its type contract is, or whether annotations (e.g., @NonNull) are enforced.
+
+Because the nullability of `constructorArgs` depends on code and contracts outside this snippet (e.g., field initialization, constructor logic, framework guarantees), and those are not provided, we cannot definitively conclude that `constructorArgs` is always non-null.
+
+Thus, based solely on the visible code, `constructorArgs` *can* be null at that line, but this is not certain without additional context about its initialization and invariants.
+    ]]></reason>
+    <value>UNKNOWN</value>
+    <requests>
+        <request><![CDATA[Show how and where the field/variable `constructorArgs` is declared and initialized (e.g., class fields, constructors, setters).]]></request>
+        <request><![CDATA[Indicate whether there are any annotations or framework contracts (e.g., @Nonnull, @NotNull, Lombok, or framework APIs) that guarantee `constructorArgs` is never null.]]></request>
+    </requests>
+</response>
+```

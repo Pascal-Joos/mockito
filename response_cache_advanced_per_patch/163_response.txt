@@ -1,0 +1,12 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public V getValue() {
+    return entry == null ? null : entry.getValue();
+  }
+  ```
+    ]]>
+  </code>
+</response>

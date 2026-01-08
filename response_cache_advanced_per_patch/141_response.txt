@@ -1,0 +1,23 @@
+<response>
+  <reason><![CDATA[
+Within `MockUtil.getMockHandler(T mock)` there is exactly one non-exceptional return path:
+
+```java
+if (isMock(mock)) {
+  return mockMaker.getHandler(mock);
+}
+```
+
+All other paths throw `NotAMockException` and therefore never return a value (null or otherwise).
+
+At the provided call site we only know that `getMockHandler(mock)` is invoked; we are not given any guarantees about:
+
+- what `isMock(mock)` returns, or  
+- what `mockMaker.getHandler(mock)` returns.
+
+Per the analysis rules, we must not assume behavior of called methods without their declarations. The nullability of `getMockHandler(mock)` thus depends entirely on whether `mockMaker.getHandler(mock)` can return null when `isMock(mock)` is true. Since the declaration/implementation of `mockMaker.getHandler` is not provided, we cannot rule out a null return value on this path.
+
+Therefore, `getMockHandler(mock)` **can** return null at this call site, if and only if `mockMaker.getHandler(mock)` is allowed to return null for a valid mock. As we cannot see that method’s contract or implementation, we must treat it as potentially returning null. Exceptions thrown in other branches do not affect this conclusion, as they are not "null returns".
+]]></reason>
+  <value>YES</value>
+</response>

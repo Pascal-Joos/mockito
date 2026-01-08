@@ -1,0 +1,35 @@
+```xml
+<response>
+    <reason><![CDATA[
+Within the method
+
+    public <M> M getMock() {
+        return (M) assertNotNull(mockitoOngoingStubbing).getMock();
+    }
+
+the expression in question is:
+
+    mockitoOngoingStubbing   // as the receiver of getMock()
+
+We need to know if this receiver can be null at the call site:
+    
+    return (M) mockitoOngoingStubbing.getMock();
+
+However, the actual code *does not* call getMock() directly on mockitoOngoingStubbing; it first passes mockitoOngoingStubbing to assertNotNull:
+
+    assertNotNull(mockitoOngoingStubbing).getMock();
+
+By usual Java semantics and by the typical contract and usage of an assertNotNull-style method:
+
+1. `assertNotNull(x)` checks at runtime that `x` is not null.
+2. If `x` *is* null, it will throw an exception (e.g., AssertionError, IllegalArgumentException, etc.) and never return.
+3. If it returns normally, the returned value is guaranteed to be non-null (it is typically `x` itself, possibly with some type refinement, or a wrapper that still requires a non-null original).
+
+Thus, as long as the program has not thrown from `assertNotNull(mockitoOngoingStubbing)`, the value it returns (and on which `.getMock()` is invoked) is non-null. That means at the point where `.getMock()` is called, the receiver is guaranteed to be non-null along all non-exceptional code paths.
+
+Therefore, under the standard semantics and contract of an `assertNotNull` method (which is what the code is clearly relying on), the expression playing the role of the receiver of `.getMock()` cannot be null in any code path that reaches the return statement. If `mockitoOngoingStubbing` were null, execution would fail at `assertNotNull(...)` and never reach `.getMock()`.
+
+So, given normal assumptions about `assertNotNull` (i.e., it throws when the argument is null), the expression `mockitoOngoingStubbing` at the point of `.getMock()` cannot be null in successful executions of this method.]]></reason>
+    <value>NO</value>
+</response>
+```

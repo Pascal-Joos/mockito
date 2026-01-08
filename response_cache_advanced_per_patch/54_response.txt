@@ -1,0 +1,22 @@
+<response>
+  <reason><![CDATA[
+The only information provided for the method is its signature:
+
+```java
+class org.mockito.mock.MockCreationSettings {
+    Class<T> getTypeToMock()
+}
+```
+
+No method body or any internal logic is shown. Without the body, we cannot determine:
+
+- How the return value is computed.
+- Whether it returns a field that could be null.
+- Whether it delegates to other methods, or under which conditions it might return a non-null value.
+
+Because the method body is completely unknown, we cannot deduce whether `null` is possible or excluded. To answer definitively, we need to see the actual implementation (method body) of `getTypeToMock()`. No other methods are known to affect its return value from the provided information, so there are no additional method declarations to request at this point—only the full definition of this method itself.]]></reason>
+  <value>UNKNOWN</value>
+  <requests>
+    <request><![CDATA[Please provide the full implementation (body) of org.mockito.mock.MockCreationSettings#getTypeToMock().]]></request>
+  </requests>
+</response>

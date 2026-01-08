@@ -1,0 +1,98 @@
+<response>
+    <reason><![CDATA[
+We are analyzing whether the *expression* used at:
+
+```java
+privateLookupIn.invokeExact(field.getDeclaringClass(), DISPATCHER.getLookup())
+```
+
+— specifically `DISPATCHER` as used there — can be null at that point in the method.
+
+Relevant parts of the method:
+
+```java
+@Override
+public void set(Field field, Object target, Object value) throws IllegalAccessException {
+  if (DISPATCHER == null) {
+    throw new MockitoInitializationException(
+        join(
+            "Could not initialize the Mockito instrumentation member accessor",
+            "",
+            "This is unexpected on JVMs from Java 9 or later - possibly, the instrumentation API could not be resolved"),
+        INITIALIZATION_ERROR);
+  }
+  ...
+  try {
+    ...
+    if (Modifier.isFinal(field.getModifiers())) {
+      isFinal = true;
+      try {
+        Nullability.castToNonnull(DISPATCHER).setAccessible(field, true);
+      } catch (Throwable ignored) {
+        illegalAccess = true;
+        throw new IllegalAccessException("Could not make final field " + field + " accessible");
+      }
+    } else {
+      isFinal = false;
+    }
+    try {
+      MethodHandle handle =
+          ((MethodHandles.Lookup)
+                  privateLookupIn.invokeExact(field.getDeclaringClass(), Nullability.castToNonnull(DISPATCHER).getLookup()))
+              .unreflectSetter(field);
+      ...
+    } finally {
+      if (isFinal) {
+        Nullability.castToNonnull(DISPATCHER).setAccessible(field, false);
+      }
+    }
+  } catch (Throwable t) {
+    ...
+  }
+}
+```
+
+Key points:
+
+1. There is an explicit guard at the start of the method:
+
+   ```java
+   if (DISPATCHER == null) {
+     throw new MockitoInitializationException(...);
+   }
+   ```
+
+   This means: if `DISPATCHER` is null when `set(...)` is entered, the method will immediately throw and never proceed further. No later code in the method (including the `invokeExact` call) executes on that path.
+
+2. All later uses of `DISPATCHER` are wrapped in `Nullability.castToNonnull(DISPATCHER)`, for example:
+
+   ```java
+   Nullability.castToNonnull(DISPATCHER).setAccessible(field, true);
+   ...
+   privateLookupIn.invokeExact(
+       field.getDeclaringClass(),
+       Nullability.castToNonnull(DISPATCHER).getLookup())
+   ```
+
+   Even if we ignore the static analyzer intent behind `castToNonnull`, the prior explicit `if (DISPATCHER == null) throw ...;` ensures that, at every reachable point after that check within the same invocation of `set`, `DISPATCHER` cannot *logically* be null, unless it is mutated concurrently from another thread.
+
+3. Whether concurrent mutation is a concern:
+
+   - If `DISPATCHER` is a normal, effectively-final static field (as is typical in Mockito’s internal dispatchers), it is not changed after initialization. In that common and intended design, once the `if (DISPATCHER == null)` check passes, `DISPATCHER` is guaranteed non-null for the rest of the call.
+   - Even if we hypothesize that some other thread could set `DISPATCHER` to null after the check, that would make *any* subsequent access potentially see null, but such racy mutation would violate normal API invariants and is not how Mockito’s dispatching infrastructure is designed to work. Under the expected contract, `DISPATCHER` is initialized once and then treated as non-null.
+
+4. Therefore, under the usual Java semantics and the apparent design of this class:
+
+   - On any valid, non-racy execution path that reaches `privateLookupIn.invokeExact(...)` inside `set`, the expression `DISPATCHER` used there is not null.
+   - If `DISPATCHER` were actually null, execution would have been cut off earlier by the `MockitoInitializationException`.
+
+So, within the normal, contract-respecting usage of this code, the expression involving `DISPATCHER` at:
+
+```java
+privateLookupIn.invokeExact(field.getDeclaringClass(), DISPATCHER.getLookup())
+```
+
+(or its equivalent with `Nullability.castToNonnull(DISPATCHER).getLookup()`) cannot be null on any path that reaches that line.
+    ]]></reason>
+    <value>NO</value>
+</response>

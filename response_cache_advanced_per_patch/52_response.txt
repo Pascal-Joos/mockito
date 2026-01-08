@@ -1,0 +1,37 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+public Object writeReplace(Object mockitoMock) throws ObjectStreamException {
+    // reentrant lock for critical section. could it be improved ?
+    mutex.lock();
+    try {
+      // mark started flag // per thread, not per instance
+      // temporary loosy hack to avoid stackoverflow
+      if (mockIsCurrentlyBeingReplaced()) {
+        return mockitoMock;
+      }
+      mockReplacementStarted();
+
+      return new CrossClassLoaderSerializationProxy(mockitoMock);
+    } catch (IOException ioe) {
+      MockName mockName = MockUtil.getMockName(mockitoMock);
+      String mockedType = Nullability.castToNonnull(MockUtil.getMockSettings(mockitoMock).getTypeToMock()).getCanonicalName();
+      throw new MockitoSerializationIssue(
+          join(
+              "The mock '" + mockName + "' of type '" + mockedType + "'",
+              "The Java Standard Serialization reported an '"
+                  + ioe.getClass().getSimpleName()
+                  + "' saying :",
+              "  " + ioe.getMessage()),
+          ioe);
+    } finally {
+      // unmark
+      mockReplacementCompleted();
+      mutex.unlock();
+    }
+}
+  ```
+    ]]>
+  </code>
+</response>

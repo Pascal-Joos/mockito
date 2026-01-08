@@ -1,0 +1,42 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private <T> RuntimeException prettifyFailure(
+      MockCreationSettings<T> mockFeatures, Exception generationFailed) {
+    if (Nullability.castToNonnull(mockFeatures.getTypeToMock()).isArray()) {
+      throw new MockitoException(
+          join("Mockito cannot mock arrays: " + Nullability.castToNonnull(mockFeatures.getTypeToMock()) + ".", ""),
+          generationFailed);
+    }
+    if (Modifier.isPrivate(Nullability.castToNonnull(mockFeatures.getTypeToMock()).getModifiers())) {
+      throw new MockitoException(
+          join(
+              "Mockito cannot mock this class: " + Nullability.castToNonnull(mockFeatures.getTypeToMock()) + ".",
+              "Most likely it is due to mocking a private class that is not visible to Mockito",
+              ""),
+          generationFailed);
+    }
+    throw new MockitoException(
+        join(
+            "Mockito cannot mock this class: " + Nullability.castToNonnull(mockFeatures.getTypeToMock()) + ".",
+            "",
+            "Mockito can only mock non-private & non-final classes.",
+            "If you're not sure why you're getting this error, please report to the mailing list.",
+            "",
+            Platform.warnForVM(
+                "IBM J9 VM",
+                "Early IBM virtual machine are known to have issues with Mockito, please upgrade to an up-to-date version.\n",
+                "Hotspot",
+                Platform.isJava8BelowUpdate45()
+                    ? "Java 8 early builds have bugs that were addressed in Java 1.8.0_45, please update your JDK!\n"
+                    : ""),
+            Platform.describe(),
+            "",
+            "Underlying exception : " + generationFailed),
+        generationFailed);
+  }
+  ```
+    ]]>
+  </code>
+</response>

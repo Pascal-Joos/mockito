@@ -1,0 +1,11 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public BDDMyOngoingStubbing<T> willThrow(Class<? extends Throwable> throwableType) {
+      return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing).willThrow(throwableType);
+  }
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private static <T> T ensureMockIsAssignableToMockedType(
+      MockCreationSettings<T> settings, T mock) {
+    // Force explicit cast to mocked type here, instead of
+    // relying on the JVM to implicitly cast on the client call site.
+    // This allows us to catch earlier the ClassCastException earlier
+    Class<T> typeToMock = Nullability.castToNonnull(settings.getTypeToMock());
+    return typeToMock.cast(mock);
+  }
+  ```
+    ]]>
+  </code>
+</response>

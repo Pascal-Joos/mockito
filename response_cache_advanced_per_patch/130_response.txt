@@ -1,0 +1,12 @@
+<response>
+  <reason><![CDATA[
+The method `mockHandler()` returns the result of `MockUtil.getMockHandler(toInspect)` directly, and no other logic in `mockHandler()` constrains or transforms that value. The only other call is `assertGoodMock()`, which either completes normally or throws, but does not itself produce or modify the return value.
+
+Because the nullability of the result at this call site depends entirely on what `MockUtil.getMockHandler(toInspect)` returns for the specific `toInspect` held in this `DefaultMockingDetails` instance, and you have not provided the declaration/implementation of `MockUtil.getMockHandler`, it is impossible to determine whether it can ever return null (e.g., for non-mock objects, invalid state, or by contract never returning null).
+
+Following your guidelines, when another method’s return directly determines this method’s result and its declaration is not provided, I must request that declaration to make a confident decision about nullability at this call site.]]></reason>
+  <success>false</success>
+  <methods>
+    <method>getMockHandler</method>
+  </methods>
+</response>

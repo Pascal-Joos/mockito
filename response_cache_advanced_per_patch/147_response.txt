@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public static MockCreationSettings getMockSettings(Object mock) {
+      if (mock == null) {
+          throw new NotAMockException("Argument should be a mock, but is null!");
+      }
+      return getMockHandler(mock).getMockSettings();
+  }
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,11 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+public <M> M getMock() {
+            return (M) Nullability.castToNonnull(mockitoOngoingStubbing).getMock();
+}
+  ```
+    ]]>
+  </code>
+</response>

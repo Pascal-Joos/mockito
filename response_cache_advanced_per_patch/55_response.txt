@@ -1,0 +1,35 @@
+<response>
+  <reason><![CDATA[
+At the call site
+
+```java
+Class originalType = originalSettings.getTypeToMock();
+```
+
+`originalSettings` is a `MockCreationSettings` instance that comes from Mockito’s internal mock metadata (e.g., via `MockUtil.getMockSettings(...)` / `MockingDetails.getMockCreationSettings()`).
+
+Across the provided call chain, `getTypeToMock()` is treated as a non-null value in multiple places, without any null-guard and in ways that would immediately throw `NullPointerException` if it could be null:
+
+- `mockFeatures.getTypeToMock().isArray()`
+- `Modifier.isFinal(mockFeatures.getTypeToMock().getModifiers())`
+- `Nullability.castToNonnull(settings.getTypeToMock())`
+- `GenericMetadataSupport.inferFrom(mockSettings.getTypeToMock())`
+- `mockSettings.getTypeToMock().getSimpleName()`
+- `originalType.isInstance(mock)`
+
+In particular, some internal calls explicitly wrap `getTypeToMock()` in `Nullability.castToNonnull(...)`, which is only used in contexts that assume the value is non-null and would otherwise fail fast.
+
+Mockito constructs `MockCreationSettings` instances as part of creating a mock and, by design, the “type to mock” is a fundamental, mandatory attribute; the rest of the codebase relies on it being non-null. There is no alternative code path shown where a `MockCreationSettings` usable in verification (`originalMockingDetails.getMockCreationSettings()`) could have a null `typeToMock` without causing earlier failures (NPE or explicit exceptions) during mock creation, serialization, or default-answer handling.
+
+Given this, at the specific call site in `VerificationStartedNotifier.assertCompatibleTypes`:
+
+```java
+Class originalType = originalSettings.getTypeToMock();
+```
+
+`originalSettings` refers to a valid mock’s creation settings, and `getTypeToMock()` cannot be null at this point; if it were, Mockito’s earlier operations on the same setting instance would already have failed.
+
+Therefore, this invocation cannot yield a null result.
+]]></reason>
+  <value>NO</value>
+</response>

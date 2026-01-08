@@ -1,0 +1,40 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
+    Class<? extends T> mockedProxyType = createMockType(settings);
+
+    Instantiator instantiator = Plugins.getInstantiatorProvider().getInstantiator(settings);
+    T mockInstance = null;
+    try {
+      mockInstance = instantiator.newInstance(mockedProxyType);
+      MockAccess mockAccess = (MockAccess) mockInstance;
+      mockAccess.setMockitoInterceptor(new MockMethodInterceptor(handler, settings));
+
+      return ensureMockIsAssignableToMockedType(settings, mockInstance);
+    } catch (ClassCastException cce) {
+      throw new MockitoException(
+          join(
+              "ClassCastException occurred while creating the mockito mock :",
+              "  class to mock : " + describeClass(Nullability.castToNonnull(settings.getTypeToMock())),
+              "  created class : " + describeClass(mockedProxyType),
+              "  proxy instance class : " + describeClass(mockInstance),
+              "  instance creation by : " + instantiator.getClass().getSimpleName(),
+              "",
+              "You might experience classloading issues, please ask the mockito mailing-list.",
+              ""),
+          cce);
+    } catch (org.mockito.creation.instance.InstantiationException e) {
+      throw new MockitoException(
+          "Unable to create mock instance of type '"
+              + mockedProxyType.getSuperclass().getSimpleName()
+              + "'",
+          e);
+    }
+  }
+  ```
+    ]]>
+  </code>
+</response>

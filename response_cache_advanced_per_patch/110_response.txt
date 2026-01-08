@@ -1,0 +1,36 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+public Object answer(InvocationOnMock invocation) throws Throwable {
+        Method mockMethod = invocation.getMethod();
+  
+        if (delegatedObject == null) {
+          throw delegatedMethodDoesNotExistOnDelegate(
+              mockMethod, invocation.getMock(), null);
+        }
+  
+        Object nonNullDelegatedObject = delegatedObject;
+        try {
+          Method delegateMethod = getDelegateMethod(mockMethod);
+  
+          if (!compatibleReturnTypes(mockMethod.getReturnType(), delegateMethod.getReturnType())) {
+            throw delegatedMethodHasWrongReturnType(
+                mockMethod, delegateMethod, invocation.getMock(), nonNullDelegatedObject);
+          }
+  
+          MemberAccessor accessor = Plugins.getMemberAccessor();
+          Object[] rawArguments = ((Invocation) invocation).getRawArguments();
+          return accessor.invoke(delegateMethod, nonNullDelegatedObject, rawArguments);
+        } catch (NoSuchMethodException e) {
+          throw delegatedMethodDoesNotExistOnDelegate(
+              mockMethod, invocation.getMock(), nonNullDelegatedObject);
+        } catch (InvocationTargetException e) {
+          // propagate the original exception from the delegate
+          throw e.getCause();
+        }
+}
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,13 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Nullable
+  Object answerTo(Invocation invocation) throws Throwable {
+    Object answer = findAnswerFor(invocation);
+    return answer == null ? null : answer.answer(invocation);
+  }
+  ```
+    ]]>
+  </code>
+</response>

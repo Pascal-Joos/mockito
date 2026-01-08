@@ -1,0 +1,19 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public Object answer(InvocationOnMock invocation) throws Throwable {
+    Class<?> methodReturnType = invocation.getMethod().getReturnType();
+    Object mock = invocation.getMock();
+    Class<?> mockType = MockUtil.getMockHandler(mock).getMockSettings().getTypeToMock();
+
+    if (methodReturnType.isAssignableFrom(Nullability.castToNonnull(mockType))) {
+      return invocation.getMock();
+    }
+
+    return defaultReturn.returnValueFor(methodReturnType);
+  }
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,4 @@
+<response>
+    <reason><![CDATA[The method name `setMockName` clearly follows the setter naming convention (`setX`), and its behavior is exactly that of a setter: it assigns a single field and returns `this` for chaining. According to your criteria, methods that are setters should not be considered initializer methods, and initializer methods are typically named with `init` or `initialize` or are framework-defined lifecycle methods like `onCreate`. Therefore, this method should not be treated as an initializer method for NullAway.]]></reason>
+    <value>NO</value>
+</response>

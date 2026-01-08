@@ -1,0 +1,20 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public Invocation getLastInvocation() {
+      MockingProgress mockingProgress = mockingProgress();
+      mockingProgress.stubbingStarted();
+      OngoingStubbingImpl ongoingStubbing =
+          (OngoingStubbingImpl) mockingProgress.pullOngoingStubbing();
+      if (ongoingStubbing == null) {
+        mockingProgress.reset();
+        throw missingMethodInvocation();
+      }
+      List<Invocation> allInvocations = ongoingStubbing.getRegisteredInvocations();
+      return allInvocations.get(allInvocations.size() - 1);
+  }
+  ```
+    ]]>
+  </code>
+</response>

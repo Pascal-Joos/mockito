@@ -1,0 +1,26 @@
+<response>
+    <reason><![CDATA[
+The parameter `message` of `append(String message)` is used directly as `message.trim()` without any null-checks or reassignment inside the method. If `message` is null, this will throw a `NullPointerException`.
+
+Looking at the call chain, `append` is called only from:
+
+```java
+VerificationCollectorImpl.this.append(error.getMessage());
+```
+
+where `error` is an `AssertionError`. The Java standard `Throwable.getMessage()` method is declared as:
+
+```java
+public String getMessage()
+```
+
+and can legally return `null` (per the JDK specification and common behavior when an exception is created without a detail message). There is no guarantee or evidence here that `AssertionError.getMessage()` will never be null.
+
+Since:
+- `append` does not guard against null,
+- `message` is not reassigned in `append`,
+- the sole caller passes `error.getMessage()` which may be null,
+
+there is a real possibility that `message` is null at the point of use. Therefore, the parameter can be null.]]></reason>
+    <value>YES</value>
+</response>

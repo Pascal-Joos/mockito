@@ -1,0 +1,55 @@
+<response>
+  <reason><![CDATA[
+At this call site the code is:
+
+```java
+final MockCreationSettings mockSettings =
+    MockUtil.getMockHandler(invocation.getMock()).getMockSettings();
+```
+
+We must determine whether `MockUtil.getMockHandler(invocation.getMock())` itself can be `null`.
+
+The implementation of `getMockHandler` is:
+
+```java
+public static <T> MockHandler<T> getMockHandler(T mock) {
+  if (mock == null) {
+    throw new NotAMockException("Argument should be a mock, but is null!");
+  }
+
+  if (isMock(mock)) {
+    return mockMaker.getHandler(mock);
+  } else {
+    throw new NotAMockException("Argument should be a mock, but is: " + mock.getClass());
+  }
+}
+```
+
+All control‑flow paths are:
+
+1. `mock == null` → throw `NotAMockException` (no return).
+2. `mock != null` and `!isMock(mock)` → throw `NotAMockException` (no return).
+3. `mock != null` and `isMock(mock)` → return `mockMaker.getHandler(mock)`.
+
+There is no explicit `return null` and no fall‑through path that would implicitly return `null`.  
+The only successful (non‑exception) path is the third one, which directly returns the result of `mockMaker.getHandler(mock)`.
+
+`isMock` is defined as:
+
+```java
+public static boolean isMock(Object mock) {
+  return mock != null && mockMaker.getHandler(mock) != null;
+}
+```
+
+For the third path to be taken, `isMock(mock)` must be `true`, which by definition requires `mockMaker.getHandler(mock) != null`. Therefore, on any execution path where `getMockHandler` actually returns, the value returned by `mockMaker.getHandler(mock)` is guaranteed to be non‑null.
+
+At the specific call site `MockUtil.getMockHandler(invocation.getMock())`, the method either:
+
+- throws a `NotAMockException` (if `invocation.getMock()` is `null` or not a mock), or
+- returns a non‑null `MockHandler` (because `isMock` enforces `mockMaker.getHandler(mock) != null`).
+
+Exceptions are not considered null returns per your guidelines. Hence, at this call site, the result of `MockUtil.getMockHandler(invocation.getMock())` cannot be `null` when it returns.
+]]></reason>
+  <value>NO</value>
+</response>
