@@ -159,6 +159,9 @@ public class MockSettingsImpl<T> extends CreationSettings<T>
     if (outerClassInstance == null) {
       return constructorArgs;
     }
+    if (constructorArgs == null) {
+      return null;
+    }
     List<Object> resultArgs = new ArrayList<Object>(constructorArgs.length + 1);
     resultArgs.add(outerClassInstance);
     resultArgs.addAll(asList(constructorArgs));
