@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  protected GenericMetadataSupport actualParameterizedType(Object mock) {
+      if (mock == null) {
+          throw new NotAMockException("Argument should be a mock, but is null!");
+      }
+      CreationSettings mockSettings =
+          (CreationSettings) MockUtil.getMockHandler(mock).getMockSettings();
+      return GenericMetadataSupport.inferFrom(mockSettings.getTypeToMock());
+  }
+  ```
+    ]]>
+  </code>
+</response>

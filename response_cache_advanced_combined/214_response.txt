@@ -1,0 +1,19 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private List<Object> selectMatchingName(
+      Collection<Object> mocks, Field candidateFieldToBeInjected) {
+    List<Object> mockNameMatches = new ArrayList<Object>();
+    for (Object mock : mocks) {
+      MockName mockName = getMockName(mock);
+      if (mockName != null && candidateFieldToBeInjected.getName().equals(mockName.toString())) {
+        mockNameMatches.add(mock);
+      }
+    }
+    return mockNameMatches;
+}
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,17 @@
+<response>
+  <reason><![CDATA[The return value of getMockName(Object mock) depends entirely on the chained calls:
+getMockHandler(mock).getMockSettings().getMockName()
+
+Whether this can be null depends on:
+1) What getMockHandler(Object) returns (and whether it can be null or throw).
+2) What getMockSettings() returns (and whether it can be null or throw).
+3) What getMockName() (on the settings object) returns (and whether it can be null).
+
+None of these methods’ declarations or contracts have been provided, so it is not possible to conclude that the final getMockName() result is guaranteed non-null or that it may be null. To determine this, the full declarations of the involved methods are required.]]></reason>
+  <value>UNKNOWN</value>
+  <methods>
+    <method>getMockHandler</method>
+    <method>getMockSettings</method>
+    <method>getMockName</method>
+  </methods>
+</response>

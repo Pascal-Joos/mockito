@@ -1,0 +1,18 @@
+```xml
+<response>
+    <reason><![CDATA[
+The expression in question is `value.getClass()`, which is evaluated only on the `false` branch of the ternary operator:
+
+    return value == null ? null : value.getClass();
+
+Control flow:
+- If `value == null` is true, the ternary chooses the first operand and the method returns `null` directly; `value.getClass()` is not evaluated.
+- If `value == null` is false, then `value` is guaranteed to be non-null at the point where `value.getClass()` is evaluated.
+
+In Java, for any non-null reference `x`, `x.getClass()` always returns a non-null `Class<?>` object. The `getClass()` method is `final` in `Object` and cannot be overridden to change this contract. Therefore, whenever the expression `value.getClass()` is actually executed, it cannot yield `null`.
+
+The overall method can return `null` (from the `value == null ? null : ...` branch), but the specific expression `value.getClass()` cannot be `null` when reached.
+    ]]></reason>
+    <value>NO</value>
+</response>
+```

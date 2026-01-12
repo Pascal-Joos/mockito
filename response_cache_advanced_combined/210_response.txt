@@ -1,0 +1,60 @@
+<response>
+  <reason><![CDATA[
+At the call site
+
+```java
+MockName mockName = getMockName(mock);
+```
+
+the implementation is:
+
+```java
+public static MockName getMockName(Object mock) {
+    return getMockHandler(mock).getMockSettings().getMockName();
+}
+```
+
+From the provided code we know:
+
+```java
+public static <T> MockHandler<T> getMockHandler(T mock) {
+    if (mock == null) {
+      throw new NotAMockException("Argument should be a mock, but is null!");
+    }
+
+    if (isMock(mock)) {
+      return mockMaker.getHandler(mock);
+    } else {
+      throw new NotAMockException("Argument should be a mock, but is: " + mock.getClass());
+    }
+}
+public static MockCreationSettings getMockSettings(Object mock) {
+    return getMockHandler(mock).getMockSettings();
+}
+```
+
+However, we do **not** have:
+
+- the implementation of `MockCreationSettings.getMockName()`
+- the implementation of `MockHandler.getMockSettings()`
+
+`MockName getMockName()` is just a declaration:
+
+```java
+class org.mockito.mock.MockCreationSettings {
+    MockName getMockName()
+}
+```
+
+Nothing in the supplied code guarantees that `MockCreationSettings.getMockName()` never returns `null`. Many call sites treat the result as non-null (e.g. they call `toString()` or `isDefault()`), but that is only a usage convention, not a proof of non-nullness. The only places where nullability is mentioned (`Nullability.castToNonnull(name)`) simply enforce non-null *at that point*, not at the original `getMockName` call.
+
+Because the nullability of the result at this call site depends directly on the (missing) implementation of `MockCreationSettings.getMockName()` (and, indirectly, on `MockHandler.getMockSettings()` not returning null), I cannot confidently determine whether `getMockName(mock)` can or cannot be null here without seeing those implementations.
+
+Therefore I need the declarations/implementations of the methods that define what `getMockName` ultimately returns.
+  ]]></reason>
+  <success>false</success>
+  <methods>
+    <method>getMockSettings</method>
+    <method>getMockName</method>
+  </methods>
+</response>

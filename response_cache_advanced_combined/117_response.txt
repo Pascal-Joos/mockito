@@ -1,0 +1,17 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public boolean isVoid() {
+      final MockCreationSettings mockSettings =
+          Nullability.castToNonnull(MockUtil.getMockHandler(invocation.getMock())).getMockSettings();
+      Class<?> returnType =
+          GenericMetadataSupport.inferFrom(mockSettings.getTypeToMock())
+              .resolveGenericReturnType(this.method)
+              .rawType();
+      return returnType == Void.TYPE || returnType == Void.class;
+  }
+  ```
+    ]]>
+  </code>
+</response>

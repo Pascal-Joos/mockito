@@ -1,0 +1,15 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+public static boolean isAssignableFromWrapper(Class<?> valueClass, Class<?> referenceType) {
+        if (isPrimitiveOrWrapper(valueClass) && isPrimitiveOrWrapper(referenceType)) {
+          return Nullability.castToNonnull(Primitives.primitiveTypeOf(valueClass))
+              .isAssignableFrom(Nullability.castToNonnull(Primitives.primitiveTypeOf(referenceType)));
+        }
+        return false;
+}
+  ```
+    ]]>
+  </code>
+</response>

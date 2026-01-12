@@ -1,0 +1,37 @@
+```xml
+<response>
+    <reason><![CDATA[
+Based on typical Mockito internals and standard Java type semantics, the call chain
+
+    MockUtil.getMockSettings(mockitoMock).getTypeToMock()
+
+should not be able to return null under normal, valid usage, but we must distinguish between:
+
+1. `getTypeToMock()` returning null, and
+2. the full expression `MockUtil.getMockSettings(mockitoMock).getTypeToMock()` evaluating to null due to some earlier part failing (e.g., `getMockSettings` returning null).
+
+From Mockito’s implementation (up through recent versions):
+
+- `MockUtil.getMockSettings(Object mock)` is intended to operate only on valid Mockito mocks. For non-mock objects, Mockito throws exceptions rather than returning null configuration.
+- For valid mocks, `MockUtil.getMockSettings(mock)` returns non-null `MockSettings` (or an internal settings/config object).
+- `MockSettings.getTypeToMock()` (or the internal equivalent, e.g., `MockCreationSettings.getTypeToMock()`) represents the class/interface being mocked and is a required piece of information for creating the mock. Mockito’s internal contract is that a mock cannot exist without a non-null type to mock; the creation code passes a non-null type and stores it as such.
+- Consequently, within Mockito’s supported usage (i.e., `mockitoMock` is a Mockito mock created via `Mockito.mock()` or equivalent), `getTypeToMock()` is not allowed to be null. If the type were missing or invalid, mock creation itself would fail earlier.
+
+On the Java side:
+
+- `Class<?>` instances are never null for an actual existing mock; `getCanonicalName()` is an instance method on `Class`, so if `getTypeToMock()` were null, you would get a `NullPointerException` right there.
+- Mockito’s own error-reporting / serialization paths (like this `writeReplace`) are designed with the assumption that `getTypeToMock()` is always present to produce meaningful diagnostic messages. This reinforces that null is not part of the contract here.
+
+Potential edge cases:
+- If `mockitoMock` is not a proper Mockito mock (e.g., arbitrary object passed in), the behavior of `MockUtil.getMockSettings(mockitoMock)` is to fail with an exception, not to return a settings object with a null type. The code in the `catch` block already presupposes that `mockitoMock` is a real Mockito mock; if that precondition is violated, other failures will occur earlier.
+- If Mockito’s internal contracts were violated by some reflection-based tampering or a corrupted mock, `getTypeToMock()` could theoretically be null, but that would be out-of-contract behavior and not something the library is designed to support.
+
+Given the method as written and Mockito’s contracts/semantics, within the intended usage where `mockitoMock` is a valid Mockito mock, the expression
+
+    MockUtil.getMockSettings(mockitoMock).getTypeToMock()
+
+is not expected to be null.
+    ]]></reason>
+    <value>NO</value>
+</response>
+```

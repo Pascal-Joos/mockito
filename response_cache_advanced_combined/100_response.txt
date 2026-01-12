@@ -1,0 +1,23 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public static void notifyStubbedAnswerLookup(
+      Invocation invocation,
+      Stubbing stubbingFound,
+      Collection<Stubbing> allStubbings,
+      CreationSettings creationSettings) {
+    List<StubbingLookupListener> listeners = creationSettings.getStubbingLookupListeners();
+    if (listeners.isEmpty()) {
+      return;
+    }
+    StubbingLookupEvent event =
+        new Event(invocation, Nullability.castToNonnull(stubbingFound), allStubbings, creationSettings);
+    for (StubbingLookupListener listener : listeners) {
+      listener.onStubbingLookup(event);
+    }
+  }
+  ```
+    ]]>
+  </code>
+</response>

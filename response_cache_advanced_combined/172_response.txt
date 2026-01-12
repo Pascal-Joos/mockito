@@ -1,0 +1,21 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private boolean injectMockCandidates(
+      Class<?> awaitingInjectionClazz, Object injectee, Set<Object> mocks) {
+    boolean injectionOccurred;
+    List<Field> orderedCandidateInjecteeFields = orderedInstanceFieldsFrom(Nullability.castToNonnull(awaitingInjectionClazz));
+    // pass 1
+    injectionOccurred =
+        injectMockCandidatesOnFields(mocks, injectee, false, orderedCandidateInjecteeFields);
+    // pass 2
+    injectionOccurred |=
+        injectMockCandidatesOnFields(
+            mocks, injectee, injectionOccurred, orderedCandidateInjecteeFields);
+    return injectionOccurred;
+}
+  ```
+    ]]>
+  </code>
+</response>

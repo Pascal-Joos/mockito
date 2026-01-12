@@ -1,0 +1,24 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public Object answer(InvocationOnMock invocation) throws Throwable {
+    Class<?> methodReturnType = invocation.getMethod().getReturnType();
+    Object mock = invocation.getMock();
+    Object mockHandler = MockUtil.getMockHandler(mock);
+    if (mockHandler == null) {
+      return null;
+    }
+    Class<?> mockType = ((MockHandler) mockHandler).getMockSettings().getTypeToMock();
+
+    if (methodReturnType.isAssignableFrom(mockType)) {
+      return invocation.getMock();
+    }
+
+    return defaultReturn.returnValueFor(methodReturnType);
+  }
+  ```
+    ]]>
+  </code>
+</response>

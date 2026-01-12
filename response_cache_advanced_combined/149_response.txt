@@ -1,0 +1,29 @@
+<response>
+  <reason><![CDATA[
+At the call site `MockUtil.getMockHandler(mock)`, the only non-exceptional return path is:
+
+```java
+if (isMock(mock)) {
+  return mockMaker.getHandler(mock);
+}
+```
+
+All other paths in `getMockHandler` throw `NotAMockException` and thus do not return any value (null or otherwise).
+
+Whether this invocation can return null therefore depends solely on `mockMaker.getHandler(mock)`. You have not provided the declaration or implementation of `mockMaker.getHandler`, and per the guidelines we must not assume its behavior. It could legally return either a non-null `MockHandler` or `null`, and the rest of the codebase even anticipates a possible null handler:
+
+```java
+MockHandler oldHandler = getMockHandler(mock);
+if (oldHandler == null) {
+  throw new NotAMockException("Argument should be a mock, but is null!");
+}
+```
+
+This shows that callers consider `getMockHandler(mock)` potentially null. Without seeing `mockMaker.getHandler`, we cannot rule out that it returns null, and thus we cannot conclude that `MockUtil.getMockHandler(mock)` is non-null at this call site.
+
+Therefore, to make a confident determination, we need the declaration/implementation of the method that actually supplies the handler.]]></reason>
+  <success>false</success>
+  <methods>
+    <method>getHandler</method>
+  </methods>
+</response>

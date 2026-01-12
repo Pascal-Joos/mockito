@@ -1,0 +1,18 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+public static <T> void resetMock(T mock) {
+    MockHandler oldHandler = getMockHandler(mock);
+    if (oldHandler == null) {
+      throw new NotAMockException("Argument should be a mock, but is null!");
+    }
+    MockCreationSettings settings = oldHandler.getMockSettings();
+    MockHandler newHandler = createMockHandler(settings);
+
+    mockMaker.resetMock(mock, newHandler, settings);
+}
+  ```
+    ]]>
+  </code>
+</response>

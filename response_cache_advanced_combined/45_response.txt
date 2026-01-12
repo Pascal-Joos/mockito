@@ -1,0 +1,15 @@
+<response>
+  <reason><![CDATA[
+The question is whether the expression `DISPATCHERS.get(identifier)` at this call site can be null, which would make the subsequent call `.isConstructorMock(type)` operate on a null reference.
+
+`DISPATCHERS.get(identifier)` is a call to some `get` method on the `DISPATCHERS` object. The nullability of this expression depends entirely on the contract and implementation of that `get` method (and possibly on how `DISPATCHERS` is constructed and maintained). None of that is provided.
+
+Java collections (e.g., `Map#get`) commonly return `null` when the key is not present, but custom types may instead throw, or guarantee a non-null value for certain keys. Without the declaration/implementation of the `get` method on `DISPATCHERS` (and any relevant guarantees it might have), we cannot determine if `DISPATCHERS.get(identifier)` can evaluate to null at this call site.
+
+Because the analysis rules forbid assuming behavior of other methods whose declarations are not shown, we must inspect the declaration of the `get` method used here to make a confident determination.
+]]></reason>
+  <success>false</success>
+  <methods>
+    <method>get</method>
+  </methods>
+</response>

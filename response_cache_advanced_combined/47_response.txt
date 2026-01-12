@@ -1,0 +1,6 @@
+<response>
+    <reason><![CDATA[
+The method name is setTypeToMock, which follows the conventional setter pattern (starts with "set" and assigns a single field, then returns this). According to your criteria, initializer methods are typically well-known lifecycle methods or any method whose name starts with "init" or "initialize" and is not a setter. This method does not match those naming rules and is instead a standard setter, even though it does initialize a field. Therefore, it should not be considered an initializer method for NullAway.
+    ]]></reason>
+    <value>NO</value>
+</response>

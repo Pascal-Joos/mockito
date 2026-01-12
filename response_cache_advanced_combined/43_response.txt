@@ -1,0 +1,22 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Nullable
+  @SuppressWarnings("unused")
+  public static Object handleConstruction(
+      String identifier,
+      Class<?> type,
+      Object object,
+      Object[] arguments,
+      String[] parameterTypeNames) {
+    Dispatcher dispatcher = DISPATCHERS.get(identifier);
+    if (dispatcher == null) {
+      return null;
+    }
+    return dispatcher.handleConstruction(type, object, arguments, parameterTypeNames);
+  }
+  ```
+    ]]>
+  </code>
+</response>

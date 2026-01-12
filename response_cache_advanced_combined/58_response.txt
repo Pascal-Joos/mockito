@@ -1,0 +1,39 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private Object readResolve() throws ObjectStreamException {
+      try {
+        ByteArrayInputStream bis = new ByteArrayInputStream(serializedMock);
+        ObjectInputStream objectInputStream =
+            new MockitoMockObjectInputStream(bis, typeToMock, extraInterfaces);
+
+        Object deserializedMock = objectInputStream.readObject();
+
+        bis.close();
+        objectInputStream.close();
+
+        return deserializedMock;
+      } catch (IOException ioe) {
+        MockCreationSettings<?> mockSettings = MockUtil.getMockSettings(serializedMock);
+        throw new MockitoSerializationIssue(
+            join(
+                "Mockito mock cannot be deserialized to a mock of '"
+                    + mockSettings.getTypeToMock().getCanonicalName()
+                    + "'. The error was :",
+                "  " + ioe.getMessage(),
+                "If you are unsure what is the reason of this exception, feel free to contact us on the mailing list."),
+            ioe);
+      } catch (ClassNotFoundException cce) {
+        throw new MockitoSerializationIssue(
+            join(
+                "A class couldn't be found while deserializing a Mockito mock, you should check your classpath. The error was :",
+                "  " + cce.getMessage(),
+                "If you are still unsure what is the reason of this exception, feel free to contact us on the mailing list."),
+            cce);
+      }
+}
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,39 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  static void assertCompatibleTypes(Object mock, MockCreationSettings originalSettings) {
+      Class originalType = originalSettings.getTypeToMock();
+      if (!Nullability.castToNonnull(originalType).isInstance(mock)) {
+        throw Reporter.methodDoesNotAcceptParameter(
+            "VerificationStartedEvent.setMock",
+            "parameter which is not the same type as the original mock.\n"
+                + "  Required type: "
+                + Nullability.castToNonnull(originalType).getName()
+                + "\n"
+                + "  Received parameter: "
+                + ValuePrinter.print(mock)
+                + ".\n ");
+      }
+
+      for (Class iface : (Set<Class>) originalSettings.getExtraInterfaces()) {
+        if (!iface.isInstance(mock)) {
+          throw Reporter.methodDoesNotAcceptParameter(
+              "VerificationStartedEvent.setMock",
+              "parameter which does not implement all extra interfaces of the original mock.\n"
+                  + "  Required type: "
+                  + Nullability.castToNonnull(originalType).getName()
+                  + "\n"
+                  + "  Required extra interface: "
+                  + iface.getName()
+                  + "\n"
+                  + "  Received parameter: "
+                  + ValuePrinter.print(mock)
+                  + ".\n ");
+        }
+      }
+  }
+  ```
+    ]]>
+  </code>
+</response>

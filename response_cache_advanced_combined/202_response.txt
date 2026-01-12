@@ -1,0 +1,13 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  protected GenericMetadataSupport actualParameterizedType(Object mock) {
+      CreationSettings mockSettings =
+          (CreationSettings) MockUtil.getMockHandler(mock).getMockSettings();
+      return GenericMetadataSupport.inferFrom(Nullability.castToNonnull(mockSettings.getTypeToMock()));
+  }
+  ```
+    ]]>
+  </code>
+</response>

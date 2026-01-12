@@ -1,0 +1,97 @@
+```xml
+<response>
+    <reason><![CDATA[
+We are analyzing whether the expression
+
+    MockUtil.getMockSettings(mock).getTypeToMock()
+
+can ever evaluate to null at the point where its getSimpleName() is called:
+
+    + MockUtil.getMockSettings(mock).getTypeToMock().getSimpleName()
+
+within:
+
+  public Object answer(InvocationOnMock invocation) {
+    if (isToStringMethod(invocation.getMethod())) {
+      Object mock = invocation.getMock();
+      MockName name = MockUtil.getMockName(mock);
+      if (name.isDefault()) {
+        return "Mock for "
+            + MockUtil.getMockSettings(mock).getTypeToMock().getSimpleName()
+            + ", hashCode: "
+            + mock.hashCode();
+      } else {
+        return name.toString();
+      }
+    } else if (isCompareToMethod(invocation.getMethod())) {
+      return invocation.getMock() == invocation.getArgument(0) ? 0 : 1;
+    }
+
+    Class<?> returnType = invocation.getMethod().getReturnType();
+    return returnValueFor(returnType);
+  }
+
+Key points:
+
+1. **Location in the call stack / typical usage**
+
+This code is characteristic of Mockito’s default `Answer` implementation used for a mock’s `toString()` method (e.g. in `DefaultAnswer` / `MockUtil` / `MockSettingsImpl` flow). In Mockito, `MockUtil.getMockSettings(mock)` returns the `MockCreationSettings<?>` associated with the given mock. That object is created when the mock is created and is part of Mockito’s internal contract.
+
+2. **Mockito’s contract for `MockCreationSettings.getTypeToMock()`**
+
+In Mockito (for several major versions, including current ones):
+
+- A mock is always created for a **non-null** type (class or interface).
+- The type is passed into the internal mock creation API and stored in the `MockCreationSettings`.
+- `MockCreationSettings#getTypeToMock()` is defined to return the class/interface that is being mocked. Under normal, supported usage, it is not optional and not allowed to be null; Mockito requires a target type to create a mock.
+
+Thus, if a valid mock object is passed to `MockUtil.getMockSettings(mock)`, its `MockCreationSettings` must have a non-null `typeToMock`. If that were null, Mockito’s mock creation would already have been in an invalid state, and many other parts of Mockito that rely on this value (e.g. creation of mock handlers, toString representation, etc.) would break systematically.
+
+3. **Control-flow and prior checks**
+
+Within this method:
+
+- `Object mock = invocation.getMock();`
+
+By Mockito’s own invocation semantics, `invocation.getMock()` is guaranteed to be the mock instance that received the call. There is no null check here because Mockito does not allow invocations on a null mock; the framework itself constructs `InvocationOnMock` only for actual mock instances.
+
+- `MockUtil.getMockName(mock);`
+
+`MockUtil.getMockName(mock)` assumes `mock` is a valid Mockito mock and would typically fail fast if it’s not. Successfully obtaining a `MockName` already implies that `mock` is a properly-configured mock with associated settings.
+
+- The problematic expression is executed only if:
+  - `isToStringMethod(invocation.getMethod())` is true, and
+  - `name.isDefault()` is true.
+
+The latter means the mock is using the default name (i.e., it was not given a custom name); in that case, Mockito needs the **type** of the mock to build the default display string: `"Mock for <TypeName>, hashCode: ..."`.
+
+Given Mockito’s design, this default naming relies on `getTypeToMock()` being non-null. If it were nullable, this code would risk a `NullPointerException` on any default-named mock’s `toString()`, which would be a very visible, core bug in Mockito. In actual Mockito implementations, this does not happen, precisely because `typeToMock` is guaranteed to be non-null.
+
+4. **Nullability from Java semantics**
+
+From pure Java semantics:
+
+- `getTypeToMock()` returns a `Class<?>`. Java allows a method to return null, but whether it can in practice depends on the library’s contract and implementation.
+- There is no local null-check on the result before calling `.getSimpleName()`. Therefore, if the framework *did* ever return null from `getTypeToMock()`, `NullPointerException` would surface here.
+
+In real Mockito code, this path is executed frequently (every default-configuration mock’s `toString()`), and widespread usage indicates that `getTypeToMock()` is not null at runtime.
+
+5. **Relying on Mockito’s documented/implicit guarantees**
+
+Mockito's public and internal APIs treat `typeToMock` as mandatory; mock creation requires a non-null target type. Thus, given:
+
+- A valid Mockito mock instance,
+- Proper construction via Mockito’s APIs (e.g. `Mockito.mock(Foo.class)`, `@Mock Foo foo;`, etc.), and
+- No manual tampering with internal settings,
+
+`MockUtil.getMockSettings(mock).getTypeToMock()` will not be null.
+
+If someone constructs an invalid or corrupted mock outside of Mockito’s normal mechanisms (e.g. using reflection to fake internals), all bets are off, but that is outside the normal, supported usage assumptions.
+
+Conclusion:
+
+Under the normal and intended usage of this code in Mockito, `MockUtil.getMockSettings(mock).getTypeToMock()` is guaranteed non-null for any real mock, so the expression cannot be null along the valid execution paths of this method.
+    ]]></reason>
+    <value>NO</value>
+</response>
+```

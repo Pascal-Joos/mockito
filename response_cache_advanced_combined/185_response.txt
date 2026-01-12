@@ -1,0 +1,36 @@
+```xml
+<response>
+    <reason><![CDATA[
+Within the shown method, the nullability of DISPATCHER is explicitly checked at the start:
+
+    if (DISPATCHER == null) {
+        throw new MockitoInitializationException(...);
+    }
+
+This check occurs before any use of DISPATCHER in the rest of the method. There are no assignments to DISPATCHER within this method, so its value cannot change after this check.
+
+Control-flow analysis:
+
+1. If DISPATCHER is null:
+   - The method immediately throws a MockitoInitializationException and exits.
+   - No subsequent code (including DISPATCHER.setAccessible(...)) is executed.
+
+2. If DISPATCHER is not null:
+   - Execution proceeds past the null check.
+   - All later uses of DISPATCHER (including:
+        DISPATCHER.setAccessible(field, true);
+        DISPATCHER.getLookup();
+        DISPATCHER.setAccessible(field, false);
+     )
+     occur only on this non-null value.
+
+Thus, on any code path where the line
+
+    DISPATCHER.setAccessible(field, false);
+
+is reached, DISPATCHER must have been non-null. No statements in this method can change it to null between the initial null check and that line. Therefore, in the context of this method’s body, DISPATCHER cannot be null at the point of that call.
+
+Note: This reasoning assumes standard Java semantics (no use of Unsafe to mutate the DISPATCHER reference concurrently in a way that would violate normal happens-before guarantees). Under normal Java code and the provided snippet, DISPATCHER is guaranteed to be non-null at that line.]]></reason>
+    <value>NO</value>
+</response>
+```

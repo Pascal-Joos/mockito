@@ -1,0 +1,38 @@
+```xml
+<response>
+    <reason><![CDATA[
+From the provided snippet, we only see the use of `mockitoOngoingStubbing`:
+
+public BDDMyOngoingStubbing<T> willThrow(Class<? extends Throwable> throwableType) {
+    return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing).willThrow(throwableType);
+}
+
+The line you are asking about:
+
+return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenThrow(throwableType));
+
+differs from the actual method implementation you provided. In either case, determining nullability of `mockitoOngoingStubbing` depends entirely on:
+
+1. How `mockitoOngoingStubbing` is declared (field vs. local variable).
+2. Where and how it is initialized.
+3. Whether there are any prior null checks or guarantees (e.g., constructor enforcing non-null, framework contracts).
+4. Whether any methods that assign to `mockitoOngoingStubbing` can return null.
+
+None of this information is available in the snippet. Mockito’s typical contracts (like `when(...)` returning an `OngoingStubbing`) strongly suggest non-null in normal usage, but this is a convention, not a strict guarantee the static analyzer can rely on without seeing the surrounding code.
+
+Since we do not see:
+
+- The declaration of `mockitoOngoingStubbing`
+- Its assignments
+- Any null checks or invariants
+
+we cannot soundly conclude that `mockitoOngoingStubbing` is never null, nor that it can definitely be null. More context is required to make a definitive determination.
+    ]]></reason>
+    <value>UNKNOWN</value>
+    <requests>
+        <request><![CDATA[Provide the declaration of `mockitoOngoingStubbing` (field or local) and its type.]]></request>
+        <request><![CDATA[Show all constructors and methods that assign a value to `mockitoOngoingStubbing`.]]></request>
+        <request><![CDATA[Indicate whether this class is an internal wrapper around Mockito and if any invariants (e.g., via `Objects.requireNonNull`) are enforced on `mockitoOngoingStubbing`.]]></request>
+    </requests>
+</response>
+```

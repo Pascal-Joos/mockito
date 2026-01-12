@@ -1,0 +1,31 @@
+```xml
+<response>
+    <reason><![CDATA[
+The expression in question is `type.getClass().getCanonicalName()`.
+
+1. The first relevant line is:
+   Checks.checkNotNull(Nullability.castToNonnull(type), "type");
+
+2. For `type.getClass()` to be called, the method must have passed the null check without throwing.
+   - If `type` were null, then either:
+     - `Nullability.castToNonnull(type)` would throw (or return null and `checkNotNull` would throw), and execution would never reach the `throw new MockitoException(...)` line, or
+     - `Checks.checkNotNull(...)` itself would throw on a null argument.
+   - By the method's intended contract and naming, `checkNotNull` is designed to enforce non-nullness and throw if the value is null. Thus, on any normal path that reaches the later code, `type` is guaranteed to be non-null.
+
+3. The `instanceof` checks:
+   if (type instanceof Class) { ... }
+   if (type instanceof ParameterizedType) { ... }
+
+   These do not modify `type`; they only determine the branch taken. If neither condition matches, execution falls through to the `throw new MockitoException(...)` line. In all cases along this fall-through path, `type` is still the same non-null reference that passed the initial check.
+
+4. Since `type` is non-null, `type.getClass()` will always return a `Class<?>` object and never null (by the Java language specification, `Object.getClass()` never returns null).
+
+5. `Class.getCanonicalName()` can itself return null for some classes (e.g., anonymous classes, local classes, array classes of such types). Therefore the *result of `getCanonicalName()`* may be null, but the question is specifically: can the expression `type` at line `+ type.getClass().getCanonicalName()` be null?
+
+   The variable `type` at that point cannot be null due to the prior `checkNotNull` enforcement; only `getCanonicalName()`'s return value may be null, not `type` itself.
+
+Conclusion: Along any execution path that reaches the string concatenation line, `type` is guaranteed to be non-null, so `type` itself cannot be null there.
+    ]]></reason>
+    <value>NO</value>
+</response>
+```

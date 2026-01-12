@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public BDDMyOngoingStubbing<T> will(Answer<?> answer) {
+          if (mockitoOngoingStubbing == null) {
+              return new BDDOngoingStubbingImpl<T>(null);
+          }
+          return new BDDOngoingStubbingImpl<T>(Nullability.castToNonnull(mockitoOngoingStubbing).then(answer));
+  }
+  ```
+    ]]>
+  </code>
+</response>

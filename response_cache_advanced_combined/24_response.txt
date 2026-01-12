@@ -1,0 +1,35 @@
+```xml
+<response>
+    <reason><![CDATA[
+Within the body of willCallRealMethod(), the field mockitoOngoingStubbing is first copied into the local variable ongoingStubbing:
+
+    OngoingStubbing<T> ongoingStubbing = mockitoOngoingStubbing;
+
+Immediately afterward, there is an explicit null-check on this local variable:
+
+    if (ongoingStubbing == null) {
+        throw new NullPointerException("mockitoOngoingStubbing");
+    }
+
+If mockitoOngoingStubbing were null at this point, the method would throw a NullPointerException and never reach the return statement. Thus, along any execution path that reaches:
+
+    return new BDDOngoingStubbingImpl<T>(ongoingStubbing.thenCallRealMethod());
+
+the value of ongoingStubbing (and therefore the value originally coming from mockitoOngoingStubbing at the time of that assignment) is guaranteed to be non-null.
+
+The line in your question uses mockitoOngoingStubbing directly:
+
+    return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenCallRealMethod());
+
+Logically, this is equivalent in terms of nullability to using ongoingStubbing, because:
+- mockitoOngoingStubbing was just assigned to ongoingStubbing,
+- the code has already verified that this value is not null,
+- there is no reassignment to mockitoOngoingStubbing between the assignment and the return.
+
+Unless there is concurrent modification of the field mockitoOngoingStubbing by another thread (which is not indicated in the provided snippet), mockitoOngoingStubbing cannot be null at the point of that return statement. In the absence of concurrency concerns or external mutation between the assignment and the return, the null-check on ongoingStubbing guarantees that mockitoOngoingStubbing is non-null when used in the return.
+
+Therefore, on all non-exceptional, single-threaded paths that reach the return statement, mockitoOngoingStubbing cannot be null.
+    ]]></reason>
+    <value>NO</value>
+</response>
+```

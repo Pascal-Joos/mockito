@@ -1,0 +1,24 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private void assureOpen(Object module, String packageName) throws Throwable {
+      if (DISPATCHER == null) {
+        throw INITIALIZATION_ERROR;
+      }
+      if (!(Boolean) isOpen.invokeWithArguments(module, packageName, DISPATCHER.getModule())) {
+        redefineModule
+            .bindTo(INSTRUMENTATION)
+            .invokeWithArguments(
+                module,
+                Collections.emptySet(),
+                Collections.emptyMap(),
+                Collections.singletonMap(packageName, Collections.singleton(DISPATCHER.getModule())),
+                Collections.emptySet(),
+                Collections.emptyMap());
+      }
+  }
+  ```
+    ]]>
+  </code>
+</response>

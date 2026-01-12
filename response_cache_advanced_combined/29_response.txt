@@ -1,0 +1,37 @@
+<response>
+  <reason><![CDATA[The nullability of mockingProgress().pullOngoingStubbing() at this call site depends entirely on the implementation of MockingProgress.pullOngoingStubbing(), which has not been provided.
+
+From the surrounding code, we see that the same method call is used in two different places:
+
+1) In MockitoCore.when(...) (and MockedStaticImpl.when(...)):
+   ```java
+   OngoingStubbing<T> stubbing = (OngoingStubbing<T>) mockingProgress.pullOngoingStubbing();
+   if (stubbing == null) {
+     mockingProgress.reset();
+     throw missingMethodInvocation();
+   }
+   return stubbing;
+   ```
+   Here, the code explicitly checks for null and handles it by throwing. This proves that, in general, pullOngoingStubbing() is *expected* to sometimes return null.
+
+2) In MockitoCore.getLastInvocation():
+   ```java
+   OngoingStubbingImpl ongoingStubbing =
+       ((OngoingStubbingImpl) mockingProgress().pullOngoingStubbing());
+   List<Invocation> allInvocations = ongoingStubbing.getRegisteredInvocations();
+   return allInvocations.get(allInvocations.size() - 1);
+   ```
+   At this specific call site there is no null-check; the code assumes a non-null OngoingStubbingImpl. However, based only on the call chain given, there is no guarantee shown that getLastInvocation() is only called in a state where pullOngoingStubbing() cannot be null. That guarantee, if it exists, would have to come from the internal logic of MockingProgress.pullOngoingStubbing() (e.g. state invariants: “if X has just happened, then pullOngoingStubbing() will never return null”).
+
+Because the body of MockingProgress.pullOngoingStubbing() is not shown, we cannot see:
+- under what conditions it returns a non-null OngoingStubbing, and
+- under what conditions it returns null.
+
+The fact that other call sites *explicitly handle* the null case strongly indicates that null is a normal, expected return value for this method in some circumstances. Without the method’s body, we cannot prove that those circumstances cannot arise at this particular call site (getLastInvocation). To make a confident determination, we must inspect the implementation of pullOngoingStubbing() to understand its state conditions and guarantees.
+
+Therefore, we need the declaration (implementation) of MockingProgress.pullOngoingStubbing() to decide whether, in the exact context of getLastInvocation(), mockingProgress().pullOngoingStubbing() can evaluate to null.]]></reason>
+  <success>false</success>
+  <methods>
+    <method>pullOngoingStubbing</method>
+  </methods>
+</response>

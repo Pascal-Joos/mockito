@@ -1,0 +1,17 @@
+```xml
+<response>
+    <reason><![CDATA[
+Within this method, `mockitoOngoingStubbing` is explicitly checked for null:
+
+    if (mockitoOngoingStubbing == null) {
+        throw new NullPointerException("mockitoOngoingStubbing");
+    }
+
+If it were null, the method would throw a `NullPointerException` and never reach the return statement. Therefore, along any execution path that reaches:
+
+    return new BDDOngoingStubbingImpl<T>(mockitoOngoingStubbing.thenReturn(value));
+
+`mockitoOngoingStubbing` is guaranteed to be non-null. No other assignments or control-flow paths are shown that could change its value between the null check and the return statement. Thus, at the line in question, `mockitoOngoingStubbing` cannot be null.]]></reason>
+    <value>NO</value>
+</response>
+```
