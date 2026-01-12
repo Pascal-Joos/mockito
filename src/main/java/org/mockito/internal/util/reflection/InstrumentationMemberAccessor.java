@@ -158,7 +158,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
       throws InvocationTargetException {
     assureArguments(
         method,
-        Modifier.isStatic(method.getModifiers()) ? null : target,
+        Nullability.castToNonnull(Modifier.isStatic(method.getModifiers()) ? null : target),
         method.getDeclaringClass(),
         arguments,
         method.getParameterTypes());
