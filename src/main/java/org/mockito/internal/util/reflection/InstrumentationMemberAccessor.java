@@ -7,6 +7,7 @@ package org.mockito.internal.util.reflection;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static org.mockito.internal.util.StringUtil.join;
 
+import edu.ucr.cs.riple.annotator.util.Nullability;
 import java.lang.instrument.Instrumentation;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -195,7 +196,7 @@ class InstrumentationMemberAccessor implements MemberAccessor {
   public Object get(Field field, Object target) {
     assureArguments(
         field,
-        Modifier.isStatic(field.getModifiers()) ? null : target,
+        Nullability.castToNonnull(Modifier.isStatic(field.getModifiers()) ? null : target),
         field.getDeclaringClass(),
         new Object[0],
         new Class<?>[0]);
