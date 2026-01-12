@@ -129,7 +129,12 @@ class InstrumentationMemberAccessor implements MemberAccessor {
       throw new InstantiationException(
           "Cannot instantiate abstract " + constructor.getDeclaringClass().getTypeName());
     }
-    assureArguments(constructor, null, null, arguments, constructor.getParameterTypes());
+    assureArguments(
+        constructor,
+        Nullability.castToNonnull(null),
+        Nullability.castToNonnull(null),
+        arguments,
+        constructor.getParameterTypes());
     try {
       Object module = getModule.bindTo(constructor.getDeclaringClass()).invokeWithArguments();
       String packageName = constructor.getDeclaringClass().getPackage().getName();
