@@ -6,6 +6,7 @@ package org.mockito.internal.junit;
 
 import static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;
 
+import edu.ucr.cs.riple.annotator.util.Nullability;
 import javax.annotation.Nullable;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -79,7 +80,7 @@ public class VerificationCollectorImpl implements VerificationCollector {
         .append('\n')
         .append(this.numberOfFailures)
         .append(". ")
-        .append(message.trim())
+        .append(Nullability.castToNonnull(message).trim())
         .append('\n');
   }
 
